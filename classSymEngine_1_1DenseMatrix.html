@@ -1204,7 +1204,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  129</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> j = 0; j &lt; ncols; j++) {</div>
 <div class="line"><span class="lineno">  130</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><span class="lineno">  131</span>                <span class="keyword">auto</span> &amp;e = m_[offset];</div>
-<div class="line"><span class="lineno">  132</span>                cur = and_tribool(cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*e));</div>
+<div class="line"><span class="lineno">  132</span>                cur = and_tribool(cur, SymEngine::is_zero(*e));</div>
 <div class="line"><span class="lineno">  133</span>                <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><span class="lineno">  134</span>                    <span class="keywordflow">return</span> cur;</div>
 <div class="line"><span class="lineno">  135</span>                }</div>
@@ -1214,7 +1214,6 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  139</span>    }</div>
 <div class="line"><span class="lineno">  140</span>    <span class="keywordflow">return</span> cur;</div>
 <div class="line"><span class="lineno">  141</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1255,7 +1254,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  190</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><span class="lineno">  191</span>                <span class="keyword">auto</span> &amp;e2 = m_[j * ncols + i];</div>
 <div class="line"><span class="lineno">  192</span>                cur = and_tribool(</div>
-<div class="line"><span class="lineno">  193</span>                    cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(e2))));</div>
+<div class="line"><span class="lineno">  193</span>                    cur, SymEngine::is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(e2))));</div>
 <div class="line"><span class="lineno">  194</span>            } <span class="keywordflow">else</span> {</div>
 <div class="line"><span class="lineno">  195</span>                cur = and_tribool(cur, SymEngine::is_real(*e));</div>
 <div class="line"><span class="lineno">  196</span>            }</div>
@@ -1575,7 +1574,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  166</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><span class="lineno">  167</span>                <span class="keyword">auto</span> &amp;e = m_[i * ncols + j];</div>
 <div class="line"><span class="lineno">  168</span>                <span class="keyword">auto</span> &amp;e2 = m_[j * ncols + i];</div>
-<div class="line"><span class="lineno">  169</span>                cur = and_tribool(cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, e2)));</div>
+<div class="line"><span class="lineno">  169</span>                cur = and_tribool(cur, SymEngine::is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, e2)));</div>
 <div class="line"><span class="lineno">  170</span>            }</div>
 <div class="line"><span class="lineno">  171</span>            <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><span class="lineno">  172</span>                <span class="keywordflow">return</span> cur;</div>
@@ -1708,7 +1707,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  107</span>    <span class="keyword">auto</span> A = *<span class="keyword">this</span>;</div>
 <div class="line"><span class="lineno">  108</span>    tribool cur = tribool::tritrue;</div>
 <div class="line"><span class="lineno">  109</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : m_) {</div>
-<div class="line"><span class="lineno">  110</span>        cur = and_tribool(cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*e));</div>
+<div class="line"><span class="lineno">  110</span>        cur = and_tribool(cur, SymEngine::is_zero(*e));</div>
 <div class="line"><span class="lineno">  111</span>        <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><span class="lineno">  112</span>            <span class="keywordflow">return</span> cur;</div>
 <div class="line"><span class="lineno">  113</span>        }</div>

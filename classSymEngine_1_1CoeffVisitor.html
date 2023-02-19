@@ -173,7 +173,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00130">130</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00131">131</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a144e1c76378a8e7deedd7ed7ee1b465f" name="a144e1c76378a8e7deedd7ed7ee1b465f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a144e1c76378a8e7deedd7ed7ee1b465f">&#9670;&#160;</a></span>CoeffVisitor()</h2>
@@ -209,8 +209,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00138">138</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  138</span>: x_(x), n_(n) {}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00139">139</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  139</span>: x_(x), n_(n) {}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -239,12 +239,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00219">219</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  220</span>    {</div>
-<div class="line"><span class="lineno">  221</span>        coeff_ = zero;</div>
-<div class="line"><span class="lineno">  222</span>        b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  223</span>        <span class="keywordflow">return</span> coeff_;</div>
-<div class="line"><span class="lineno">  224</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00220">220</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  221</span>    {</div>
+<div class="line"><span class="lineno">  222</span>        coeff_ = zero;</div>
+<div class="line"><span class="lineno">  223</span>        b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  224</span>        <span class="keywordflow">return</span> coeff_;</div>
+<div class="line"><span class="lineno">  225</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -272,21 +272,21 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00140">140</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  141</span>    {</div>
-<div class="line"><span class="lineno">  142</span>        umap_basic_num dict;</div>
-<div class="line"><span class="lineno">  143</span>        RCP&lt;const Number&gt; coef = zero;</div>
-<div class="line"><span class="lineno">  144</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
-<div class="line"><span class="lineno">  145</span>            p.first-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  146</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*coeff_, *zero)) {</div>
-<div class="line"><span class="lineno">  147</span>                <a class="code hl_function" href="classSymEngine_1_1Add.html#ae0a7745f46665b058a577c74974f1b7c">Add::coef_dict_add_term</a>(outArg(coef), dict, p.second, coeff_);</div>
-<div class="line"><span class="lineno">  148</span>            }</div>
-<div class="line"><span class="lineno">  149</span>        }</div>
-<div class="line"><span class="lineno">  150</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
-<div class="line"><span class="lineno">  151</span>            iaddnum(outArg(coef), x.get_coef());</div>
-<div class="line"><span class="lineno">  152</span>        }</div>
-<div class="line"><span class="lineno">  153</span>        coeff_ = <a class="code hl_function" href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">Add::from_dict</a>(coef, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
-<div class="line"><span class="lineno">  154</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00141">141</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  142</span>    {</div>
+<div class="line"><span class="lineno">  143</span>        umap_basic_num dict;</div>
+<div class="line"><span class="lineno">  144</span>        RCP&lt;const Number&gt; coef = zero;</div>
+<div class="line"><span class="lineno">  145</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
+<div class="line"><span class="lineno">  146</span>            p.first-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  147</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*coeff_, *zero)) {</div>
+<div class="line"><span class="lineno">  148</span>                <a class="code hl_function" href="classSymEngine_1_1Add.html#ae0a7745f46665b058a577c74974f1b7c">Add::coef_dict_add_term</a>(outArg(coef), dict, p.second, coeff_);</div>
+<div class="line"><span class="lineno">  149</span>            }</div>
+<div class="line"><span class="lineno">  150</span>        }</div>
+<div class="line"><span class="lineno">  151</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
+<div class="line"><span class="lineno">  152</span>            iaddnum(outArg(coef), x.get_coef());</div>
+<div class="line"><span class="lineno">  153</span>        }</div>
+<div class="line"><span class="lineno">  154</span>        coeff_ = <a class="code hl_function" href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">Add::from_dict</a>(coef, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><span class="lineno">  155</span>    }</div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a307db20756a09c9f2bc7a5983e3ea3fb"><div class="ttname"><a href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">SymEngine::Add::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, umap_basic_num &amp;&amp;d)</div><div class="ttdoc">Create an appropriate instance from dictionary quickly.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00140">add.cpp:140</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_ae0a7745f46665b058a577c74974f1b7c"><div class="ttname"><a href="classSymEngine_1_1Add.html#ae0a7745f46665b058a577c74974f1b7c">SymEngine::Add::coef_dict_add_term</a></div><div class="ttdeci">static void coef_dict_add_term(const Ptr&lt; RCP&lt; const Number &gt; &gt; &amp;coef, umap_basic_num &amp;d, const RCP&lt; const Number &gt; &amp;c, const RCP&lt; const Basic &gt; &amp;term)</div><div class="ttdoc">Updates the numerical coefficient and the dictionary.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00261">add.cpp:261</a></div></div>
 <div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
@@ -319,18 +319,18 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00206">206</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  207</span>    {</div>
-<div class="line"><span class="lineno">  208</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *n_)) {</div>
-<div class="line"><span class="lineno">  209</span>            coeff_ = zero;</div>
-<div class="line"><span class="lineno">  210</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  211</span>        }</div>
-<div class="line"><span class="lineno">  212</span>        <span class="keywordflow">if</span> (has_symbol(x, *x_)) {</div>
-<div class="line"><span class="lineno">  213</span>            coeff_ = zero;</div>
-<div class="line"><span class="lineno">  214</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  215</span>            coeff_ = x.rcp_from_this();</div>
-<div class="line"><span class="lineno">  216</span>        }</div>
-<div class="line"><span class="lineno">  217</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00207">207</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  208</span>    {</div>
+<div class="line"><span class="lineno">  209</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *n_)) {</div>
+<div class="line"><span class="lineno">  210</span>            coeff_ = zero;</div>
+<div class="line"><span class="lineno">  211</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  212</span>        }</div>
+<div class="line"><span class="lineno">  213</span>        <span class="keywordflow">if</span> (has_symbol(x, *x_)) {</div>
+<div class="line"><span class="lineno">  214</span>            coeff_ = zero;</div>
+<div class="line"><span class="lineno">  215</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  216</span>            coeff_ = x.rcp_from_this();</div>
+<div class="line"><span class="lineno">  217</span>        }</div>
+<div class="line"><span class="lineno">  218</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -358,16 +358,16 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00195">195</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  196</span>    {</div>
-<div class="line"><span class="lineno">  197</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*one, *n_)) {</div>
-<div class="line"><span class="lineno">  198</span>            coeff_ = one;</div>
-<div class="line"><span class="lineno">  199</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
-<div class="line"><span class="lineno">  200</span>            coeff_ = x.rcp_from_this();</div>
-<div class="line"><span class="lineno">  201</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  202</span>            coeff_ = zero;</div>
-<div class="line"><span class="lineno">  203</span>        }</div>
-<div class="line"><span class="lineno">  204</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00196">196</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  197</span>    {</div>
+<div class="line"><span class="lineno">  198</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*one, *n_)) {</div>
+<div class="line"><span class="lineno">  199</span>            coeff_ = one;</div>
+<div class="line"><span class="lineno">  200</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
+<div class="line"><span class="lineno">  201</span>            coeff_ = x.rcp_from_this();</div>
+<div class="line"><span class="lineno">  202</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  203</span>            coeff_ = zero;</div>
+<div class="line"><span class="lineno">  204</span>        }</div>
+<div class="line"><span class="lineno">  205</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -395,22 +395,22 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00156">156</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  157</span>    {</div>
-<div class="line"><span class="lineno">  158</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
-<div class="line"><span class="lineno">  159</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*p.first, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*p.second, *n_)) {</div>
-<div class="line"><span class="lineno">  160</span>                map_basic_basic dict = x.get_dict();</div>
-<div class="line"><span class="lineno">  161</span>                dict.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(p.first);</div>
-<div class="line"><span class="lineno">  162</span>                coeff_ = <a class="code hl_function" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(x.get_coef(), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
-<div class="line"><span class="lineno">  163</span>                <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  164</span>            }</div>
-<div class="line"><span class="lineno">  165</span>        }</div>
-<div class="line"><span class="lineno">  166</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_) and not has_symbol(x, *x_)) {</div>
-<div class="line"><span class="lineno">  167</span>            coeff_ = x.rcp_from_this();</div>
-<div class="line"><span class="lineno">  168</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  169</span>            coeff_ = zero;</div>
-<div class="line"><span class="lineno">  170</span>        }</div>
-<div class="line"><span class="lineno">  171</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00157">157</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  158</span>    {</div>
+<div class="line"><span class="lineno">  159</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : x.get_dict()) {</div>
+<div class="line"><span class="lineno">  160</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*p.first, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*p.second, *n_)) {</div>
+<div class="line"><span class="lineno">  161</span>                map_basic_basic dict = x.get_dict();</div>
+<div class="line"><span class="lineno">  162</span>                dict.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/map/erase.html">erase</a>(p.first);</div>
+<div class="line"><span class="lineno">  163</span>                coeff_ = <a class="code hl_function" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(x.get_coef(), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><span class="lineno">  164</span>                <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  165</span>            }</div>
+<div class="line"><span class="lineno">  166</span>        }</div>
+<div class="line"><span class="lineno">  167</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_) and not has_symbol(x, *x_)) {</div>
+<div class="line"><span class="lineno">  168</span>            coeff_ = x.rcp_from_this();</div>
+<div class="line"><span class="lineno">  169</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  170</span>            coeff_ = zero;</div>
+<div class="line"><span class="lineno">  171</span>        }</div>
+<div class="line"><span class="lineno">  172</span>    }</div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ab8e2f2039c048fe0a09b346df85ba65d"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">SymEngine::Mul::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, map_basic_basic &amp;&amp;d)</div><div class="ttdoc">Create a Mul from a dict.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00115">mul.cpp:115</a></div></div>
 <div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/erase.html">std::map::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>
 </div><!-- fragment -->
@@ -440,16 +440,16 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00173">173</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  174</span>    {</div>
-<div class="line"><span class="lineno">  175</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_base(), *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_exp(), *n_)) {</div>
-<div class="line"><span class="lineno">  176</span>            coeff_ = one;</div>
-<div class="line"><span class="lineno">  177</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*x.get_base(), *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
-<div class="line"><span class="lineno">  178</span>            coeff_ = x.rcp_from_this();</div>
-<div class="line"><span class="lineno">  179</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  180</span>            coeff_ = zero;</div>
-<div class="line"><span class="lineno">  181</span>        }</div>
-<div class="line"><span class="lineno">  182</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00174">174</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  175</span>    {</div>
+<div class="line"><span class="lineno">  176</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_base(), *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*x.get_exp(), *n_)) {</div>
+<div class="line"><span class="lineno">  177</span>            coeff_ = one;</div>
+<div class="line"><span class="lineno">  178</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*x.get_base(), *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
+<div class="line"><span class="lineno">  179</span>            coeff_ = x.rcp_from_this();</div>
+<div class="line"><span class="lineno">  180</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  181</span>            coeff_ = zero;</div>
+<div class="line"><span class="lineno">  182</span>        }</div>
+<div class="line"><span class="lineno">  183</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -477,16 +477,16 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00184">184</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  185</span>    {</div>
-<div class="line"><span class="lineno">  186</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*one, *n_)) {</div>
-<div class="line"><span class="lineno">  187</span>            coeff_ = one;</div>
-<div class="line"><span class="lineno">  188</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
-<div class="line"><span class="lineno">  189</span>            coeff_ = x.rcp_from_this();</div>
-<div class="line"><span class="lineno">  190</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  191</span>            coeff_ = zero;</div>
-<div class="line"><span class="lineno">  192</span>        }</div>
-<div class="line"><span class="lineno">  193</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00185">185</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  186</span>    {</div>
+<div class="line"><span class="lineno">  187</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*one, *n_)) {</div>
+<div class="line"><span class="lineno">  188</span>            coeff_ = one;</div>
+<div class="line"><span class="lineno">  189</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(x, *x_) and <a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*zero, *n_)) {</div>
+<div class="line"><span class="lineno">  190</span>            coeff_ = x.rcp_from_this();</div>
+<div class="line"><span class="lineno">  191</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  192</span>            coeff_ = zero;</div>
+<div class="line"><span class="lineno">  193</span>        }</div>
+<div class="line"><span class="lineno">  194</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -511,7 +511,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00135">135</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00136">136</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 
 </div>
 </div>
@@ -535,7 +535,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00134">134</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00135">135</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 
 </div>
 </div>
@@ -559,7 +559,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00133">133</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00134">134</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 
 </div>
 </div>

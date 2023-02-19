@@ -299,7 +299,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00246">246</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00247">247</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  154</span>{</div>
 <div class="line"><span class="lineno">  155</span>    vec_basic newargs;</div>
 <div class="line"><span class="lineno">  156</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : x.get_args()) {</div>
@@ -328,7 +328,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00245">245</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00246">246</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  149</span>{</div>
 <div class="line"><span class="lineno">  150</span>    result_ = x.rcp_from_this();</div>
 <div class="line"><span class="lineno">  151</span>}</div>
@@ -635,7 +635,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00247">247</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00248">248</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  163</span>{</div>
 <div class="line"><span class="lineno">  164</span>    vec_basic newargs;</div>
 <div class="line"><span class="lineno">  165</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : x.get_args()) {</div>
@@ -662,7 +662,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00263">263</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00264">264</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  194</span>{</div>
 <div class="line"><span class="lineno">  195</span>    <span class="keyword">auto</span> fargs = x.get_args();</div>
 <div class="line"><span class="lineno">  196</span>    vec_basic newargs;</div>
@@ -691,7 +691,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00249">249</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00250">250</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  183</span>{</div>
 <div class="line"><span class="lineno">  184</span>    <span class="keyword">auto</span> farg = x.get_arg();</div>
 <div class="line"><span class="lineno">  185</span>    <span class="keyword">auto</span> newarg = apply(farg);</div>
@@ -720,7 +720,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00248">248</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00249">249</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  172</span>{</div>
 <div class="line"><span class="lineno">  173</span>    <span class="keyword">auto</span> base_ = x.get_base(), exp_ = x.get_exp();</div>
 <div class="line"><span class="lineno">  174</span>    <span class="keyword">auto</span> newarg1 = apply(base_), newarg2 = apply(exp_);</div>
@@ -803,14 +803,13 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   26</span>        result_ = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1);</div>
 <div class="line"><span class="lineno">   27</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_true(is_negative(*newarg, assumptions_))) {</div>
 <div class="line"><span class="lineno">   28</span>        result_ = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(-1);</div>
-<div class="line"><span class="lineno">   29</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*newarg, assumptions_))) {</div>
+<div class="line"><span class="lineno">   29</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_true(is_zero(*newarg, assumptions_))) {</div>
 <div class="line"><span class="lineno">   30</span>        result_ = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(0);</div>
 <div class="line"><span class="lineno">   31</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><span class="lineno">   32</span>        result_ = <a class="code hl_function" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a>(newarg);</div>
 <div class="line"><span class="lineno">   33</span>    }</div>
 <div class="line"><span class="lineno">   34</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a354804803424321111913a4071ca837e"><div class="ttname"><a href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">SymEngine::sign</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sign(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sign.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00527">functions.cpp:527</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -841,16 +840,16 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00252">252</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  253</span>    {</div>
-<div class="line"><span class="lineno">  254</span>        <span class="keyword">auto</span> farg1 = x.get_arg1(), farg2 = x.get_arg2();</div>
-<div class="line"><span class="lineno">  255</span>        <span class="keyword">auto</span> newarg1 = apply(farg1), newarg2 = apply(farg2);</div>
-<div class="line"><span class="lineno">  256</span>        <span class="keywordflow">if</span> (farg1 != newarg1 or farg2 != newarg2) {</div>
-<div class="line"><span class="lineno">  257</span>            result_ = x.create(newarg1, newarg2);</div>
-<div class="line"><span class="lineno">  258</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  259</span>            result_ = x.rcp_from_this();</div>
-<div class="line"><span class="lineno">  260</span>        }</div>
-<div class="line"><span class="lineno">  261</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00253">253</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  254</span>    {</div>
+<div class="line"><span class="lineno">  255</span>        <span class="keyword">auto</span> farg1 = x.get_arg1(), farg2 = x.get_arg2();</div>
+<div class="line"><span class="lineno">  256</span>        <span class="keyword">auto</span> newarg1 = apply(farg1), newarg2 = apply(farg2);</div>
+<div class="line"><span class="lineno">  257</span>        <span class="keywordflow">if</span> (farg1 != newarg1 or farg2 != newarg2) {</div>
+<div class="line"><span class="lineno">  258</span>            result_ = x.create(newarg1, newarg2);</div>
+<div class="line"><span class="lineno">  259</span>        } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  260</span>            result_ = x.rcp_from_this();</div>
+<div class="line"><span class="lineno">  261</span>        }</div>
+<div class="line"><span class="lineno">  262</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>

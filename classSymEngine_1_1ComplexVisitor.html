@@ -1409,7 +1409,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  643</span>        i1 = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1);</div>
 <div class="line"><span class="lineno">  644</span>    <span class="keywordflow">else</span></div>
 <div class="line"><span class="lineno">  645</span>        i1 = <a class="code hl_function" href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">Complex::from_two_nums</a>(*<a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(0), *<a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1));</div>
-<div class="line"><span class="lineno">  646</span>    tribool zi1 = <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(x.get_arg(), i1));</div>
+<div class="line"><span class="lineno">  646</span>    tribool zi1 = is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(x.get_arg(), i1));</div>
 <div class="line"><span class="lineno">  647</span>    <span class="keywordflow">if</span> (not is_false(zi1)) {</div>
 <div class="line"><span class="lineno">  648</span>        is_complex_ = not_tribool(zi1);</div>
 <div class="line"><span class="lineno">  649</span>        <span class="keywordflow">return</span>;</div>
@@ -1419,12 +1419,11 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  653</span>        mi1 = <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(-1);</div>
 <div class="line"><span class="lineno">  654</span>    <span class="keywordflow">else</span></div>
 <div class="line"><span class="lineno">  655</span>        mi1 = <a class="code hl_function" href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">Complex::from_two_nums</a>(*<a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(0), *<a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(-1));</div>
-<div class="line"><span class="lineno">  656</span>    tribool zmi1 = <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(x.get_arg(), mi1));</div>
+<div class="line"><span class="lineno">  656</span>    tribool zmi1 = is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(x.get_arg(), mi1));</div>
 <div class="line"><span class="lineno">  657</span>    is_complex_ = not_tribool(zmi1);</div>
 <div class="line"><span class="lineno">  658</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1Complex_html_adacb67b50059961da56764fe0a9170fa"><div class="ttname"><a href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">SymEngine::Complex::from_two_nums</a></div><div class="ttdeci">static RCP&lt; const Number &gt; from_two_nums(const Number &amp;re, const Number &amp;im)</div><div class="ttdef"><b>Definition:</b> <a href="complex_8cpp_source.html#l00109">complex.cpp:109</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -1468,7 +1467,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  624</span>    <span class="comment">// Check if function argument is complex and then if &#39;not_zero&#39; is not zero</span></div>
 <div class="line"><span class="lineno">  625</span>    x.get_arg()-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><span class="lineno">  626</span>    <span class="keywordflow">if</span> (is_true(is_complex_)) {</div>
-<div class="line"><span class="lineno">  627</span>        tribool zero = <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(not_zero);</div>
+<div class="line"><span class="lineno">  627</span>        tribool zero = is_zero(not_zero);</div>
 <div class="line"><span class="lineno">  628</span>        <span class="keywordflow">if</span> (not is_false(zero)) {</div>
 <div class="line"><span class="lineno">  629</span>            is_complex_ = not_tribool(zero);</div>
 <div class="line"><span class="lineno">  630</span>        }</div>

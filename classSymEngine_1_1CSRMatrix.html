@@ -1643,7 +1643,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  502</span>        p.push_back(p.back());</div>
 <div class="line"><span class="lineno">  503</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ci = 0; ci &lt; ncols; ++ci) {</div>
 <div class="line"><span class="lineno">  504</span>            <span class="keyword">auto</span> elem = exprs[ri]-&gt;diff(x[ci], diff_cache);</div>
-<div class="line"><span class="lineno">  505</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*elem))) {</div>
+<div class="line"><span class="lineno">  505</span>            <span class="keywordflow">if</span> (!is_true(is_zero(*elem))) {</div>
 <div class="line"><span class="lineno">  506</span>                p.back()++;</div>
 <div class="line"><span class="lineno">  507</span>                j.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(ci);</div>
 <div class="line"><span class="lineno">  508</span>                elems.emplace_back(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elem));</div>
@@ -1653,7 +1653,6 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  512</span>    <span class="keywordflow">return</span> CSRMatrix(nrows, ncols, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j),</div>
 <div class="line"><span class="lineno">  513</span>                     <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elems));</div>
 <div class="line"><span class="lineno">  514</span>}</div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">std::vector::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -2108,7 +2107,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  140</span>        }</div>
 <div class="line"><span class="lineno">  141</span>    }</div>
 <div class="line"><span class="lineno">  142</span> </div>
-<div class="line"><span class="lineno">  143</span>    <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*e))) {</div>
+<div class="line"><span class="lineno">  143</span>    <span class="keywordflow">if</span> (!is_true(is_zero(*e))) {</div>
 <div class="line"><span class="lineno">  144</span>        <span class="keywordflow">if</span> (k &lt; row_end and j_[k] == j) {</div>
 <div class="line"><span class="lineno">  145</span>            x_[k] = e;</div>
 <div class="line"><span class="lineno">  146</span>        } <span class="keywordflow">else</span> { <span class="comment">// j_[k] &gt; j or k is the last non-zero element</span></div>
@@ -2359,7 +2358,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  714</span> </div>
 <div class="line"><span class="lineno">  715</span>            <span class="keywordflow">if</span> (A_j == B_j) {</div>
 <div class="line"><span class="lineno">  716</span>                RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], B.x_[B_pos]);</div>
-<div class="line"><span class="lineno">  717</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  717</span>                <span class="keywordflow">if</span> (!is_true(is_zero(*result))) {</div>
 <div class="line"><span class="lineno">  718</span>                    C.j_.push_back(A_j);</div>
 <div class="line"><span class="lineno">  719</span>                    C.x_.push_back(result);</div>
 <div class="line"><span class="lineno">  720</span>                    nnz++;</div>
@@ -2368,7 +2367,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  723</span>                B_pos++;</div>
 <div class="line"><span class="lineno">  724</span>            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (A_j &lt; B_j) {</div>
 <div class="line"><span class="lineno">  725</span>                RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], zero);</div>
-<div class="line"><span class="lineno">  726</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  726</span>                <span class="keywordflow">if</span> (!is_true(is_zero(*result))) {</div>
 <div class="line"><span class="lineno">  727</span>                    C.j_.push_back(A_j);</div>
 <div class="line"><span class="lineno">  728</span>                    C.x_.push_back(result);</div>
 <div class="line"><span class="lineno">  729</span>                    nnz++;</div>
@@ -2377,7 +2376,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  732</span>            } <span class="keywordflow">else</span> {</div>
 <div class="line"><span class="lineno">  733</span>                <span class="comment">// B_j &lt; A_j</span></div>
 <div class="line"><span class="lineno">  734</span>                RCP&lt;const Basic&gt; result = bin_op(zero, B.x_[B_pos]);</div>
-<div class="line"><span class="lineno">  735</span>                <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  735</span>                <span class="keywordflow">if</span> (!is_true(is_zero(*result))) {</div>
 <div class="line"><span class="lineno">  736</span>                    C.j_.push_back(B_j);</div>
 <div class="line"><span class="lineno">  737</span>                    C.x_.push_back(result);</div>
 <div class="line"><span class="lineno">  738</span>                    nnz++;</div>
@@ -2389,7 +2388,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  744</span>        <span class="comment">// tail</span></div>
 <div class="line"><span class="lineno">  745</span>        <span class="keywordflow">while</span> (A_pos &lt; A_end) {</div>
 <div class="line"><span class="lineno">  746</span>            RCP&lt;const Basic&gt; result = bin_op(A.x_[A_pos], zero);</div>
-<div class="line"><span class="lineno">  747</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  747</span>            <span class="keywordflow">if</span> (!is_true(is_zero(*result))) {</div>
 <div class="line"><span class="lineno">  748</span>                C.j_.push_back(A.j_[A_pos]);</div>
 <div class="line"><span class="lineno">  749</span>                C.x_.push_back(result);</div>
 <div class="line"><span class="lineno">  750</span>                nnz++;</div>
@@ -2398,7 +2397,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  753</span>        }</div>
 <div class="line"><span class="lineno">  754</span>        <span class="keywordflow">while</span> (B_pos &lt; B_end) {</div>
 <div class="line"><span class="lineno">  755</span>            RCP&lt;const Basic&gt; result = bin_op(zero, B.x_[B_pos]);</div>
-<div class="line"><span class="lineno">  756</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*result))) {</div>
+<div class="line"><span class="lineno">  756</span>            <span class="keywordflow">if</span> (!is_true(is_zero(*result))) {</div>
 <div class="line"><span class="lineno">  757</span>                C.j_.push_back(B.j_[B_pos]);</div>
 <div class="line"><span class="lineno">  758</span>                C.x_.push_back(result);</div>
 <div class="line"><span class="lineno">  759</span>                nnz++;</div>
@@ -2639,7 +2638,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  601</span> </div>
 <div class="line"><span class="lineno">  602</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = 0; jj &lt; length; jj++) {</div>
 <div class="line"><span class="lineno">  603</span> </div>
-<div class="line"><span class="lineno">  604</span>            <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*sums[head]))) {</div>
+<div class="line"><span class="lineno">  604</span>            <span class="keywordflow">if</span> (!is_true(is_zero(*sums[head]))) {</div>
 <div class="line"><span class="lineno">  605</span>                C.j_[nnz] = head;</div>
 <div class="line"><span class="lineno">  606</span>                C.x_[nnz] = sums[head];</div>
 <div class="line"><span class="lineno">  607</span>                nnz++;</div>
@@ -2701,7 +2700,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  675</span>    <span class="keywordtype">unsigned</span> i;</div>
 <div class="line"><span class="lineno">  676</span> </div>
 <div class="line"><span class="lineno">  677</span>    <span class="keywordflow">for</span> (i = 0; i &lt; A.col_; i++) {</div>
-<div class="line"><span class="lineno">  678</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
+<div class="line"><span class="lineno">  678</span>        <span class="keywordflow">if</span> (is_true(is_zero(*X.get(i, 0))))</div>
 <div class="line"><span class="lineno">  679</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
 <div class="line"><span class="lineno">  680</span>    }</div>
 <div class="line"><span class="lineno">  681</span> </div>
@@ -2750,7 +2749,7 @@ Friends</h2></td></tr>
 <div class="line"><span class="lineno">  658</span>    SYMENGINE_ASSERT(A.row_ == X.nrows() and X.ncols() == 1);</div>
 <div class="line"><span class="lineno">  659</span> </div>
 <div class="line"><span class="lineno">  660</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.row_; i++) {</div>
-<div class="line"><span class="lineno">  661</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
+<div class="line"><span class="lineno">  661</span>        <span class="keywordflow">if</span> (is_true(is_zero(*X.get(i, 0))))</div>
 <div class="line"><span class="lineno">  662</span>            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
 <div class="line"><span class="lineno">  663</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = A.p_[i]; jj &lt; A.p_[i + 1]; jj++)</div>
 <div class="line"><span class="lineno">  664</span>            A.x_[jj] = <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[jj], X.get(i, 0));</div>

@@ -1132,177 +1132,187 @@ $(function() {
 <div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>    str_ = o.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
 <div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>}</div>
 <div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span> </div>
-<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::parenthesizeLT(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>                                       PrecedenceEnum precedenceEnum)</div>
-<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>{</div>
-<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>    Precedence prec;</div>
-<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt; precedenceEnum) {</div>
-<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>        <span class="keywordflow">return</span> parenthesize(apply(x));</div>
-<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>        <span class="keywordflow">return</span> apply(x);</div>
-<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>    }</div>
-<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>}</div>
-<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span> </div>
-<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::parenthesizeLE(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>                                       PrecedenceEnum precedenceEnum)</div>
-<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>{</div>
-<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    Precedence prec;</div>
-<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt;= precedenceEnum) {</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>        <span class="keywordflow">return</span> parenthesize(apply(x));</div>
-<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>        <span class="keywordflow">return</span> apply(x);</div>
-<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>    }</div>
-<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span>}</div>
-<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span> </div>
-<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::parenthesize(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;x)</div>
+<div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span><span class="keywordtype">void</span> StrPrinter::bvisit(<span class="keyword">const</span> IdentityMatrix &amp;x)</div>
+<div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>{</div>
+<div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>    str_ = <span class="stringliteral">&quot;I&quot;</span>;</div>
+<div class="line"><a id="l01033" name="l01033"></a><span class="lineno"> 1033</span>}</div>
+<div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span> </div>
+<div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span><span class="keywordtype">void</span> StrPrinter::bvisit(<span class="keyword">const</span> ZeroMatrix &amp;x)</div>
+<div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>{</div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    str_ = <span class="stringliteral">&quot;0&quot;</span>;</div>
+<div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span>}</div>
+<div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span> </div>
+<div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::parenthesizeLT(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a id="l01041" name="l01041"></a><span class="lineno"> 1041</span>                                       PrecedenceEnum precedenceEnum)</div>
+<div class="line"><a id="l01042" name="l01042"></a><span class="lineno"> 1042</span>{</div>
+<div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>    Precedence prec;</div>
+<div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt; precedenceEnum) {</div>
+<div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>        <span class="keywordflow">return</span> parenthesize(apply(x));</div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span>        <span class="keywordflow">return</span> apply(x);</div>
+<div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>    }</div>
+<div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>}</div>
+<div class="line"><a id="l01050" name="l01050"></a><span class="lineno"> 1050</span> </div>
+<div class="line"><a id="l01051" name="l01051"></a><span class="lineno"> 1051</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::parenthesizeLE(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>                                       PrecedenceEnum precedenceEnum)</div>
 <div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>{</div>
-<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;(&quot;</span> + x + <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>}</div>
-<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span> </div>
-<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::apply(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
-<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>{</div>
-<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>    b-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>    <span class="keywordflow">return</span> str_;</div>
-<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>}</div>
-<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span> </div>
-<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::apply(<span class="keyword">const</span> Basic &amp;b)</div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>{</div>
-<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>    b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>    <span class="keywordflow">return</span> str_;</div>
-<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>}</div>
-<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span> </div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> init_str_printer_names()</div>
-<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>{</div>
-<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names;</div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/assign.html">assign</a>(<a class="code hl_enumvalue" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID_Count</a>, <span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;sin&quot;</span>;</div>
-<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;cos&quot;</span>;</div>
-<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;tan&quot;</span>;</div>
-<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;cot&quot;</span>;</div>
-<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;csc&quot;</span>;</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;sec&quot;</span>;</div>
-<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>    names[SYMENGINE_ASIN] = <span class="stringliteral">&quot;asin&quot;</span>;</div>
-<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>    names[SYMENGINE_ACOS] = <span class="stringliteral">&quot;acos&quot;</span>;</div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    names[SYMENGINE_ASEC] = <span class="stringliteral">&quot;asec&quot;</span>;</div>
-<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>    names[SYMENGINE_ACSC] = <span class="stringliteral">&quot;acsc&quot;</span>;</div>
-<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>    names[SYMENGINE_ATAN] = <span class="stringliteral">&quot;atan&quot;</span>;</div>
-<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    names[SYMENGINE_ACOT] = <span class="stringliteral">&quot;acot&quot;</span>;</div>
-<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;atan2&quot;</span>;</div>
-<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;sinh&quot;</span>;</div>
-<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>    names[SYMENGINE_CSCH] = <span class="stringliteral">&quot;csch&quot;</span>;</div>
-<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;cosh&quot;</span>;</div>
-<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>    names[SYMENGINE_SECH] = <span class="stringliteral">&quot;sech&quot;</span>;</div>
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;tanh&quot;</span>;</div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;coth&quot;</span>;</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>    names[SYMENGINE_ASINH] = <span class="stringliteral">&quot;asinh&quot;</span>;</div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    names[SYMENGINE_ACSCH] = <span class="stringliteral">&quot;acsch&quot;</span>;</div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    names[SYMENGINE_ACOSH] = <span class="stringliteral">&quot;acosh&quot;</span>;</div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>    names[SYMENGINE_ATANH] = <span class="stringliteral">&quot;atanh&quot;</span>;</div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>    names[SYMENGINE_ACOTH] = <span class="stringliteral">&quot;acoth&quot;</span>;</div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>    names[SYMENGINE_ASECH] = <span class="stringliteral">&quot;asech&quot;</span>;</div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;lambertw&quot;</span>;</div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;zeta&quot;</span>;</div>
-<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;dirichlet_eta&quot;</span>;</div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;kroneckerdelta&quot;</span>;</div>
-<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;levicivita&quot;</span>;</div>
-<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>    names[SYMENGINE_FLOOR] = <span class="stringliteral">&quot;floor&quot;</span>;</div>
-<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>    names[SYMENGINE_CEILING] = <span class="stringliteral">&quot;ceiling&quot;</span>;</div>
-<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;truncate&quot;</span>;</div>
-<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>    names[SYMENGINE_ERF] = <span class="stringliteral">&quot;erf&quot;</span>;</div>
-<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>    names[SYMENGINE_ERFC] = <span class="stringliteral">&quot;erfc&quot;</span>;</div>
-<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;lowergamma&quot;</span>;</div>
-<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;uppergamma&quot;</span>;</div>
-<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;beta&quot;</span>;</div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>    names[SYMENGINE_LOGGAMMA] = <span class="stringliteral">&quot;loggamma&quot;</span>;</div>
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>    names[SYMENGINE_POLYGAMMA] = <span class="stringliteral">&quot;polygamma&quot;</span>;</div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;gamma&quot;</span>;</div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>    names[SYMENGINE_ABS] = <span class="stringliteral">&quot;abs&quot;</span>;</div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    names[SYMENGINE_MAX] = <span class="stringliteral">&quot;max&quot;</span>;</div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    names[SYMENGINE_MIN] = <span class="stringliteral">&quot;min&quot;</span>;</div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>    names[SYMENGINE_SIGN] = <span class="stringliteral">&quot;sign&quot;</span>;</div>
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>    names[SYMENGINE_CONJUGATE] = <span class="stringliteral">&quot;conjugate&quot;</span>;</div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;primepi&quot;</span>;</div>
-<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>    names[SYMENGINE_PRIMORIAL] = <span class="stringliteral">&quot;primorial&quot;</span>;</div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>    names[SYMENGINE_UNEVALUATED_EXPR] = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>    <span class="keywordflow">return</span> names;</div>
-<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>}</div>
-<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span> </div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::print_mul()</div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>{</div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;*&quot;</span>;</div>
-<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>}</div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span> </div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span><span class="keywordtype">void</span> JuliaStrPrinter::_print_pow(<a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;o,</div>
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>                                 <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a,</div>
-<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>                                 <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>{</div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*a, *E)) {</div>
-<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>        o &lt;&lt; <span class="stringliteral">&quot;exp(&quot;</span> &lt;&lt; apply(b) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*b, *<a class="code hl_function" href="namespaceSymEngine.html#a95903c12d6aeba7f070da7207a17149d">rational</a>(1, 2))) {</div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>        o &lt;&lt; <span class="stringliteral">&quot;sqrt(&quot;</span> &lt;&lt; apply(a) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>        o &lt;&lt; parenthesizeLE(a, PrecedenceEnum::Pow);</div>
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>        o &lt;&lt; <span class="stringliteral">&quot;^&quot;</span>;</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>        o &lt;&lt; parenthesizeLE(b, PrecedenceEnum::Pow);</div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>    }</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>}</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span> </div>
-<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span><span class="keywordtype">void</span> JuliaStrPrinter::bvisit(<span class="keyword">const</span> Constant &amp;x)</div>
-<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>{</div>
-<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *E)) {</div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>        str_ = <span class="stringliteral">&quot;exp(1)&quot;</span>;</div>
-<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>        str_ = x.get_name();</div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>        <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/transform.html">std::transform</a>(str_.begin(), str_.end(), str_.begin(), ::tolower);</div>
+<div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    Precedence prec;</div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    <span class="keywordflow">if</span> (prec.getPrecedence(x) &lt;= precedenceEnum) {</div>
+<div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span>        <span class="keywordflow">return</span> parenthesize(apply(x));</div>
+<div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>        <span class="keywordflow">return</span> apply(x);</div>
+<div class="line"><a id="l01059" name="l01059"></a><span class="lineno"> 1059</span>    }</div>
+<div class="line"><a id="l01060" name="l01060"></a><span class="lineno"> 1060</span>}</div>
+<div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span> </div>
+<div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::parenthesize(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;x)</div>
+<div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>{</div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;(&quot;</span> + x + <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span>}</div>
+<div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span> </div>
+<div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::apply(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
+<div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>{</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>    b-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>    <span class="keywordflow">return</span> str_;</div>
+<div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>}</div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span> </div>
+<div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::apply(<span class="keyword">const</span> Basic &amp;b)</div>
+<div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>{</div>
+<div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>    b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span>    <span class="keywordflow">return</span> str_;</div>
+<div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span>}</div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span> </div>
+<div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> init_str_printer_names()</div>
+<div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>{</div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names;</div>
+<div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span>    names.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/assign.html">assign</a>(<a class="code hl_enumvalue" href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093a6677a8664e199a5336ef27d6af28a9d2">TypeID_Count</a>, <span class="stringliteral">&quot;&quot;</span>);</div>
+<div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span>    names[SYMENGINE_SIN] = <span class="stringliteral">&quot;sin&quot;</span>;</div>
+<div class="line"><a id="l01084" name="l01084"></a><span class="lineno"> 1084</span>    names[SYMENGINE_COS] = <span class="stringliteral">&quot;cos&quot;</span>;</div>
+<div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>    names[SYMENGINE_TAN] = <span class="stringliteral">&quot;tan&quot;</span>;</div>
+<div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span>    names[SYMENGINE_COT] = <span class="stringliteral">&quot;cot&quot;</span>;</div>
+<div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span>    names[SYMENGINE_CSC] = <span class="stringliteral">&quot;csc&quot;</span>;</div>
+<div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    names[SYMENGINE_SEC] = <span class="stringliteral">&quot;sec&quot;</span>;</div>
+<div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>    names[SYMENGINE_ASIN] = <span class="stringliteral">&quot;asin&quot;</span>;</div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    names[SYMENGINE_ACOS] = <span class="stringliteral">&quot;acos&quot;</span>;</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    names[SYMENGINE_ASEC] = <span class="stringliteral">&quot;asec&quot;</span>;</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>    names[SYMENGINE_ACSC] = <span class="stringliteral">&quot;acsc&quot;</span>;</div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    names[SYMENGINE_ATAN] = <span class="stringliteral">&quot;atan&quot;</span>;</div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    names[SYMENGINE_ACOT] = <span class="stringliteral">&quot;acot&quot;</span>;</div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>    names[SYMENGINE_ATAN2] = <span class="stringliteral">&quot;atan2&quot;</span>;</div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>    names[SYMENGINE_SINH] = <span class="stringliteral">&quot;sinh&quot;</span>;</div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>    names[SYMENGINE_CSCH] = <span class="stringliteral">&quot;csch&quot;</span>;</div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>    names[SYMENGINE_COSH] = <span class="stringliteral">&quot;cosh&quot;</span>;</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>    names[SYMENGINE_SECH] = <span class="stringliteral">&quot;sech&quot;</span>;</div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>    names[SYMENGINE_TANH] = <span class="stringliteral">&quot;tanh&quot;</span>;</div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>    names[SYMENGINE_COTH] = <span class="stringliteral">&quot;coth&quot;</span>;</div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    names[SYMENGINE_ASINH] = <span class="stringliteral">&quot;asinh&quot;</span>;</div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>    names[SYMENGINE_ACSCH] = <span class="stringliteral">&quot;acsch&quot;</span>;</div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>    names[SYMENGINE_ACOSH] = <span class="stringliteral">&quot;acosh&quot;</span>;</div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>    names[SYMENGINE_ATANH] = <span class="stringliteral">&quot;atanh&quot;</span>;</div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>    names[SYMENGINE_ACOTH] = <span class="stringliteral">&quot;acoth&quot;</span>;</div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>    names[SYMENGINE_ASECH] = <span class="stringliteral">&quot;asech&quot;</span>;</div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
+<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>    names[SYMENGINE_LAMBERTW] = <span class="stringliteral">&quot;lambertw&quot;</span>;</div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>    names[SYMENGINE_ZETA] = <span class="stringliteral">&quot;zeta&quot;</span>;</div>
+<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>    names[SYMENGINE_DIRICHLET_ETA] = <span class="stringliteral">&quot;dirichlet_eta&quot;</span>;</div>
+<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>    names[SYMENGINE_KRONECKERDELTA] = <span class="stringliteral">&quot;kroneckerdelta&quot;</span>;</div>
+<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>    names[SYMENGINE_LEVICIVITA] = <span class="stringliteral">&quot;levicivita&quot;</span>;</div>
+<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>    names[SYMENGINE_FLOOR] = <span class="stringliteral">&quot;floor&quot;</span>;</div>
+<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>    names[SYMENGINE_CEILING] = <span class="stringliteral">&quot;ceiling&quot;</span>;</div>
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>    names[SYMENGINE_TRUNCATE] = <span class="stringliteral">&quot;truncate&quot;</span>;</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    names[SYMENGINE_ERF] = <span class="stringliteral">&quot;erf&quot;</span>;</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    names[SYMENGINE_ERFC] = <span class="stringliteral">&quot;erfc&quot;</span>;</div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>    names[SYMENGINE_LOWERGAMMA] = <span class="stringliteral">&quot;lowergamma&quot;</span>;</div>
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>    names[SYMENGINE_UPPERGAMMA] = <span class="stringliteral">&quot;uppergamma&quot;</span>;</div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>    names[SYMENGINE_BETA] = <span class="stringliteral">&quot;beta&quot;</span>;</div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>    names[SYMENGINE_LOGGAMMA] = <span class="stringliteral">&quot;loggamma&quot;</span>;</div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>    names[SYMENGINE_LOG] = <span class="stringliteral">&quot;log&quot;</span>;</div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>    names[SYMENGINE_POLYGAMMA] = <span class="stringliteral">&quot;polygamma&quot;</span>;</div>
+<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>    names[SYMENGINE_GAMMA] = <span class="stringliteral">&quot;gamma&quot;</span>;</div>
+<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>    names[SYMENGINE_ABS] = <span class="stringliteral">&quot;abs&quot;</span>;</div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>    names[SYMENGINE_MAX] = <span class="stringliteral">&quot;max&quot;</span>;</div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>    names[SYMENGINE_MIN] = <span class="stringliteral">&quot;min&quot;</span>;</div>
+<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>    names[SYMENGINE_SIGN] = <span class="stringliteral">&quot;sign&quot;</span>;</div>
+<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>    names[SYMENGINE_CONJUGATE] = <span class="stringliteral">&quot;conjugate&quot;</span>;</div>
+<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>    names[SYMENGINE_PRIMEPI] = <span class="stringliteral">&quot;primepi&quot;</span>;</div>
+<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>    names[SYMENGINE_PRIMORIAL] = <span class="stringliteral">&quot;primorial&quot;</span>;</div>
+<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>    names[SYMENGINE_UNEVALUATED_EXPR] = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>    <span class="keywordflow">return</span> names;</div>
+<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>}</div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span> </div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::print_mul()</div>
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>{</div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;*&quot;</span>;</div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>}</div>
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span> </div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span><span class="keywordtype">void</span> JuliaStrPrinter::_print_pow(<a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;o,</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>                                 <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a,</div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>                                 <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b)</div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>{</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*a, *E)) {</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>        o &lt;&lt; <span class="stringliteral">&quot;exp(&quot;</span> &lt;&lt; apply(b) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*b, *<a class="code hl_function" href="namespaceSymEngine.html#a95903c12d6aeba7f070da7207a17149d">rational</a>(1, 2))) {</div>
+<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>        o &lt;&lt; <span class="stringliteral">&quot;sqrt(&quot;</span> &lt;&lt; apply(a) &lt;&lt; <span class="stringliteral">&quot;)&quot;</span>;</div>
+<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>        o &lt;&lt; parenthesizeLE(a, PrecedenceEnum::Pow);</div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>        o &lt;&lt; <span class="stringliteral">&quot;^&quot;</span>;</div>
+<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>        o &lt;&lt; parenthesizeLE(b, PrecedenceEnum::Pow);</div>
 <div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>    }</div>
 <div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>}</div>
 <div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span> </div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span><span class="keywordtype">void</span> JuliaStrPrinter::bvisit(<span class="keyword">const</span> NaN &amp;x)</div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span><span class="keywordtype">void</span> JuliaStrPrinter::bvisit(<span class="keyword">const</span> Constant &amp;x)</div>
 <div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>{</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>    str_ = <span class="stringliteral">&quot;NaN&quot;</span>;</div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>}</div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span> </div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span><span class="keywordtype">void</span> JuliaStrPrinter::bvisit(<span class="keyword">const</span> Infty &amp;x)</div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>{</div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>    <span class="keywordflow">if</span> (x.is_negative_infinity())</div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>        s &lt;&lt; <span class="stringliteral">&quot;-Inf&quot;</span>;</div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (x.is_positive_infinity())</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>        s &lt;&lt; <span class="stringliteral">&quot;Inf&quot;</span>;</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>        s &lt;&lt; <span class="stringliteral">&quot;zoo&quot;</span>;</div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>}</div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span> </div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> JuliaStrPrinter::get_imag_symbol()</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>{</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;im&quot;</span>;</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>}</div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span> </div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::get_imag_symbol()</div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>{</div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;I&quot;</span>;</div>
+<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>    <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(x, *E)) {</div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>        str_ = <span class="stringliteral">&quot;exp(1)&quot;</span>;</div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>        str_ = x.get_name();</div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>        <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/transform.html">std::transform</a>(str_.begin(), str_.end(), str_.begin(), ::tolower);</div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>    }</div>
+<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>}</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span> </div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span><span class="keywordtype">void</span> JuliaStrPrinter::bvisit(<span class="keyword">const</span> NaN &amp;x)</div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>{</div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>    str_ = <span class="stringliteral">&quot;NaN&quot;</span>;</div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>}</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span> </div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span><span class="keywordtype">void</span> JuliaStrPrinter::bvisit(<span class="keyword">const</span> Infty &amp;x)</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>{</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>    <span class="keywordflow">if</span> (x.is_negative_infinity())</div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>        s &lt;&lt; <span class="stringliteral">&quot;-Inf&quot;</span>;</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (x.is_positive_infinity())</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>        s &lt;&lt; <span class="stringliteral">&quot;Inf&quot;</span>;</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>        s &lt;&lt; <span class="stringliteral">&quot;zoo&quot;</span>;</div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>    str_ = s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
 <div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>}</div>
 <div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span> </div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> JuliaStrPrinter::get_imag_symbol()</div>
 <div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>{</div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>    StrPrinter strPrinter;</div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>}</div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span> </div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> DenseMatrix &amp;x)</div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>{</div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>    <span class="keywordflow">return</span> x.__str__();</div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>}</div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span> </div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> julia_str(<span class="keyword">const</span> Basic &amp;x)</div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>{</div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>    JuliaStrPrinter strPrinter;</div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>}</div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;im&quot;</span>;</div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>}</div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span> </div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StrPrinter::get_imag_symbol()</div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>{</div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;I&quot;</span>;</div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>}</div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span> </div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>{</div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>    StrPrinter strPrinter;</div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>}</div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span> </div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str(<span class="keyword">const</span> DenseMatrix &amp;x)</div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>{</div>
+<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span>    <span class="keywordflow">return</span> x.__str__();</div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>}</div>
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span> </div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span><a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> julia_str(<span class="keyword">const</span> Basic &amp;x)</div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>{</div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>    JuliaStrPrinter strPrinter;</div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>    <span class="keywordflow">return</span> strPrinter.apply(x);</div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>}</div>
+<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aassign_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/assign.html">std::vector::assign</a></div><div class="ttdeci">T assign(T... args)</div></div>
 <div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>

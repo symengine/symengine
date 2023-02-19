@@ -605,7 +605,7 @@ Additional Inherited Members</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="pow_8cpp_source.html#l00017">17</a> of file <a class="el" href="pow_8cpp_source.html">pow.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   18</span>{</div>
 <div class="line"><span class="lineno">   19</span>    <span class="comment">// e.g. 0**x</span></div>
-<div class="line"><span class="lineno">   20</span>    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(base) and down_cast&lt;const Integer &amp;&gt;(base).<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>()) {</div>
+<div class="line"><span class="lineno">   20</span>    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(base) and down_cast&lt;const Integer &amp;&gt;(base).is_zero()) {</div>
 <div class="line"><span class="lineno">   21</span>        <span class="keywordflow">if</span> (<a class="code hl_function" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)) {</div>
 <div class="line"><span class="lineno">   22</span>            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">   23</span>        } <span class="keywordflow">else</span> {</div>
@@ -650,7 +650,6 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   62</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1998df939d1b28e0356a43f33433d9d3"><div class="ttname"><a href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">SymEngine::is_number_and_zero</a></div><div class="ttdeci">bool is_number_and_zero(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00139">number.h:139</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

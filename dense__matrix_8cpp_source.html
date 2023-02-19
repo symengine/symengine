@@ -214,7 +214,7 @@ $(function() {
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    <span class="keyword">auto</span> A = *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    tribool cur = tribool::tritrue;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : m_) {</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        cur = and_tribool(cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*e));</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>        cur = and_tribool(cur, SymEngine::is_zero(*e));</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>        <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>            <span class="keywordflow">return</span> cur;</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>        }</div>
@@ -236,7 +236,7 @@ $(function() {
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> j = 0; j &lt; ncols; j++) {</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keyword">auto</span> &amp;e = m_[offset];</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                cur = and_tribool(cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*e));</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                cur = and_tribool(cur, SymEngine::is_zero(*e));</div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                    <span class="keywordflow">return</span> cur;</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                }</div>
@@ -273,7 +273,7 @@ $(function() {
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                <span class="keyword">auto</span> &amp;e = m_[i * ncols + j];</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>                <span class="keyword">auto</span> &amp;e2 = m_[j * ncols + i];</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                cur = and_tribool(cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, e2)));</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>                cur = and_tribool(cur, SymEngine::is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, e2)));</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            }</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>            <span class="keywordflow">if</span> (is_false(cur)) {</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>                <span class="keywordflow">return</span> cur;</div>
@@ -297,7 +297,7 @@ $(function() {
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            <span class="keywordflow">if</span> (j != i) {</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                <span class="keyword">auto</span> &amp;e2 = m_[j * ncols + i];</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                cur = and_tribool(</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                    cur, <a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(e2))));</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                    cur, SymEngine::is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(e, <a class="code hl_function" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(e2))));</div>
 <div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>                cur = and_tribool(cur, SymEngine::is_real(*e));</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            }</div>
@@ -1203,7 +1203,7 @@ $(function() {
 <div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span><span class="keywordtype">unsigned</span> pivot(DenseMatrix &amp;B, <span class="keywordtype">unsigned</span> r, <span class="keywordtype">unsigned</span> c)</div>
 <div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>{</div>
 <div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> k = r; k &lt; B.row_; k++) {</div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>        <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*(B.m_[k * B.col_ + c])))) {</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>        <span class="keywordflow">if</span> (!is_true(is_zero(*(B.m_[k * B.col_ + c])))) {</div>
 <div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>            <span class="keywordflow">return</span> k;</div>
 <div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>        }</div>
 <div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    }</div>
@@ -1221,7 +1221,7 @@ $(function() {
 <div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>    }</div>
 <div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>    <span class="keywordtype">unsigned</span> row = 0;</div>
 <div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> col = 0; col &lt; b.col_ &amp;&amp; row &lt; b.row_; col++) {</div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>        <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*b.get(row, col))))</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>        <span class="keywordflow">if</span> (is_true(is_zero(*b.get(row, col))))</div>
 <div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>            <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>        pivot_cols.push_back(col);</div>
 <div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>        <span class="keywordflow">if</span> (row == 0 and normalize_last) {</div>
@@ -1559,7 +1559,7 @@ $(function() {
 <div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>                LU.m_[i * n + j] = <a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(LU.m_[i * n + j],</div>
 <div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>                                       <a class="code hl_function" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(LU.m_[i * n + k], LU.m_[k * n + j]));</div>
 <div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>            }</div>
-<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>            <span class="keywordflow">if</span> (pivot == -1 and !is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*LU.m_[i * n + j])))</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>            <span class="keywordflow">if</span> (pivot == -1 and !is_true(is_zero(*LU.m_[i * n + j])))</div>
 <div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>                pivot = i;</div>
 <div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>        }</div>
 <div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>        <span class="keywordflow">if</span> (pivot == -1)</div>
@@ -1829,9 +1829,9 @@ $(function() {
 <div class="line"><a id="l01722" name="l01722"></a><span class="lineno"> 1722</span>        RCP&lt;const Basic&gt; d;</div>
 <div class="line"><a id="l01723" name="l01723"></a><span class="lineno"> 1723</span> </div>
 <div class="line"><a id="l01724" name="l01724"></a><span class="lineno"> 1724</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> k = 0; k &lt; n - 1; k++) {</div>
-<div class="line"><a id="l01725" name="l01725"></a><span class="lineno"> 1725</span>            <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*B.m_[k * n + k]))) {</div>
+<div class="line"><a id="l01725" name="l01725"></a><span class="lineno"> 1725</span>            <span class="keywordflow">if</span> (is_true(is_zero(*B.m_[k * n + k]))) {</div>
 <div class="line"><a id="l01726" name="l01726"></a><span class="lineno"> 1726</span>                <span class="keywordflow">for</span> (i = k + 1; i &lt; n; i++)</div>
-<div class="line"><a id="l01727" name="l01727"></a><span class="lineno"> 1727</span>                    <span class="keywordflow">if</span> (!is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*B.m_[i * n + k]))) {</div>
+<div class="line"><a id="l01727" name="l01727"></a><span class="lineno"> 1727</span>                    <span class="keywordflow">if</span> (!is_true(is_zero(*B.m_[i * n + k]))) {</div>
 <div class="line"><a id="l01728" name="l01728"></a><span class="lineno"> 1728</span>                        row_exchange_dense(B, i, k);</div>
 <div class="line"><a id="l01729" name="l01729"></a><span class="lineno"> 1729</span>                        <a class="code hl_function" href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">sign</a> *= -1;</div>
 <div class="line"><a id="l01730" name="l01730"></a><span class="lineno"> 1730</span>                        <span class="keywordflow">break</span>;</div>
@@ -2183,7 +2183,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_a8a0fa36d4fbff063bb37b9893c4e6354"><div class="ttname"><a href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">SymEngine::insert</a></div><div class="ttdeci">void insert(T1 &amp;m, const T2 &amp;first, const T3 &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00083">dict.h:83</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a9ce338c90dc059360ee606ed5c614f72"><div class="ttname"><a href="namespaceSymEngine.html#a9ce338c90dc059360ee606ed5c614f72">SymEngine::symbol</a></div><div class="ttdeci">RCP&lt; const Symbol &gt; symbol(const std::string &amp;name)</div><div class="ttdoc">inline version to return Symbol</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00082">symbol.h:82</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac104d13f145416cd18c61b0121017eb6"><div class="ttname"><a href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">SymEngine::expand</a></div><div class="ttdeci">RCP&lt; const Basic &gt; expand(const RCP&lt; const Basic &gt; &amp;self, bool deep=true)</div><div class="ttdoc">Expands self</div><div class="ttdef"><b>Definition:</b> <a href="expand_8cpp_source.html#l00369">expand.cpp:369</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ae459921e036f06869a8d53b0f019c0c3"><div class="ttname"><a href="namespaceSymEngine.html#ae459921e036f06869a8d53b0f019c0c3">SymEngine::ssubs</a></div><div class="ttdeci">RCP&lt; const Basic &gt; ssubs(const RCP&lt; const Basic &gt; &amp;x, const map_basic_basic &amp;subs_dict, bool cache=true)</div><div class="ttdoc">SymPy compatible subs.</div><div class="ttdef"><b>Definition:</b> <a href="subs_8h_source.html#l00550">subs.h:550</a></div></div>

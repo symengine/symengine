@@ -1,10 +1,10 @@
 <map id="/home/runner/work/symengine/symengine/symengine/series_generic.h" name="/home/runner/work/symengine/symengine/symengine/series_generic.h">
-<area shape="rect" id="node1" title=" " alt="" coords="545,5,767,60"/>
-<area shape="rect" id="node2" href="$uintpoly_8h.html" title=" " alt="" coords="556,108,756,133"/>
+<area shape="rect" id="node1" title=" " alt="" coords="544,5,765,60"/>
+<area shape="rect" id="node2" href="$uintpoly_8h.html" title=" " alt="" coords="555,108,755,133"/>
 <area shape="rect" id="node47" href="$uexprpoly_8h_source.html" title=" " alt="" coords="779,108,991,133"/>
 <area shape="rect" id="node49" href="$series_8h.html" title=" " alt="" coords="5,548,155,573"/>
-<area shape="rect" id="node3" href="$usymenginepoly_8h_source.html" title=" " alt="" coords="542,181,797,207"/>
-<area shape="rect" id="node4" href="$upolybase_8h_source.html" title=" " alt="" coords="561,255,777,280"/>
+<area shape="rect" id="node3" href="$usymenginepoly_8h_source.html" title=" " alt="" coords="541,181,795,207"/>
+<area shape="rect" id="node4" href="$upolybase_8h_source.html" title=" " alt="" coords="560,255,776,280"/>
 <area shape="rect" id="node5" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="1071,856,1215,881"/>
 <area shape="rect" id="node26" href="$pow_8h.html" title=" " alt="" coords="615,401,751,427"/>
 <area shape="rect" id="node38" href="$add_8h.html" title="Classes and functions relating to the binary operation of addition." alt="" coords="818,401,953,427"/>

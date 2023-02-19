@@ -580,7 +580,7 @@ Private Attributes</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="test__visitors_8cpp_source.html#l00481">481</a> of file <a class="el" href="test__visitors_8cpp_source.html">test_visitors.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  483</span>{</div>
-<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">if</span> (is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, assumptions_))) {</div>
+<div class="line"><span class="lineno">  484</span>    <span class="keywordflow">if</span> (is_true(is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, assumptions_))) {</div>
 <div class="line"><span class="lineno">  485</span>        <span class="comment">// exp == 0 =&gt; true</span></div>
 <div class="line"><span class="lineno">  486</span>        is_real_ = tribool::tritrue;</div>
 <div class="line"><span class="lineno">  487</span>        <span class="keywordflow">return</span>;</div>
@@ -600,7 +600,7 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  501</span>            is_real_ = tribool::indeterminate;</div>
 <div class="line"><span class="lineno">  502</span>        }</div>
 <div class="line"><span class="lineno">  503</span>    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_false(is_real_) &amp;&amp; is_true(is_complex(*base, assumptions_))</div>
-<div class="line"><span class="lineno">  504</span>               &amp;&amp; is_true(<a class="code hl_function" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1)), assumptions_))) {</div>
+<div class="line"><span class="lineno">  504</span>               &amp;&amp; is_true(is_zero(*<a class="code hl_function" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code hl_function" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(1)), assumptions_))) {</div>
 <div class="line"><span class="lineno">  505</span>        <span class="comment">// base is not real but complex and exp = 1 =&gt; false</span></div>
 <div class="line"><span class="lineno">  506</span>        is_real_ = tribool::trifalse;</div>
 <div class="line"><span class="lineno">  507</span>    } <span class="keywordflow">else</span> {</div>
@@ -609,7 +609,6 @@ Private Attributes</h2></td></tr>
 <div class="line"><span class="lineno">  510</span>}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
 </div><!-- fragment -->
 </div>
