@@ -1027,6 +1027,16 @@ void StrPrinter::bvisit(const Tuple &x)
     str_ = o.str();
 }
 
+void StrPrinter::bvisit(const IdentityMatrix &x)
+{
+    str_ = "I";
+}
+
+void StrPrinter::bvisit(const ZeroMatrix &x)
+{
+    str_ = "0";
+}
+
 std::string StrPrinter::parenthesizeLT(const RCP<const Basic> &x,
                                        PrecedenceEnum precedenceEnum)
 {

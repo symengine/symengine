@@ -112,6 +112,17 @@ public:
     void bvisit(const Beta &self);
     void bvisit(const Set &self);
     void bvisit(const Tuple &self);
+    void bvisit(const IdentityMatrix &self);
+    void bvisit(const ZeroMatrix &self);
+    void bvisit(const MatrixSymbol &self);
+    void bvisit(const DiagonalMatrix &self);
+    void bvisit(const ImmutableDenseMatrix &self);
+    void bvisit(const MatrixAdd &self);
+    void bvisit(const HadamardProduct &self);
+    void bvisit(const MatrixMul &self);
+    void bvisit(const ConjugateMatrix &self);
+    void bvisit(const Transpose &self);
+    void bvisit(const Trace &self);
     void bvisit(const Boolean &self);
     void bvisit(const GaloisField &self);
     void bvisit(const Piecewise &self);

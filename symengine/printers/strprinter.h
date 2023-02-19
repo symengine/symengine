@@ -192,6 +192,8 @@ public:
 #endif
     void bvisit(const NumberWrapper &x);
     void bvisit(const Tuple &x);
+    void bvisit(const IdentityMatrix &x);
+    void bvisit(const ZeroMatrix &x);
 
     std::string apply(const RCP<const Basic> &b);
     std::string apply(const vec_basic &v);
