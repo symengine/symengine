@@ -220,6 +220,7 @@ set(HEADERS
     printers/strprinter.h
     printers/latex.h
     printers/unicode.h
+    printers/stringbox.h
     printers.h
     rational.h
     real_double.h
@@ -259,6 +260,7 @@ set(HEADERS
     matrices/hadamard_product.h
     matrices/matrix_mul.h
     matrices/conjugate_matrix.h
+    matrices/size.h
     matrices/transpose.h
     matrices/trace.h
 )
