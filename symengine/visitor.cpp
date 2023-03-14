@@ -205,25 +205,18 @@ void TransformVisitor::bvisit(const Piecewise &x)
 {
     auto branch_cond_pairs = x.get_vec();
     PiecewiseVec new_pairs;
-    bool changed = false;
     for (const auto &branch_cond : branch_cond_pairs) {
         auto branch = branch_cond.first;
         auto cond = branch_cond.second;
         auto new_branch = apply(branch);
-        // decltype(cond) new_cond =
-        // rcp_static_cast<some-kind-of-boolean-cse-symbol?>(apply(rcp_static_cast<const
-        // Basic>(cond)));
-        if (!changed) {
-            changed |= !eq(*new_branch, *branch);
-            // changed |= !eq(*new_cond, *cond);
+        auto new_cond = apply(cond);
+        if (!is_a_Boolean(*new_cond)) {
+            new_cond = Eq(new_cond, boolTrue);
         }
-        new_pairs.push_back({new_branch, cond /*new_cond*/});
+        new_pairs.push_back(
+            {new_branch, rcp_static_cast<const Boolean>(new_cond)});
     }
-    if (changed) {
-        result_ = piecewise(new_pairs);
-    } else {
-        result_ = x.rcp_from_this();
-    }
+    result_ = piecewise(new_pairs);
 }
 
 void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
