@@ -262,6 +262,7 @@ public:
     }
 
     void bvisit(const MultiArgFunction &x);
+    void bvisit(const Piecewise &x);
 };
 
 template <typename Derived, typename First, typename... Rest>

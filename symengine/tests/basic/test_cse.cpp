@@ -1,19 +1,25 @@
 #include "catch.hpp"
+#include "symengine/dict.h"
+#include "symengine/logic.h"
 
 #include <symengine/basic.h>
 #include <symengine/pow.h>
 #include <symengine/add.h>
 #include <symengine/mul.h>
 #include <symengine/functions.h>
+#include <symengine/logic.h>
 
 using SymEngine::add;
 using SymEngine::Basic;
+using SymEngine::boolTrue;
 using SymEngine::cse;
 using SymEngine::div;
+using SymEngine::Gt;
 using SymEngine::integer;
 using SymEngine::mul;
 using SymEngine::neg;
 using SymEngine::one;
+using SymEngine::piecewise;
 using SymEngine::pow;
 using SymEngine::RCP;
 using SymEngine::sin;
@@ -301,6 +307,17 @@ TEST_CASE("CSE: simple", "[cse]")
         cse(substs, reduced, {e1, e2, e3, e4});
         REQUIRE(unified_eq(substs, {{x0, add(x, y)}, {x1, add(x0, z)}}));
         REQUIRE(unified_eq(reduced, {x0, add(i2, x0), x1, add(i3, x1)}));
+    }
+    {
+        auto pw1 = piecewise(
+            {{pow(add(x, y), i2), Gt(x, y)}, {sqrt(add(x, y)), boolTrue}});
+
+        vec_pair substs;
+        vec_basic reduced;
+        cse(substs, reduced, {pw1});
+        REQUIRE(unified_eq(substs, {{x0, add(x, y)}}));
+        REQUIRE(unified_eq(reduced, {piecewise({{pow(x0, i2), Gt(x, y)},
+                                                {sqrt(x0), boolTrue}})}));
     }
 }
 
