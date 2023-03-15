@@ -437,7 +437,7 @@ public:
           excluded_symbols(excluded_symbols_), replacements(replacements_)
     {
     }
-    virtual RCP<const Basic> apply(const RCP<const Basic> &orig_expr)
+    RCP<const Basic> apply(const RCP<const Basic> &orig_expr) override
     {
         RCP<const Basic> expr = orig_expr;
         if (is_a_Atom(*expr)) {

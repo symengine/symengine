@@ -43,7 +43,7 @@ public:
     URatPoly(const RCP<const Basic> &var, URatDict &&dict);
 
     //! \return size of the hash
-    hash_t __hash__() const;
+    hash_t __hash__() const override;
 }; // URatPoly
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined

@@ -26,20 +26,20 @@ public:
     //! Constructor of RealDouble class
     explicit RealDouble(double i);
     //! \return size of the hash
-    virtual hash_t __hash__() const;
+    hash_t __hash__() const override;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
+    bool __eq__(const Basic &o) const override;
+    int compare(const Basic &o) const override;
     //! \return `true` if positive
-    inline virtual bool is_positive() const
+    inline bool is_positive() const override
     {
         return i > 0;
     }
     //! \return `true` if negative
-    inline virtual bool is_negative() const
+    inline bool is_negative() const override
     {
         return i < 0;
     }
@@ -49,33 +49,33 @@ public:
         return i;
     }
     //! \return `true` if this number is an exact number
-    inline virtual bool is_exact() const
+    inline bool is_exact() const override
     {
         return false;
     }
     //! Get `Evaluate` singleton to evaluate numerically
-    virtual Evaluate &get_eval() const;
+    Evaluate &get_eval() const override;
 
     //! \return `true` when equals to 0
-    virtual bool is_zero() const
+    bool is_zero() const override
     {
         return this->i == 0.0;
     }
     //! \return `false`
     // A double is not exactly equal to `1`
-    virtual bool is_one() const
+    bool is_one() const override
     {
         return false;
     }
     //! \return `false`
     // A double is not exactly equal to `-1`
-    virtual bool is_minus_one() const
+    bool is_minus_one() const override
     {
         return false;
     }
     //! \returns `false`
     // False is returned because a RealDouble cannot have a imaginary part
-    virtual bool is_complex() const
+    bool is_complex() const override
     {
         return false;
     }
@@ -117,7 +117,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `addreal`
-    virtual RCP<const Number> add(const Number &other) const
+    RCP<const Number> add(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return addreal(down_cast<const Rational &>(other));
@@ -169,7 +169,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `subreal`
-    virtual RCP<const Number> sub(const Number &other) const
+    RCP<const Number> sub(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return subreal(down_cast<const Rational &>(other));
@@ -213,7 +213,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `subreal`
-    virtual RCP<const Number> rsub(const Number &other) const
+    RCP<const Number> rsub(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return rsubreal(down_cast<const Rational &>(other));
@@ -266,7 +266,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `mulreal`
-    virtual RCP<const Number> mul(const Number &other) const
+    RCP<const Number> mul(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return mulreal(down_cast<const Rational &>(other));
@@ -318,7 +318,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `divreal`
-    virtual RCP<const Number> div(const Number &other) const
+    RCP<const Number> div(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return divreal(down_cast<const Rational &>(other));
@@ -362,7 +362,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `divreal`
-    virtual RCP<const Number> rdiv(const Number &other) const
+    RCP<const Number> rdiv(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return rdivreal(down_cast<const Rational &>(other));
@@ -419,7 +419,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `powreal`
-    virtual RCP<const Number> pow(const Number &other) const
+    RCP<const Number> pow(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return powreal(down_cast<const Rational &>(other));
@@ -471,7 +471,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `powreal`
-    virtual RCP<const Number> rpow(const Number &other) const
+    RCP<const Number> rpow(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return rpowreal(down_cast<const Rational &>(other));

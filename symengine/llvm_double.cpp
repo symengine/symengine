@@ -316,16 +316,16 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         std::string &ss_;
         MemoryBufferRefCallback(std::string &ss) : ss_(ss) {}
 
-        virtual void notifyObjectCompiled(const llvm::Module *M,
-                                          llvm::MemoryBufferRef obj)
+        void notifyObjectCompiled(const llvm::Module *M,
+                                  llvm::MemoryBufferRef obj) override
         {
             const char *c = obj.getBufferStart();
             // Saving the object code in a std::string
             ss_.assign(c, obj.getBufferSize());
         }
 
-        virtual std::unique_ptr<llvm::MemoryBuffer>
-        getObject(const llvm::Module *M)
+        std::unique_ptr<llvm::MemoryBuffer>
+        getObject(const llvm::Module *M) override
         {
             return NULL;
         }
@@ -1007,15 +1007,15 @@ void LLVMVisitor::loads(const std::string &s)
 
     public:
         MCJITObjectLoader(const std::string &s) : s_(s) {}
-        virtual void notifyObjectCompiled(const llvm::Module *M,
-                                          llvm::MemoryBufferRef obj)
+        void notifyObjectCompiled(const llvm::Module *M,
+                                  llvm::MemoryBufferRef obj) override
         {
         }
 
         // No need to check M because there is only one function
         // Return it after reading from the file.
-        virtual std::unique_ptr<llvm::MemoryBuffer>
-        getObject(const llvm::Module *M)
+        std::unique_ptr<llvm::MemoryBuffer>
+        getObject(const llvm::Module *M) override
         {
             return llvm::MemoryBuffer::getMemBufferCopy(llvm::StringRef(s_));
         }

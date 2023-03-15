@@ -41,7 +41,7 @@ public:
         : SymEngineException(msg, SYMENGINE_RUNTIME_ERROR)
     {
     }
-    const char *what() const throw()
+    const char *what() const throw() override
     {
         return m_msg.c_str();
     }

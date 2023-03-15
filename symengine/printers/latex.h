@@ -61,13 +61,13 @@ private:
 protected:
     void print_with_args(const Basic &x, const std::string &join,
                          std::ostringstream &s);
-    virtual std::string parenthesize(const std::string &expr);
-    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                            const RCP<const Basic> &b);
-    virtual bool split_mul_coef();
-    virtual std::string print_mul();
-    virtual std::string print_div(const std::string &num,
-                                  const std::string &den, bool paren);
+    std::string parenthesize(const std::string &expr) override;
+    void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                    const RCP<const Basic> &b) override;
+    bool split_mul_coef() override;
+    std::string print_mul() override;
+    std::string print_div(const std::string &num, const std::string &den,
+                          bool paren) override;
 };
 } // namespace SymEngine
 

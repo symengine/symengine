@@ -13,8 +13,8 @@ public:
     using StrPrinter::apply;
     using StrPrinter::bvisit;
     static const std::vector<std::string> names_;
-    virtual void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                            const RCP<const Basic> &b);
+    void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
+                    const RCP<const Basic> &b) override;
     void bvisit(const BooleanAtom &x);
     void bvisit(const And &x);
     void bvisit(const Or &x);
