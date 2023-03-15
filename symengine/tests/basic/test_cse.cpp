@@ -319,6 +319,19 @@ TEST_CASE("CSE: simple", "[cse]")
         REQUIRE(unified_eq(reduced, {piecewise({{pow(x0, i2), Gt(x, y)},
                                                 {sqrt(x0), boolTrue}})}));
     }
+    {
+        auto pw2 = piecewise({{pow(x, i2), Gt(add(x, y), i2)},
+                              {sqrt(y), Gt(add(x, y), i3)},
+                              {sqrt(x), boolTrue}});
+
+        vec_pair substs;
+        vec_basic reduced;
+        cse(substs, reduced, {pw2});
+        REQUIRE(unified_eq(substs, {{x0, add(x, y)}}));
+        REQUIRE(unified_eq(reduced, {piecewise({{pow(x, i2), Gt(x0, i2)},
+                                                {sqrt(y), Gt(x0, i3)},
+                                                {sqrt(x), boolTrue}})}));
+    }
 }
 
 TEST_CASE("CSE: regression test gh-1463", "[cse]")
