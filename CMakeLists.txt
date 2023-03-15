@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 2.8.12)
+
 if (POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
 endif()
+
+if (POLICY CMP0057)
+    cmake_policy(SET CMP0057 NEW) # needed for llvm >= 16
+endif ()
+
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
 
 project(symengine LANGUAGES C CXX)
@@ -435,7 +441,6 @@ if (WITH_LLVM)
     include_directories(SYSTEM ${LLVM_INCLUDE_DIRS})
     set(HAVE_SYMENGINE_LLVM yes)
     set(PKGS ${PKGS} "LLVM")
-    message("LLVM VERSION: ${LLVM_VERSION}")
 endif()
 
 # BENCHMARKS
@@ -753,6 +758,7 @@ endif()
 
 message("WITH_LLVM: ${WITH_LLVM}")
 if (WITH_LLVM)
+    message("LLVM VERSION: ${LLVM_VERSION}")
     message("LLVM_INCLUDE_DIRS: ${LLVM_INCLUDE_DIRS}")
 endif()
 

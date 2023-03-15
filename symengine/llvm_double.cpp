@@ -632,7 +632,11 @@ void LLVMVisitor::bvisit(const Piecewise &x)
     then_bb = builder->GetInsertBlock();
 
     // Emit else block.
+#if (LLVM_VERSION_MAJOR < 16)
     function->getBasicBlockList().push_back(else_bb);
+#else
+    function->insert(function->end(), else_bb);
+#endif
     builder->SetInsertPoint(else_bb);
     llvm::Value *else_value = apply(*pw->get_vec().back().first);
     builder->CreateBr(merge_bb);
@@ -642,7 +646,11 @@ void LLVMVisitor::bvisit(const Piecewise &x)
     else_bb = builder->GetInsertBlock();
 
     // Emit merge block.
+#if (LLVM_VERSION_MAJOR < 16)
     function->getBasicBlockList().push_back(merge_bb);
+#else
+    function->insert(function->end(), merge_bb);
+#endif
     builder->SetInsertPoint(merge_bb);
     llvm::PHINode *phi_node
         = builder->CreatePHI(get_float_type(&mod->getContext()), 2);
