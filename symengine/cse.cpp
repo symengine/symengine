@@ -501,7 +501,8 @@ void tree_cse(vec_pair &replacements, vec_basic &reduced_exprs,
 
     std::function<void(RCP<const Basic> & expr)> find_repeated;
     find_repeated = [&](RCP<const Basic> expr) -> void {
-        if (is_a_Number(*expr)) {
+        // Do not replace atoms
+        if (is_a_Number(*expr) or is_a<BooleanAtom>(*expr)) {
             return;
         }
 
