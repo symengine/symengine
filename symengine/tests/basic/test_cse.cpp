@@ -1,6 +1,4 @@
 #include "catch.hpp"
-#include "symengine/dict.h"
-#include "symengine/logic.h"
 
 #include <symengine/basic.h>
 #include <symengine/pow.h>
