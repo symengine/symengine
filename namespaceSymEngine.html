@@ -5182,12 +5182,12 @@ template&lt;typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00312">312</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  313</span>{</div>
-<div class="line"><span class="lineno">  314</span>    <a class="code hl_class" href="classSymEngine_1_1AtomsVisitor.html">AtomsVisitor</a>&lt;Args...&gt; visitor;</div>
-<div class="line"><span class="lineno">  315</span>    <span class="keywordflow">return</span> visitor.apply(b);</div>
-<div class="line"><span class="lineno">  316</span>};</div>
-<div class="ttc" id="aclassSymEngine_1_1AtomsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1AtomsVisitor.html">SymEngine::AtomsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00279">visitor.h:280</a></div></div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00313">313</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  314</span>{</div>
+<div class="line"><span class="lineno">  315</span>    <a class="code hl_class" href="classSymEngine_1_1AtomsVisitor.html">AtomsVisitor</a>&lt;Args...&gt; visitor;</div>
+<div class="line"><span class="lineno">  316</span>    <span class="keywordflow">return</span> visitor.apply(b);</div>
+<div class="line"><span class="lineno">  317</span>};</div>
+<div class="ttc" id="aclassSymEngine_1_1AtomsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1AtomsVisitor.html">SymEngine::AtomsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00280">visitor.h:281</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -7097,15 +7097,15 @@ template&lt;class Archive , class T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00296">296</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  297</span>{</div>
-<div class="line"><span class="lineno">  298</span>    <a class="code hl_class" href="classSymEngine_1_1CountOpsVisitor.html">CountOpsVisitor</a> v;</div>
-<div class="line"><span class="lineno">  299</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : a) {</div>
-<div class="line"><span class="lineno">  300</span>        v.apply(*p);</div>
-<div class="line"><span class="lineno">  301</span>    }</div>
-<div class="line"><span class="lineno">  302</span>    <span class="keywordflow">return</span> v.count;</div>
-<div class="line"><span class="lineno">  303</span>}</div>
-<div class="ttc" id="aclassSymEngine_1_1CountOpsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1CountOpsVisitor.html">SymEngine::CountOpsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00318">visitor.h:319</a></div></div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00314">314</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  315</span>{</div>
+<div class="line"><span class="lineno">  316</span>    <a class="code hl_class" href="classSymEngine_1_1CountOpsVisitor.html">CountOpsVisitor</a> v;</div>
+<div class="line"><span class="lineno">  317</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : a) {</div>
+<div class="line"><span class="lineno">  318</span>        v.apply(*p);</div>
+<div class="line"><span class="lineno">  319</span>    }</div>
+<div class="line"><span class="lineno">  320</span>    <span class="keywordflow">return</span> v.count;</div>
+<div class="line"><span class="lineno">  321</span>}</div>
+<div class="ttc" id="aclassSymEngine_1_1CountOpsVisitor_html"><div class="ttname"><a href="classSymEngine_1_1CountOpsVisitor.html">SymEngine::CountOpsVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00319">visitor.h:320</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -7352,14 +7352,14 @@ template&lt;class Archive , class T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="cse_8cpp_source.html#l00546">546</a> of file <a class="el" href="cse_8cpp_source.html">cse.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  548</span>{</div>
-<div class="line"><span class="lineno">  549</span>    <span class="comment">// Find other optimization opportunities.</span></div>
-<div class="line"><span class="lineno">  550</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_basic</a> opt_subs = opt_cse(exprs);</div>
-<div class="line"><span class="lineno">  551</span> </div>
-<div class="line"><span class="lineno">  552</span>    <span class="comment">// Main CSE algorithm.</span></div>
-<div class="line"><span class="lineno">  553</span>    tree_cse(replacements, reduced_exprs, exprs, opt_subs);</div>
-<div class="line"><span class="lineno">  554</span>}</div>
+<p class="definition">Definition at line <a class="el" href="cse_8cpp_source.html#l00547">547</a> of file <a class="el" href="cse_8cpp_source.html">cse.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  549</span>{</div>
+<div class="line"><span class="lineno">  550</span>    <span class="comment">// Find other optimization opportunities.</span></div>
+<div class="line"><span class="lineno">  551</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_basic</a> opt_subs = opt_cse(exprs);</div>
+<div class="line"><span class="lineno">  552</span> </div>
+<div class="line"><span class="lineno">  553</span>    <span class="comment">// Main CSE algorithm.</span></div>
+<div class="line"><span class="lineno">  554</span>    tree_cse(replacements, reduced_exprs, exprs, opt_subs);</div>
+<div class="line"><span class="lineno">  555</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -27705,17 +27705,17 @@ template&lt;typename Container , template&lt; typename X, typename Y &gt; class 
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00204">204</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  205</span>{</div>
-<div class="line"><span class="lineno">  206</span>    b.accept(v);</div>
-<div class="line"><span class="lineno">  207</span>    <span class="keywordflow">if</span> (v.stop_ or v.local_stop_)</div>
-<div class="line"><span class="lineno">  208</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  209</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : b.<a class="code hl_function" href="classSymEngine_1_1Basic.html#a6544293931047d6d9097e81f7d306cae">get_args</a>()) {</div>
-<div class="line"><span class="lineno">  210</span>        preorder_traversal_local_stop(*p, v);</div>
-<div class="line"><span class="lineno">  211</span>        <span class="keywordflow">if</span> (v.stop_)</div>
-<div class="line"><span class="lineno">  212</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  213</span>    }</div>
-<div class="line"><span class="lineno">  214</span>}</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8cpp_source.html#l00222">222</a> of file <a class="el" href="visitor_8cpp_source.html">visitor.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  223</span>{</div>
+<div class="line"><span class="lineno">  224</span>    b.accept(v);</div>
+<div class="line"><span class="lineno">  225</span>    <span class="keywordflow">if</span> (v.stop_ or v.local_stop_)</div>
+<div class="line"><span class="lineno">  226</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  227</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : b.<a class="code hl_function" href="classSymEngine_1_1Basic.html#a6544293931047d6d9097e81f7d306cae">get_args</a>()) {</div>
+<div class="line"><span class="lineno">  228</span>        preorder_traversal_local_stop(*p, v);</div>
+<div class="line"><span class="lineno">  229</span>        <span class="keywordflow">if</span> (v.stop_)</div>
+<div class="line"><span class="lineno">  230</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  231</span>    }</div>
+<div class="line"><span class="lineno">  232</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -33727,47 +33727,48 @@ template&lt;typename T &gt; </div>
 <div class="line"><span class="lineno">  501</span> </div>
 <div class="line"><span class="lineno">  502</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/utility/functional/function.html">std::function</a>&lt;void(RCP&lt;const Basic&gt; &amp; expr)&gt; find_repeated;</div>
 <div class="line"><span class="lineno">  503</span>    find_repeated = [&amp;](RCP&lt;const Basic&gt; expr) -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><span class="lineno">  504</span>        <span class="keywordflow">if</span> (is_a_Number(*expr)) {</div>
-<div class="line"><span class="lineno">  505</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  506</span>        }</div>
-<div class="line"><span class="lineno">  507</span> </div>
-<div class="line"><span class="lineno">  508</span>        <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*expr)) {</div>
-<div class="line"><span class="lineno">  509</span>            excluded_symbols.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr);</div>
-<div class="line"><span class="lineno">  510</span>        }</div>
-<div class="line"><span class="lineno">  511</span> </div>
-<div class="line"><span class="lineno">  512</span>        <span class="keywordflow">if</span> (seen_subexp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/find.html">find</a>(expr) != seen_subexp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>()) {</div>
-<div class="line"><span class="lineno">  513</span>            to_eliminate.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr);</div>
-<div class="line"><span class="lineno">  514</span>            <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">  515</span>        }</div>
-<div class="line"><span class="lineno">  516</span> </div>
-<div class="line"><span class="lineno">  517</span>        seen_subexp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr);</div>
-<div class="line"><span class="lineno">  518</span> </div>
-<div class="line"><span class="lineno">  519</span>        <span class="keyword">auto</span> iter = opt_subs.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(expr);</div>
-<div class="line"><span class="lineno">  520</span>        <span class="keywordflow">if</span> (iter != opt_subs.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
-<div class="line"><span class="lineno">  521</span>            expr = iter-&gt;second;</div>
-<div class="line"><span class="lineno">  522</span>        }</div>
-<div class="line"><span class="lineno">  523</span> </div>
-<div class="line"><span class="lineno">  524</span>        vec_basic args = expr-&gt;get_args();</div>
-<div class="line"><span class="lineno">  525</span> </div>
-<div class="line"><span class="lineno">  526</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;arg : args) {</div>
-<div class="line"><span class="lineno">  527</span>            find_repeated(arg);</div>
-<div class="line"><span class="lineno">  528</span>        }</div>
-<div class="line"><span class="lineno">  529</span>    };</div>
-<div class="line"><span class="lineno">  530</span> </div>
-<div class="line"><span class="lineno">  531</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> e : exprs) {</div>
-<div class="line"><span class="lineno">  532</span>        find_repeated(e);</div>
-<div class="line"><span class="lineno">  533</span>    }</div>
-<div class="line"><span class="lineno">  534</span> </div>
-<div class="line"><span class="lineno">  535</span>    umap_basic_basic subs;</div>
-<div class="line"><span class="lineno">  536</span> </div>
-<div class="line"><span class="lineno">  537</span>    RebuildVisitor rebuild_visitor(subs, opt_subs, to_eliminate,</div>
-<div class="line"><span class="lineno">  538</span>                                   excluded_symbols, replacements);</div>
-<div class="line"><span class="lineno">  539</span> </div>
-<div class="line"><span class="lineno">  540</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : exprs) {</div>
-<div class="line"><span class="lineno">  541</span>        <span class="keyword">auto</span> reduced_e = rebuild_visitor.apply(e);</div>
-<div class="line"><span class="lineno">  542</span>        reduced_exprs.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(reduced_e);</div>
-<div class="line"><span class="lineno">  543</span>    }</div>
-<div class="line"><span class="lineno">  544</span>}</div>
+<div class="line"><span class="lineno">  504</span>        <span class="comment">// Do not replace atoms</span></div>
+<div class="line"><span class="lineno">  505</span>        <span class="keywordflow">if</span> (is_a_Number(*expr) or is_a&lt;BooleanAtom&gt;(*expr)) {</div>
+<div class="line"><span class="lineno">  506</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  507</span>        }</div>
+<div class="line"><span class="lineno">  508</span> </div>
+<div class="line"><span class="lineno">  509</span>        <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*expr)) {</div>
+<div class="line"><span class="lineno">  510</span>            excluded_symbols.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr);</div>
+<div class="line"><span class="lineno">  511</span>        }</div>
+<div class="line"><span class="lineno">  512</span> </div>
+<div class="line"><span class="lineno">  513</span>        <span class="keywordflow">if</span> (seen_subexp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/find.html">find</a>(expr) != seen_subexp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>()) {</div>
+<div class="line"><span class="lineno">  514</span>            to_eliminate.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr);</div>
+<div class="line"><span class="lineno">  515</span>            <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">  516</span>        }</div>
+<div class="line"><span class="lineno">  517</span> </div>
+<div class="line"><span class="lineno">  518</span>        seen_subexp.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(expr);</div>
+<div class="line"><span class="lineno">  519</span> </div>
+<div class="line"><span class="lineno">  520</span>        <span class="keyword">auto</span> iter = opt_subs.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(expr);</div>
+<div class="line"><span class="lineno">  521</span>        <span class="keywordflow">if</span> (iter != opt_subs.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
+<div class="line"><span class="lineno">  522</span>            expr = iter-&gt;second;</div>
+<div class="line"><span class="lineno">  523</span>        }</div>
+<div class="line"><span class="lineno">  524</span> </div>
+<div class="line"><span class="lineno">  525</span>        vec_basic args = expr-&gt;get_args();</div>
+<div class="line"><span class="lineno">  526</span> </div>
+<div class="line"><span class="lineno">  527</span>        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;arg : args) {</div>
+<div class="line"><span class="lineno">  528</span>            find_repeated(arg);</div>
+<div class="line"><span class="lineno">  529</span>        }</div>
+<div class="line"><span class="lineno">  530</span>    };</div>
+<div class="line"><span class="lineno">  531</span> </div>
+<div class="line"><span class="lineno">  532</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> e : exprs) {</div>
+<div class="line"><span class="lineno">  533</span>        find_repeated(e);</div>
+<div class="line"><span class="lineno">  534</span>    }</div>
+<div class="line"><span class="lineno">  535</span> </div>
+<div class="line"><span class="lineno">  536</span>    umap_basic_basic subs;</div>
+<div class="line"><span class="lineno">  537</span> </div>
+<div class="line"><span class="lineno">  538</span>    RebuildVisitor rebuild_visitor(subs, opt_subs, to_eliminate,</div>
+<div class="line"><span class="lineno">  539</span>                                   excluded_symbols, replacements);</div>
+<div class="line"><span class="lineno">  540</span> </div>
+<div class="line"><span class="lineno">  541</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : exprs) {</div>
+<div class="line"><span class="lineno">  542</span>        <span class="keyword">auto</span> reduced_e = rebuild_visitor.apply(e);</div>
+<div class="line"><span class="lineno">  543</span>        reduced_exprs.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(reduced_e);</div>
+<div class="line"><span class="lineno">  544</span>    }</div>
+<div class="line"><span class="lineno">  545</span>}</div>
 <div class="ttc" id="afunction_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/functional/function.html">std::function</a></div></div>
 </div><!-- fragment -->
 </div>

@@ -156,7 +156,7 @@ Data Fields</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename... Args&gt;<br />
 class SymEngine::AtomsVisitor&lt; Args &gt;</div>
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00279">279</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00280">280</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a51a80df914e86f06beb88c77723b7b9d" name="a51a80df914e86f06beb88c77723b7b9d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a51a80df914e86f06beb88c77723b7b9d">&#9670;&#160;</a></span>apply()</h2>
@@ -184,11 +184,11 @@ template&lt;typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00304">304</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  305</span>    {</div>
-<div class="line"><span class="lineno">  306</span>        b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  307</span>        <span class="keywordflow">return</span> s;</div>
-<div class="line"><span class="lineno">  308</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00305">305</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  306</span>    {</div>
+<div class="line"><span class="lineno">  307</span>        b.accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  308</span>        <span class="keywordflow">return</span> s;</div>
+<div class="line"><span class="lineno">  309</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -218,15 +218,15 @@ template&lt;typename... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00294">294</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  295</span>    {</div>
-<div class="line"><span class="lineno">  296</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_args()) {</div>
-<div class="line"><span class="lineno">  297</span>            <span class="keyword">auto</span> iter = visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_set/insert.html">insert</a>(p-&gt;rcp_from_this());</div>
-<div class="line"><span class="lineno">  298</span>            <span class="keywordflow">if</span> (iter.second) {</div>
-<div class="line"><span class="lineno">  299</span>                p-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><span class="lineno">  300</span>            }</div>
-<div class="line"><span class="lineno">  301</span>        }</div>
-<div class="line"><span class="lineno">  302</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00295">295</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  296</span>    {</div>
+<div class="line"><span class="lineno">  297</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : x.get_args()) {</div>
+<div class="line"><span class="lineno">  298</span>            <span class="keyword">auto</span> iter = visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_set/insert.html">insert</a>(p-&gt;rcp_from_this());</div>
+<div class="line"><span class="lineno">  299</span>            <span class="keywordflow">if</span> (iter.second) {</div>
+<div class="line"><span class="lineno">  300</span>                p-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">  301</span>            }</div>
+<div class="line"><span class="lineno">  302</span>        }</div>
+<div class="line"><span class="lineno">  303</span>    }</div>
 <div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_set/insert.html">std::unordered_set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 </div><!-- fragment -->
 </div>
@@ -259,12 +259,12 @@ template&lt;typename T , typename  = enable_if_t&lt;is_base_of_multiple&lt;T, Ar
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00287">287</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  288</span>    {</div>
-<div class="line"><span class="lineno">  289</span>        s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(x.rcp_from_this());</div>
-<div class="line"><span class="lineno">  290</span>        visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_set/insert.html">insert</a>(x.rcp_from_this());</div>
-<div class="line"><span class="lineno">  291</span>        bvisit((<span class="keyword">const</span> Basic &amp;)x);</div>
-<div class="line"><span class="lineno">  292</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00288">288</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  289</span>    {</div>
+<div class="line"><span class="lineno">  290</span>        s.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(x.rcp_from_this());</div>
+<div class="line"><span class="lineno">  291</span>        visited.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/unordered_set/insert.html">insert</a>(x.rcp_from_this());</div>
+<div class="line"><span class="lineno">  292</span>        bvisit((<span class="keyword">const</span> Basic &amp;)x);</div>
+<div class="line"><span class="lineno">  293</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -283,7 +283,7 @@ template&lt;typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00282">282</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00283">283</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 
 </div>
 </div>
@@ -301,7 +301,7 @@ template&lt;typename... Args&gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00283">283</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="visitor_8h_source.html#l00284">284</a> of file <a class="el" href="visitor_8h_source.html">visitor.h</a>.</p>
 
 </div>
 </div>
