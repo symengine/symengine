@@ -326,8 +326,8 @@ TEST_CASE("CSE: simple", "[cse]")
         vec_basic reduced;
         cse(substs, reduced, {pw2});
         REQUIRE(unified_eq(substs, {{x0, add(x, y)}}));
-        REQUIRE(unified_eq(reduced, {piecewise({{pow(x, i2), Gt(x0, i2)},
-                                                {sqrt(y), Gt(x0, i3)},
+        REQUIRE(unified_eq(reduced, {piecewise({{pow(x, i2), Gt(x0, i3)},
+                                                {sqrt(y), Gt(x0, i2)},
                                                 {sqrt(x), boolTrue}})}));
     }
 }
