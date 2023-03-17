@@ -318,8 +318,8 @@ TEST_CASE("CSE: simple", "[cse]")
                                                 {sqrt(x0), boolTrue}})}));
     }
     {
-        auto pw2 = piecewise({{pow(x, i2), Gt(add(x, y), i2)},
-                              {sqrt(y), Gt(add(x, y), i3)},
+        auto pw2 = piecewise({{pow(x, i2), Gt(add(x, y), i3)},
+                              {sqrt(y), Gt(add(x, y), i2)},
                               {sqrt(x), boolTrue}});
 
         vec_pair substs;
