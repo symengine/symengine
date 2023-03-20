@@ -141,10 +141,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a50862d819c765e12fb2714b6f7fdc9c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JuliaStrPrinter.html#a50862d819c765e12fb2714b6f7fdc9c7">_print_pow</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;o, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;a, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b)</td></tr>
-<tr class="separator:a50862d819c765e12fb2714b6f7fdc9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0069f3ee2975ecc4c3720ae41b11087a"><td class="memItemLeft" align="right" valign="top">virtual <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JuliaStrPrinter.html#a0069f3ee2975ecc4c3720ae41b11087a">get_imag_symbol</a> ()</td></tr>
-<tr class="separator:a0069f3ee2975ecc4c3720ae41b11087a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c6719bf6dd56c5ec5903f6219982e2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JuliaStrPrinter.html#a4c6719bf6dd56c5ec5903f6219982e2d">_print_pow</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;o, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;a, const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;b) override</td></tr>
+<tr class="separator:a4c6719bf6dd56c5ec5903f6219982e2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2d34001d89aaa41ccbccae8f7bcde06"><td class="memItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JuliaStrPrinter.html#ac2d34001d89aaa41ccbccae8f7bcde06">get_imag_symbol</a> () override</td></tr>
+<tr class="separator:ac2d34001d89aaa41ccbccae8f7bcde06"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab815f6f6b9a7c70b60d2b465649d8620"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JuliaStrPrinter.html#ab815f6f6b9a7c70b60d2b465649d8620">bvisit</a> (const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &amp;x)</td></tr>
 <tr class="separator:ab815f6f6b9a7c70b60d2b465649d8620"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad17b1c9a767e1bcf06268f0e5b5cab50"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JuliaStrPrinter.html#ad17b1c9a767e1bcf06268f0e5b5cab50">bvisit</a> (const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &amp;x)</td></tr>
@@ -402,8 +402,8 @@ Additional Inherited Members</h2></td></tr>
 <div class="textblock">
 <p class="definition">Definition at line <a class="el" href="strprinter_8h_source.html#l00203">203</a> of file <a class="el" href="strprinter_8h_source.html">strprinter.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a50862d819c765e12fb2714b6f7fdc9c7" name="a50862d819c765e12fb2714b6f7fdc9c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a50862d819c765e12fb2714b6f7fdc9c7">&#9670;&#160;</a></span>_print_pow()</h2>
+<a id="a4c6719bf6dd56c5ec5903f6219982e2d" name="a4c6719bf6dd56c5ec5903f6219982e2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c6719bf6dd56c5ec5903f6219982e2d">&#9670;&#160;</a></span>_print_pow()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -437,7 +437,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -2214,8 +2214,8 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a0069f3ee2975ecc4c3720ae41b11087a" name="a0069f3ee2975ecc4c3720ae41b11087a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0069f3ee2975ecc4c3720ae41b11087a">&#9670;&#160;</a></span>get_imag_symbol()</h2>
+<a id="ac2d34001d89aaa41ccbccae8f7bcde06" name="ac2d34001d89aaa41ccbccae8f7bcde06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2d34001d89aaa41ccbccae8f7bcde06">&#9670;&#160;</a></span>get_imag_symbol()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2232,7 +2232,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

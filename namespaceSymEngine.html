@@ -5533,8 +5533,8 @@ template&lt;typename... Args&gt; </div>
 <div class="line"><span class="lineno">  148</span>    mp_bin_ui(f, n.<a class="code hl_function" href="classSymEngine_1_1Integer.html#a0a7f55abb94df0cbfa2c248f4545cacc">as_integer_class</a>(), k);</div>
 <div class="line"><span class="lineno">  149</span>    <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
 <div class="line"><span class="lineno">  150</span>}</div>
-<div class="ttc" id="aclassSymEngine_1_1Integer_html_a0a7f55abb94df0cbfa2c248f4545cacc"><div class="ttname"><a href="classSymEngine_1_1Integer.html#a0a7f55abb94df0cbfa2c248f4545cacc">SymEngine::Integer::as_integer_class</a></div><div class="ttdeci">const integer_class &amp; as_integer_class() const</div><div class="ttdoc">Convert to integer_class.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00048">integer.h:48</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Integer_html_a0a7f55abb94df0cbfa2c248f4545cacc"><div class="ttname"><a href="classSymEngine_1_1Integer.html#a0a7f55abb94df0cbfa2c248f4545cacc">SymEngine::Integer::as_integer_class</a></div><div class="ttdeci">const integer_class &amp; as_integer_class() const</div><div class="ttdoc">Convert to integer_class.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00045">integer.h:45</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -14490,10 +14490,10 @@ template&lt;typename T1 , typename T2 , typename T3 &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Integer&gt; from integer_class </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integer_8h_source.html#l00206">206</a> of file <a class="el" href="integer_8h_source.html">integer.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  207</span>{</div>
-<div class="line"><span class="lineno">  208</span>    <span class="keywordflow">return</span> make_rcp&lt;const Integer&gt;(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(i));</div>
-<div class="line"><span class="lineno">  209</span>}</div>
+<p class="definition">Definition at line <a class="el" href="integer_8h_source.html#l00203">203</a> of file <a class="el" href="integer_8h_source.html">integer.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  204</span>{</div>
+<div class="line"><span class="lineno">  205</span>    <span class="keywordflow">return</span> make_rcp&lt;const Integer&gt;(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(i));</div>
+<div class="line"><span class="lineno">  206</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -14524,10 +14524,10 @@ template&lt;typename T &gt; </div>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>RCP&lt;const Integer&gt; from integral values </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="integer_8h_source.html#l00200">200</a> of file <a class="el" href="integer_8h_source.html">integer.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  201</span>{</div>
-<div class="line"><span class="lineno">  202</span>    <span class="keywordflow">return</span> make_rcp&lt;const Integer&gt;(integer_class(i));</div>
-<div class="line"><span class="lineno">  203</span>}</div>
+<p class="definition">Definition at line <a class="el" href="integer_8h_source.html#l00197">197</a> of file <a class="el" href="integer_8h_source.html">integer.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  198</span>{</div>
+<div class="line"><span class="lineno">  199</span>    <span class="keywordflow">return</span> make_rcp&lt;const Integer&gt;(integer_class(i));</div>
+<div class="line"><span class="lineno">  200</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -24954,7 +24954,7 @@ template&lt;typename Poly &gt; </div>
 <div class="line"><span class="lineno"> 1429</span>    _crt_cartesian(roots, rem, moduli);</div>
 <div class="line"><span class="lineno"> 1430</span>    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a>(roots.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), roots.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), <a class="code hl_struct" href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a>());</div>
 <div class="line"><span class="lineno"> 1431</span>}</div>
-<div class="ttc" id="astructSymEngine_1_1RCPIntegerKeyLess_html"><div class="ttname"><a href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a></div><div class="ttdoc">less operator (&lt;) for Integers</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00188">integer.h:188</a></div></div>
+<div class="ttc" id="astructSymEngine_1_1RCPIntegerKeyLess_html"><div class="ttname"><a href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a></div><div class="ttdoc">less operator (&lt;) for Integers</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00185">integer.h:185</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -29697,10 +29697,10 @@ template&lt;class Archive &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="serialize-cereal_8h_source.html#l00255">255</a> of file <a class="el" href="serialize-cereal_8h_source.html">serialize-cereal.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  256</span>{</div>
-<div class="line"><span class="lineno">  257</span>    ar(b.<a class="code hl_function" href="classSymEngine_1_1FunctionSymbol.html#a0a7901d846d83400fbe54245e4385fff">get_name</a>(), b.<a class="code hl_function" href="classSymEngine_1_1MultiArgFunction.html#a7df8b2e0e3868a53c3004f0948f71c41">get_args</a>());</div>
+<div class="line"><span class="lineno">  257</span>    ar(b.<a class="code hl_function" href="classSymEngine_1_1FunctionSymbol.html#a0a7901d846d83400fbe54245e4385fff">get_name</a>(), b.<a class="code hl_function" href="classSymEngine_1_1MultiArgFunction.html#abf6c43e7c9676774e918f4f29923cd1e">get_args</a>());</div>
 <div class="line"><span class="lineno">  258</span>}</div>
 <div class="ttc" id="aclassSymEngine_1_1FunctionSymbol_html_a0a7901d846d83400fbe54245e4385fff"><div class="ttname"><a href="classSymEngine_1_1FunctionSymbol.html#a0a7901d846d83400fbe54245e4385fff">SymEngine::FunctionSymbol::get_name</a></div><div class="ttdeci">const std::string &amp; get_name() const</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00654">functions.h:654</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1MultiArgFunction_html_a7df8b2e0e3868a53c3004f0948f71c41"><div class="ttname"><a href="classSymEngine_1_1MultiArgFunction.html#a7df8b2e0e3868a53c3004f0948f71c41">SymEngine::MultiArgFunction::get_args</a></div><div class="ttdeci">virtual vec_basic get_args() const</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00159">functions.h:159</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1MultiArgFunction_html_abf6c43e7c9676774e918f4f29923cd1e"><div class="ttname"><a href="classSymEngine_1_1MultiArgFunction.html#abf6c43e7c9676774e918f4f29923cd1e">SymEngine::MultiArgFunction::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00159">functions.h:159</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -30086,7 +30086,7 @@ template&lt;class Archive &gt; </div>
 
 <p class="definition">Definition at line <a class="el" href="serialize-cereal_8h_source.html#l00250">250</a> of file <a class="el" href="serialize-cereal_8h_source.html">serialize-cereal.h</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  251</span>{</div>
-<div class="line"><span class="lineno">  252</span>    ar(b.<a class="code hl_function" href="classSymEngine_1_1MultiArgFunction.html#a7df8b2e0e3868a53c3004f0948f71c41">get_args</a>());</div>
+<div class="line"><span class="lineno">  252</span>    ar(b.<a class="code hl_function" href="classSymEngine_1_1MultiArgFunction.html#abf6c43e7c9676774e918f4f29923cd1e">get_args</a>());</div>
 <div class="line"><span class="lineno">  253</span>}</div>
 </div><!-- fragment -->
 </div>

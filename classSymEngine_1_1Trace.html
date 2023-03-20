@@ -140,10 +140,10 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae33c29cf54e22879f8d159a3de3c5651"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#ae33c29cf54e22879f8d159a3de3c5651">Trace</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1MatrixExpr.html">MatrixExpr</a> &gt; &amp;arg)</td></tr>
 <tr class="separator:ae33c29cf54e22879f8d159a3de3c5651"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a822fe8d45a6f86ecad260c50bf5cec27"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#a822fe8d45a6f86ecad260c50bf5cec27">accept</a> (<a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v) const</td></tr>
-<tr class="separator:a822fe8d45a6f86ecad260c50bf5cec27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a489998bd75eaba396ad87e17ce5b2cc2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#a489998bd75eaba396ad87e17ce5b2cc2">accept</a> (<a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;v) const</td></tr>
-<tr class="separator:a489998bd75eaba396ad87e17ce5b2cc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cd43ef2465358f36f557b2643444e87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#a6cd43ef2465358f36f557b2643444e87">accept</a> (<a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v) const override</td></tr>
+<tr class="separator:a6cd43ef2465358f36f557b2643444e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a69a554702aea7fb62013a6f98851d598"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#a69a554702aea7fb62013a6f98851d598">accept</a> (<a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;v) const override</td></tr>
+<tr class="separator:a69a554702aea7fb62013a6f98851d598"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a69de332fa021849b8b24b616298eba32"><td class="memItemLeft" align="right" valign="top">hash_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#a69de332fa021849b8b24b616298eba32">__hash__</a> () const override</td></tr>
 <tr class="separator:a69de332fa021849b8b24b616298eba32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4439c85b8aef8285efd6a9e69965058"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Trace.html#aa4439c85b8aef8285efd6a9e69965058">__eq__</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) const override</td></tr>
@@ -363,8 +363,8 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a489998bd75eaba396ad87e17ce5b2cc2" name="a489998bd75eaba396ad87e17ce5b2cc2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a489998bd75eaba396ad87e17ce5b2cc2">&#9670;&#160;</a></span>accept() <span class="overload">[1/2]</span></h2>
+<a id="a69a554702aea7fb62013a6f98851d598" name="a69a554702aea7fb62013a6f98851d598"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69a554702aea7fb62013a6f98851d598">&#9670;&#160;</a></span>accept() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -373,7 +373,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SymEngine::Trace::accept </td>
+          <td class="memname">void SymEngine::Trace::accept </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
@@ -382,7 +382,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -391,8 +391,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a822fe8d45a6f86ecad260c50bf5cec27" name="a822fe8d45a6f86ecad260c50bf5cec27"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a822fe8d45a6f86ecad260c50bf5cec27">&#9670;&#160;</a></span>accept() <span class="overload">[2/2]</span></h2>
+<a id="a6cd43ef2465358f36f557b2643444e87" name="a6cd43ef2465358f36f557b2643444e87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cd43ef2465358f36f557b2643444e87">&#9670;&#160;</a></span>accept() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -401,7 +401,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SymEngine::Trace::accept </td>
+          <td class="memname">void SymEngine::Trace::accept </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
@@ -410,7 +410,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

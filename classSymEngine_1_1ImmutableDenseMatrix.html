@@ -143,10 +143,10 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa14f3abc89fc840c8499e9e517b63e8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#aa14f3abc89fc840c8499e9e517b63e8c">ImmutableDenseMatrix</a> (size_t m, size_t n, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;values)</td></tr>
 <tr class="separator:aa14f3abc89fc840c8499e9e517b63e8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5feabd61f774df0dd7fa0430387aee3d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#a5feabd61f774df0dd7fa0430387aee3d">accept</a> (<a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v) const</td></tr>
-<tr class="separator:a5feabd61f774df0dd7fa0430387aee3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3daf3f9caeb23a2db248b20af4a12b39"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#a3daf3f9caeb23a2db248b20af4a12b39">accept</a> (<a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;v) const</td></tr>
-<tr class="separator:a3daf3f9caeb23a2db248b20af4a12b39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a332d9592611c1c7766cb1d2bf350bfd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#a332d9592611c1c7766cb1d2bf350bfd4">accept</a> (<a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v) const override</td></tr>
+<tr class="separator:a332d9592611c1c7766cb1d2bf350bfd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa06f3b48683c877b279933a0c8c2323"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#aaa06f3b48683c877b279933a0c8c2323">accept</a> (<a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;v) const override</td></tr>
+<tr class="separator:aaa06f3b48683c877b279933a0c8c2323"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a413a53042608cd90d4d2399f9a5ae014"><td class="memItemLeft" align="right" valign="top">hash_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#a413a53042608cd90d4d2399f9a5ae014">__hash__</a> () const override</td></tr>
 <tr class="separator:a413a53042608cd90d4d2399f9a5ae014"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae63c47601339a0bd534f921d18a16ff2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ImmutableDenseMatrix.html#ae63c47601339a0bd534f921d18a16ff2">__eq__</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) const override</td></tr>
@@ -410,8 +410,8 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a3daf3f9caeb23a2db248b20af4a12b39" name="a3daf3f9caeb23a2db248b20af4a12b39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3daf3f9caeb23a2db248b20af4a12b39">&#9670;&#160;</a></span>accept() <span class="overload">[1/2]</span></h2>
+<a id="aaa06f3b48683c877b279933a0c8c2323" name="aaa06f3b48683c877b279933a0c8c2323"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa06f3b48683c877b279933a0c8c2323">&#9670;&#160;</a></span>accept() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +420,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SymEngine::ImmutableDenseMatrix::accept </td>
+          <td class="memname">void SymEngine::ImmutableDenseMatrix::accept </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
@@ -429,7 +429,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -438,8 +438,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a5feabd61f774df0dd7fa0430387aee3d" name="a5feabd61f774df0dd7fa0430387aee3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5feabd61f774df0dd7fa0430387aee3d">&#9670;&#160;</a></span>accept() <span class="overload">[2/2]</span></h2>
+<a id="a332d9592611c1c7766cb1d2bf350bfd4" name="a332d9592611c1c7766cb1d2bf350bfd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a332d9592611c1c7766cb1d2bf350bfd4">&#9670;&#160;</a></span>accept() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -448,7 +448,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SymEngine::ImmutableDenseMatrix::accept </td>
+          <td class="memname">void SymEngine::ImmutableDenseMatrix::accept </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
@@ -457,7 +457,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -591,7 +591,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/insert.html">std::vector::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

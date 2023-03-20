@@ -663,7 +663,7 @@ $(function() {
 <div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span> </div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span><span class="keyword">class </span>EvaluateMPFR : <span class="keyword">public</span> Evaluate</div>
 <div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span>{</div>
-<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/sin.html">sin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00699" name="l00699"></a><span class="lineno">  699</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/sin.html">sin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00700" name="l00700"></a><span class="lineno">  700</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00701" name="l00701"></a><span class="lineno">  701</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00702" name="l00702"></a><span class="lineno">  702</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -671,7 +671,7 @@ $(function() {
 <div class="line"><a id="l00704" name="l00704"></a><span class="lineno">  704</span>                 MPFR_RNDN);</div>
 <div class="line"><a id="l00705" name="l00705"></a><span class="lineno">  705</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00706" name="l00706"></a><span class="lineno">  706</span>    }</div>
-<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/cos.html">cos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00707" name="l00707"></a><span class="lineno">  707</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/cos.html">cos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00708" name="l00708"></a><span class="lineno">  708</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00709" name="l00709"></a><span class="lineno">  709</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00710" name="l00710"></a><span class="lineno">  710</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -679,7 +679,7 @@ $(function() {
 <div class="line"><a id="l00712" name="l00712"></a><span class="lineno">  712</span>                 MPFR_RNDN);</div>
 <div class="line"><a id="l00713" name="l00713"></a><span class="lineno">  713</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00714" name="l00714"></a><span class="lineno">  714</span>    }</div>
-<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/tan.html">tan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00715" name="l00715"></a><span class="lineno">  715</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/tan.html">tan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00716" name="l00716"></a><span class="lineno">  716</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00717" name="l00717"></a><span class="lineno">  717</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00718" name="l00718"></a><span class="lineno">  718</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -687,7 +687,7 @@ $(function() {
 <div class="line"><a id="l00720" name="l00720"></a><span class="lineno">  720</span>                 MPFR_RNDN);</div>
 <div class="line"><a id="l00721" name="l00721"></a><span class="lineno">  721</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00722" name="l00722"></a><span class="lineno">  722</span>    }</div>
-<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a87b495de4d9aef4e2785d3414e6977aa">cot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00723" name="l00723"></a><span class="lineno">  723</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a87b495de4d9aef4e2785d3414e6977aa">cot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00724" name="l00724"></a><span class="lineno">  724</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -695,7 +695,7 @@ $(function() {
 <div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span>                 MPFR_RNDN);</div>
 <div class="line"><a id="l00729" name="l00729"></a><span class="lineno">  729</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00730" name="l00730"></a><span class="lineno">  730</span>    }</div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a1a35d45982072e8755a2b415bab129ba">sec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a1a35d45982072e8755a2b415bab129ba">sec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00733" name="l00733"></a><span class="lineno">  733</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00734" name="l00734"></a><span class="lineno">  734</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -703,7 +703,7 @@ $(function() {
 <div class="line"><a id="l00736" name="l00736"></a><span class="lineno">  736</span>                 MPFR_RNDN);</div>
 <div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00738" name="l00738"></a><span class="lineno">  738</span>    }</div>
-<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#aac2883235cc548f08ea23326353e0134">csc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00739" name="l00739"></a><span class="lineno">  739</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#aac2883235cc548f08ea23326353e0134">csc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00740" name="l00740"></a><span class="lineno">  740</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00741" name="l00741"></a><span class="lineno">  741</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00742" name="l00742"></a><span class="lineno">  742</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -711,7 +711,7 @@ $(function() {
 <div class="line"><a id="l00744" name="l00744"></a><span class="lineno">  744</span>                 MPFR_RNDN);</div>
 <div class="line"><a id="l00745" name="l00745"></a><span class="lineno">  745</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00746" name="l00746"></a><span class="lineno">  746</span>    }</div>
-<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/asin.html">asin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00747" name="l00747"></a><span class="lineno">  747</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/asin.html">asin</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00748" name="l00748"></a><span class="lineno">  748</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00749" name="l00749"></a><span class="lineno">  749</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00750" name="l00750"></a><span class="lineno">  750</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -730,7 +730,7 @@ $(function() {
 <div class="line"><a id="l00763" name="l00763"></a><span class="lineno">  763</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00764" name="l00764"></a><span class="lineno">  764</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00765" name="l00765"></a><span class="lineno">  765</span>    }</div>
-<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/acos.html">acos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00766" name="l00766"></a><span class="lineno">  766</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/acos.html">acos</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00767" name="l00767"></a><span class="lineno">  767</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00768" name="l00768"></a><span class="lineno">  768</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00769" name="l00769"></a><span class="lineno">  769</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -749,7 +749,7 @@ $(function() {
 <div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>    }</div>
-<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/atan.html">atan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00785" name="l00785"></a><span class="lineno">  785</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/atan.html">atan</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00786" name="l00786"></a><span class="lineno">  786</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00787" name="l00787"></a><span class="lineno">  787</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00788" name="l00788"></a><span class="lineno">  788</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -757,7 +757,7 @@ $(function() {
 <div class="line"><a id="l00790" name="l00790"></a><span class="lineno">  790</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span>    }</div>
-<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#aebcb782a4d69ba115c13a331bb5e4cba">acot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#aebcb782a4d69ba115c13a331bb5e4cba">acot</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -766,7 +766,7 @@ $(function() {
 <div class="line"><a id="l00799" name="l00799"></a><span class="lineno">  799</span>        mpfr_atan(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);</div>
 <div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span>    }</div>
-<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a770eb76ede26403354e4c1ae810c3eb9">asec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a770eb76ede26403354e4c1ae810c3eb9">asec</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -787,7 +787,7 @@ $(function() {
 <div class="line"><a id="l00820" name="l00820"></a><span class="lineno">  820</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00821" name="l00821"></a><span class="lineno">  821</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00822" name="l00822"></a><span class="lineno">  822</span>    }</div>
-<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a441485eec265e862086e257b24f39619">acsc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00823" name="l00823"></a><span class="lineno">  823</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a441485eec265e862086e257b24f39619">acsc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00824" name="l00824"></a><span class="lineno">  824</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00825" name="l00825"></a><span class="lineno">  825</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00826" name="l00826"></a><span class="lineno">  826</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -808,7 +808,7 @@ $(function() {
 <div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span>    }</div>
-<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/sinh.html">sinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00844" name="l00844"></a><span class="lineno">  844</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/sinh.html">sinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00845" name="l00845"></a><span class="lineno">  845</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00846" name="l00846"></a><span class="lineno">  846</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00847" name="l00847"></a><span class="lineno">  847</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -816,7 +816,7 @@ $(function() {
 <div class="line"><a id="l00849" name="l00849"></a><span class="lineno">  849</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00850" name="l00850"></a><span class="lineno">  850</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00851" name="l00851"></a><span class="lineno">  851</span>    }</div>
-<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#abaf2d363a25f737f66c43961a2c9b189">csch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00852" name="l00852"></a><span class="lineno">  852</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#abaf2d363a25f737f66c43961a2c9b189">csch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00853" name="l00853"></a><span class="lineno">  853</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -824,7 +824,7 @@ $(function() {
 <div class="line"><a id="l00857" name="l00857"></a><span class="lineno">  857</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00858" name="l00858"></a><span class="lineno">  858</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00859" name="l00859"></a><span class="lineno">  859</span>    }</div>
-<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/cosh.html">cosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00860" name="l00860"></a><span class="lineno">  860</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/cosh.html">cosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00861" name="l00861"></a><span class="lineno">  861</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00862" name="l00862"></a><span class="lineno">  862</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00863" name="l00863"></a><span class="lineno">  863</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -832,7 +832,7 @@ $(function() {
 <div class="line"><a id="l00865" name="l00865"></a><span class="lineno">  865</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span>    }</div>
-<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a4f5dc2e3fd1198f985c2dee59fbf848f">sech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a4f5dc2e3fd1198f985c2dee59fbf848f">sech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00869" name="l00869"></a><span class="lineno">  869</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00870" name="l00870"></a><span class="lineno">  870</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00871" name="l00871"></a><span class="lineno">  871</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -840,7 +840,7 @@ $(function() {
 <div class="line"><a id="l00873" name="l00873"></a><span class="lineno">  873</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00874" name="l00874"></a><span class="lineno">  874</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00875" name="l00875"></a><span class="lineno">  875</span>    }</div>
-<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/tanh.html">tanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00876" name="l00876"></a><span class="lineno">  876</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/tanh.html">tanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00877" name="l00877"></a><span class="lineno">  877</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00878" name="l00878"></a><span class="lineno">  878</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00879" name="l00879"></a><span class="lineno">  879</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -848,7 +848,7 @@ $(function() {
 <div class="line"><a id="l00881" name="l00881"></a><span class="lineno">  881</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00882" name="l00882"></a><span class="lineno">  882</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00883" name="l00883"></a><span class="lineno">  883</span>    }</div>
-<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a2a90d704dca9d038d809da659b455502">coth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00884" name="l00884"></a><span class="lineno">  884</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a2a90d704dca9d038d809da659b455502">coth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00885" name="l00885"></a><span class="lineno">  885</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00886" name="l00886"></a><span class="lineno">  886</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00887" name="l00887"></a><span class="lineno">  887</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -856,7 +856,7 @@ $(function() {
 <div class="line"><a id="l00889" name="l00889"></a><span class="lineno">  889</span>                  MPFR_RNDN);</div>
 <div class="line"><a id="l00890" name="l00890"></a><span class="lineno">  890</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00891" name="l00891"></a><span class="lineno">  891</span>    }</div>
-<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/asinh.html">asinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00892" name="l00892"></a><span class="lineno">  892</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/asinh.html">asinh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00893" name="l00893"></a><span class="lineno">  893</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00894" name="l00894"></a><span class="lineno">  894</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00895" name="l00895"></a><span class="lineno">  895</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -864,7 +864,7 @@ $(function() {
 <div class="line"><a id="l00897" name="l00897"></a><span class="lineno">  897</span>                   down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t(), MPFR_RNDN);</div>
 <div class="line"><a id="l00898" name="l00898"></a><span class="lineno">  898</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00899" name="l00899"></a><span class="lineno">  899</span>    }</div>
-<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a79d78569325a57c3da3ff4de95ff53dd">acsch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00900" name="l00900"></a><span class="lineno">  900</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a79d78569325a57c3da3ff4de95ff53dd">acsch</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00901" name="l00901"></a><span class="lineno">  901</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00902" name="l00902"></a><span class="lineno">  902</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00903" name="l00903"></a><span class="lineno">  903</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -873,7 +873,7 @@ $(function() {
 <div class="line"><a id="l00906" name="l00906"></a><span class="lineno">  906</span>        mpfr_asinh(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);</div>
 <div class="line"><a id="l00907" name="l00907"></a><span class="lineno">  907</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l00908" name="l00908"></a><span class="lineno">  908</span>    }</div>
-<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/acosh.html">acosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00909" name="l00909"></a><span class="lineno">  909</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/acosh.html">acosh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00910" name="l00910"></a><span class="lineno">  910</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00911" name="l00911"></a><span class="lineno">  911</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00912" name="l00912"></a><span class="lineno">  912</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -892,7 +892,7 @@ $(function() {
 <div class="line"><a id="l00925" name="l00925"></a><span class="lineno">  925</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00926" name="l00926"></a><span class="lineno">  926</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00927" name="l00927"></a><span class="lineno">  927</span>    }</div>
-<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/atanh.html">atanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00928" name="l00928"></a><span class="lineno">  928</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/atanh.html">atanh</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00929" name="l00929"></a><span class="lineno">  929</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00930" name="l00930"></a><span class="lineno">  930</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00931" name="l00931"></a><span class="lineno">  931</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -911,7 +911,7 @@ $(function() {
 <div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span>    }</div>
-<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a6d8a501171dfc0dae4f98450268d0ab3">acoth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a6d8a501171dfc0dae4f98450268d0ab3">acoth</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -932,7 +932,7 @@ $(function() {
 <div class="line"><a id="l00965" name="l00965"></a><span class="lineno">  965</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00966" name="l00966"></a><span class="lineno">  966</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00967" name="l00967"></a><span class="lineno">  967</span>    }</div>
-<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#adb505bfa00177f523f101090335f6ca0">asech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00968" name="l00968"></a><span class="lineno">  968</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#adb505bfa00177f523f101090335f6ca0">asech</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00969" name="l00969"></a><span class="lineno">  969</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00970" name="l00970"></a><span class="lineno">  970</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00971" name="l00971"></a><span class="lineno">  971</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -953,7 +953,7 @@ $(function() {
 <div class="line"><a id="l00986" name="l00986"></a><span class="lineno">  986</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l00987" name="l00987"></a><span class="lineno">  987</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l00988" name="l00988"></a><span class="lineno">  988</span>    }</div>
-<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/log.html">log</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00989" name="l00989"></a><span class="lineno">  989</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/log.html">log</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00990" name="l00990"></a><span class="lineno">  990</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00991" name="l00991"></a><span class="lineno">  991</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -972,7 +972,7 @@ $(function() {
 <div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span>            <span class="stringliteral">&quot;Result is complex. Recompile with MPC support.&quot;</span>);</div>
 <div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span>    }</div>
-<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a3deecb23288ff261b9534dbe7291cf7b">abs</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a3deecb23288ff261b9534dbe7291cf7b">abs</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>        mpfr_class t(down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_prec());</div>
@@ -981,7 +981,7 @@ $(function() {
 <div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>    }</div>
 <div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span> </div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a5427bd85fc080a17d0718a7d97353a49">gamma</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a5427bd85fc080a17d0718a7d97353a49">gamma</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -993,7 +993,7 @@ $(function() {
 <div class="line"><a id="l01026" name="l01026"></a><span class="lineno"> 1026</span>            <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented.&quot;</span>);</div>
 <div class="line"><a id="l01027" name="l01027"></a><span class="lineno"> 1027</span>        }</div>
 <div class="line"><a id="l01028" name="l01028"></a><span class="lineno"> 1028</span>    }</div>
-<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/exp.html">exp</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01029" name="l01029"></a><span class="lineno"> 1029</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/exp.html">exp</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01030" name="l01030"></a><span class="lineno"> 1030</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01031" name="l01031"></a><span class="lineno"> 1031</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01032" name="l01032"></a><span class="lineno"> 1032</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -1001,7 +1001,7 @@ $(function() {
 <div class="line"><a id="l01034" name="l01034"></a><span class="lineno"> 1034</span>        mpfr_exp(t.get_mpfr_t(), x_, MPFR_RNDN);</div>
 <div class="line"><a id="l01035" name="l01035"></a><span class="lineno"> 1035</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l01036" name="l01036"></a><span class="lineno"> 1036</span>    }</div>
-<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/floor.html">floor</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01037" name="l01037"></a><span class="lineno"> 1037</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/floor.html">floor</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01038" name="l01038"></a><span class="lineno"> 1038</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01039" name="l01039"></a><span class="lineno"> 1039</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01040" name="l01040"></a><span class="lineno"> 1040</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -1010,7 +1010,7 @@ $(function() {
 <div class="line"><a id="l01043" name="l01043"></a><span class="lineno"> 1043</span>        mp_demote(i);</div>
 <div class="line"><a id="l01044" name="l01044"></a><span class="lineno"> 1044</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(i));</div>
 <div class="line"><a id="l01045" name="l01045"></a><span class="lineno"> 1045</span>    }</div>
-<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">ceiling</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01046" name="l01046"></a><span class="lineno"> 1046</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#a39c4aa170bc123a990149a38662edf99">ceiling</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01047" name="l01047"></a><span class="lineno"> 1047</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01048" name="l01048"></a><span class="lineno"> 1048</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01049" name="l01049"></a><span class="lineno"> 1049</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -1019,7 +1019,7 @@ $(function() {
 <div class="line"><a id="l01052" name="l01052"></a><span class="lineno"> 1052</span>        mp_demote(i);</div>
 <div class="line"><a id="l01053" name="l01053"></a><span class="lineno"> 1053</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(i));</div>
 <div class="line"><a id="l01054" name="l01054"></a><span class="lineno"> 1054</span>    }</div>
-<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#aa4550752e62ed1fbf09556fd21536e17">truncate</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01055" name="l01055"></a><span class="lineno"> 1055</span>    RCP&lt;const Basic&gt; <a class="code hl_function" href="namespaceSymEngine.html#aa4550752e62ed1fbf09556fd21536e17">truncate</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01056" name="l01056"></a><span class="lineno"> 1056</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01057" name="l01057"></a><span class="lineno"> 1057</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01058" name="l01058"></a><span class="lineno"> 1058</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -1028,7 +1028,7 @@ $(function() {
 <div class="line"><a id="l01061" name="l01061"></a><span class="lineno"> 1061</span>        mp_demote(i);</div>
 <div class="line"><a id="l01062" name="l01062"></a><span class="lineno"> 1062</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">integer</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(i));</div>
 <div class="line"><a id="l01063" name="l01063"></a><span class="lineno"> 1063</span>    }</div>
-<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/erf.html">erf</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01064" name="l01064"></a><span class="lineno"> 1064</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/erf.html">erf</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01065" name="l01065"></a><span class="lineno"> 1065</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -1036,7 +1036,7 @@ $(function() {
 <div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>        mpfr_erf(t.get_mpfr_t(), x_, MPFR_RNDN);</div>
 <div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>        <span class="keywordflow">return</span> real_mpfr(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>    }</div>
-<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/erfc.html">erfc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span>    RCP&lt;const Basic&gt; <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/erfc.html">erfc</a>(<span class="keyword">const</span> Basic &amp;x)<span class="keyword"> const override</span></div>
 <div class="line"><a id="l01073" name="l01073"></a><span class="lineno"> 1073</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l01074" name="l01074"></a><span class="lineno"> 1074</span>        SYMENGINE_ASSERT(is_a&lt;RealMPFR&gt;(x))</div>
 <div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span>        mpfr_srcptr x_ = down_cast&lt;const RealMPFR &amp;&gt;(x).i.get_mpfr_t();</div>
@@ -1087,7 +1087,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_aac2883235cc548f08ea23326353e0134"><div class="ttname"><a href="namespaceSymEngine.html#aac2883235cc548f08ea23326353e0134">SymEngine::csc</a></div><div class="ttdeci">RCP&lt; const Basic &gt; csc(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Csc:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01138">functions.cpp:1138</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abaf2d363a25f737f66c43961a2c9b189"><div class="ttname"><a href="namespaceSymEngine.html#abaf2d363a25f737f66c43961a2c9b189">SymEngine::csch</a></div><div class="ttdeci">RCP&lt; const Basic &gt; csch(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Csch:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02169">functions.cpp:2169</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abb24605f1aae71927876f7237e221544"><div class="ttname"><a href="namespaceSymEngine.html#abb24605f1aae71927876f7237e221544">SymEngine::hash_combine_impl</a></div><div class="ttdeci">void hash_combine_impl(hash_t &amp;seed, const T &amp;v, typename std::enable_if&lt; std::is_base_of&lt; Basic, T &gt;::value &gt;::type *=nullptr)</div><div class="ttdoc">Templatised version to combine hash.</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00061">basic-inl.h:61</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_adb505bfa00177f523f101090335f6ca0"><div class="ttname"><a href="namespaceSymEngine.html#adb505bfa00177f523f101090335f6ca0">SymEngine::asech</a></div><div class="ttdeci">RCP&lt; const Basic &gt; asech(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize ASech:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02571">functions.cpp:2571</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aebcb782a4d69ba115c13a331bb5e4cba"><div class="ttname"><a href="namespaceSymEngine.html#aebcb782a4d69ba115c13a331bb5e4cba">SymEngine::acot</a></div><div class="ttdeci">RCP&lt; const Basic &gt; acot(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize ACot:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01566">functions.cpp:1566</a></div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>

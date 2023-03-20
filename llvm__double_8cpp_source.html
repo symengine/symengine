@@ -423,17 +423,17 @@ $(function() {
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;ss_;</div>
 <div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>        MemoryBufferRefCallback(<a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;ss) : ss_(ss) {}</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span> </div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> notifyObjectCompiled(<span class="keyword">const</span> llvm::Module *M,</div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>                                          llvm::MemoryBufferRef obj)</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>        {</div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        <span class="keywordtype">void</span> notifyObjectCompiled(<span class="keyword">const</span> llvm::Module *M,</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>                                  llvm::MemoryBufferRef obj)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>            <span class="keyword">const</span> <span class="keywordtype">char</span> *c = obj.getBufferStart();</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>            <span class="comment">// Saving the object code in a std::string</span></div>
 <div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>            ss_.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/string/basic_string/assign.html">assign</a>(c, obj.getBufferSize());</div>
 <div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>        }</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span> </div>
-<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <span class="keyword">virtual</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::MemoryBuffer&gt;</a></div>
-<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        getObject(<span class="keyword">const</span> llvm::Module *M)</div>
-<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        {</div>
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::MemoryBuffer&gt;</a></div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>        getObject(<span class="keyword">const</span> llvm::Module *M)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>            <span class="keywordflow">return</span> NULL;</div>
 <div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        }</div>
 <div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>    };</div>
@@ -1114,16 +1114,16 @@ $(function() {
 <div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span> </div>
 <div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span>    <span class="keyword">public</span>:</div>
 <div class="line"><a id="l01009" name="l01009"></a><span class="lineno"> 1009</span>        MCJITObjectLoader(<span class="keyword">const</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s) : s_(s) {}</div>
-<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>        <span class="keyword">virtual</span> <span class="keywordtype">void</span> notifyObjectCompiled(<span class="keyword">const</span> llvm::Module *M,</div>
-<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>                                          llvm::MemoryBufferRef obj)</div>
-<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span>        {</div>
+<div class="line"><a id="l01010" name="l01010"></a><span class="lineno"> 1010</span>        <span class="keywordtype">void</span> notifyObjectCompiled(<span class="keyword">const</span> llvm::Module *M,</div>
+<div class="line"><a id="l01011" name="l01011"></a><span class="lineno"> 1011</span>                                  llvm::MemoryBufferRef obj)<span class="keyword"> override</span></div>
+<div class="line"><a id="l01012" name="l01012"></a><span class="lineno"> 1012</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span>        }</div>
 <div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span> </div>
 <div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span>        <span class="comment">// No need to check M because there is only one function</span></div>
 <div class="line"><a id="l01016" name="l01016"></a><span class="lineno"> 1016</span>        <span class="comment">// Return it after reading from the file.</span></div>
-<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>        <span class="keyword">virtual</span> <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::MemoryBuffer&gt;</a></div>
-<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>        getObject(<span class="keyword">const</span> llvm::Module *M)</div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span>        {</div>
+<div class="line"><a id="l01017" name="l01017"></a><span class="lineno"> 1017</span>        <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::MemoryBuffer&gt;</a></div>
+<div class="line"><a id="l01018" name="l01018"></a><span class="lineno"> 1018</span>        getObject(<span class="keyword">const</span> llvm::Module *M)<span class="keyword"> override</span></div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span><span class="keyword">        </span>{</div>
 <div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span>            <span class="keywordflow">return</span> llvm::MemoryBuffer::getMemBufferCopy(llvm::StringRef(s_));</div>
 <div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span>        }</div>
 <div class="line"><a id="l01022" name="l01022"></a><span class="lineno"> 1022</span>    };</div>
@@ -1222,7 +1222,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_aa077500b689f21abfefa66ee545946e5"><div class="ttname"><a href="namespaceSymEngine.html#aa077500b689f21abfefa66ee545946e5">SymEngine::acosh</a></div><div class="ttdeci">RCP&lt; const Basic &gt; acosh(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize ACosh:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02461">functions.cpp:2461</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abb176b90171ba213e14a1dca70b890ab"><div class="ttname"><a href="namespaceSymEngine.html#abb176b90171ba213e14a1dca70b890ab">SymEngine::Eq</a></div><div class="ttdeci">RCP&lt; const Boolean &gt; Eq(const RCP&lt; const Basic &gt; &amp;lhs)</div><div class="ttdoc">Returns the canonicalized Equality object from a single argument.</div><div class="ttdef"><b>Definition:</b> <a href="logic_8cpp_source.html#l00653">logic.cpp:653</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00200">integer.h:200</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac2bb33638379ae439e0a51953a3b0a67"><div class="ttname"><a href="namespaceSymEngine.html#ac2bb33638379ae439e0a51953a3b0a67">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; constInteger &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac51d8c7a02041f2c0a6daa8905e20b0d"><div class="ttname"><a href="namespaceSymEngine.html#ac51d8c7a02041f2c0a6daa8905e20b0d">SymEngine::erf</a></div><div class="ttdeci">RCP&lt; const Basic &gt; erf(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Erf:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02891">functions.cpp:2891</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ae24e5db43005e29f95bf5ecc8789f812"><div class="ttname"><a href="namespaceSymEngine.html#ae24e5db43005e29f95bf5ecc8789f812">SymEngine::sinh</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sinh(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sinh:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02127">functions.cpp:2127</a></div></div>
 <div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>

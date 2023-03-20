@@ -144,10 +144,10 @@ $(function() {
 Public Member Functions</h2></td></tr>
 <tr class="memitem:adff9ff9a009159869aa14c6e220d1f08"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#adff9ff9a009159869aa14c6e220d1f08">MatrixMul</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;scalar, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;factors)</td></tr>
 <tr class="separator:adff9ff9a009159869aa14c6e220d1f08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ff587b60bcfd7383119e9bd2895e85f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#a6ff587b60bcfd7383119e9bd2895e85f">accept</a> (<a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v) const</td></tr>
-<tr class="separator:a6ff587b60bcfd7383119e9bd2895e85f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1c9a1833c00f909ab7ce506bc2e708ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#a1c9a1833c00f909ab7ce506bc2e708ae">accept</a> (<a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;v) const</td></tr>
-<tr class="separator:a1c9a1833c00f909ab7ce506bc2e708ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae668268f70ccf18b3cc5679686d462ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#ae668268f70ccf18b3cc5679686d462ba">accept</a> (<a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;v) const override</td></tr>
+<tr class="separator:ae668268f70ccf18b3cc5679686d462ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1b1cd1ebc2c48be05f5d83184544701"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#af1b1cd1ebc2c48be05f5d83184544701">accept</a> (<a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;v) const override</td></tr>
+<tr class="separator:af1b1cd1ebc2c48be05f5d83184544701"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab26cdb8cbbc75541e160d48a096a3740"><td class="memItemLeft" align="right" valign="top">hash_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#ab26cdb8cbbc75541e160d48a096a3740">__hash__</a> () const override</td></tr>
 <tr class="separator:ab26cdb8cbbc75541e160d48a096a3740"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7cfcdffc9d4f560e5146a96da81e665c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1MatrixMul.html#a7cfcdffc9d4f560e5146a96da81e665c">__eq__</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) const override</td></tr>
@@ -397,8 +397,8 @@ Additional Inherited Members</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a1c9a1833c00f909ab7ce506bc2e708ae" name="a1c9a1833c00f909ab7ce506bc2e708ae"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1c9a1833c00f909ab7ce506bc2e708ae">&#9670;&#160;</a></span>accept() <span class="overload">[1/2]</span></h2>
+<a id="af1b1cd1ebc2c48be05f5d83184544701" name="af1b1cd1ebc2c48be05f5d83184544701"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1b1cd1ebc2c48be05f5d83184544701">&#9670;&#160;</a></span>accept() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -407,7 +407,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SymEngine::MatrixMul::accept </td>
+          <td class="memname">void SymEngine::MatrixMul::accept </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSymEngine_1_1EvalRealDoubleVisitorFinal.html">EvalRealDoubleVisitorFinal</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
@@ -416,7 +416,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -425,8 +425,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a6ff587b60bcfd7383119e9bd2895e85f" name="a6ff587b60bcfd7383119e9bd2895e85f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ff587b60bcfd7383119e9bd2895e85f">&#9670;&#160;</a></span>accept() <span class="overload">[2/2]</span></h2>
+<a id="ae668268f70ccf18b3cc5679686d462ba" name="ae668268f70ccf18b3cc5679686d462ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae668268f70ccf18b3cc5679686d462ba">&#9670;&#160;</a></span>accept() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -435,7 +435,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void SymEngine::MatrixMul::accept </td>
+          <td class="memname">void SymEngine::MatrixMul::accept </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSymEngine_1_1Visitor.html">Visitor</a> &amp;&#160;</td>
           <td class="paramname"><em>v</em></td><td>)</td>
@@ -444,7 +444,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
