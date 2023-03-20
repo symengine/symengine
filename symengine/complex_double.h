@@ -22,33 +22,33 @@ public:
     //! Constructor of ComplexDouble class
     explicit ComplexDouble(std::complex<double> i);
     //! \return size of the hash
-    virtual hash_t __hash__() const;
+    hash_t __hash__() const override;
     /*! Equality comparator
      * \param o - Object to be compared with
      * \return whether the 2 objects are equal
      * */
-    virtual bool __eq__(const Basic &o) const;
-    virtual int compare(const Basic &o) const;
+    bool __eq__(const Basic &o) const override;
+    int compare(const Basic &o) const override;
     //! Get the real part of the complex number
-    virtual RCP<const Number> real_part() const;
+    RCP<const Number> real_part() const override;
     //! Get the imaginary part of the complex number
-    virtual RCP<const Number> imaginary_part() const;
+    RCP<const Number> imaginary_part() const override;
     //! Get the conjugate of the complex number
-    virtual RCP<const Basic> conjugate() const;
+    RCP<const Basic> conjugate() const override;
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_positive() const
+    inline bool is_positive() const override
     {
         return false;
     }
     //! \returns `false`
     // False is returned because complex cannot be compared with zero
-    inline virtual bool is_negative() const
+    inline bool is_negative() const override
     {
         return false;
     }
     //! \returns `true`
-    inline virtual bool is_complex() const
+    inline bool is_complex() const override
     {
         return true;
     }
@@ -59,27 +59,27 @@ public:
     }
     //! \returns `false`
     // False is returned because std::complex<double> is not exact
-    inline virtual bool is_exact() const
+    inline bool is_exact() const override
     {
         return false;
     }
     //! Get `Evaluate` singleton to evaluate numerically
-    virtual Evaluate &get_eval() const;
+    Evaluate &get_eval() const override;
 
     //! \return `true` if equal to `0`
-    virtual bool is_zero() const
+    bool is_zero() const override
     {
         return i == 0.0;
     }
     //! \return `false`
     // A std::complex<double> is not exactly equal to `1`
-    virtual bool is_one() const
+    bool is_one() const override
     {
         return false;
     }
     //! \return `false`
     // A std::complex<double> is not exactly equal to `-1`
-    virtual bool is_minus_one() const
+    bool is_minus_one() const override
     {
         return false;
     }
@@ -130,7 +130,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `addcomp`
-    virtual RCP<const Number> add(const Number &other) const
+    RCP<const Number> add(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return addcomp(down_cast<const Rational &>(other));
@@ -193,7 +193,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `subcomp`
-    virtual RCP<const Number> sub(const Number &other) const
+    RCP<const Number> sub(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return subcomp(down_cast<const Rational &>(other));
@@ -248,7 +248,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `subcomp`
-    virtual RCP<const Number> rsub(const Number &other) const
+    RCP<const Number> rsub(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return rsubcomp(down_cast<const Rational &>(other));
@@ -309,7 +309,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `mulcomp`
-    virtual RCP<const Number> mul(const Number &other) const
+    RCP<const Number> mul(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return mulcomp(down_cast<const Rational &>(other));
@@ -372,7 +372,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `divcomp`
-    virtual RCP<const Number> div(const Number &other) const
+    RCP<const Number> div(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return divcomp(down_cast<const Rational &>(other));
@@ -427,7 +427,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `divcomp`
-    virtual RCP<const Number> rdiv(const Number &other) const
+    RCP<const Number> rdiv(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return rdivcomp(down_cast<const Rational &>(other));
@@ -488,7 +488,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `powcomp`
-    virtual RCP<const Number> pow(const Number &other) const
+    RCP<const Number> pow(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return powcomp(down_cast<const Rational &>(other));
@@ -544,7 +544,7 @@ public:
     }
 
     //! Converts the param `other` appropriately and then calls `powcomp`
-    virtual RCP<const Number> rpow(const Number &other) const
+    RCP<const Number> rpow(const Number &other) const override
     {
         if (is_a<Rational>(other)) {
             return rpowcomp(down_cast<const Rational &>(other));

@@ -20,11 +20,11 @@ public:
     URatPSeriesFlint(const fqp_t p, const std::string varname,
                      const unsigned degree);
     IMPLEMENT_TYPEID(SYMENGINE_URATPSERIESFLINT)
-    virtual int compare(const Basic &o) const;
-    virtual hash_t __hash__() const;
-    virtual RCP<const Basic> as_basic() const;
-    virtual umap_int_basic as_dict() const;
-    virtual RCP<const Basic> get_coeff(int) const;
+    int compare(const Basic &o) const override;
+    hash_t __hash__() const override;
+    RCP<const Basic> as_basic() const override;
+    umap_int_basic as_dict() const override;
+    RCP<const Basic> get_coeff(int) const override;
 
     static RCP<const URatPSeriesFlint>
     series(const RCP<const Basic> &t, const std::string &x, unsigned int prec);

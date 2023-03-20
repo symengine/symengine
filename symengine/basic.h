@@ -201,7 +201,7 @@ public:
     //! Returns the list of arguments
     virtual vec_basic get_args() const = 0;
 
-    SYMENGINE_INCLUDE_METHODS(= 0;)
+    SYMENGINE_INCLUDE_METHODS_BASE()
 
     RCP<const Basic> diff(const RCP<const Symbol> &x, bool cache = true) const;
 };
@@ -335,12 +335,12 @@ struct hash<SymEngine::Basic>;
     {                                                                          \
         return type_code_id;                                                   \
     };                                                                         \
-    SYMENGINE_INCLUDE_METHODS(;)
+    SYMENGINE_INCLUDE_METHODS_DERIVED()
 #else
 #define IMPLEMENT_TYPEID(SYMENGINE_ID)                                         \
     /*! Type_code_id shared by all instances */                                \
     const static TypeID type_code_id = SYMENGINE_ID;                           \
-    SYMENGINE_INCLUDE_METHODS(;)
+    SYMENGINE_INCLUDE_METHODS_DERIVED()
 #endif
 
 #ifdef WITH_SYMENGINE_VIRTUAL_TYPEID

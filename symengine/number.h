@@ -63,7 +63,7 @@ public:
     virtual RCP<const Number> pow(const Number &other) const = 0;
     virtual RCP<const Number> rpow(const Number &other) const = 0;
 
-    virtual vec_basic get_args() const
+    vec_basic get_args() const override
     {
         return {};
     }

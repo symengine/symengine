@@ -120,7 +120,7 @@ public:
     UIntPoly(const RCP<const Basic> &var, UIntDict &&dict);
 
     //! \return size of the hash
-    hash_t __hash__() const;
+    hash_t __hash__() const override;
 }; // UIntPoly
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined

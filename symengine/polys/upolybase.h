@@ -366,14 +366,14 @@ public:
     typedef Container container_type;
 
     //! \returns `-1`,`0` or `1` after comparing
-    virtual int compare(const Basic &o) const = 0;
-    virtual hash_t __hash__() const = 0;
+    int compare(const Basic &o) const override = 0;
+    hash_t __hash__() const override = 0;
 
     // return `degree` + 1. `0` returned for zero poly.
     virtual int size() const = 0;
 
     //! \returns `true` if two objects are equal
-    inline bool __eq__(const Basic &o) const
+    inline bool __eq__(const Basic &o) const override
     {
         if (is_a<Poly>(o))
             return eq(*var_, *(down_cast<const Poly &>(o).var_))
@@ -391,7 +391,7 @@ public:
         return poly_;
     }
 
-    inline vec_basic get_args() const
+    inline vec_basic get_args() const override
     {
         return {};
     }

@@ -23,7 +23,7 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_PRIMEPI)
     PrimePi(const RCP<const Basic> &arg);
     bool is_canonical(const RCP<const Basic> &arg) const;
-    RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 
 RCP<const Basic> primepi(const RCP<const Basic> &arg);
@@ -39,7 +39,7 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_PRIMORIAL)
     Primorial(const RCP<const Basic> &arg);
     bool is_canonical(const RCP<const Basic> &arg) const;
-    RCP<const Basic> create(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 
 RCP<const Basic> primorial(const RCP<const Basic> &arg);

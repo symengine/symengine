@@ -51,7 +51,7 @@ public:
     using CodePrinter::str_;
     void bvisit(const Infty &x);
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                    const RCP<const Basic> &b);
+                    const RCP<const Basic> &b) override;
 };
 
 class C99CodePrinter : public BaseVisitor<C99CodePrinter, C89CodePrinter>
@@ -62,7 +62,7 @@ public:
     using C89CodePrinter::str_;
     void bvisit(const Infty &x);
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                    const RCP<const Basic> &b);
+                    const RCP<const Basic> &b) override;
     void bvisit(const Gamma &x);
     void bvisit(const LogGamma &x);
 };
@@ -75,7 +75,7 @@ public:
     using CodePrinter::str_;
     void bvisit(const Constant &x);
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
-                    const RCP<const Basic> &b);
+                    const RCP<const Basic> &b) override;
     void bvisit(const Abs &x);
     void bvisit(const Sin &x);
     void bvisit(const Cos &x);
