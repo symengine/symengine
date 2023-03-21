@@ -2,6 +2,7 @@
 #define SYMENGINE_PRIME_SIEVE_H
 
 #include <vector>
+#include <symengine/symengine_config.h>
 
 // Sieve class stores all the primes upto a limit. When a prime or a list of
 // prime
