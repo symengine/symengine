@@ -5,7 +5,7 @@ if (POLICY CMP0074)
 endif()
 
 if (POLICY CMP0057)
-    cmake_policy(SET CMP0057 NEW) # needed for llvm >= 16
+  cmake_policy(SET CMP0057 NEW) # needed for llvm >= 16
 endif ()
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
@@ -398,6 +398,8 @@ if (HAVE_SYMENGINE_GMP)
         endif()
     endif()
 endif()
+
+include(GNUInstallDirs)
 
 # LLVM
 set(WITH_LLVM no
