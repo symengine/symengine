@@ -141,7 +141,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00018">18</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00019">19</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a300c51072dc282855fbe9898015d5532" name="a300c51072dc282855fbe9898015d5532"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a300c51072dc282855fbe9898015d5532">&#9670;&#160;</a></span>_extend()</h2>
@@ -167,52 +167,52 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00041">41</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   42</span>{</div>
-<div class="line"><span class="lineno">   43</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
-<div class="line"><span class="lineno">   44</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_PRIMESIEVE</span></div>
-<div class="line"><span class="lineno">   45</span>    <span class="keywordflow">if</span> (_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() &lt; limit)</div>
-<div class="line"><span class="lineno">   46</span>        primesieve::generate_primes(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() + 1, limit, &amp;_primes);</div>
-<div class="line"><span class="lineno">   47</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">   48</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> sqrt_limit</div>
-<div class="line"><span class="lineno">   49</span>        = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/floor.html">std::floor</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/sqrt.html">std::sqrt</a>(limit)));</div>
-<div class="line"><span class="lineno">   50</span>    <span class="keywordtype">unsigned</span> start = _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() + 1;</div>
-<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">if</span> (limit &lt;= start)</div>
-<div class="line"><span class="lineno">   52</span>        <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">if</span> (sqrt_limit &gt;= start) {</div>
-<div class="line"><span class="lineno">   54</span>        _extend(sqrt_limit);</div>
-<div class="line"><span class="lineno">   55</span>        start = _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() + 1;</div>
-<div class="line"><span class="lineno">   56</span>    }</div>
-<div class="line"><span class="lineno">   57</span> </div>
-<div class="line"><span class="lineno">   58</span>    <span class="keywordtype">unsigned</span> segment = _sieve_size;</div>
-<div class="line"><span class="lineno">   59</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/valarray.html">std::valarray&lt;bool&gt;</a> is_prime(segment);</div>
-<div class="line"><span class="lineno">   60</span>    <span class="keywordflow">for</span> (; start &lt;= limit; start += 2 * segment) {</div>
-<div class="line"><span class="lineno">   61</span>        <span class="keywordtype">unsigned</span> finish = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(start + segment * 2 + 1, limit);</div>
-<div class="line"><span class="lineno">   62</span>        is_prime[std::slice(0, segment, 1)] = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   63</span>        <span class="comment">// considering only odd integers. An odd number n corresponds to</span></div>
-<div class="line"><span class="lineno">   64</span>        <span class="comment">// n-start/2 in the array.</span></div>
-<div class="line"><span class="lineno">   65</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> index = 1; index &lt; _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>()</div>
-<div class="line"><span class="lineno">   66</span>                                 and _primes[index] * _primes[index] &lt;= finish;</div>
-<div class="line"><span class="lineno">   67</span>             ++index) {</div>
-<div class="line"><span class="lineno">   68</span>            <span class="keywordtype">unsigned</span> n = _primes[index];</div>
-<div class="line"><span class="lineno">   69</span>            <span class="keywordtype">unsigned</span> multiple = (start / n + 1) * n;</div>
-<div class="line"><span class="lineno">   70</span>            <span class="keywordflow">if</span> (multiple % 2 == 0)</div>
-<div class="line"><span class="lineno">   71</span>                multiple += n;</div>
-<div class="line"><span class="lineno">   72</span>            <span class="keywordflow">if</span> (multiple &gt; finish)</div>
-<div class="line"><span class="lineno">   73</span>                <span class="keywordflow">continue</span>;</div>
-<div class="line"><span class="lineno">   74</span>            std::slice sl = std::slice((multiple - start) / 2,</div>
-<div class="line"><span class="lineno">   75</span>                                       1 + (finish - multiple) / (2 * n), n);</div>
-<div class="line"><span class="lineno">   76</span>            <span class="comment">// starting from n*n, all the odd multiples of n are marked not</span></div>
-<div class="line"><span class="lineno">   77</span>            <span class="comment">// prime.</span></div>
-<div class="line"><span class="lineno">   78</span>            is_prime[sl] = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   79</span>        }</div>
-<div class="line"><span class="lineno">   80</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = start + 1; n &lt;= finish; n += 2) {</div>
-<div class="line"><span class="lineno">   81</span>            <span class="keywordflow">if</span> (is_prime[(n - start) / 2])</div>
-<div class="line"><span class="lineno">   82</span>                _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(n);</div>
-<div class="line"><span class="lineno">   83</span>        }</div>
-<div class="line"><span class="lineno">   84</span>    }</div>
-<div class="line"><span class="lineno">   85</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   86</span>}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00044">44</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   45</span>{</div>
+<div class="line"><span class="lineno">   46</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
+<div class="line"><span class="lineno">   47</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_PRIMESIEVE</span></div>
+<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">if</span> (_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() &lt; limit)</div>
+<div class="line"><span class="lineno">   49</span>        primesieve::generate_primes(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() + 1, limit, &amp;_primes);</div>
+<div class="line"><span class="lineno">   50</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">   51</span>    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> sqrt_limit</div>
+<div class="line"><span class="lineno">   52</span>        = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/floor.html">std::floor</a>(<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/numeric/math/sqrt.html">std::sqrt</a>(limit)));</div>
+<div class="line"><span class="lineno">   53</span>    <span class="keywordtype">unsigned</span> start = _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() + 1;</div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">if</span> (limit &lt;= start)</div>
+<div class="line"><span class="lineno">   55</span>        <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">if</span> (sqrt_limit &gt;= start) {</div>
+<div class="line"><span class="lineno">   57</span>        _extend(sqrt_limit);</div>
+<div class="line"><span class="lineno">   58</span>        start = _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>() + 1;</div>
+<div class="line"><span class="lineno">   59</span>    }</div>
+<div class="line"><span class="lineno">   60</span> </div>
+<div class="line"><span class="lineno">   61</span>    <span class="keywordtype">unsigned</span> segment = _sieve_size;</div>
+<div class="line"><span class="lineno">   62</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/numeric/valarray.html">std::valarray&lt;bool&gt;</a> is_prime(segment);</div>
+<div class="line"><span class="lineno">   63</span>    <span class="keywordflow">for</span> (; start &lt;= limit; start += 2 * segment) {</div>
+<div class="line"><span class="lineno">   64</span>        <span class="keywordtype">unsigned</span> finish = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(start + segment * 2 + 1, limit);</div>
+<div class="line"><span class="lineno">   65</span>        is_prime[std::slice(0, segment, 1)] = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   66</span>        <span class="comment">// considering only odd integers. An odd number n corresponds to</span></div>
+<div class="line"><span class="lineno">   67</span>        <span class="comment">// n-start/2 in the array.</span></div>
+<div class="line"><span class="lineno">   68</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> index = 1; index &lt; _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>()</div>
+<div class="line"><span class="lineno">   69</span>                                 and _primes[index] * _primes[index] &lt;= finish;</div>
+<div class="line"><span class="lineno">   70</span>             ++index) {</div>
+<div class="line"><span class="lineno">   71</span>            <span class="keywordtype">unsigned</span> n = _primes[index];</div>
+<div class="line"><span class="lineno">   72</span>            <span class="keywordtype">unsigned</span> multiple = (start / n + 1) * n;</div>
+<div class="line"><span class="lineno">   73</span>            <span class="keywordflow">if</span> (multiple % 2 == 0)</div>
+<div class="line"><span class="lineno">   74</span>                multiple += n;</div>
+<div class="line"><span class="lineno">   75</span>            <span class="keywordflow">if</span> (multiple &gt; finish)</div>
+<div class="line"><span class="lineno">   76</span>                <span class="keywordflow">continue</span>;</div>
+<div class="line"><span class="lineno">   77</span>            std::slice sl = std::slice((multiple - start) / 2,</div>
+<div class="line"><span class="lineno">   78</span>                                       1 + (finish - multiple) / (2 * n), n);</div>
+<div class="line"><span class="lineno">   79</span>            <span class="comment">// starting from n*n, all the odd multiples of n are marked not</span></div>
+<div class="line"><span class="lineno">   80</span>            <span class="comment">// prime.</span></div>
+<div class="line"><span class="lineno">   81</span>            is_prime[sl] = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   82</span>        }</div>
+<div class="line"><span class="lineno">   83</span>        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = start + 1; n &lt;= finish; n += 2) {</div>
+<div class="line"><span class="lineno">   84</span>            <span class="keywordflow">if</span> (is_prime[(n - start) / 2])</div>
+<div class="line"><span class="lineno">   85</span>                _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(n);</div>
+<div class="line"><span class="lineno">   86</span>        }</div>
+<div class="line"><span class="lineno">   87</span>    }</div>
+<div class="line"><span class="lineno">   88</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   89</span>}</div>
 <div class="ttc" id="aback_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/back.html">std::vector::back</a></div><div class="ttdeci">T back(T... args)</div></div>
 <div class="ttc" id="afloor_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/floor.html">std::floor</a></div><div class="ttdeci">T floor(T... args)</div></div>
 <div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
@@ -247,11 +247,11 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00026">26</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   27</span>{</div>
-<div class="line"><span class="lineno">   28</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
-<div class="line"><span class="lineno">   29</span>    _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/erase.html">erase</a>(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>() + 10, _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>());</div>
-<div class="line"><span class="lineno">   30</span>}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00029">29</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   30</span>{</div>
+<div class="line"><span class="lineno">   31</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
+<div class="line"><span class="lineno">   32</span>    _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/erase.html">erase</a>(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>() + 10, _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>());</div>
+<div class="line"><span class="lineno">   33</span>}</div>
 <div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/erase.html">std::vector::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>
@@ -298,18 +298,18 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00088">88</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>{</div>
-<div class="line"><span class="lineno">   90</span>    _extend(limit);</div>
-<div class="line"><span class="lineno">   91</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
-<div class="line"><span class="lineno">   92</span>    <span class="keyword">auto</span> it = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a>(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), limit);</div>
-<div class="line"><span class="lineno">   93</span>    <span class="comment">// find the first position greater than limit and reserve space for the</span></div>
-<div class="line"><span class="lineno">   94</span>    <span class="comment">// primes</span></div>
-<div class="line"><span class="lineno">   95</span>    primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(it - _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
-<div class="line"><span class="lineno">   96</span>    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), it, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a>(primes));</div>
-<div class="line"><span class="lineno">   97</span>    <span class="keywordflow">if</span> (_clear)</div>
-<div class="line"><span class="lineno">   98</span>        clear();</div>
-<div class="line"><span class="lineno">   99</span>}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00091">91</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   92</span>{</div>
+<div class="line"><span class="lineno">   93</span>    _extend(limit);</div>
+<div class="line"><span class="lineno">   94</span>    <a class="code hl_classRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;_primes = sieve_primes();</div>
+<div class="line"><span class="lineno">   95</span>    <span class="keyword">auto</span> it = <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/upper_bound.html">std::upper_bound</a>(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), limit);</div>
+<div class="line"><span class="lineno">   96</span>    <span class="comment">// find the first position greater than limit and reserve space for the</span></div>
+<div class="line"><span class="lineno">   97</span>    <span class="comment">// primes</span></div>
+<div class="line"><span class="lineno">   98</span>    primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(it - _primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><span class="lineno">   99</span>    <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(_primes.<a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), it, <a class="code hl_functionRef" href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a>(primes));</div>
+<div class="line"><span class="lineno">  100</span>    <span class="keywordflow">if</span> (_clear)</div>
+<div class="line"><span class="lineno">  101</span>        clear();</div>
+<div class="line"><span class="lineno">  102</span>}</div>
 <div class="ttc" id="aback_inserter_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/back_inserter.html">std::back_inserter</a></div><div class="ttdeci">T back_inserter(T... args)</div></div>
 <div class="ttc" id="acopy_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a></div><div class="ttdeci">T copy(T... args)</div></div>
 <div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">std::vector::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
@@ -341,10 +341,10 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00021">21</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   22</span>{</div>
-<div class="line"><span class="lineno">   23</span>    _clear = clear;</div>
-<div class="line"><span class="lineno">   24</span>}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00024">24</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   25</span>{</div>
+<div class="line"><span class="lineno">   26</span>    _clear = clear;</div>
+<div class="line"><span class="lineno">   27</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -372,14 +372,14 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00032">32</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   33</span>{</div>
-<div class="line"><span class="lineno">   34</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_PRIMESIEVE</span></div>
-<div class="line"><span class="lineno">   35</span>    primesieve::set_sieve_size(size);</div>
-<div class="line"><span class="lineno">   36</span><span class="preprocessor">#else</span></div>
-<div class="line"><span class="lineno">   37</span>    _sieve_size = size * 1024 * 8; <span class="comment">// size in bits</span></div>
-<div class="line"><span class="lineno">   38</span><span class="preprocessor">#endif</span></div>
-<div class="line"><span class="lineno">   39</span>}</div>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8cpp_source.html#l00035">35</a> of file <a class="el" href="prime__sieve_8cpp_source.html">prime_sieve.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   36</span>{</div>
+<div class="line"><span class="lineno">   37</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_PRIMESIEVE</span></div>
+<div class="line"><span class="lineno">   38</span>    primesieve::set_sieve_size(size);</div>
+<div class="line"><span class="lineno">   39</span><span class="preprocessor">#else</span></div>
+<div class="line"><span class="lineno">   40</span>    _sieve_size = size * 1024 * 8; <span class="comment">// size in bits</span></div>
+<div class="line"><span class="lineno">   41</span><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="lineno">   42</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -404,7 +404,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00024">24</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00025">25</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
 
 </div>
 </div>
@@ -428,7 +428,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00023">23</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="prime__sieve_8h_source.html#l00024">24</a> of file <a class="el" href="prime__sieve_8h_source.html">prime_sieve.h</a>.</p>
 
 </div>
 </div>
