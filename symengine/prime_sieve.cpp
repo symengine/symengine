@@ -5,6 +5,9 @@
 #include <algorithm>
 #include <vector>
 #include <iterator>
+#ifdef HAVE_SYMENGINE_PRIMESIEVE
+#include <primesieve.hpp>
+#endif
 
 namespace SymEngine
 {
