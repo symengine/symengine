@@ -399,7 +399,7 @@ if (HAVE_SYMENGINE_GMP)
     endif()
 endif()
 
-include(GNUInstallDirs)
+include(GNUInstallDirs)  # For llvm>=16
 
 # LLVM
 set(WITH_LLVM no
