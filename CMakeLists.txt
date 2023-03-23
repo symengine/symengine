@@ -5,7 +5,7 @@ if (POLICY CMP0074)
 endif()
 
 if (POLICY CMP0057)
-    cmake_policy(SET CMP0057 NEW) # needed for llvm >= 16
+  cmake_policy(SET CMP0057 NEW) # needed for llvm >= 16
 endif ()
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
@@ -14,7 +14,7 @@ project(symengine LANGUAGES C CXX)
 
 set(SYMENGINE_MAJOR_VERSION 0)
 set(SYMENGINE_MINOR_VERSION 10)
-set(SYMENGINE_PATCH_VERSION 0)
+set(SYMENGINE_PATCH_VERSION 1)
 set(SYMENGINE_VERSION ${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}.${SYMENGINE_PATCH_VERSION})
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
@@ -398,6 +398,8 @@ if (HAVE_SYMENGINE_GMP)
         endif()
     endif()
 endif()
+
+include(GNUInstallDirs)  # For llvm>=16
 
 # LLVM
 set(WITH_LLVM no
