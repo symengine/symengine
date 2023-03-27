@@ -21,7 +21,6 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_DOUBLE)
     //! Constructor of ComplexDouble class
     explicit ComplexDouble(std::complex<double> i);
-    ComplexDouble(double real, double imag);
     //! \return size of the hash
     hash_t __hash__() const override;
     /*! Equality comparator
@@ -562,6 +561,7 @@ public:
 };
 
 RCP<const ComplexDouble> complex_double(std::complex<double> x);
+RCP<const ComplexDouble> complex_double(double real, double imag);
 
 } // namespace SymEngine
 
