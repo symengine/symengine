@@ -13,6 +13,11 @@ ComplexDouble::ComplexDouble(std::complex<double> i)
     SYMENGINE_ASSIGN_TYPEID()
     this->i = i;
 }
+ComplexDouble::ComplexDouble(double real, double imag)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    this->i = std::complex<double>(real, imag);
+}
 //! Get the real part of the complex number
 RCP<const Number> ComplexDouble::real_part() const
 {
