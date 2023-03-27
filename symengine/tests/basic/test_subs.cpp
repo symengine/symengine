@@ -93,6 +93,12 @@ TEST_CASE("Number: subs", "[subs]")
     d[x] = one;
     REQUIRE(eq(*r1->subs(d), *r2));
     d.clear();
+
+    r1 = mul(x, i2);
+    r2 = mul(x, mul(x, i2));
+    d[i2] = mul(x, i2);
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
 }
 
 TEST_CASE("Add: subs", "[subs]")
