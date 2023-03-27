@@ -109,10 +109,13 @@ public:
 
         // Replace the coefficient
         RCP<const Basic> factor = apply(x.get_coef());
-        RCP<const Basic> exp, t;
-        Mul::as_base_exp(factor, outArg(exp), outArg(t));
-        Mul::dict_add_term_new(outArg(coef), d, exp, t);
-
+        if (is_a_Number(*factor)) {
+            imulnum(outArg(coef), rcp_static_cast<const Number>(factor));
+        } else {
+            RCP<const Basic> exp, t;
+            Mul::as_base_exp(factor, outArg(exp), outArg(t));
+            Mul::dict_add_term_new(outArg(coef), d, exp, t);
+        }
         result_ = Mul::from_dict(coef, std::move(d));
     }
 
