@@ -8,6 +8,7 @@ using SymEngine::Basic;
 using SymEngine::Boolean;
 using SymEngine::boolFalse;
 using SymEngine::boolTrue;
+using SymEngine::complex_double;
 using SymEngine::ComplexInf;
 using SymEngine::down_cast;
 using SymEngine::dummy;
@@ -84,6 +85,18 @@ TEST_CASE("Number: subs", "[subs]")
     r1 = mul(x, add(i2, I));
     r2 = mul(x, sub(i2, I));
     d[I] = neg(I);
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
+
+    r1 = mul(x, complex_double(0, 1));
+    r2 = complex_double(0, 1);
+    d[x] = one;
+    REQUIRE(eq(*r1->subs(d), *r2));
+    d.clear();
+
+    r1 = mul(x, i2);
+    r2 = mul(x, mul(x, i2));
+    d[i2] = mul(x, i2);
     REQUIRE(eq(*r1->subs(d), *r2));
     d.clear();
 }

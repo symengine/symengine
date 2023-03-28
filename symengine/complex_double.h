@@ -561,6 +561,7 @@ public:
 };
 
 RCP<const ComplexDouble> complex_double(std::complex<double> x);
+RCP<const ComplexDouble> complex_double(double real, double imag);
 
 } // namespace SymEngine
 
