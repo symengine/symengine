@@ -133,6 +133,7 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_LLVM: 12
+            WITH_COVERAGE: yes
             CC: clang
             OS: ubuntu-20.04
 
