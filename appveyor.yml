@@ -45,7 +45,7 @@ install:
 - if [%COMPILER%]==[MSVC15] if [%BUILD_TYPE%]==[Debug] set "conda_pkgs=symengine/label/debug::mpir=3.0.0"
 - if [%COMPILER%]==[MSVC15] if [%WITH_MPFR%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::mpfr=3.1.5"
 - if [%COMPILER%]==[MSVC15] if [%WITH_MPC%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::mpc=1.0.3"
-- if [%COMPILER%]==[MSVC15] if [%WITH_LLVM%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::llvmdev=3.9"
+- if [%COMPILER%]==[MSVC15] if [%WITH_LLVM%]==[yes] set "conda_pkgs=%conda_pkgs% conda-forge::llvmdev=4.0"
 - if [%COMPILER%]==[MSVC15] conda create --yes -n myenv %conda_pkgs%
 - if [%COMPILER%]==[MSVC15] call activate myenv
 - if [%COMPILER%]==[MSVC15] if [%LIB_TYPE%]==[lib] rm %CONDA_PREFIX%\Library\lib\gmp.lib
