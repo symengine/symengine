@@ -17,7 +17,6 @@ class Function;
 class ExecutionEngine;
 class MemoryBufferRef;
 class LLVMContext;
-class Pass;
 } // namespace llvm
 
 namespace SymEngine
