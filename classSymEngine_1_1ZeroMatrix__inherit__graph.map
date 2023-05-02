@@ -1,6 +1,6 @@
 <map id="SymEngine::ZeroMatrix" name="SymEngine::ZeroMatrix">
-<area shape="rect" id="node1" title=" " alt="" coords="21,240,196,265"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="21,167,196,192"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,93,178,119"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="21,249,195,277"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="21,174,195,201"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,98,177,126"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,50"/>
 </map>

@@ -1,10 +1,10 @@
 <map id="SymEngine::OptsCSEVisitor" name="SymEngine::OptsCSEVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="617,78,817,103"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="289,5,466,45"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,13,154,38"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="301,71,453,111"/>
-<area shape="rect" id="node5" title=" " alt="" coords="62,62,101,87"/>
-<area shape="rect" id="node6" title=" " alt="" coords="62,111,101,137"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="271,152,484,192"/>
-<area shape="rect" id="node8" title=" " alt="" coords="5,161,157,186"/>
+<area shape="rect" id="node1" title=" " alt="" coords="615,83,814,111"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="288,5,464,50"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,14,153,42"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="300,75,452,119"/>
+<area shape="rect" id="node5" title=" " alt="" coords="62,66,100,94"/>
+<area shape="rect" id="node6" title=" " alt="" coords="62,118,100,146"/>
+<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="270,160,482,205"/>
+<area shape="rect" id="node8" title=" " alt="" coords="5,170,157,198"/>
 </map>

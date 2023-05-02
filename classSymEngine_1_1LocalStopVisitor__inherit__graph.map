@@ -1,7 +1,7 @@
 <map id="SymEngine::LocalStopVisitor" name="SymEngine::LocalStopVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,152,213,177"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,225,203,280"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="22,79,197,104"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="37,5,182,31"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1IsALinearArgTrigVisitor.html" title=" " alt="" coords="5,328,213,368"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,157,213,184"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,232,203,294"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="22,81,196,109"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="37,5,181,33"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1IsALinearArgTrigVisitor.html" title=" " alt="" coords="5,342,213,387"/>
 </map>

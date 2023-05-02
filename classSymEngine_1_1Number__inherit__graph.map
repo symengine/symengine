@@ -1,20 +1,20 @@
 <map id="SymEngine::Number" name="SymEngine::Number">
-<area shape="rect" id="node1" title=" " alt="" coords="447,252,601,277"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="670,55,863,80"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1Infty.html" title=" " alt="" coords="701,104,833,129"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1Integer.html" title="Integer Class." alt="" coords="692,153,841,179"/>
-<area shape="rect" id="node10" href="$classSymEngine_1_1NaN.html" title=" " alt="" coords="701,203,832,228"/>
-<area shape="rect" id="node11" href="$classSymEngine_1_1NumberWrapper.html" title=" " alt="" coords="661,252,872,277"/>
-<area shape="rect" id="node12" href="$classSymEngine_1_1Rational.html" title="Rational Class." alt="" coords="688,301,845,327"/>
-<area shape="rect" id="node13" href="$classSymEngine_1_1RealDouble.html" title="RealDouble Class to hold double values." alt="" coords="677,351,856,376"/>
-<area shape="rect" id="node14" href="$classSymEngine_1_1RealMPFR.html" title=" " alt="" coords="682,400,851,425"/>
-<area shape="rect" id="node15" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="649,449,884,475"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="260,252,399,277"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,245,212,285"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="955,5,1116,31"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="932,55,1139,80"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="940,104,1131,129"/>
-<area shape="rect" id="node16" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="943,399,1128,453"/>
-<area shape="rect" id="node18" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="948,478,1123,518"/>
-<area shape="rect" id="node17" href="$classSymEngine_1_1UnivariateSeries.html" title="UnivariateSeries Class." alt="" coords="1187,413,1397,439"/>
+<area shape="rect" id="node1" title=" " alt="" coords="444,265,598,293"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1ComplexBase.html" title="ComplexBase Class for deriving all complex classes." alt="" coords="667,57,860,85"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1Infty.html" title=" " alt="" coords="698,109,829,137"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Integer.html" title="Integer Class." alt="" coords="689,161,838,189"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1NaN.html" title=" " alt="" coords="698,213,829,241"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1NumberWrapper.html" title=" " alt="" coords="659,265,868,293"/>
+<area shape="rect" id="node12" href="$classSymEngine_1_1Rational.html" title="Rational Class." alt="" coords="685,317,842,345"/>
+<area shape="rect" id="node13" href="$classSymEngine_1_1RealDouble.html" title="RealDouble Class to hold double values." alt="" coords="675,369,852,397"/>
+<area shape="rect" id="node14" href="$classSymEngine_1_1RealMPFR.html" title=" " alt="" coords="679,421,848,449"/>
+<area shape="rect" id="node15" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="646,473,881,501"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="259,265,396,293"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,257,211,302"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="952,5,1112,33"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="929,57,1135,85"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="937,109,1127,137"/>
+<area shape="rect" id="node16" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="940,418,1124,479"/>
+<area shape="rect" id="node18" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="945,504,1119,548"/>
+<area shape="rect" id="node17" href="$classSymEngine_1_1UnivariateSeries.html" title="UnivariateSeries Class." alt="" coords="1183,435,1393,462"/>
 </map>

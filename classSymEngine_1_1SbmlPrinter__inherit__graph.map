@@ -1,7 +1,7 @@
 <map id="SymEngine::SbmlPrinter" name="SymEngine::SbmlPrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="15,328,193,353"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,240,203,280"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="22,167,186,192"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,79,193,119"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,177,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="14,342,193,370"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,202,294"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="22,174,185,201"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,81,192,126"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,176,33"/>
 </map>

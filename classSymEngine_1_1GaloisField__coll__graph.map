@@ -1,10 +1,10 @@
 <map id="SymEngine::GaloisField" name="SymEngine::GaloisField">
-<area shape="rect" id="node1" title=" " alt="" coords="112,553,287,579"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="84,464,315,504"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="101,375,297,415"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="113,285,286,325"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,190,178,215"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,93,212,133"/>
-<area shape="rect" id="node7" title=" " alt="" coords="52,5,165,31"/>
-<area shape="rect" id="node8" title=" " alt="" coords="203,183,377,223"/>
+<area shape="rect" id="node1" title=" " alt="" coords="110,584,285,611"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="83,490,312,534"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="100,396,295,440"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="111,302,284,346"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,201,177,228"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,98,211,143"/>
+<area shape="rect" id="node7" title=" " alt="" coords="52,5,164,33"/>
+<area shape="rect" id="node8" title=" " alt="" coords="201,192,375,237"/>
 </map>

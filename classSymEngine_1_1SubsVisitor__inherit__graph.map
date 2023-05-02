@@ -1,9 +1,9 @@
 <map id="SymEngine::SubsVisitor" name="SymEngine::SubsVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="35,328,211,353"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="16,401,231,441"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,240,241,280"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1XReplaceVisitor.html" title=" " alt="" coords="20,167,227,192"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="35,79,212,119"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="51,5,196,31"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1SSubsVisitor.html" title=" " alt="" coords="31,489,215,515"/>
+<area shape="rect" id="node1" title=" " alt="" coords="35,342,211,370"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="16,418,230,462"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,241,294"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1XReplaceVisitor.html" title=" " alt="" coords="20,174,226,201"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="35,81,211,126"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="51,5,195,33"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1SSubsVisitor.html" title=" " alt="" coords="31,510,215,538"/>
 </map>

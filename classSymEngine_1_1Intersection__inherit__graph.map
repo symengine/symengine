@@ -1,6 +1,6 @@
 <map id="SymEngine::Intersection" name="SymEngine::Intersection">
-<area shape="rect" id="node1" title=" " alt="" coords="19,240,199,265"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="47,167,171,192"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,93,178,119"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,212,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="18,249,198,277"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="46,174,170,201"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,98,177,126"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,50"/>
 </map>

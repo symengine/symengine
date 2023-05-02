@@ -1,7 +1,7 @@
 <map id="SymEngine::RealDouble" name="SymEngine::RealDouble">
-<area shape="rect" id="node1" title="RealDouble Class to hold double values." alt="" coords="19,332,198,357"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="31,257,186,283"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,183,178,208"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,93,212,133"/>
-<area shape="rect" id="node5" title=" " alt="" coords="52,5,165,31"/>
+<area shape="rect" id="node1" title="RealDouble Class to hold double values." alt="" coords="19,346,197,374"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="31,269,185,297"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,192,177,220"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,98,211,143"/>
+<area shape="rect" id="node5" title=" " alt="" coords="52,5,164,33"/>
 </map>

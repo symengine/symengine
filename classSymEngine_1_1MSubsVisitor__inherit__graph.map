@@ -1,7 +1,7 @@
 <map id="SymEngine::MSubsVisitor" name="SymEngine::MSubsVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="35,328,223,353"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,240,253,280"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1XReplaceVisitor.html" title=" " alt="" coords="26,167,233,192"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="41,79,218,119"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="57,5,202,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="35,342,223,370"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,253,294"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1XReplaceVisitor.html" title=" " alt="" coords="26,174,232,201"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="41,81,217,126"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="57,5,201,33"/>
 </map>

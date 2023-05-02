@@ -1,9 +1,9 @@
 <map id="SymEngine::MExprDict" name="SymEngine::MExprDict">
-<area shape="rect" id="node1" title=" " alt="" coords="71,417,242,443"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1UDictWrapper.html" title=" " alt="" coords="59,313,254,368"/>
-<area shape="rect" id="node3" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="67,196,246,251"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="5,108,135,133"/>
-<area shape="rect" id="node5" title=" " alt="" coords="51,13,89,38"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1Expression.html" title=" " alt="" coords="159,108,333,133"/>
-<area shape="rect" id="node7" title=" " alt="" coords="159,5,333,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="71,445,241,473"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1UDictWrapper.html" title=" " alt="" coords="60,334,253,396"/>
+<area shape="rect" id="node3" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="67,208,245,269"/>
+<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="5,115,134,143"/>
+<area shape="rect" id="node5" title=" " alt="" coords="50,14,89,42"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1Expression.html" title=" " alt="" coords="158,115,331,143"/>
+<area shape="rect" id="node7" title=" " alt="" coords="157,5,331,50"/>
 </map>

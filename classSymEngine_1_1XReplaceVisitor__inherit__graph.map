@@ -1,11 +1,11 @@
 <map id="SymEngine::XReplaceVisitor" name="SymEngine::XReplaceVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="424,45,631,70"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="679,5,927,45"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="685,69,921,109"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="199,37,376,77"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,45,151,70"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1MSubsVisitor.html" title=" " alt="" coords="975,13,1163,38"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1SubsVisitor.html" title=" " alt="" coords="981,77,1157,102"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="1211,69,1425,109"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1SSubsVisitor.html" title=" " alt="" coords="1473,77,1657,102"/>
+<area shape="rect" id="node1" title=" " alt="" coords="422,49,627,76"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="675,5,923,50"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="681,75,917,119"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="198,40,374,85"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,49,150,76"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1MSubsVisitor.html" title=" " alt="" coords="971,14,1158,42"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1SubsVisitor.html" title=" " alt="" coords="977,83,1152,111"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="1206,75,1419,119"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1SSubsVisitor.html" title=" " alt="" coords="1467,83,1651,111"/>
 </map>

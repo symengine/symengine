@@ -1,6 +1,6 @@
 <map id="SymEngine::BasicToUExprPoly" name="SymEngine::BasicToUExprPoly">
-<area shape="rect" id="node1" title=" " alt="" coords="17,255,236,280"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="5,167,248,207"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="38,79,215,119"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="54,5,199,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="17,266,236,294"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="5,174,248,218"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="38,81,215,126"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="54,5,199,33"/>
 </map>

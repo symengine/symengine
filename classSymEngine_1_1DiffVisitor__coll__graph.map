@@ -1,9 +1,9 @@
 <map id="SymEngine::DiffVisitor" name="SymEngine::DiffVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="612,109,780,134"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="304,5,481,45"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,13,154,38"/>
-<area shape="rect" id="node4" title=" " alt="" coords="305,69,480,109"/>
-<area shape="rect" id="node5" title=" " alt="" coords="305,133,480,173"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="271,197,515,267"/>
-<area shape="rect" id="node7" title=" " alt="" coords="5,219,157,245"/>
+<area shape="rect" id="node1" title=" " alt="" coords="609,118,776,146"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="303,5,480,50"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="9,14,153,42"/>
+<area shape="rect" id="node4" title=" " alt="" coords="304,75,479,119"/>
+<area shape="rect" id="node5" title=" " alt="" coords="304,144,479,189"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="270,212,513,291"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,238,157,266"/>
 </map>

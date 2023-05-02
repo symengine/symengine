@@ -1,6 +1,6 @@
 <map id="SymEngine::NeedsSymbolicExpansionVisitor" name="SymEngine::NeedsSymbolicExpansionVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="29,255,233,295"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,152,256,207"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="43,79,218,104"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="58,5,203,31"/>
+<area shape="rect" id="node1" title=" " alt="" coords="29,266,232,311"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,157,256,218"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="44,81,217,109"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="58,5,203,33"/>
 </map>

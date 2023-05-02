@@ -1,6 +1,6 @@
 <map id="SymEngine::ImmutableDenseMatrix" name="SymEngine::ImmutableDenseMatrix">
-<area shape="rect" id="node1" title=" " alt="" coords="5,240,220,280"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="25,167,200,192"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="43,93,182,119"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="9,5,216,45"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,249,220,294"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="26,174,199,201"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="44,98,181,126"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="10,5,215,50"/>
 </map>
