@@ -17,11 +17,6 @@ class Function;
 class ExecutionEngine;
 class MemoryBufferRef;
 class LLVMContext;
-class Pass;
-namespace legacy
-{
-class FunctionPassManager;
-}
 } // namespace llvm
 
 namespace SymEngine
@@ -39,7 +34,7 @@ protected:
     llvm::Value *result_;
     std::shared_ptr<llvm::LLVMContext> context;
     std::shared_ptr<llvm::ExecutionEngine> executionengine;
-    std::shared_ptr<llvm::legacy::FunctionPassManager> fpm;
+
     intptr_t func;
 
     // Following are invalid after the init call.
@@ -53,15 +48,8 @@ public:
     llvm::Value *apply(const Basic &b);
     void init(const vec_basic &x, const Basic &b,
               const bool symbolic_cse = false, unsigned opt_level = 3);
-    void init(const vec_basic &x, const Basic &b, const bool symbolic_cse,
-              const std::vector<llvm::Pass *> &passes, unsigned opt_level = 3);
     void init(const vec_basic &inputs, const vec_basic &outputs,
               const bool symbolic_cse = false, unsigned opt_level = 3);
-    void init(const vec_basic &inputs, const vec_basic &outputs,
-              const bool symbolic_cse, const std::vector<llvm::Pass *> &passes,
-              unsigned opt_level = 3);
-
-    static std::vector<llvm::Pass *> create_default_passes(int optlevel);
 
     // Helper functions
     void set_double(double d);

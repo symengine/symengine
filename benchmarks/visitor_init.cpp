@@ -17,5 +17,4 @@ static void Init(benchmark::State &state)
 }
 
 SYMENGINE_BENCHMARK_VISITORS(Init);
-
 BENCHMARK_MAIN();
