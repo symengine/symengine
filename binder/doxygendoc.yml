@@ -9,5 +9,5 @@ dependencies:
   - cmake
   - arb
   - libflint
-  - doxygen
+  - doxygen==1.9.1
   - graphviz # For dot
