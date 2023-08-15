@@ -259,6 +259,12 @@ if (WITH_VIRTUAL_TYPEID)
     set(WITH_SYMENGINE_VIRTUAL_TYPEID True)
 endif()
 
+if (SYMENGINE_INTEGER_CLASS STREQUAL "BOOSTMP")
+    if (WITH_FLINT OR WITH_ARB OR WITH_MPFR)
+        message(FATAL_ERROR "INTEGER_CLASS=boostmp cannot be used with FLINT, ARB or MPFR")
+    endif()
+endif()
+
 # Parser
 set(WITH_GENERATE_PARSER no CACHE BOOL "Generate parser files")
 if (WITH_GENERATE_PARSER)
