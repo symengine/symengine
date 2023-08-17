@@ -1,11 +1,21 @@
 <map id="SymEngine::UnicodePrinter" name="SymEngine::UnicodePrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="974,101,1172,128"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="691,5,867,50"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="413,14,557,42"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="392,170,578,198"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1StringBox.html" title=" " alt="" coords="696,126,862,154"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="193,170,279,198"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="5,161,144,206"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="700,74,858,102"/>
-<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="441,98,529,126"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="974,101,1172,128"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="691,5,867,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="882,52,951,72,1031,97,1029,102,949,77,880,57"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="413,14,557,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="572,25,690,25,690,30,572,30"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="392,170,578,198"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="593,189,724,191,796,188,867,179,914,169,961,155,1038,126,1040,131,962,160,915,174,867,185,796,193,724,197,593,195"/>
+<area shape="rect" id="Node000009" href="$classSymEngine_1_1StringBox.html" title=" " alt="" coords="696,126,862,154"/>
+<area shape="poly" id="edge9_Node000009_Node000004" title=" " alt="" coords="592,165,695,149,696,155,593,170"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="193,170,279,198"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="294,181,392,181,392,186,294,186"/>
+<area shape="rect" id="Node000006" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="5,161,144,206"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="159,181,193,181,193,186,159,186"/>
+<area shape="rect" id="Node000007" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="700,74,858,102"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="873,93,974,103,973,108,873,99"/>
+<area shape="rect" id="Node000008" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="441,98,529,126"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="543,104,699,91,699,97,544,110"/>
+<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="544,115,602,121,696,130,695,135,601,126,543,120"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="876,137,950,133,998,126,998,131,950,138,876,142"/>
 </map>

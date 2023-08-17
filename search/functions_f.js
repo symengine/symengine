@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['complex_3c_20t_20_3e_0',['complex&lt; T &gt;',['../classSymEngine_1_1Expression.html#a364944f6645accc2f01de5d133fc7e79',1,'SymEngine::Expression']]],
+  ['complex_0',['complex',['../classSymEngine_1_1Expression.html#af7df7925f51e6d8ac7408afce631f57c',1,'SymEngine::Expression']]],
   ['oct_1',['oct',['http://en.cppreference.com/w/cpp/io/manip/hex.html',1,'std']]],
   ['ofstream_2',['ofstream',['http://en.cppreference.com/w/cpp/io/basic_ofstream/basic_ofstream.html',1,'std::ofstream']]],
   ['once_5fflag_3',['once_flag',['http://en.cppreference.com/w/cpp/thread/once_flag.html',1,'std::once_flag']]],

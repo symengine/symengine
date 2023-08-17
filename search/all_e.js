@@ -2,7 +2,7 @@ var searchData=
 [
   ['n_0',['n',['http://en.cppreference.com/w/cpp/numeric/random/student_t_distribution/n.html',1,'std::student_t_distribution::n()'],['http://en.cppreference.com/w/cpp/numeric/random/chi_squared_distribution/n.html',1,'std::chi_squared_distribution::n()'],['http://en.cppreference.com/w/cpp/numeric/random/fisher_f_distribution/params.html',1,'std::fisher_f_distribution::n()']]],
   ['name_1',['name',['http://en.cppreference.com/w/cpp/locale/locale/name.html',1,'std::locale::name()'],['http://en.cppreference.com/w/cpp/error/error_category/name.html',1,'std::error_category::name()'],['http://en.cppreference.com/w/cpp/types/type_info/name.html',1,'std::type_info::name()'],['http://en.cppreference.com/w/cpp/types/type_index/name.html',1,'std::type_index::name()']]],
-  ['name_5f_2',['name_',['../classSymEngine_1_1Constant.html#a1bf2b0ca4fe996d2364e1a9c00cd8107',1,'SymEngine::Constant::name_()'],['../classSymEngine_1_1Symbol.html#a72c0503980f682249669205072120d9f',1,'SymEngine::Symbol::name_()']]],
+  ['name_5f_2',['name_',['../classSymEngine_1_1Constant.html#a1bf2b0ca4fe996d2364e1a9c00cd8107',1,'SymEngine::Constant::name_'],['../classSymEngine_1_1Symbol.html#a72c0503980f682249669205072120d9f',1,'SymEngine::Symbol::name_']]],
   ['nan_3',['nan',['http://en.cppreference.com/w/cpp/numeric/math/nan.html',1,'std']]],
   ['nan_4',['NaN',['../classSymEngine_1_1NaN.html#a99936c26fabc1271af822c44df167986',1,'SymEngine::NaN::NaN()'],['../classSymEngine_1_1NaN.html',1,'SymEngine::NaN']]],
   ['nan_2eh_5',['nan.h',['../nan_8h.html',1,'']]],

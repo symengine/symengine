@@ -1,9 +1,15 @@
 <map id="SymEngine::PolyGeneratorVisitorPow" name="SymEngine::PolyGeneratorVisitorPow">
-<area shape="rect" id="node1" title=" " alt="" coords="645,91,840,135"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="304,5,517,50"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="17,14,162,42"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="287,74,534,152"/>
-<area shape="rect" id="node5" title=" " alt="" coords="14,83,165,111"/>
-<area shape="rect" id="node6" title=" " alt="" coords="5,135,174,163"/>
-<area shape="rect" id="node7" title=" " alt="" coords="323,176,498,221"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="645,91,840,135"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="304,5,517,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="515,52,654,88,652,93,514,57"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="17,14,162,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="177,25,303,25,303,30,177,30"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="287,74,534,152"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="549,110,645,110,645,116,549,116"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="14,83,165,111"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="180,99,287,104,286,110,180,104"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,135,174,163"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="188,135,286,124,286,130,189,141"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="323,176,498,221"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="511,170,652,133,653,139,512,175"/>
 </map>

@@ -1,9 +1,15 @@
 <map id="SymEngine::ComplexBase" name="SymEngine::ComplexBase">
-<area shape="rect" id="node1" title="ComplexBase Class for deriving all complex classes." alt="" coords="197,249,390,277"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="5,325,166,353"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="190,325,397,353"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="420,325,610,353"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="216,174,371,201"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="225,98,362,126"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="191,5,396,50"/>
+<area shape="rect" id="Node000001" title="ComplexBase Class for deriving all complex classes." alt="" coords="197,249,390,277"/>
+<area shape="rect" id="Node000005" href="$classSymEngine_1_1Complex.html" title="Complex Class." alt="" coords="5,325,166,353"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="244,285,124,327,122,322,242,280"/>
+<area shape="rect" id="Node000006" href="$classSymEngine_1_1ComplexDouble.html" title="Complex Double Class to hold std::complex&lt;double&gt; values." alt="" coords="190,325,397,353"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="296,292,296,325,291,325,291,292"/>
+<area shape="rect" id="Node000007" href="$classSymEngine_1_1ComplexMPC.html" title=" " alt="" coords="420,325,610,353"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="348,280,476,322,474,327,346,285"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="216,174,371,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="296,216,296,249,291,249,291,216"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="225,98,362,126"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="296,141,296,173,291,173,291,141"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="191,5,396,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="296,65,296,97,291,97,291,65"/>
 </map>

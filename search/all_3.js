@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['c_2b_2b_20style_20guide_0',['C++ Style Guide',['../md_md_style_guide.html',1,'']]],
+  ['c_2b_2b_20style_20guide_0',['C++ Style Guide',['../md_md_2style__guide.html',1,'']]],
   ['c16rtomb_1',['c16rtomb',['http://en.cppreference.com/w/cpp/string/multibyte/c16rtomb.html',1,'std']]],
   ['c32rtomb_2',['c32rtomb',['http://en.cppreference.com/w/cpp/string/multibyte/c32rtomb.html',1,'std']]],
   ['c89codeprinter_3',['C89CodePrinter',['../classSymEngine_1_1C89CodePrinter.html',1,'SymEngine']]],

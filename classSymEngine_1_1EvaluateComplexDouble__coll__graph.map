@@ -1,5 +1,7 @@
 <map id="SymEngine::EvaluateComplexDouble" name="SymEngine::EvaluateComplexDouble">
-<area shape="rect" id="node1" title=" " alt="" coords="5,174,223,218"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="11,81,217,126"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Evaluate.html" title="A class that will evaluate functions numerically." alt="" coords="34,5,194,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,223,218"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="11,81,217,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="117,140,117,173,111,173,111,140"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Evaluate.html" title="A class that will evaluate functions numerically." alt="" coords="34,5,194,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="117,48,117,80,111,80,111,48"/>
 </map>

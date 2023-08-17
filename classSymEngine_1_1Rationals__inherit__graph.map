@@ -1,6 +1,9 @@
 <map id="SymEngine::Rationals" name="SymEngine::Rationals">
-<area shape="rect" id="node1" title=" " alt="" coords="26,249,190,277"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="46,174,170,201"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,98,177,126"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="26,249,190,277"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1Set.html" title=" " alt="" coords="46,174,170,201"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,216,111,249,105,249,105,216"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,98,177,126"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,141,111,173,105,173,105,141"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,65,111,97,105,97,105,65"/>
 </map>

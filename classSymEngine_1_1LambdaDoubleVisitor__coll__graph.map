@@ -1,13 +1,23 @@
 <map id="SymEngine::LambdaDoubleVisitor&lt; T &gt;" name="SymEngine::LambdaDoubleVisitor&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="734,169,1014,197"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="311,5,488,67"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="20,22,165,50"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="299,92,500,119"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="41,92,144,119"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/map.html" title=" " alt="" coords="293,144,506,222"/>
-<area shape="rect" id="node7" title=" " alt="" coords="5,153,180,197"/>
-<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="49,221,136,249"/>
-<area shape="rect" id="node9" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="317,246,482,291"/>
-<area shape="rect" id="node10" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="309,315,490,360"/>
-<area shape="rect" id="node11" title=" " alt="" coords="17,324,168,351"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="734,169,1014,197"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="311,5,488,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="503,42,605,58,659,71,711,87,753,105,793,126,855,166,852,171,790,131,751,110,709,92,657,76,604,63,502,47"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="20,22,165,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="179,34,311,34,311,39,179,39"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="299,92,500,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="504,120,785,166,784,171,503,125"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="41,92,144,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="158,103,298,103,298,108,158,108"/>
+<area shape="rect" id="Node000006" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/map.html" title=" " alt="" coords="293,144,506,222"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="521,180,734,180,734,186,521,186"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,153,180,197"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="195,175,293,177,292,183,195,180"/>
+<area shape="rect" id="Node000008" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="49,221,136,249"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="150,222,292,198,293,204,151,228"/>
+<area shape="rect" id="Node000009" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/utility/functional/function.html" title=" " alt="" coords="317,246,482,291"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="496,248,792,195,793,200,497,253"/>
+<area shape="rect" id="Node000010" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="309,315,490,360"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="504,318,605,296,709,264,786,229,848,195,851,200,789,234,711,269,606,301,505,323"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="17,324,168,351"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="183,335,308,335,308,340,183,340"/>
 </map>

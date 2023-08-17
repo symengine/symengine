@@ -1,6 +1,9 @@
 <map id="SymEngine::InfVisitor" name="SymEngine::InfVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="113,192,274,220"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,82,182,127"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,5,166,33"/>
-<area shape="rect" id="node4" title=" " alt="" coords="206,82,381,127"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="113,192,274,220"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,82,182,127"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,135,183,190,179,194,123,139"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,5,166,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,48,96,82,91,82,91,48"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="206,82,381,127"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="264,139,208,194,204,190,260,135"/>
 </map>

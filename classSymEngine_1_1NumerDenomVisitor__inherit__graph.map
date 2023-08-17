@@ -1,5 +1,7 @@
 <map id="SymEngine::NumerDenomVisitor" name="SymEngine::NumerDenomVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,174,241,201"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="31,81,215,126"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="51,5,195,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,241,201"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="31,81,215,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,141,126,173,120,173,120,141"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="51,5,195,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="126,48,126,80,120,80,120,48"/>
 </map>

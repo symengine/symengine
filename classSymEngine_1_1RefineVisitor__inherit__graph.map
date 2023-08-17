@@ -1,7 +1,11 @@
 <map id="SymEngine::RefineVisitor" name="SymEngine::RefineVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="37,342,223,370"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,255,294"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="25,174,235,201"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="42,81,218,126"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="58,5,202,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="37,342,223,370"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,255,294"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,309,133,341,127,341,127,309"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="25,174,235,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="133,216,133,249,127,249,127,216"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="42,81,218,126"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="133,141,133,173,127,173,127,141"/>
+<area shape="rect" id="Node000005" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="58,5,202,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="133,48,133,80,127,80,127,48"/>
 </map>

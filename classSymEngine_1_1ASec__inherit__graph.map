@@ -1,9 +1,15 @@
 <map id="SymEngine::ASec" name="SymEngine::ASec">
-<area shape="rect" id="node1" title=" " alt="" coords="52,476,187,504"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1InverseTrigFunction.html" title=" " alt="" coords="5,401,234,428"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1TrigBase.html" title=" " alt="" coords="41,325,198,353"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="17,249,222,277"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="41,174,198,201"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="51,98,188,126"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="17,5,222,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="52,476,187,504"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1InverseTrigFunction.html" title=" " alt="" coords="5,401,234,428"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,443,122,476,117,476,117,443"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1TrigBase.html" title=" " alt="" coords="41,325,198,353"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,368,122,400,117,400,117,368"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="17,249,222,277"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,292,122,325,117,325,117,292"/>
+<area shape="rect" id="Node000005" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="41,174,198,201"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="122,216,122,249,117,249,117,216"/>
+<area shape="rect" id="Node000006" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="51,98,188,126"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="122,141,122,173,117,173,117,141"/>
+<area shape="rect" id="Node000007" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="17,5,222,50"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="122,65,122,97,117,97,117,65"/>
 </map>

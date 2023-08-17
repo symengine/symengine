@@ -1,5 +1,7 @@
 <map id="SymEngine::PolyGamma" name="SymEngine::PolyGamma">
-<area shape="rect" id="node1" title=" " alt="" coords="5,157,188,184"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="35,81,158,109"/>
-<area shape="rect" id="node3" title=" " alt="" coords="52,5,141,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,157,188,184"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="35,81,158,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,124,99,156,94,156,94,124"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="52,5,141,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,48,99,81,94,81,94,48"/>
 </map>

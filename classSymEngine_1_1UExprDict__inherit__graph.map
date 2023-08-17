@@ -1,4 +1,5 @@
 <map id="SymEngine::UExprDict" name="SymEngine::UExprDict">
-<area shape="rect" id="node1" title=" " alt="" coords="32,98,199,126"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1ODictWrapper.html" title=" " alt="" coords="5,5,226,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="32,98,199,126"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1ODictWrapper.html" title=" " alt="" coords="5,5,226,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,65,118,97,113,97,113,65"/>
 </map>

@@ -1,5 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classSymEngine_1_1ContainerBaseIter.html" title=" " alt="" coords="5,40,203,85"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1ContainerForIter.html" title=" " alt="" coords="253,5,461,50"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1ContainerRevIter.html" title=" " alt="" coords="251,75,463,119"/>
+<area shape="rect" id="Node000000" href="$classSymEngine_1_1ContainerBaseIter.html" title=" " alt="" coords="5,40,203,85"/>
+<area shape="rect" id="Node000001" href="$classSymEngine_1_1ContainerForIter.html" title=" " alt="" coords="253,5,461,50"/>
+<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="217,44,252,39,253,45,218,49"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1ContainerRevIter.html" title=" " alt="" coords="251,75,463,119"/>
+<area shape="poly" id="edge12_Node000000_Node000002" title=" " alt="" coords="218,75,251,80,250,85,217,81"/>
 </map>

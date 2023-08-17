@@ -1,6 +1,9 @@
 <map id="SymEngine::MExprPoly" name="SymEngine::MExprPoly">
-<area shape="rect" id="node1" title=" " alt="" coords="27,266,199,294"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="5,174,221,218"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="44,98,182,126"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="10,5,216,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="27,266,199,294"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="5,174,221,218"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,233,116,266,110,266,110,233"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="44,98,182,126"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,141,116,173,110,173,110,141"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="10,5,216,50"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,65,116,97,110,97,110,65"/>
 </map>

@@ -1,9 +1,15 @@
 <map id="SymEngine::Subs" name="SymEngine::Subs">
-<area shape="rect" id="node1" title=" " alt="" coords="881,74,1015,102"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="624,14,761,42"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="268,5,473,50"/>
-<area shape="rect" id="node4" title=" " alt="" coords="5,14,118,42"/>
-<area shape="rect" id="node5" title=" " alt="" coords="605,65,779,110"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/map.html" title=" " alt="" coords="586,134,798,196"/>
-<area shape="rect" id="node7" title=" " alt="" coords="295,151,446,179"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="881,74,1015,102"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="624,14,761,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="773,43,858,62,891,71,890,76,857,68,772,48"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="268,5,473,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="488,25,623,25,623,30,488,30"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,14,118,42"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="132,25,268,25,268,30,132,30"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="605,65,779,110"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="794,85,881,85,881,90,794,90"/>
+<area shape="rect" id="Node000006" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/map.html" title=" " alt="" coords="586,134,798,196"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="810,127,899,99,901,105,811,132"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="295,151,446,179"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="461,162,586,162,586,168,461,168"/>
 </map>

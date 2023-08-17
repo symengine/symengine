@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['i_0',['i',['../classSymEngine_1_1Integer.html#afc8490bf285d05ad909a00ac9515fe7e',1,'SymEngine::Integer::i()'],['../classSymEngine_1_1Rational.html#a57708d4d6ffbc4c862bad6fe20cc77af',1,'SymEngine::Rational::i()']]],
+  ['i_0',['i',['../classSymEngine_1_1Integer.html#afc8490bf285d05ad909a00ac9515fe7e',1,'SymEngine::Integer::i'],['../classSymEngine_1_1Rational.html#a57708d4d6ffbc4c862bad6fe20cc77af',1,'SymEngine::Rational::i']]],
   ['i_5fnth_5froot_1',['i_nth_root',['../namespaceSymEngine.html#a20c21685cc5bd4d8e4dc5bc9c53bd37e',1,'SymEngine']]],
   ['iabs_2',['iabs',['../namespaceSymEngine.html#adfe12999fb4a97e343fa0a648b888f2f',1,'SymEngine']]],
   ['id_3',['id',['http://en.cppreference.com/w/cpp/locale/locale/id/id.html',1,'std::locale::id::id()'],['http://en.cppreference.com/w/cpp/thread/thread/id/id.html',1,'std::thread::id::id()'],['http://en.cppreference.com/w/cpp/locale/locale/id.html',1,'std::locale::id'],['http://en.cppreference.com/w/cpp/thread/thread/id.html',1,'std::thread::id']]],

@@ -1,5 +1,7 @@
 <map id="/home/runner/work/symengine/symengine/symengine/eval_mpfr.h" name="/home/runner/work/symengine/symengine/symengine/eval_mpfr.h">
-<area shape="rect" id="node1" title=" " alt="" coords="110,5,364,50"/>
-<area shape="rect" id="node2" href="$eval__mpfr_8cpp_source.html" title=" " alt="" coords="5,98,226,160"/>
-<area shape="rect" id="node3" href="$real__mpfr_8cpp_source.html" title=" " alt="" coords="249,98,470,160"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="110,5,364,50"/>
+<area shape="rect" id="Node000002" href="$eval__mpfr_8cpp_source.html" title=" " alt="" coords="5,98,226,160"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,61,154,100,151,96,198,57"/>
+<area shape="rect" id="Node000003" href="$real__mpfr_8cpp_source.html" title=" " alt="" coords="249,98,470,160"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="276,57,324,95,321,100,273,61"/>
 </map>

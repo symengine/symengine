@@ -1,7 +1,11 @@
 <map id="SymEngine::PolynomialVisitor" name="SymEngine::PolynomialVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="68,208,285,235"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,98,182,143"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,5,166,33"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="206,107,314,134"/>
-<area shape="rect" id="node5" title=" " alt="" coords="241,5,279,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="68,208,285,235"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,98,182,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,152,168,206,164,209,118,156"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,5,166,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,48,96,97,91,97,91,48"/>
+<area shape="rect" id="Node000004" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="206,107,314,134"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="242,147,189,209,185,206,238,144"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="241,5,279,33"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="263,48,263,106,258,106,258,48"/>
 </map>

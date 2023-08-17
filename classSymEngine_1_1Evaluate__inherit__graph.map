@@ -1,10 +1,17 @@
 <map id="SymEngine::Evaluate" name="SymEngine::Evaluate">
-<area shape="rect" id="node1" title="A class that will evaluate functions numerically." alt="" coords="5,143,165,171"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="232,5,437,50"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="232,75,437,119"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1EvaluateDouble.html" title="Evaluate functions with double precision." alt="" coords="213,143,456,171"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1EvaluateInfty.html" title=" " alt="" coords="240,195,429,223"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1EvaluateNaN.html" title=" " alt="" coords="241,247,428,275"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EvaluateComplexDouble.html" title=" " alt="" coords="513,5,730,50"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1EvaluateRealDouble.html" title=" " alt="" coords="504,83,738,111"/>
+<area shape="rect" id="Node000001" title="A class that will evaluate functions numerically." alt="" coords="5,143,165,171"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="232,5,437,50"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,131,156,95,211,60,239,48,241,53,214,65,159,99,114,135"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="232,75,437,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,137,238,117,239,123,160,142"/>
+<area shape="rect" id="Node000006" href="$classSymEngine_1_1EvaluateDouble.html" title="Evaluate functions with double precision." alt="" coords="213,143,456,171"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="179,154,212,154,212,160,179,160"/>
+<area shape="rect" id="Node000007" href="$classSymEngine_1_1EvaluateInfty.html" title=" " alt="" coords="240,195,429,223"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="170,172,265,192,264,197,169,177"/>
+<area shape="rect" id="Node000008" href="$classSymEngine_1_1EvaluateNaN.html" title=" " alt="" coords="241,247,428,275"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="119,178,162,206,214,232,252,244,250,249,212,237,160,211,116,182"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1EvaluateComplexDouble.html" title=" " alt="" coords="513,5,730,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="452,25,512,25,512,30,452,30"/>
+<area shape="rect" id="Node000005" href="$classSymEngine_1_1EvaluateRealDouble.html" title=" " alt="" coords="504,83,738,111"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="452,94,504,94,504,100,452,100"/>
 </map>

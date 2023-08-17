@@ -1,6 +1,9 @@
 <map id="SymEngine::EvalComplexDoubleVisitor" name="SymEngine::EvalComplexDoubleVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="5,283,240,328"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="13,174,232,235"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="34,81,211,126"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="50,5,195,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,283,240,328"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1EvalDoubleVisitor.html" title=" " alt="" coords="13,174,232,235"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,250,125,283,120,283,120,250"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="34,81,211,126"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="125,140,125,173,120,173,120,140"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="50,5,195,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="125,48,125,80,120,80,120,48"/>
 </map>

@@ -1,9 +1,15 @@
 <map id="SymEngine::SeriesCoeffInterface" name="SymEngine::SeriesCoeffInterface">
-<area shape="rect" id="node1" title=" " alt="" coords="646,61,881,89"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="929,5,1113,67"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="934,91,1108,136"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="444,61,598,89"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="259,61,396,89"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,53,211,97"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1UnivariateSeries.html" title="UnivariateSeries Class." alt="" coords="1161,22,1371,50"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="646,61,881,89"/>
+<area shape="rect" id="Node000005" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="929,5,1113,67"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="874,56,928,47,929,53,875,61"/>
+<area shape="rect" id="Node000007" href="$classSymEngine_1_1SeriesBase.html" title=" " alt="" coords="934,91,1108,136"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="875,89,934,98,933,103,874,94"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="444,61,598,89"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="614,72,646,72,646,78,614,78"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="259,61,396,89"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="411,72,444,72,444,78,411,78"/>
+<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,53,211,97"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="226,72,259,72,259,78,226,78"/>
+<area shape="rect" id="Node000006" href="$classSymEngine_1_1UnivariateSeries.html" title="UnivariateSeries Class." alt="" coords="1161,22,1371,50"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="1128,34,1160,34,1160,39,1128,39"/>
 </map>

@@ -1,8 +1,13 @@
 <map id="SymEngine::MSymEnginePoly&lt; Container, Poly &gt;" name="SymEngine::MSymEnginePoly&lt; Container, Poly &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="102,317,317,362"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="42,216,179,244"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,98,211,143"/>
-<area shape="rect" id="node4" title=" " alt="" coords="52,5,164,33"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="205,208,417,252"/>
-<area shape="rect" id="node6" title=" " alt="" coords="235,107,386,134"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="102,317,317,362"/>
+<area shape="rect" id="Node000002" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="42,216,179,244"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,253,192,315,188,319,130,257"/>
+<area shape="rect" id="Node000003" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,98,211,143"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,158,113,216,108,216,106,158"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="52,5,164,33"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,48,111,97,105,97,105,48"/>
+<area shape="rect" id="Node000005" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="205,208,417,252"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="282,265,232,319,228,315,279,261"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="235,107,386,134"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="313,149,313,207,308,207,308,149"/>
 </map>
