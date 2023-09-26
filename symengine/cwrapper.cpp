@@ -281,7 +281,7 @@ int number_is_complex(const basic s)
     return (int)((down_cast<const Number &>(*(s->m))).is_complex());
 }
 
-int expression_has_symbol(const basic e, const basic s)
+int basic_has_symbol(const basic e, const basic s)
 {
     //Should have a check for s being a symbol
     return (int)(has_symbol(*(e->m), *(s->m)));

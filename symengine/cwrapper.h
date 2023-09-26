@@ -169,7 +169,7 @@ int number_is_positive(const basic s);
 int number_is_complex(const basic s);
 
 //! Returns 1 if `e` contains the symbol `s`; 0 otherwise
-int expression_has_symbol(const basic e, const basic s);
+int basic_has_symbol(const basic e, const basic s);
 
 //! Assign to s, a long.
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
