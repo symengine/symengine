@@ -40,9 +40,8 @@ var searchData=
   ['unshift_37',['unshift',['http://en.cppreference.com/w/cpp/locale/codecvt/unshift.html',1,'std::codecvt_utf8_utf16::unshift()'],['http://en.cppreference.com/w/cpp/locale/codecvt/unshift.html',1,'std::codecvt::unshift()'],['http://en.cppreference.com/w/cpp/locale/codecvt/unshift.html',1,'std::codecvt_byname::unshift()'],['http://en.cppreference.com/w/cpp/locale/codecvt/unshift.html',1,'std::codecvt_utf16::unshift()'],['http://en.cppreference.com/w/cpp/locale/codecvt/unshift.html',1,'std::codecvt_utf8::unshift()']]],
   ['upper_5fbound_38',['upper_bound',['http://en.cppreference.com/w/cpp/algorithm/upper_bound.html',1,'std::upper_bound()'],['http://en.cppreference.com/w/cpp/container/multimap/upper_bound.html',1,'std::multimap::upper_bound()'],['http://en.cppreference.com/w/cpp/container/map/upper_bound.html',1,'std::map::upper_bound()'],['http://en.cppreference.com/w/cpp/container/set/upper_bound.html',1,'std::set::upper_bound()'],['http://en.cppreference.com/w/cpp/container/multiset/upper_bound.html',1,'std::multiset::upper_bound()']]],
   ['uppercase_39',['uppercase',['http://en.cppreference.com/w/cpp/io/manip/uppercase.html',1,'std']]],
-  ['uppergamma_40',['UpperGamma',['../classSymEngine_1_1UpperGamma.html#a18a5234d01159a7138b2068142dd6e3d',1,'SymEngine::UpperGamma']]],
-  ['uppergamma_41',['uppergamma',['../namespaceSymEngine.html#afd4e5ab0bad75561a69caf9036301083',1,'SymEngine']]],
-  ['uratpoly_42',['URatPoly',['../classSymEngine_1_1URatPoly.html#af3dd7725a84f62877f6a20b9d0458e47',1,'SymEngine::URatPoly']]],
-  ['use_5fcount_43',['use_count',['http://en.cppreference.com/w/cpp/memory/weak_ptr/use_count.html',1,'std::weak_ptr']]],
-  ['use_5ffacet_44',['use_facet',['http://en.cppreference.com/w/cpp/locale/use_facet.html',1,'std']]]
+  ['uppergamma_40',['uppergamma',['../classSymEngine_1_1UpperGamma.html#a18a5234d01159a7138b2068142dd6e3d',1,'SymEngine::UpperGamma::UpperGamma()'],['../namespaceSymEngine.html#afd4e5ab0bad75561a69caf9036301083',1,'SymEngine::uppergamma()']]],
+  ['uratpoly_41',['URatPoly',['../classSymEngine_1_1URatPoly.html#af3dd7725a84f62877f6a20b9d0458e47',1,'SymEngine::URatPoly']]],
+  ['use_5fcount_42',['use_count',['http://en.cppreference.com/w/cpp/memory/weak_ptr/use_count.html',1,'std::weak_ptr']]],
+  ['use_5ffacet_43',['use_facet',['http://en.cppreference.com/w/cpp/locale/use_facet.html',1,'std']]]
 ];

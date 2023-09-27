@@ -24,11 +24,10 @@ var searchData=
   ['true_5ftype_21',['true_type',['http://en.cppreference.com/w/cpp/types/integral_constant.html',1,'std']]],
   ['truncate_22',['Truncate',['../classSymEngine_1_1Truncate.html',1,'SymEngine']]],
   ['try_5fto_5flock_5ft_23',['try_to_lock_t',['http://en.cppreference.com/w/cpp/thread/lock_tag_t.html',1,'std']]],
-  ['tuple_24',['tuple',['http://en.cppreference.com/w/cpp/utility/tuple.html',1,'std']]],
-  ['tuple_25',['Tuple',['../classSymEngine_1_1Tuple.html',1,'SymEngine']]],
-  ['two_5fby_5ftwo_5fmatrix_26',['two_by_two_matrix',['../structSymEngine_1_1two__by__two__matrix.html',1,'SymEngine']]],
-  ['twoargbasic_27',['TwoArgBasic',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
-  ['twoargbasic_3c_20boolean_20_3e_28',['TwoArgBasic&lt; Boolean &gt;',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
-  ['type_5findex_29',['type_index',['http://en.cppreference.com/w/cpp/types/type_index.html',1,'std']]],
-  ['type_5finfo_30',['type_info',['http://en.cppreference.com/w/cpp/types/type_info.html',1,'std']]]
+  ['tuple_24',['tuple',['http://en.cppreference.com/w/cpp/utility/tuple.html',1,'std::tuple'],['../classSymEngine_1_1Tuple.html',1,'SymEngine::Tuple']]],
+  ['two_5fby_5ftwo_5fmatrix_25',['two_by_two_matrix',['../structSymEngine_1_1two__by__two__matrix.html',1,'SymEngine']]],
+  ['twoargbasic_26',['TwoArgBasic',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
+  ['twoargbasic_3c_20boolean_20_3e_27',['TwoArgBasic&lt; Boolean &gt;',['../classSymEngine_1_1TwoArgBasic.html',1,'SymEngine']]],
+  ['type_5findex_28',['type_index',['http://en.cppreference.com/w/cpp/types/type_index.html',1,'std']]],
+  ['type_5finfo_29',['type_info',['http://en.cppreference.com/w/cpp/types/type_info.html',1,'std']]]
 ];

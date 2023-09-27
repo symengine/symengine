@@ -5,8 +5,8 @@ var searchData=
   ['key_5feq_2',['key_eq',['http://en.cppreference.com/w/cpp/container/unordered_map/key_eq.html',1,'std::unordered_map::key_eq()'],['http://en.cppreference.com/w/cpp/container/unordered_multimap/key_eq.html',1,'std::unordered_multimap::key_eq()'],['http://en.cppreference.com/w/cpp/container/unordered_multiset/key_eq.html',1,'std::unordered_multiset::key_eq()'],['http://en.cppreference.com/w/cpp/container/unordered_set/key_eq.html',1,'std::unordered_set::key_eq()']]],
   ['kill_5fdependency_3',['kill_dependency',['http://en.cppreference.com/w/cpp/atomic/kill_dependency.html',1,'std']]],
   ['kilo_4',['kilo',['http://en.cppreference.com/w/cpp/numeric/ratio/ratio.html',1,'std']]],
-  ['knuth_5fb_5',['knuth_b',['http://en.cppreference.com/w/cpp/numeric/random/shuffle_order_engine/shuffle_order_engine.html',1,'std::knuth_b::knuth_b()'],['http://en.cppreference.com/w/cpp/numeric/random/shuffle_order_engine.html',1,'std::knuth_b']]],
+  ['knuth_5fb_5',['knuth_b',['http://en.cppreference.com/w/cpp/numeric/random/shuffle_order_engine.html',1,'std::knuth_b'],['http://en.cppreference.com/w/cpp/numeric/random/shuffle_order_engine/shuffle_order_engine.html',1,'std::knuth_b::knuth_b()']]],
   ['kronecker_6',['kronecker',['../namespaceSymEngine.html#a133cec803e9dbba163ce363a413a8a83',1,'SymEngine']]],
   ['kronecker_5fdelta_7',['kronecker_delta',['../namespaceSymEngine.html#ae256c31b33e601a3c0b163437a85ad75',1,'SymEngine']]],
-  ['kroneckerdelta_8',['KroneckerDelta',['../classSymEngine_1_1KroneckerDelta.html#ae71aa1798cdbb66ca8a7f83a166af402',1,'SymEngine::KroneckerDelta::KroneckerDelta()'],['../classSymEngine_1_1KroneckerDelta.html',1,'SymEngine::KroneckerDelta']]]
+  ['kroneckerdelta_8',['kroneckerdelta',['../classSymEngine_1_1KroneckerDelta.html#ae71aa1798cdbb66ca8a7f83a166af402',1,'SymEngine::KroneckerDelta::KroneckerDelta()'],['../classSymEngine_1_1KroneckerDelta.html',1,'SymEngine::KroneckerDelta']]]
 ];

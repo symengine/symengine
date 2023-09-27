@@ -9,7 +9,7 @@ var searchData=
   ['value_5for_6',['value_or',['http://en.cppreference.com/w/cpp/experimental/optional/value_or.html',1,'std::experimental::optional']]],
   ['vec_5fbasic_5feq_5fperm_7',['vec_basic_eq_perm',['../namespaceSymEngine.html#a9abe8e75a54bd930425a94584942b8e5',1,'SymEngine']]],
   ['vec_5fhash_8',['vec_hash',['../structSymEngine_1_1vec__hash.html',1,'SymEngine']]],
-  ['vector_9',['vector',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std::vector&lt; T &gt;'],['http://en.cppreference.com/w/cpp/container/vector/vector.html',1,'std::vector::vector()']]],
+  ['vector_9',['vector',['http://en.cppreference.com/w/cpp/container/vector/vector.html',1,'std::vector::vector()'],['http://en.cppreference.com/w/cpp/container/vector.html',1,'std::vector&lt; T &gt;']]],
   ['vector_3c_20double_20_3e_10',['vector&lt; double &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
   ['vector_3c_20int_20_3e_11',['vector&lt; int &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
   ['vector_3c_20integer_5fclass_20_3e_12',['vector&lt; integer_class &gt;',['http://en.cppreference.com/w/cpp/container/vector.html',1,'std']]],
