@@ -55,9 +55,21 @@ void test_cwrapper()
     basic_str_free(s);
 
     integer_set_ui(e, 456);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, x) == 0);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 0);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 0);
     basic_add(e, e, x);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, x) == 1);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 0);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 0);
     basic_mul(e, e, y);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, x) == 1);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 1);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 0);
     basic_div(e, e, z);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, x) == 1);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 1);
+    SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 1);
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "y*(456 + x)/z") == 0);
     basic_str_free(s);

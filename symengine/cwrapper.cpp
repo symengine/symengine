@@ -283,7 +283,6 @@ int number_is_complex(const basic s)
 
 int basic_has_symbol(const basic e, const basic s)
 {
-    //Should have a check for s being a symbol
     return (int)(has_symbol(*(e->m), *(s->m)));
 }
 
