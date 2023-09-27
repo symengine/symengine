@@ -30,6 +30,7 @@ using SymEngine::DenseMatrix;
 using SymEngine::down_cast;
 using SymEngine::function_symbol;
 using SymEngine::FunctionSymbol;
+using SymEngine::has_symbol;
 using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::LambdaRealDoubleVisitor;
@@ -278,6 +279,11 @@ int number_is_complex(const basic s)
 {
     SYMENGINE_ASSERT(is_a_Number(*(s->m)));
     return (int)((down_cast<const Number &>(*(s->m))).is_complex());
+}
+
+int basic_has_symbol(const basic e, const basic s)
+{
+    return (int)(has_symbol(*(e->m), *(s->m)));
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
