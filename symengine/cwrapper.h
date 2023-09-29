@@ -170,6 +170,14 @@ int number_is_complex(const basic s);
 
 //! Returns 1 if `e` contains the symbol `s`; 0 otherwise
 int basic_has_symbol(const basic e, const basic s);
+//! Returns 1 if `s` is of type Add; 0 otherwise
+int basic_is_Add(const basic s);
+//! Returns 1 if `s` is of type Mul; 0 otherwise
+int basic_is_Mul(const basic s);
+//! Returns 1 if `s` is of type Pow; 0 otherwise
+int basic_is_Pow(const basic s);
+//! Returns 1 if `s` is of type Log; 0 otherwise
+int basic_is_Log(const basic s);
 
 //! Assign to s, a long.
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i);
