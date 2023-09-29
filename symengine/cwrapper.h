@@ -253,6 +253,10 @@ CWRAPPER_OUTPUT_TYPE basic_mul(basic s, const basic a, const basic b);
 CWRAPPER_OUTPUT_TYPE basic_div(basic s, const basic a, const basic b);
 //! Assigns s = a ** b.
 CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b);
+//! Returns the base of a Pow expression
+CWRAPPER_OUTPUT_TYPE basic_get_base(basic s, const basic a);
+//! Returns the exponent of a Pow expression
+CWRAPPER_OUTPUT_TYPE basic_get_exp(basic s, const basic a);
 //! Assign to s, derivative of expr with respect to sym.
 //! Returns SYMENGINE_RUNTIME_ERROR if sym is not a symbol.
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, const basic sym);

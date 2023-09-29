@@ -781,7 +781,7 @@ void test_hash()
 
 void test_subs2()
 {
-    basic s, e, x, y, z;
+    basic s, e, x, y, z, base, exp;
     basic_new_stack(s);
     basic_new_stack(e);
     basic_new_stack(x);
@@ -802,7 +802,10 @@ void test_subs2()
     integer_set_si(z, 3);
     basic_pow(e, x, z);
     // e should be x**3
-
+    basic_get_base(base, e);
+    basic_get_exp(exp, e);
+    SYMENGINE_C_ASSERT(basic_eq(base, x));
+    SYMENGINE_C_ASSERT(basic_eq(exp, z));
     SYMENGINE_C_ASSERT(basic_eq(s, e));
 
     basic_free_stack(s);
@@ -810,6 +813,8 @@ void test_subs2()
     basic_free_stack(x);
     basic_free_stack(y);
     basic_free_stack(z);
+    basic_free_stack(base);
+    basic_free_stack(exp);
 }
 
 void test_subs()
