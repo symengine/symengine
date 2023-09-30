@@ -28,6 +28,7 @@ using SymEngine::ComplexDouble;
 using SymEngine::CSRMatrix;
 using SymEngine::DenseMatrix;
 using SymEngine::down_cast;
+using SymEngine::E;
 using SymEngine::function_symbol;
 using SymEngine::FunctionSymbol;
 using SymEngine::has_symbol;
@@ -309,7 +310,7 @@ int basic_is_Log(const basic s)
 int basic_is_Exp(const basic s)
 {
     SYMENGINE_ASSERT(basic_is_Pow(s) == 1);
-    return (down_cast<const SymEngine::Pow &>(*(s->m))).get_exp() == SymEngine::E ? 1 : 0;
+    return (down_cast<const SymEngine::Pow &>(*(s->m))).get_exp() == E ? 1 : 0;
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)

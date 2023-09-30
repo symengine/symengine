@@ -59,10 +59,12 @@ void test_cwrapper()
     SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 0);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 0);
     basic_add(e, e, x);
+    SYMENGINE_C_ASSERT(basic_is_Add(e) == 1);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, x) == 1);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 0);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 0);
     basic_mul(e, e, y);
+    SYMENGINE_C_ASSERT(basic_is_Mul(e) == 1);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, x) == 1);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, y) == 1);
     SYMENGINE_C_ASSERT(basic_has_symbol(e, z) == 0);
@@ -102,7 +104,9 @@ void test_cwrapper()
 
     integer_set_ui(e, 123);
     basic_sqrt(e, e);
+    SYMENGINE_C_ASSERT(basic_is_Pow(e) == 1);
     basic_exp(e, e);
+    SYMENGINE_C_ASSERT(basic_is_Exp(e) == 1);
 
     s = basic_str(e);
     SYMENGINE_C_ASSERT(strcmp(s, "exp(sqrt(123))") == 0);
@@ -1389,6 +1393,7 @@ void test_functions()
 
     integer_set_ui(res, 2);
     basic_log(res, res);
+    SYMENGINE_C_ASSERT(basic_is_Log(res) == 1);
     SYMENGINE_C_ASSERT(basic_eq(res, ans));
 
     real_double_set_d(res, 1.1);
