@@ -213,10 +213,10 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="comment">// Use these two functions to allocate and free &#39;basic&#39; on a heap. The pointer</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="comment">// can then be used in all the other methods below (i.e. the methods that</span></div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span><span class="comment">// accept &#39;basic s&#39; work no matter if &#39;s&#39; is stack or heap allocated).</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><a class="code hl_struct" href="structCRCPBasic__C.html">basic_struct</a> *basic_new_heap();</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><a class="code hl_struct" href="structCRCPBasic__C.html">basic_struct</a> *basic_new_heap(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keywordtype">void</span> basic_free_heap(<a class="code hl_struct" href="structCRCPBasic__C.html">basic_struct</a> *s);</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">const</span> <span class="keywordtype">char</span> *symengine_version();</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">const</span> <span class="keywordtype">char</span> *symengine_version(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span> </div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keywordtype">void</span> basic_const_set(basic s, <span class="keyword">const</span> <span class="keywordtype">char</span> *c);</div>
@@ -424,7 +424,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span> </div>
 <div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCVectorInt.html">CVectorInt</a> <a class="code hl_struct" href="structCVectorInt.html">CVectorInt</a>;</div>
 <div class="line"><a id="l00478" name="l00478"></a><span class="lineno">  478</span> </div>
-<div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span><a class="code hl_struct" href="structCVectorInt.html">CVectorInt</a> *vectorint_new();</div>
+<div class="line"><a id="l00479" name="l00479"></a><span class="lineno">  479</span><a class="code hl_struct" href="structCVectorInt.html">CVectorInt</a> *vectorint_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00480" name="l00480"></a><span class="lineno">  480</span> </div>
 <div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span><span class="comment">// &#39;data&#39; must point to allocated memory of size &#39;size&#39;. The function returns 0</span></div>
 <div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span><span class="comment">// if std::vector&lt;int&gt; can be initialized using placement new into &#39;data&#39;,</span></div>
@@ -444,7 +444,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span> </div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a>;</div>
 <div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span> </div>
-<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span><a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *vecbasic_new();</div>
+<div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span><a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *vecbasic_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span><span class="keywordtype">void</span> vecbasic_free(<a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *self);</div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span>CWRAPPER_OUTPUT_TYPE vecbasic_push_back(<a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *self, <span class="keyword">const</span> basic value);</div>
 <div class="line"><a id="l00503" name="l00503"></a><span class="lineno">  503</span>CWRAPPER_OUTPUT_TYPE vecbasic_get(<a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *self, <span class="keywordtype">size_t</span> n, basic result);</div>
@@ -462,8 +462,8 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCDenseMatrix.html">CDenseMatrix</a> <a class="code hl_struct" href="structCDenseMatrix.html">CDenseMatrix</a>;</div>
 <div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCSparseMatrix.html">CSparseMatrix</a> <a class="code hl_struct" href="structCSparseMatrix.html">CSparseMatrix</a>;</div>
 <div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span> </div>
-<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span><a class="code hl_struct" href="structCDenseMatrix.html">CDenseMatrix</a> *dense_matrix_new();</div>
-<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span><a class="code hl_struct" href="structCSparseMatrix.html">CSparseMatrix</a> *sparse_matrix_new();</div>
+<div class="line"><a id="l00523" name="l00523"></a><span class="lineno">  523</span><a class="code hl_struct" href="structCDenseMatrix.html">CDenseMatrix</a> *dense_matrix_new(<span class="keywordtype">void</span>);</div>
+<div class="line"><a id="l00524" name="l00524"></a><span class="lineno">  524</span><a class="code hl_struct" href="structCSparseMatrix.html">CSparseMatrix</a> *sparse_matrix_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00525" name="l00525"></a><span class="lineno">  525</span> </div>
 <div class="line"><a id="l00526" name="l00526"></a><span class="lineno">  526</span><span class="keywordtype">void</span> dense_matrix_free(<a class="code hl_struct" href="structCDenseMatrix.html">CDenseMatrix</a> *self);</div>
 <div class="line"><a id="l00528" name="l00528"></a><span class="lineno">  528</span><a class="code hl_struct" href="structCDenseMatrix.html">CDenseMatrix</a> *dense_matrix_new_vec(<span class="keywordtype">unsigned</span> rows, <span class="keywordtype">unsigned</span> cols, <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *l);</div>
@@ -556,7 +556,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span><span class="keywordtype">int</span> sparse_matrix_eq(<a class="code hl_struct" href="structCSparseMatrix.html">CSparseMatrix</a> *lhs, <a class="code hl_struct" href="structCSparseMatrix.html">CSparseMatrix</a> *rhs);</div>
 <div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span> </div>
 <div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span> </div>
-<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span><a class="code hl_struct" href="structCSetBasic.html">CSetBasic</a> *setbasic_new();</div>
+<div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span><a class="code hl_struct" href="structCSetBasic.html">CSetBasic</a> *setbasic_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span><span class="keywordtype">void</span> setbasic_free(<a class="code hl_struct" href="structCSetBasic.html">CSetBasic</a> *self);</div>
 <div class="line"><a id="l00667" name="l00667"></a><span class="lineno">  667</span><span class="keywordtype">int</span> setbasic_insert(<a class="code hl_struct" href="structCSetBasic.html">CSetBasic</a> *self, <span class="keyword">const</span> basic value);</div>
 <div class="line"><a id="l00668" name="l00668"></a><span class="lineno">  668</span><span class="keywordtype">void</span> setbasic_get(<a class="code hl_struct" href="structCSetBasic.html">CSetBasic</a> *self, <span class="keywordtype">int</span> n, basic result);</div>
@@ -567,7 +567,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00676" name="l00676"></a><span class="lineno">  676</span> </div>
 <div class="line"><a id="l00677" name="l00677"></a><span class="lineno">  677</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCMapBasicBasic.html">CMapBasicBasic</a> <a class="code hl_struct" href="structCMapBasicBasic.html">CMapBasicBasic</a>;</div>
 <div class="line"><a id="l00678" name="l00678"></a><span class="lineno">  678</span> </div>
-<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span><a class="code hl_struct" href="structCMapBasicBasic.html">CMapBasicBasic</a> *mapbasicbasic_new();</div>
+<div class="line"><a id="l00679" name="l00679"></a><span class="lineno">  679</span><a class="code hl_struct" href="structCMapBasicBasic.html">CMapBasicBasic</a> *mapbasicbasic_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00680" name="l00680"></a><span class="lineno">  680</span><span class="keywordtype">void</span> mapbasicbasic_free(<a class="code hl_struct" href="structCMapBasicBasic.html">CMapBasicBasic</a> *self);</div>
 <div class="line"><a id="l00681" name="l00681"></a><span class="lineno">  681</span><span class="keywordtype">void</span> mapbasicbasic_insert(<a class="code hl_struct" href="structCMapBasicBasic.html">CMapBasicBasic</a> *self, <span class="keyword">const</span> basic key,</div>
 <div class="line"><a id="l00682" name="l00682"></a><span class="lineno">  682</span>                          <span class="keyword">const</span> basic mapped);</div>
@@ -599,7 +599,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00725" name="l00725"></a><span class="lineno">  725</span>                                      <span class="keyword">const</span> basic s);</div>
 <div class="line"><a id="l00726" name="l00726"></a><span class="lineno">  726</span> </div>
 <div class="line"><a id="l00728" name="l00728"></a><span class="lineno">  728</span> </div>
-<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="keywordtype">char</span> *ascii_art_str();</div>
+<div class="line"><a id="l00731" name="l00731"></a><span class="lineno">  731</span><span class="keywordtype">char</span> *ascii_art_str(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00732" name="l00732"></a><span class="lineno">  732</span> </div>
 <div class="line"><a id="l00735" name="l00735"></a><span class="lineno">  735</span>CWRAPPER_OUTPUT_TYPE ntheory_gcd(basic s, <span class="keyword">const</span> basic a, <span class="keyword">const</span> basic b);</div>
 <div class="line"><a id="l00737" name="l00737"></a><span class="lineno">  737</span>CWRAPPER_OUTPUT_TYPE ntheory_lcm(basic s, <span class="keyword">const</span> basic a, <span class="keyword">const</span> basic b);</div>
@@ -628,7 +628,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00777" name="l00777"></a><span class="lineno">  777</span>                                          <span class="keyword">const</span> basic x);</div>
 <div class="line"><a id="l00778" name="l00778"></a><span class="lineno">  778</span> </div>
 <div class="line"><a id="l00780" name="l00780"></a><span class="lineno">  780</span><span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code hl_struct" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> <a class="code hl_struct" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a>;</div>
-<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span><a class="code hl_struct" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *lambda_real_double_visitor_new();</div>
+<div class="line"><a id="l00781" name="l00781"></a><span class="lineno">  781</span><a class="code hl_struct" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *lambda_real_double_visitor_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00782" name="l00782"></a><span class="lineno">  782</span><span class="keywordtype">void</span> lambda_real_double_visitor_init(<a class="code hl_struct" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *self,</div>
 <div class="line"><a id="l00783" name="l00783"></a><span class="lineno">  783</span>                                     <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *args,</div>
 <div class="line"><a id="l00784" name="l00784"></a><span class="lineno">  784</span>                                     <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse);</div>
@@ -640,7 +640,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00791" name="l00791"></a><span class="lineno">  791</span><span class="preprocessor">#ifdef HAVE_SYMENGINE_LLVM</span></div>
 <div class="line"><a id="l00792" name="l00792"></a><span class="lineno">  792</span><span class="comment">// double</span></div>
 <div class="line"><a id="l00793" name="l00793"></a><span class="lineno">  793</span><span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMDoubleVisitor CLLVMDoubleVisitor;</div>
-<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>CLLVMDoubleVisitor *llvm_double_visitor_new();</div>
+<div class="line"><a id="l00794" name="l00794"></a><span class="lineno">  794</span>CLLVMDoubleVisitor *llvm_double_visitor_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00795" name="l00795"></a><span class="lineno">  795</span><span class="keywordtype">void</span> llvm_double_visitor_init(CLLVMDoubleVisitor *self, <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *args,</div>
 <div class="line"><a id="l00796" name="l00796"></a><span class="lineno">  796</span>                              <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
 <div class="line"><a id="l00797" name="l00797"></a><span class="lineno">  797</span>                              <span class="keywordtype">int</span> opt_level);</div>
@@ -649,7 +649,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00800" name="l00800"></a><span class="lineno">  800</span><span class="keywordtype">void</span> llvm_double_visitor_free(CLLVMDoubleVisitor *self);</div>
 <div class="line"><a id="l00801" name="l00801"></a><span class="lineno">  801</span><span class="comment">// float</span></div>
 <div class="line"><a id="l00802" name="l00802"></a><span class="lineno">  802</span><span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMFloatVisitor CLLVMFloatVisitor;</div>
-<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>CLLVMFloatVisitor *llvm_float_visitor_new();</div>
+<div class="line"><a id="l00803" name="l00803"></a><span class="lineno">  803</span>CLLVMFloatVisitor *llvm_float_visitor_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00804" name="l00804"></a><span class="lineno">  804</span><span class="keywordtype">void</span> llvm_float_visitor_init(CLLVMFloatVisitor *self, <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *args,</div>
 <div class="line"><a id="l00805" name="l00805"></a><span class="lineno">  805</span>                             <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
 <div class="line"><a id="l00806" name="l00806"></a><span class="lineno">  806</span>                             <span class="keywordtype">int</span> opt_level);</div>
@@ -660,7 +660,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00811" name="l00811"></a><span class="lineno">  811</span><span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
 <div class="line"><a id="l00812" name="l00812"></a><span class="lineno">  812</span><span class="comment">// long double</span></div>
 <div class="line"><a id="l00813" name="l00813"></a><span class="lineno">  813</span><span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMLongDoubleVisitor CLLVMLongDoubleVisitor;</div>
-<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>CLLVMLongDoubleVisitor *llvm_long_double_visitor_new();</div>
+<div class="line"><a id="l00814" name="l00814"></a><span class="lineno">  814</span>CLLVMLongDoubleVisitor *llvm_long_double_visitor_new(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00815" name="l00815"></a><span class="lineno">  815</span><span class="keywordtype">void</span> llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,</div>
 <div class="line"><a id="l00816" name="l00816"></a><span class="lineno">  816</span>                                   <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *args,</div>
 <div class="line"><a id="l00817" name="l00817"></a><span class="lineno">  817</span>                                   <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
@@ -677,7 +677,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00828" name="l00828"></a><span class="lineno">  828</span>                               <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *reduced_exprs,</div>
 <div class="line"><a id="l00829" name="l00829"></a><span class="lineno">  829</span>                               <span class="keyword">const</span> <a class="code hl_struct" href="structCVecBasic.html">CVecBasic</a> *exprs);</div>
 <div class="line"><a id="l00830" name="l00830"></a><span class="lineno">  830</span> </div>
-<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="keywordtype">void</span> symengine_print_stack_on_segfault();</div>
+<div class="line"><a id="l00832" name="l00832"></a><span class="lineno">  832</span><span class="keywordtype">void</span> symengine_print_stack_on_segfault(<span class="keywordtype">void</span>);</div>
 <div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span> </div>
 <div class="line"><a id="l00834" name="l00834"></a><span class="lineno">  834</span><span class="preprocessor">#ifdef __cplusplus</span></div>
 <div class="line"><a id="l00835" name="l00835"></a><span class="lineno">  835</span>}</div>
