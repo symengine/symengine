@@ -306,6 +306,12 @@ int basic_is_Log(const basic s)
     return basic_get_type(s) == SYMENGINE_LOG ? 1 : 0;
 }
 
+int basic_is_Exp(const basic s)
+{
+    SYMENGINE_ASSERT(basic_is_Pow(s) == 1);
+    return (down_cast<const SymEngine::Pow &>(*(s->m))).get_exp() == SymEngine::E ? 1 : 0;
+}
+
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
 {
     CWRAPPER_BEGIN
