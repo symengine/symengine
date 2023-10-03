@@ -802,8 +802,8 @@ void test_subs2()
     integer_set_si(z, 3);
     basic_pow(e, x, z);
     // e should be x**3
-    basic_get_base(base, e);
-    basic_get_exp(exp, e);
+    basic_pow_get_base(base, e);
+    basic_pow_get_exp(exp, e);
     SYMENGINE_C_ASSERT(basic_eq(base, x));
     SYMENGINE_C_ASSERT(basic_eq(exp, z));
     SYMENGINE_C_ASSERT(basic_eq(s, e));

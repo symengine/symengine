@@ -578,19 +578,21 @@ CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b)
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_get_base(basic s, const basic a)
+CWRAPPER_OUTPUT_TYPE basic_pow_get_base(basic s, const basic a)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(basic_get_type(a) == SYMENGINE_POW);
-    s->m = (down_cast<const SymEngine::Pow &>(*(a->m))).get_base();
+    auto args = a->m->get_args();
+    s->m = args[0];
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_get_exp(basic s, const basic a)
+CWRAPPER_OUTPUT_TYPE basic_pow_get_exp(basic s, const basic a)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(basic_get_type(a) == SYMENGINE_POW);
-    s->m = (down_cast<const SymEngine::Pow &>(*(a->m))).get_exp();
+    auto args = a->m->get_args();
+    s->m = args[1];
     CWRAPPER_END
 }
 
