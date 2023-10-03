@@ -289,28 +289,29 @@ int basic_has_symbol(const basic e, const basic s)
 
 int basic_is_Add(const basic s)
 {
-    return basic_get_type(s) == SYMENGINE_ADD ? 1 : 0;
+    return basic_get_type(s) == SYMENGINE_ADD;
 }
 
 int basic_is_Mul(const basic s)
 {
-    return basic_get_type(s) == SYMENGINE_MUL ? 1 : 0;
+    return basic_get_type(s) == SYMENGINE_MUL;
 }
 
 int basic_is_Pow(const basic s)
 {
-    return basic_get_type(s) == SYMENGINE_POW ? 1 : 0;
+    return basic_get_type(s) == SYMENGINE_POW;
 }
 
 int basic_is_Log(const basic s)
 {
-    return basic_get_type(s) == SYMENGINE_LOG ? 1 : 0;
+    return basic_get_type(s) == SYMENGINE_LOG;
 }
 
 int basic_is_Exp(const basic s)
 {
     SYMENGINE_ASSERT(basic_is_Pow(s) == 1);
-    return (down_cast<const SymEngine::Pow &>(*(s->m))).get_exp() == E ? 1 : 0;
+    auto args = s->m->get_args();
+    return args[1] == E;
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
