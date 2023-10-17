@@ -1,13 +1,8 @@
 <map id="SymEngine::Equality" name="SymEngine::Equality">
-<area shape="rect" id="Node000001" title=" " alt="" coords="30,418,186,445"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1Relational.html" title=" " alt="" coords="24,342,192,370"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,385,111,417,105,417,105,385"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="16,249,200,294"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,309,111,341,105,341,105,309"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="30,174,186,201"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,216,111,249,105,249,105,216"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,98,177,126"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="111,141,111,173,105,173,105,141"/>
-<area shape="rect" id="Node000006" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,50"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="111,65,111,97,105,97,105,65"/>
+<area shape="rect" id="node1" title=" " alt="" coords="30,424,186,453"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Relational.html" title=" " alt="" coords="24,347,192,376"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="16,253,200,299"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="30,176,186,205"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,99,177,128"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
 </map>

@@ -1,7 +1,5 @@
 <map id="SymEngine::MatrixBase" name="SymEngine::MatrixBase">
-<area shape="rect" id="Node000001" title=" " alt="" coords="102,5,279,33"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1CSRMatrix.html" title=" " alt="" coords="5,81,176,109"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,44,110,83,107,78,159,40"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1DenseMatrix.html" title=" " alt="" coords="199,81,385,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,40,275,78,272,83,219,44"/>
+<area shape="rect" id="node1" title=" " alt="" coords="102,5,279,34"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1CSRMatrix.html" title=" " alt="" coords="5,82,176,111"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1DenseMatrix.html" title=" " alt="" coords="199,82,385,111"/>
 </map>

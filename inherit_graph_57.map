@@ -1,7 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,22,119,50"/>
-<area shape="rect" id="Node000001" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="167,5,380,67"/>
-<area shape="poly" id="edge348_Node000000_Node000001" title=" " alt="" coords="134,34,166,34,166,39,134,39"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1URatPoly.html" title=" " alt="" coords="428,22,590,50"/>
-<area shape="poly" id="edge349_Node000001_Node000002" title=" " alt="" coords="395,34,428,34,428,39,395,39"/>
-</map>

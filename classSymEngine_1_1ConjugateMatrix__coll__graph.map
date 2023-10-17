@@ -1,13 +1,7 @@
 <map id="SymEngine::ConjugateMatrix" name="SymEngine::ConjugateMatrix">
-<area shape="rect" id="Node000001" title=" " alt="" coords="151,379,361,406"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="21,278,195,305"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,311,238,376,235,381,138,316"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,192,177,220"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,235,111,277,105,277,105,235"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,98,211,143"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,158,111,192,105,192,105,158"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="52,5,164,33"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="111,48,111,97,105,97,105,48"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="218,269,393,314"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="291,328,265,380,260,377,286,326"/>
+<area shape="rect" id="node1" title=" " alt="" coords="151,290,361,319"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="21,188,195,217"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,101,177,130"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
+<area shape="rect" id="node5" title=" " alt="" coords="218,179,393,225"/>
 </map>

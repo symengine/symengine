@@ -1,7 +1,5 @@
 <map id="SymEngine::GaloisFieldDict" name="SymEngine::GaloisFieldDict">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,208,206,235"/>
-<area shape="rect" id="Node000002" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="30,98,181,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,158,108,208,103,208,103,158"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="52,5,159,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,48,108,97,103,97,103,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,210,206,239"/>
+<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="30,99,181,145"/>
+<area shape="rect" id="node3" title=" " alt="" coords="52,5,159,34"/>
 </map>

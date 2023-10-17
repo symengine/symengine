@@ -1,15 +1,8 @@
 <map id="SymEngine::Contains" name="SymEngine::Contains">
-<area shape="rect" id="Node000001" title=" " alt="" coords="218,379,377,406"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="30,278,186,305"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,310,273,376,271,380,145,315"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,192,177,220"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,235,111,277,105,277,105,235"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,98,211,143"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="111,158,111,192,105,192,105,158"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="52,5,164,33"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="111,48,111,97,105,97,105,48"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="210,269,385,314"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="300,329,300,379,295,379,295,329"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="409,269,583,314"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="441,323,325,380,323,376,438,318"/>
+<area shape="rect" id="node1" title=" " alt="" coords="218,290,377,319"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Boolean.html" title=" " alt="" coords="30,188,186,217"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,101,177,130"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
+<area shape="rect" id="node5" title=" " alt="" coords="210,179,385,225"/>
+<area shape="rect" id="node6" title=" " alt="" coords="409,179,583,225"/>
 </map>

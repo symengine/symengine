@@ -1,7 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classSymEngine_1_1ContainerBaseIter.html" title=" " alt="" coords="5,40,203,85"/>
-<area shape="rect" id="Node000001" href="$classSymEngine_1_1ContainerForIter.html" title=" " alt="" coords="253,5,461,50"/>
-<area shape="poly" id="edge11_Node000000_Node000001" title=" " alt="" coords="217,44,252,39,253,45,218,49"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1ContainerRevIter.html" title=" " alt="" coords="251,75,463,119"/>
-<area shape="poly" id="edge12_Node000000_Node000002" title=" " alt="" coords="218,75,251,80,250,85,217,81"/>
+<area shape="rect" id="node1" href="$classSymEngine_1_1Evaluate.html" title="A class that will evaluate functions numerically." alt="" coords="5,146,165,175"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="232,5,437,51"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EvaluateDouble.html" title=" " alt="" coords="232,76,437,122"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1EvaluateDouble.html" title="Evaluate functions with double precision." alt="" coords="213,146,456,175"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1EvaluateInfty.html" title=" " alt="" coords="240,199,429,228"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1EvaluateNaN.html" title=" " alt="" coords="241,253,428,282"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1EvaluateComplexDouble.html" title=" " alt="" coords="513,5,730,51"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1EvaluateRealDouble.html" title=" " alt="" coords="504,85,738,114"/>
 </map>

@@ -1,9 +1,6 @@
 <map id="/home/runner/work/symengine/symengine/symengine/eval.h" name="/home/runner/work/symengine/symengine/symengine/eval.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="299,5,519,50"/>
-<area shape="rect" id="Node000002" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="5,107,269,151"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,58,197,108,196,103,335,53"/>
-<area shape="rect" id="Node000003" href="$eval_8cpp_source.html" title=" " alt="" coords="293,107,525,151"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="412,65,412,106,406,106,406,65"/>
-<area shape="rect" id="Node000004" href="$llvm__double_8cpp_source.html" title=" " alt="" coords="550,98,770,160"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="479,53,584,95,582,100,477,58"/>
+<area shape="rect" id="node1" title=" " alt="" coords="299,5,519,51"/>
+<area shape="rect" id="node2" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="5,108,269,154"/>
+<area shape="rect" id="node3" href="$eval_8cpp_source.html" title=" " alt="" coords="293,108,525,154"/>
+<area shape="rect" id="node4" href="$llvm__double_8cpp_source.html" title=" " alt="" coords="550,99,770,162"/>
 </map>

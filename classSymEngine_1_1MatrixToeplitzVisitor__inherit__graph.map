@@ -1,7 +1,5 @@
 <map id="SymEngine::MatrixToeplitzVisitor" name="SymEngine::MatrixToeplitzVisitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,200,218"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="10,81,195,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,140,105,173,100,173,100,140"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="30,5,175,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,48,105,80,100,80,100,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,176,200,222"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="10,82,195,128"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="30,5,175,34"/>
 </map>

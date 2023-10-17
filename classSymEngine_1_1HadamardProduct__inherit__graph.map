@@ -1,9 +1,6 @@
 <map id="SymEngine::HadamardProduct" name="SymEngine::HadamardProduct">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,249,225,277"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="28,174,202,201"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,216,118,249,112,249,112,216"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="46,98,184,126"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,141,118,173,112,173,112,141"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="12,5,218,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="118,65,118,97,112,97,112,65"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,253,225,282"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="28,176,202,205"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="46,99,184,128"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="12,5,218,51"/>
 </map>

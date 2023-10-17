@@ -1,7 +1,5 @@
 <map id="SymEngine::TwoArgBasic&lt; BaseClass &gt;" name="SymEngine::TwoArgBasic&lt; BaseClass &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="35,132,219,177"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,14,94,42"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,52,116,130,111,133,63,55"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="118,5,293,50"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,64,143,133,138,130,182,61"/>
+<area shape="rect" id="node1" title=" " alt="" coords="35,133,219,179"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,14,94,43"/>
+<area shape="rect" id="node3" title=" " alt="" coords="118,5,293,51"/>
 </map>

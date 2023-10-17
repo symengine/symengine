@@ -1,11 +1,7 @@
 <map id="SymEngine::RewriteAsExp" name="SymEngine::RewriteAsExp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="37,342,230,370"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,262,294"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,309,136,341,131,341,131,309"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="29,174,238,201"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="136,216,136,249,131,249,131,216"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="45,81,222,126"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="136,141,136,173,131,173,131,141"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="61,5,206,33"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="136,48,136,80,131,80,131,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="37,347,230,376"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,253,262,299"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1TransformVisitor.html" title=" " alt="" coords="29,176,238,205"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="45,82,222,128"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="61,5,206,34"/>
 </map>

@@ -1,5 +1,4 @@
 <map id="SymEngine::CSRMatrix" name="SymEngine::CSRMatrix">
-<area shape="rect" id="Node000001" title=" " alt="" coords="8,81,179,109"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,5,182,33"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,48,96,81,91,81,91,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="8,82,179,111"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,5,182,34"/>
 </map>

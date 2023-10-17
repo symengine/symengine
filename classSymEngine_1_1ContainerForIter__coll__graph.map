@@ -1,7 +1,5 @@
 <map id="SymEngine::ContainerForIter&lt; T, Int &gt;" name="SymEngine::ContainerForIter&lt; T, Int &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,192,213,237"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1ContainerBaseIter.html" title=" " alt="" coords="10,98,208,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,158,112,192,106,192,106,158"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="47,5,171,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,48,112,97,106,97,106,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,195,213,241"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1ContainerBaseIter.html" title=" " alt="" coords="10,99,208,145"/>
+<area shape="rect" id="node3" title=" " alt="" coords="47,5,171,34"/>
 </map>

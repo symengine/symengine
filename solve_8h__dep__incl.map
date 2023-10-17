@@ -1,9 +1,6 @@
 <map id="/home/runner/work/symengine/symengine/symengine/solve.h" name="/home/runner/work/symengine/symengine/symengine/solve.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="290,5,515,50"/>
-<area shape="rect" id="Node000002" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="5,107,269,151"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="332,58,196,108,194,103,330,53"/>
-<area shape="rect" id="Node000003" href="$dense__matrix_8cpp_source.html" title=" " alt="" coords="292,98,513,160"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="405,65,405,98,400,98,400,65"/>
-<area shape="rect" id="Node000004" href="$solve_8cpp_source.html" title=" " alt="" coords="536,107,775,151"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="472,53,601,103,599,108,470,58"/>
+<area shape="rect" id="node1" title=" " alt="" coords="290,5,515,51"/>
+<area shape="rect" id="node2" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="5,108,269,154"/>
+<area shape="rect" id="node3" href="$dense__matrix_8cpp_source.html" title=" " alt="" coords="292,99,513,162"/>
+<area shape="rect" id="node4" href="$solve_8cpp_source.html" title=" " alt="" coords="536,108,775,154"/>
 </map>

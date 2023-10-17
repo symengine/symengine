@@ -1,7 +1,5 @@
 <map id="SymEngine::FreeSymbolsVisitor" name="SymEngine::FreeSymbolsVisitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,234,201"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="31,81,208,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,141,122,173,117,173,117,141"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="47,5,192,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,48,122,80,117,80,117,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,176,234,205"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="31,82,208,128"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="47,5,192,34"/>
 </map>

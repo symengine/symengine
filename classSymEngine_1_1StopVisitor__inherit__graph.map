@@ -1,23 +1,13 @@
 <map id="SymEngine::StopVisitor" name="SymEngine::StopVisitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="198,122,371,150"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="441,5,647,50"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="319,111,365,85,418,60,451,48,453,53,420,65,368,90,322,116"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="421,75,667,119"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="386,118,420,113,421,118,386,123"/>
-<area shape="rect" id="Node000007" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="419,144,669,205"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="386,148,419,153,418,158,386,153"/>
-<area shape="rect" id="Node000009" href="$classSymEngine_1_1LocalStopVisitor.html" title=" " alt="" coords="441,231,648,259"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="318,156,365,186,420,215,463,228,461,233,418,219,362,191,315,161"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,122,150,150"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,133,197,133,197,138,165,138"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1CoeffVisitor.html" title=" " alt="" coords="737,14,916,42"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="662,25,737,25,737,30,662,30"/>
-<area shape="rect" id="Node000006" href="$classSymEngine_1_1HasSymbolVisitor.html" title=" " alt="" coords="717,83,936,111"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="682,94,717,94,717,100,682,100"/>
-<area shape="rect" id="Node000008" href="$classSymEngine_1_1NeedsSymbolicExpansionVisitor.html" title=" " alt="" coords="725,149,928,194"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="684,170,724,170,724,175,684,176"/>
-<area shape="rect" id="Node000010" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="733,218,920,280"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="663,244,733,245,733,250,663,249"/>
-<area shape="rect" id="Node000011" href="$classSymEngine_1_1IsALinearArgTrigVisitor.html" title=" " alt="" coords="984,227,1191,271"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="935,246,983,246,983,252,935,252"/>
+<area shape="rect" id="node1" title=" " alt="" coords="198,133,371,162"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="421,5,667,51"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="419,76,669,139"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="441,163,647,209"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1LocalStopVisitor.html" title=" " alt="" coords="441,235,648,264"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,133,150,162"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1HasSymbolVisitor.html" title=" " alt="" coords="717,14,936,43"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1NeedsSymbolicExpansionVisitor.html" title=" " alt="" coords="725,84,928,130"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1CoeffVisitor.html" title=" " alt="" coords="737,169,916,198"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="733,222,920,285"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1IsALinearArgTrigVisitor.html" title=" " alt="" coords="984,231,1191,277"/>
 </map>

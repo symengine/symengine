@@ -1,7 +1,5 @@
 <map id="SymEngine::PositiveVisitor" name="SymEngine::PositiveVisitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,202,201"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,81,192,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,141,106,173,101,173,101,141"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,176,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,48,106,80,101,80,101,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,176,202,205"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,82,192,128"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,176,34"/>
 </map>

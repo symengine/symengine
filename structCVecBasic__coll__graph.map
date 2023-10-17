@@ -1,7 +1,5 @@
 <map id="CVecBasic" name="CVecBasic">
-<area shape="rect" id="Node000001" title=" " alt="" coords="52,208,140,235"/>
-<area shape="rect" id="Node000002" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="5,98,187,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,158,99,208,93,208,93,158"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="20,5,172,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,48,99,97,93,97,93,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="52,210,140,239"/>
+<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="5,99,187,145"/>
+<area shape="rect" id="node3" title=" " alt="" coords="20,5,172,34"/>
 </map>

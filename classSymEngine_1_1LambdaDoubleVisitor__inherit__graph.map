@@ -1,7 +1,9 @@
 <map id="SymEngine::LambdaDoubleVisitor&lt; T &gt;" name="SymEngine::LambdaDoubleVisitor&lt; T &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,191,286,218"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="57,81,234,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,157,148,190,143,190,143,157"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="73,5,218,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="148,48,148,81,143,81,143,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="422,79,702,108"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="758,5,997,85"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="750,110,1005,173"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="198,62,374,125"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,79,150,108"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1LambdaComplexDoubleVisitor.html" title=" " alt="" coords="1061,22,1274,68"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1LambdaRealDoubleVisitor.html" title=" " alt="" coords="1053,118,1282,164"/>
 </map>

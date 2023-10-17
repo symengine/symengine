@@ -1,9 +1,6 @@
 <map id="SymEngine::ImmutableDenseMatrix" name="SymEngine::ImmutableDenseMatrix">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,249,220,294"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="26,174,199,201"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,216,115,249,110,249,110,216"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="44,98,181,126"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,141,115,173,110,173,110,141"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="10,5,215,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="115,65,115,97,110,97,110,65"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,253,220,299"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="26,176,199,205"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="44,99,181,128"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="10,5,215,51"/>
 </map>

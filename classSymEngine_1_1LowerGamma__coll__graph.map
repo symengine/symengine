@@ -1,9 +1,6 @@
 <map id="SymEngine::LowerGamma" name="SymEngine::LowerGamma">
-<area shape="rect" id="Node000001" title=" " alt="" coords="30,209,224,237"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="65,132,189,160"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,175,130,209,124,209,124,175"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,14,94,42"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,52,120,130,116,133,64,55"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="118,5,293,50"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="185,64,138,133,134,130,181,61"/>
+<area shape="rect" id="node1" title=" " alt="" coords="30,212,224,241"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1TwoArgBasic.html" title=" " alt="" coords="65,133,189,162"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,14,94,43"/>
+<area shape="rect" id="node4" title=" " alt="" coords="118,5,293,51"/>
 </map>

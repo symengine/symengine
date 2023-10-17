@@ -1,7 +1,5 @@
 <map id="SymEngine::BoundaryVisitor" name="SymEngine::BoundaryVisitor">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,212,201"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="20,81,197,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,141,111,173,106,173,106,141"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="36,5,181,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,48,111,80,106,80,106,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,176,212,205"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="20,82,197,128"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="36,5,181,34"/>
 </map>

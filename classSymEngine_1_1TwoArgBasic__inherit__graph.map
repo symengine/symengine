@@ -1,19 +1,11 @@
 <map id="SymEngine::TwoArgBasic&lt; BaseClass &gt;" name="SymEngine::TwoArgBasic&lt; BaseClass &gt;">
-<area shape="rect" id="Node000001" title=" " alt="" coords="142,178,326,223"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1ATan2.html" title=" " alt="" coords="374,5,599,33"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="255,164,304,102,336,70,373,44,400,31,402,36,375,48,340,74,308,105,259,167"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1Beta.html" title=" " alt="" coords="378,57,595,85"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="268,166,315,128,373,94,403,83,405,88,375,99,318,133,271,170"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1KroneckerDelta.html" title=" " alt="" coords="386,109,588,154"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="331,171,402,152,403,157,332,176"/>
-<area shape="rect" id="Node000006" href="$classSymEngine_1_1LowerGamma.html" title=" " alt="" coords="390,178,583,223"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="341,198,390,198,390,203,341,203"/>
-<area shape="rect" id="Node000007" href="$classSymEngine_1_1PolyGamma.html" title=" " alt="" coords="396,248,578,292"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="332,225,403,244,402,249,331,230"/>
-<area shape="rect" id="Node000008" href="$classSymEngine_1_1UpperGamma.html" title=" " alt="" coords="390,317,583,362"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="273,231,320,268,375,302,402,314,400,319,373,307,317,272,269,235"/>
-<area shape="rect" id="Node000009" href="$classSymEngine_1_1Zeta.html" title=" " alt="" coords="378,385,595,413"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="256,234,277,268,304,305,337,341,375,372,397,382,395,387,373,376,333,345,300,308,272,271,251,237"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,187,94,214"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,198,141,198,141,203,108,203"/>
+<area shape="rect" id="node1" title=" " alt="" coords="142,182,326,228"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1ATan2.html" title=" " alt="" coords="374,5,599,34"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Beta.html" title=" " alt="" coords="378,59,595,88"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1KroneckerDelta.html" title=" " alt="" coords="386,112,588,158"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1LowerGamma.html" title=" " alt="" coords="390,182,583,228"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1PolyGamma.html" title=" " alt="" coords="396,253,578,299"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1UpperGamma.html" title=" " alt="" coords="390,324,583,370"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Zeta.html" title=" " alt="" coords="378,393,595,422"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,191,94,220"/>
 </map>

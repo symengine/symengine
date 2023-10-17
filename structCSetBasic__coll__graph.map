@@ -1,7 +1,5 @@
 <map id="CSetBasic" name="CSetBasic">
-<area shape="rect" id="Node000001" title=" " alt="" coords="68,208,155,235"/>
-<area shape="rect" id="Node000002" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="5,98,218,143"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,158,114,208,109,208,109,158"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="36,5,187,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,48,114,97,109,97,109,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="68,210,155,239"/>
+<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="5,99,218,145"/>
+<area shape="rect" id="node3" title=" " alt="" coords="36,5,187,34"/>
 </map>

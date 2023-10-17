@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['c_20api_20documentation_0',['SymEngine C++ API Documentation',['../index.html',1,'']]],
-  ['c_20style_20guide_1',['C++ Style Guide',['../md_md_2style__guide.html',1,'']]]
+  ['deprecated_20list_4817',['Deprecated List',['../deprecated.html',1,'']]],
+  ['doxygen_20style_20guide_4818',['Doxygen Style Guide',['../md_md_doc_guide.html',1,'']]]
 ];

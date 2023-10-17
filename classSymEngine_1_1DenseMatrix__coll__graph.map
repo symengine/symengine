@@ -1,9 +1,6 @@
 <map id="SymEngine::DenseMatrix" name="SymEngine::DenseMatrix">
-<area shape="rect" id="Node000001" title=" " alt="" coords="62,208,248,235"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,107,182,134"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,145,149,206,145,209,107,148"/>
-<area shape="rect" id="Node000003" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="206,98,387,143"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="255,154,175,209,172,205,252,149"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="221,5,372,33"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="299,48,299,97,294,97,294,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="62,210,248,239"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,108,182,137"/>
+<area shape="rect" id="node3" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="206,99,387,145"/>
+<area shape="rect" id="node4" title=" " alt="" coords="221,5,372,34"/>
 </map>

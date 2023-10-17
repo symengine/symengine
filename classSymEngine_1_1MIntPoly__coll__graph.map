@@ -1,27 +1,6 @@
 <map id="SymEngine::MIntPoly" name="SymEngine::MIntPoly">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1568,91,1727,119"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="1303,83,1518,127"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1533,102,1567,102,1567,108,1533,108"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="1041,27,1179,55"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1193,56,1303,79,1302,85,1192,61"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="716,5,922,50"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="937,30,1041,35,1041,41,936,36"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="426,14,538,42"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="553,25,716,25,716,30,553,30"/>
-<area shape="rect" id="Node000006" href="$classSymEngine_1_1MIntDict.html" title=" " alt="" coords="1031,91,1189,119"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="1204,102,1303,102,1303,108,1204,108"/>
-<area shape="rect" id="Node000007" href="$classSymEngine_1_1UDictWrapper.html" title=" " alt="" coords="722,74,916,136"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="931,102,1031,102,1031,108,931,108"/>
-<area shape="rect" id="Node000008" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/unordered_map.html" title=" " alt="" coords="398,66,566,144"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="582,102,722,102,722,108,582,108"/>
-<area shape="rect" id="Node000009" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="157,63,285,91"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="300,83,398,93,397,99,300,88"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="5,63,44,91"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="59,74,156,74,156,80,59,80"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="167,115,275,143"/>
-<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="290,128,374,123,397,120,398,125,374,129,290,133"/>
-<area shape="rect" id="Node000012" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/set.html" title=" " alt="" coords="1004,147,1216,191"/>
-<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="1230,141,1302,125,1303,131,1231,146"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="743,161,895,188"/>
-<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="910,170,1003,168,1003,174,910,175"/>
+<area shape="rect" id="node1" title=" " alt="" coords="33,270,193,299"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MSymEnginePoly.html" title=" " alt="" coords="5,176,221,222"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="44,99,182,128"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="10,5,216,51"/>
 </map>

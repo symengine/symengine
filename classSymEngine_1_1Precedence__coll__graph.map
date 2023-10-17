@@ -1,7 +1,5 @@
 <map id="SymEngine::Precedence" name="SymEngine::Precedence">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,174,183,201"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="6,81,182,126"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,141,97,173,91,173,91,141"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="22,5,166,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,48,97,80,91,80,91,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,176,183,205"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="6,82,182,128"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="22,5,166,34"/>
 </map>

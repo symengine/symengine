@@ -1,15 +1,9 @@
 <map id="SymEngine::Coth" name="SymEngine::Coth">
-<area shape="rect" id="Node000001" title=" " alt="" coords="53,476,185,504"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1HyperbolicFunction.html" title=" " alt="" coords="5,401,233,428"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,443,122,476,116,476,116,443"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1HyperbolicBase.html" title=" " alt="" coords="17,325,221,353"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,368,122,400,116,400,116,368"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="16,249,222,277"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="122,292,122,325,116,325,116,292"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="40,174,198,201"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="122,216,122,249,116,249,116,216"/>
-<area shape="rect" id="Node000006" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="50,98,188,126"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="122,141,122,173,116,173,116,141"/>
-<area shape="rect" id="Node000007" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="16,5,222,50"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="122,65,122,97,116,97,116,65"/>
+<area shape="rect" id="node1" title=" " alt="" coords="53,484,185,513"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1HyperbolicFunction.html" title=" " alt="" coords="5,407,233,436"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1HyperbolicBase.html" title=" " alt="" coords="17,330,221,359"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="16,253,222,282"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="40,176,198,205"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="50,99,188,128"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="16,5,222,51"/>
 </map>

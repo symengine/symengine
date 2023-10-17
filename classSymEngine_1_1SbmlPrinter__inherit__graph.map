@@ -1,11 +1,7 @@
 <map id="SymEngine::SbmlPrinter" name="SymEngine::SbmlPrinter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="14,342,193,370"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,202,294"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,309,106,341,101,341,101,309"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="22,174,185,201"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,216,106,249,101,249,101,216"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,81,192,126"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,141,106,173,101,173,101,141"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,176,33"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="106,48,106,80,101,80,101,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="14,347,193,376"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,253,202,299"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="22,176,185,205"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="15,82,192,128"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="31,5,176,34"/>
 </map>

@@ -1,9 +1,6 @@
 <map id="SymEngine::BasicToUExprPoly" name="SymEngine::BasicToUExprPoly">
-<area shape="rect" id="Node000001" title=" " alt="" coords="17,266,236,294"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="5,174,248,218"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,233,129,266,124,266,124,233"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="38,81,215,126"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="129,140,129,173,124,173,124,140"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="54,5,199,33"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="129,48,129,80,124,80,124,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="17,270,236,299"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BasicToUPolyBase.html" title=" " alt="" coords="5,176,248,222"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="38,82,215,128"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="54,5,199,34"/>
 </map>

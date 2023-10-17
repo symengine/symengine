@@ -1,11 +1,7 @@
 <map id="SymEngine::JuliaStrPrinter" name="SymEngine::JuliaStrPrinter">
-<area shape="rect" id="Node000001" title=" " alt="" coords="14,342,206,370"/>
-<area shape="rect" id="Node000002" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,249,215,294"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,309,113,341,107,341,107,309"/>
-<area shape="rect" id="Node000003" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="28,174,192,201"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,216,113,249,107,249,107,216"/>
-<area shape="rect" id="Node000004" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="22,81,198,126"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="113,141,113,173,107,173,107,141"/>
-<area shape="rect" id="Node000005" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="38,5,182,33"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="113,48,113,80,107,80,107,48"/>
+<area shape="rect" id="node1" title=" " alt="" coords="14,347,206,376"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,253,215,299"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="28,176,192,205"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="22,82,198,128"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="38,5,182,34"/>
 </map>
