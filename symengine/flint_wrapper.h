@@ -6,6 +6,8 @@
 
 #include <flint/fmpz.h>
 #include <flint/fmpq.h>
+#include <flint/fmpz_poly.h>
+#include <flint/fmpz_poly_factor.h>
 #include <flint/fmpq_poly.h>
 
 namespace SymEngine
@@ -710,13 +712,15 @@ public:
     }
     fmpq_poly_wrapper(const mpz_t z)
     {
+        fmpz_wrapper fz(z);
         fmpq_poly_init(poly);
-        fmpq_poly_set_mpz(poly, z);
+        fmpq_poly_set_fmpz(poly, fz.get_fmpz_t());
     }
     fmpq_poly_wrapper(const mpq_t q)
     {
+        fmpq_wrapper fq(q);
         fmpq_poly_init(poly);
-        fmpq_poly_set_mpq(poly, q);
+        fmpq_poly_set_fmpq(poly, fq.get_fmpq_t());
     }
     fmpq_poly_wrapper(const fmpq_wrapper &q)
     {
