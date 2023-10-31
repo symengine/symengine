@@ -83,7 +83,7 @@ if [[ "${WITH_BENCHMARKS_GOOGLE}" == "yes" ]]; then
 fi
 
 if [[ "${WITH_PIRANHA}" == "yes" ]]; then
-    conda_pkgs="$conda_pkgs piranha=0.11 cmake=3.24.3"
+    conda_pkgs="$conda_pkgs piranha=0.11 cmake=3.24.3 'boost-cpp<1.79.0'"
 fi
 
 if [[ "${WITH_PRIMESIEVE}" == "yes" ]]; then
