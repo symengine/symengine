@@ -290,9 +290,6 @@ if (WITH_FLINT)
     set(HAVE_SYMENGINE_FLINT True)
     set(PKGS ${PKGS} "FLINT")
 
-    # Workaround for https://github.com/fredrik-johansson/arb/issues/24
-    include_directories(SYSTEM ${FLINT_INCLUDE_DIRS}/flint)
-
     set(WITH_MPFR yes)
 endif()
 

@@ -4,7 +4,9 @@ libfind_include(flint/flint.h flint)
 libfind_library(flint flint)
 
 set(FLINT_LIBRARIES ${FLINT_LIBRARY})
-set(FLINT_INCLUDE_DIRS ${FLINT_INCLUDE_DIR})
+# Workaround for https://github.com/fredrik-johansson/arb/issues/24
+set(FLINT_INCLUDE_DIRS ${FLINT_INCLUDE_DIR} ${FLINT_INCLUDE_DIR}/flint)
+
 set(FLINT_TARGETS flint)
 
 file(READ "${FLINT_INCLUDE_DIR}/flint/flint.h" FLINT_H)
