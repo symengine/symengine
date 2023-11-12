@@ -291,6 +291,9 @@ if (WITH_FLINT)
     set(PKGS ${PKGS} "FLINT")
 
     set(WITH_MPFR yes)
+    if ("${FLINT_VERSION_MAJOR}" GREATER "2")
+        set(WITH_ARB yes)
+    endif()
 endif()
 
 if (WITH_ARB)
