@@ -13,6 +13,7 @@
 #endif // HAVE_SYMENGINE_MPFR
 
 #if defined(HAVE_SYMENGINE_ARB)
+#include <mpfr.h>
 #include <arb.h>
 #endif // HAVE_SYMENGINE_ARB
 

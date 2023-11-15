@@ -14,9 +14,10 @@
 #include <primesieve.hpp>
 #endif // HAVE_SYMENGINE_PRIMESIEVE
 #ifdef HAVE_SYMENGINE_ARB
-#include "arb.h"
-#include "bernoulli.h"
-#include "rational.h"
+#include <mpfr.h>
+#include <flint/fmpq.h>
+#include <arb.h>
+#include <bernoulli.h>
 #endif // HAVE_SYMENGINE_ARB
 #ifndef HAVE_SYMENGINE_GMP
 #include <boost/random/uniform_int.hpp>
