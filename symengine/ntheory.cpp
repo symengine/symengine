@@ -15,6 +15,7 @@
 #endif // HAVE_SYMENGINE_PRIMESIEVE
 #ifdef HAVE_SYMENGINE_ARB
 #include <mpfr.h>
+#include <flint/fmpq.h>
 #include <arb.h>
 #include <bernoulli.h>
 #endif // HAVE_SYMENGINE_ARB
