@@ -560,7 +560,10 @@ RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
 vec_basic linsolve_helper(const DenseMatrix &A, const DenseMatrix &b)
 {
     DenseMatrix res(A.nrows(), 1);
-    fraction_free_gauss_jordan_solve(A, b, res);
+    int fail = fraction_free_gauss_jordan_solve(A, b, res);
+    if (fail) {
+        return {};
+    }
     vec_basic fs;
     for (unsigned i = 0; i < res.nrows(); i++) {
         fs.push_back(res.get(i, 0));

@@ -1176,8 +1176,8 @@ TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
         = DenseMatrix(2, 2, {integer(1), integer(1), integer(1), integer(-1)});
     DenseMatrix b = DenseMatrix(2, 1, {integer(5), integer(3)});
     DenseMatrix x = DenseMatrix(2, 1);
-    fraction_free_gauss_jordan_solve(A, b, x);
-
+    int failure = fraction_free_gauss_jordan_solve(A, b, x);
+    REQUIRE(failure == 0);
     REQUIRE(x == DenseMatrix(2, 1, {integer(4), integer(1)}));
 
     A = DenseMatrix(4, 4,
@@ -1203,6 +1203,10 @@ TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
     REQUIRE(x
             == DenseMatrix(2, 2,
                            {integer(5), integer(5), integer(2), integer(-1)}));
+
+    DenseMatrix B = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
+    failure = fraction_free_gauss_jordan_solve(B, b, x);
+    REQUIRE(failure == 1);
 }
 
 TEST_CASE("test_fraction_free_LU(): matrices", "[matrices]")

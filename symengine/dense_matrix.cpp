@@ -1237,7 +1237,7 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     }
 }
 
-void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+int fraction_free_gauss_jordan_solve(const DenseMatrix &A,
                                       const DenseMatrix &b, DenseMatrix &x,
                                       bool pivot)
 {
@@ -1258,7 +1258,9 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
             while (p < col and eq(*A_.m_[p * col + i], *zero)) {
                 p++;
             }
-            SYMENGINE_ASSERT(p != col);
+            if (p == col) {
+                return i+1;
+            }
             if (p != i) {
                 // pivot A
                 for (k = i; k < col; k++) {
@@ -1299,6 +1301,7 @@ void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
     for (k = 0; k < bcol; k++)
         for (i = 0; i < col; i++)
             x.m_[i * bcol + k] = div(b_.m_[i * bcol + k], A_.m_[i * col + i]);
+    return 0;
 }
 
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
@@ -1907,7 +1910,7 @@ void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B)
     pivoted_LU_solve(A, e, B);
 }
 
-void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
+int inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_ and B.row_ == B.col_
                      and B.row_ == A.row_);
@@ -1926,7 +1929,7 @@ void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B)
             B.m_[i * n + j] = zero;
         }
 
-    fraction_free_gauss_jordan_solve(A, e, B);
+    return fraction_free_gauss_jordan_solve(A, e, B);
 }
 
 // ----------------------- Vector-specific Methods --------------------------//
