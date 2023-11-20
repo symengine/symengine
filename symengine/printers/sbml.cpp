@@ -100,8 +100,10 @@ void SbmlPrinter::bvisit(const Piecewise &x)
     s << "piecewise(";
     while (it != vec.end()) {
         s << apply((*it).first);
-        s << ", ";
-        s << apply((*it).second);
+        if (!(it + 1 == vec.end() && eq(*(*it).second, *boolTrue))) {
+            s << ", ";
+            s << apply((*it).second);
+        }
         ++it;
         if (it != vec.end()) {
             s << ", ";
