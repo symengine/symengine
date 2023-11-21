@@ -460,8 +460,11 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
 
     s = "piecewise(x, x>0, 0)";
     res = parse_sbml(s);
+    s = sbml(*res);
     REQUIRE(eq(*res, *piecewise({{x, Gt(x, zero)}, {zero, boolTrue}})));
-    REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
+    REQUIRE(eq(*res, *parse_sbml(s)));
+    // check that printing doesn't add a "true" condition to the final 0 piece
+    REQUIRE(s.substr(s.size() - 2) == "0)");
 
     s = "piecewise(x, x>0, -x, x<=0)";
     res = parse_sbml(s);
@@ -471,10 +474,12 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
 
     s = "piecewise(x, x>0, -2*x, x<0, 6)";
     res = parse_sbml(s);
+    s = sbml(*res);
     REQUIRE(eq(*res, *piecewise({{x, Gt(x, zero)},
                                  {mul(integer(-2), x), Lt(x, zero)},
                                  {integer(6), boolTrue}})));
-    REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
+    REQUIRE(eq(*res, *parse_sbml(s)));
+    REQUIRE(s.substr(s.size() - 2) == "6)");
 
     s = "power(x, y)";
     res = parse_sbml(s);
