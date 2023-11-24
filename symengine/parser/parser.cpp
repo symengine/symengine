@@ -4,9 +4,28 @@
 #include <symengine/real_mpfr.h>
 #include <symengine/ntheory_funcs.h>
 #include <symengine/parser/tokenizer.h>
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+#include <charconv>
+#endif
 
 namespace SymEngine
 {
+
+static double string_to_double(const char *str, char **endptr)
+{
+#if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
+    // use std::from_chars: locale-independent, non-allocating, non-throwing
+    double result{0.0};
+    auto [ptr, ec] = std::from_chars(str, nullptr, result);
+    if (endptr != nullptr) {
+        *endptr = const_cast<char *>(ptr);
+    }
+    return result;
+#else
+    // otherwise fall-back to using strtod
+    return std::strtod(str, endptr);
+#endif
+}
 
 RCP<const Basic>
 parse(const std::string &s, bool convert_xor,
@@ -311,7 +330,7 @@ RCP<const Basic> Parser::parse_numeric(const std::string &expr)
         }
         if (digits <= 15) {
             char *endptr = 0;
-            double d = std::strtod(startptr, &endptr);
+            double d = string_to_double(startptr, &endptr);
             return real_double(d);
         } else {
             // mpmath.libmp.libmpf.dps_to_prec
@@ -321,7 +340,7 @@ RCP<const Basic> Parser::parse_numeric(const std::string &expr)
         }
 #else
         char *endptr = 0;
-        double d = std::strtod(startptr, &endptr);
+        double d = string_to_double(startptr, &endptr);
         return real_double(d);
 #endif
     }
@@ -332,7 +351,7 @@ Parser::parse_implicit_mul(const std::string &expr)
 {
     const char *startptr = expr.c_str();
     char *endptr = 0;
-    std::strtod(startptr, &endptr);
+    string_to_double(startptr, &endptr);
 
     RCP<const Basic> num = one, sym;
 
