@@ -15,7 +15,7 @@ static double string_to_double(const char *str, char **endptr)
 {
 #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || __cplusplus >= 201703L)
     // use std::from_chars: locale-independent, non-allocating, non-throwing
-    double result{0.0};
+    double result;
     auto [ptr, ec] = std::from_chars(str, nullptr, result);
     if (endptr != nullptr) {
         *endptr = const_cast<char *>(ptr);
