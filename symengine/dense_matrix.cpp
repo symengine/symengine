@@ -1237,9 +1237,8 @@ void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
     }
 }
 
-int fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                      const DenseMatrix &b, DenseMatrix &x,
-                                      bool pivot)
+int fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
+                                     DenseMatrix &x, bool pivot)
 {
     SYMENGINE_ASSERT(A.row_ == A.col_);
     SYMENGINE_ASSERT(b.row_ == A.row_ and x.row_ == A.row_);
@@ -1259,7 +1258,7 @@ int fraction_free_gauss_jordan_solve(const DenseMatrix &A,
                 p++;
             }
             if (p == col) {
-                return i+1;
+                return i + 1;
             }
             if (p != i) {
                 // pivot A

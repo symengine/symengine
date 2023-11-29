@@ -1204,7 +1204,8 @@ TEST_CASE("test_fraction_free_gauss_jordan_solve(): matrices", "[matrices]")
             == DenseMatrix(2, 2,
                            {integer(5), integer(5), integer(2), integer(-1)}));
 
-    DenseMatrix B = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
+    DenseMatrix B
+        = DenseMatrix(2, 2, {integer(0), integer(0), integer(0), integer(0)});
     failure = fraction_free_gauss_jordan_solve(B, b, x);
     REQUIRE(failure == 1);
 }
