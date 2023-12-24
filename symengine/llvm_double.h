@@ -32,8 +32,8 @@ protected:
     std::map<RCP<const Basic>, llvm::Value *, RCPBasicKeyLess>
         replacement_symbol_ptrs;
     llvm::Value *result_;
-    std::shared_ptr<llvm::LLVMContext> context;
-    std::shared_ptr<llvm::ExecutionEngine> executionengine;
+    std::unique_ptr<llvm::LLVMContext> context;
+    std::unique_ptr<llvm::ExecutionEngine> executionengine;
 
     intptr_t func;
 
@@ -45,6 +45,8 @@ protected:
     virtual llvm::Type *get_float_type(llvm::LLVMContext *) = 0;
 
 public:
+    LLVMVisitor();
+    ~LLVMVisitor() override;
     llvm::Value *apply(const Basic &b);
     void init(const vec_basic &x, const Basic &b,
               const bool symbolic_cse = false, unsigned opt_level = 3);
@@ -103,6 +105,8 @@ public:
 class LLVMDoubleVisitor : public LLVMVisitor
 {
 public:
+    LLVMDoubleVisitor();
+    ~LLVMDoubleVisitor() override;
     double call(const std::vector<double> &vec) const;
     void call(double *outs, const double *inps) const;
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
@@ -126,6 +130,8 @@ public:
 class LLVMFloatVisitor : public LLVMVisitor
 {
 public:
+    LLVMFloatVisitor();
+    ~LLVMFloatVisitor() override;
     float call(const std::vector<float> &vec) const;
     void call(float *outs, const float *inps) const;
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
@@ -151,6 +157,8 @@ public:
 class LLVMLongDoubleVisitor : public LLVMVisitor
 {
 public:
+    LLVMLongDoubleVisitor();
+    ~LLVMLongDoubleVisitor() override;
     long double call(const std::vector<long double> &vec) const;
     void call(long double *outs, const long double *inps) const;
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
