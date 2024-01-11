@@ -69,7 +69,7 @@ Run tests:
 
 ### Development
 
-GitHub Actions checks](https://github.com/symengine/symengine/actions/workflows/ci.yml)
+[GitHub Actions checks](https://github.com/symengine/symengine/actions/workflows/ci.yml)
 the code in both Release and Debug mode with all possible checks, so just
 sending a GitHub pull request is enough and you can use any mode you want to
 develop it. However, the best way to develop SymEngine on Linux is to use the
