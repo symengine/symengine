@@ -46,6 +46,11 @@ using std::make_unique;
 #else
 using llvm::make_unique;
 #endif
+#if (LLVM_VERSION_MAJOR < 18)
+using CodeGenOptLevel = llvm::CodeGenOpt::Level;
+#else
+using CodeGenOptLevel = llvm::CodeGenOptLevel;
+#endif
 
 class IRBuilder : public llvm::IRBuilder<>
 {
@@ -266,7 +271,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     executionengine = std::unique_ptr<llvm::ExecutionEngine>(
         llvm::EngineBuilder(std::move(module))
             .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(static_cast<llvm::CodeGenOpt::Level>(opt_level))
+            .setOptLevel(static_cast<CodeGenOptLevel>(opt_level))
             .setErrorStr(&error)
             .create());
 
@@ -968,7 +973,7 @@ void LLVMVisitor::loads(const std::string &s)
     executionengine = std::unique_ptr<llvm::ExecutionEngine>(
         llvm::EngineBuilder(std::move(module))
             .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+            .setOptLevel(CodeGenOptLevel::Aggressive)
             .setErrorStr(&error)
             .create());
 
