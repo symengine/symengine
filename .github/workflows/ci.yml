@@ -99,10 +99,19 @@ jobs:
           # Release build (recent LLVM+clang)
           - BUILD_TYPE: Release
             OS: ubuntu-20.04
-            CC: clang
+            CC: clang-18
+            CXX: clang++-18
             WITH_LLVM: 18
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main'
             EXTRA_APT_PACKAGES: clang-18 llvm-18
+
+          # Release build (latest pre-release of LLVM)
+          - BUILD_TYPE: Release
+            OS: ubuntu-20.04
+            CC: clang
+            WITH_LLVM: "LATEST"
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
+            EXTRA_APT_PACKAGES: llvm
 
           ## In-tree builds (we just check a few configurations to make sure they work):
           # Debug build
@@ -180,8 +189,6 @@ jobs:
             WITH_SYMENGINE_RCP: yes
             WITH_BFD: no
             WITH_COTIRE: no
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main'
-            EXTRA_APT_PACKAGES: clang-15
             INTEGER_CLASS: boostmp
             CC: clang
             OS: ubuntu-22.04
@@ -236,6 +243,7 @@ jobs:
       OS: ${{ matrix.OS }}
       WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
       CC: ${{ matrix.CC }}
+      CXX: ${{ matrix.CXX }}
       WITH_COTIRE: ${{ matrix.WITH_COTIRE }}
       WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
