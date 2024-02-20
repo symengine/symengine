@@ -96,13 +96,30 @@ jobs:
             OS: ubuntu-20.04
             CC: gcc
 
-          # Release build (recent LLVM+clang)
+          # Release build (recent LLVM)
           - BUILD_TYPE: Release
             OS: ubuntu-20.04
             CC: clang
             WITH_LLVM: 13
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
             EXTRA_APT_PACKAGES: clang-13 llvm-13
+
+          # Release build (recent LLVM + clang)
+          - BUILD_TYPE: Release
+            OS: ubuntu-20.04
+            CC: clang-18
+            CXX: clang++-18
+            WITH_LLVM: 18
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main'
+            EXTRA_APT_PACKAGES: clang-18 llvm-18
+
+          # Release build (latest pre-release of LLVM)
+          - BUILD_TYPE: Release
+            OS: ubuntu-20.04
+            CC: clang
+            WITH_LLVM: "LATEST"
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
+            EXTRA_APT_PACKAGES: llvm
 
           ## In-tree builds (we just check a few configurations to make sure they work):
           # Debug build
@@ -236,6 +253,7 @@ jobs:
       OS: ${{ matrix.OS }}
       WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
       CC: ${{ matrix.CC }}
+      CXX: ${{ matrix.CXX }}
       WITH_COTIRE: ${{ matrix.WITH_COTIRE }}
       WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
@@ -259,14 +277,14 @@ jobs:
       run: echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
 
     - name: Cache ccache
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ env.OPTIONS }}-${{ runner.os }}-${{ github.sha }}
         restore-keys: ccache-${{ github.job }}-${{ env.OPTIONS }}-${{ runner.os }}-
 
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 2
 
