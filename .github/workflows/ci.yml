@@ -96,11 +96,10 @@ jobs:
             OS: ubuntu-20.04
             CC: gcc
 
-          # Release build (recent LLVM+clang)
+          # Release build (recent LLVM)
           - BUILD_TYPE: Release
             OS: ubuntu-20.04
-            CC: clang-18
-            CXX: clang++-18
+            CC: clang
             WITH_LLVM: 18
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main'
             EXTRA_APT_PACKAGES: clang-18 llvm-18
@@ -189,6 +188,8 @@ jobs:
             WITH_SYMENGINE_RCP: yes
             WITH_BFD: no
             WITH_COTIRE: no
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main'
+            EXTRA_APT_PACKAGES: clang-15
             INTEGER_CLASS: boostmp
             CC: clang
             OS: ubuntu-22.04
