@@ -100,6 +100,15 @@ jobs:
           - BUILD_TYPE: Release
             OS: ubuntu-20.04
             CC: clang
+            WITH_LLVM: 13
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
+            EXTRA_APT_PACKAGES: clang-13 llvm-13
+
+          # Release build (recent LLVM + clang)
+          - BUILD_TYPE: Release
+            OS: ubuntu-20.04
+            CC: clang-18
+            CXX: clang++-18
             WITH_LLVM: 18
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main'
             EXTRA_APT_PACKAGES: clang-18 llvm-18
