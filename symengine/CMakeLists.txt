@@ -248,6 +248,7 @@ set(HEADERS
     refine.h
     simplify.h
     utilities/stream_fmt.h
+    utilities/fast_float/fast_float.h
     tuple.h
     matrix_expressions.h
     matrices/matrix_expr.h
