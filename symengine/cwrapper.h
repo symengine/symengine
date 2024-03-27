@@ -100,6 +100,8 @@ typedef basic_struct basic[1];
 void basic_new_stack(basic s);
 //! Free the C++ class wrapped by s.
 void basic_free_stack(basic s);
+//! Free the C++ class wrapped by s only if s is stack allocated.
+void basic_free_stack_if_not_null(basic s);
 
 // Use these two functions to allocate and free 'basic' on a heap. The pointer
 // can then be used in all the other methods below (i.e. the methods that
