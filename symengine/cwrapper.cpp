@@ -128,11 +128,6 @@ void basic_new_stack(basic s)
 
 void basic_free_stack(basic s)
 {
-    s->m.~RCP();
-}
-
-void basic_free_stack_if_not_null(basic s)
-{
     if (s != nullptr) {
         s->m.~RCP();
     }
