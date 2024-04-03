@@ -98,8 +98,10 @@ typedef basic_struct basic[1];
 // 'basic' type, this function initializes an RCP<const Basic> on the stack
 // allocated variable. The 's' variable must be freed using basic_free_stack()
 void basic_new_stack(basic s);
-//! Free the C++ class wrapped by s; does nothing if `s` is `nullptr`
+//! Free the C++ class wrapped by s.
 void basic_free_stack(basic s);
+//! Free the C++ class wrapped by s; does nothing if `s` is `nullptr`
+void basic_free_stack_if_not_null(basic s);
 
 // Use these two functions to allocate and free 'basic' on a heap. The pointer
 // can then be used in all the other methods below (i.e. the methods that
