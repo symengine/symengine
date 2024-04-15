@@ -10,11 +10,13 @@ using SymEngine::Basic;
 using SymEngine::complex_double;
 using SymEngine::Integer;
 using SymEngine::is_a;
-using SymEngine::mpfr_class;
 using SymEngine::Number;
 using SymEngine::RCP;
-using SymEngine::RealMPFR;
 using SymEngine::Symbol;
+#ifdef HAVE_SYMENGINE_MPFR
+using SymEngine::mpfr_class;
+using SymEngine::RealMPFR;
+#endif
 
 namespace se = SymEngine;
 
@@ -66,6 +68,8 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     check_string_serialization_roundtrip(se::reals());
     check_string_serialization_roundtrip(
         complex_double(std::complex<double>(4, 5)));
+#ifdef HAVE_SYMENGINE_MPFR
     check_string_serialization_roundtrip(
         real_mpfr(mpfr_class("0.35", 100, 10)));
+#endif
 }
