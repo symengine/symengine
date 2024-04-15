@@ -10,8 +10,10 @@ using SymEngine::Basic;
 using SymEngine::complex_double;
 using SymEngine::Integer;
 using SymEngine::is_a;
+using SymEngine::mpfr_class;
 using SymEngine::Number;
 using SymEngine::RCP;
+using SymEngine::RealMPFR;
 using SymEngine::Symbol;
 
 namespace se = SymEngine;
@@ -33,10 +35,14 @@ RCP<const T> loads(string sobj)
     return obj;
 }
 
-void check_string_serialization_roundtrip(RCP<const Basic> basic1)
+template <typename T>
+void check_string_serialization_roundtrip(RCP<const T> basic1)
 {
-    RCP<const Basic> basic2 = loads<Basic>(dumps<Basic>(basic1));
+    RCP<const Basic> basic2 = loads<T>(dumps<T>(basic1));
     REQUIRE(eq(*basic1, *basic2));
+
+    RCP<const Basic> basic3 = loads<Basic>(dumps<Basic>(basic1));
+    REQUIRE(eq(*basic1, *basic3));
 }
 
 TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
@@ -60,4 +66,6 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     check_string_serialization_roundtrip(se::reals());
     check_string_serialization_roundtrip(
         complex_double(std::complex<double>(4, 5)));
+    check_string_serialization_roundtrip(
+        real_mpfr(mpfr_class("0.35", 100, 10)));
 }
