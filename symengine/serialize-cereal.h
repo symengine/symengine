@@ -563,7 +563,7 @@ template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const RealMPFR> &)
 {
     std::string num;
-    unsigned prec;
+    mpfr_prec_t prec;
     ar(num, prec);
     return make_rcp<const RealMPFR>(mpfr_class(num, prec, 10));
 }
