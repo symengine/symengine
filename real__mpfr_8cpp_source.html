@@ -155,7 +155,7 @@ $(function() {
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    mpfr_add_z(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;               get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;RCP&lt;const Number&gt; RealMPFR::addreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -163,7 +163,7 @@ $(function() {
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    mpfr_add_q(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;               get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;RCP&lt;const Number&gt; RealMPFR::addreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -183,7 +183,7 @@ $(function() {
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    mpfr_add_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;}</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;RCP&lt;const Number&gt; RealMPFR::addreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -202,7 +202,7 @@ $(function() {
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    mpfr_class t(<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(get_prec(), other.get_prec()));</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    mpfr_add(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;RCP&lt;const Number&gt; RealMPFR::subreal(<span class="keyword">const</span> Integer &amp;other)<span class="keyword"> const</span></div>
@@ -210,7 +210,7 @@ $(function() {
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    mpfr_sub_z(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;               get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;}</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;RCP&lt;const Number&gt; RealMPFR::subreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -218,7 +218,7 @@ $(function() {
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    mpfr_sub_q(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;               get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;}</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;RCP&lt;const Number&gt; RealMPFR::subreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -238,7 +238,7 @@ $(function() {
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    mpfr_sub_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;}</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;RCP&lt;const Number&gt; RealMPFR::subreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -257,7 +257,7 @@ $(function() {
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    mpfr_class t(<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(get_prec(), other.get_prec()));</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    mpfr_sub(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;}</div>
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;RCP&lt;const Number&gt; RealMPFR::rsubreal(<span class="keyword">const</span> Integer &amp;other)<span class="keyword"> const</span></div>
@@ -265,7 +265,7 @@ $(function() {
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;    mpfr_z_sub(t.get_mpfr_t(), get_mpz_t(other.as_integer_class()),</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;               i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;}</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;RCP&lt;const Number&gt; RealMPFR::rsubreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -274,7 +274,7 @@ $(function() {
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    mpfr_sub_q(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;               get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;    mpfr_neg(t.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;}</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;RCP&lt;const Number&gt; RealMPFR::rsubreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -294,7 +294,7 @@ $(function() {
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;    mpfr_d_sub(t.get_mpfr_t(), other.i, i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;}</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160; </div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;RCP&lt;const Number&gt; RealMPFR::rsubreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -317,7 +317,7 @@ $(function() {
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;    mpfr_mul_z(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;               get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;}</div>
 <div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160; </div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;RCP&lt;const Number&gt; RealMPFR::mulreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -325,7 +325,7 @@ $(function() {
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160;    mpfr_mul_q(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;               get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00289"></a><span class="lineno">  289</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00290"></a><span class="lineno">  290</span>&#160;}</div>
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160; </div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;RCP&lt;const Number&gt; RealMPFR::mulreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -345,7 +345,7 @@ $(function() {
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    mpfr_mul_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;}</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160; </div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;RCP&lt;const Number&gt; RealMPFR::mulreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -364,7 +364,7 @@ $(function() {
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    mpfr_class t(<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(get_prec(), other.get_prec()));</div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    mpfr_mul(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;}</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;RCP&lt;const Number&gt; RealMPFR::divreal(<span class="keyword">const</span> Integer &amp;other)<span class="keyword"> const</span></div>
@@ -372,7 +372,7 @@ $(function() {
 <div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    mpfr_div_z(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;               get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;}</div>
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
 <div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;RCP&lt;const Number&gt; RealMPFR::divreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -380,7 +380,7 @@ $(function() {
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    mpfr_div_q(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;               get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;}</div>
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;RCP&lt;const Number&gt; RealMPFR::divreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -400,7 +400,7 @@ $(function() {
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;    mpfr_div_d(t.get_mpfr_t(), i.get_mpfr_t(), other.i, MPFR_RNDN);</div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;}</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
 <div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;RCP&lt;const Number&gt; RealMPFR::divreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -419,7 +419,7 @@ $(function() {
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    mpfr_class t(<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(get_prec(), other.get_prec()));</div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    mpfr_div(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;}</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160; </div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;RCP&lt;const Number&gt; RealMPFR::rdivreal(<span class="keyword">const</span> Integer &amp;other)<span class="keyword"> const</span></div>
@@ -428,7 +428,7 @@ $(function() {
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;    mpfr_div_z(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;               get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    mpfr_pow_si(t.get_mpfr_t(), t.get_mpfr_t(), -1, MPFR_RNDN);</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;}</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;RCP&lt;const Number&gt; RealMPFR::rdivreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -437,7 +437,7 @@ $(function() {
 <div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    mpfr_div_q(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;               get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    mpfr_pow_si(t.get_mpfr_t(), t.get_mpfr_t(), -1, MPFR_RNDN);</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;}</div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160; </div>
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;RCP&lt;const Number&gt; RealMPFR::rdivreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -457,7 +457,7 @@ $(function() {
 <div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    mpfr_d_div(t.get_mpfr_t(), other.i, i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;}</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160; </div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;RCP&lt;const Number&gt; RealMPFR::rdivreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -477,7 +477,7 @@ $(function() {
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    mpfr_pow_z(t.get_mpfr_t(), i.get_mpfr_t(),</div>
 <div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;               get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;}</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160; </div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;RCP&lt;const Number&gt; RealMPFR::powreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -498,7 +498,7 @@ $(function() {
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    mpfr_set_q(t.get_mpfr_t(), get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
 <div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    mpfr_pow(t.get_mpfr_t(), i.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;}</div>
 <div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160; </div>
 <div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;RCP&lt;const Number&gt; RealMPFR::powreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -530,7 +530,7 @@ $(function() {
 <div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;    mpfr_set_d(t.get_mpfr_t(), other.i, MPFR_RNDN);</div>
 <div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;    mpfr_pow(t.get_mpfr_t(), i.get_mpfr_t(), t.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;}</div>
 <div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160; </div>
 <div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;RCP&lt;const Number&gt; RealMPFR::powreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>
@@ -562,7 +562,7 @@ $(function() {
 <div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;    }</div>
 <div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;    mpfr_class t(<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(get_prec(), other.get_prec()));</div>
 <div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;    mpfr_pow(t.get_mpfr_t(), i.get_mpfr_t(), other.i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;}</div>
 <div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160; </div>
 <div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;RCP&lt;const Number&gt; RealMPFR::rpowreal(<span class="keyword">const</span> Integer &amp;other)<span class="keyword"> const</span></div>
@@ -583,7 +583,7 @@ $(function() {
 <div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    mpfr_set_z(t.get_mpfr_t(), get_mpz_t(other.as_integer_class()), MPFR_RNDN);</div>
 <div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;    mpfr_pow(t.get_mpfr_t(), t.get_mpfr_t(), i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;}</div>
 <div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160; </div>
 <div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;RCP&lt;const Number&gt; RealMPFR::rpowreal(<span class="keyword">const</span> Rational &amp;other)<span class="keyword"> const</span></div>
@@ -604,7 +604,7 @@ $(function() {
 <div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    mpfr_set_q(t.get_mpfr_t(), get_mpq_t(other.as_rational_class()), MPFR_RNDN);</div>
 <div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    mpfr_pow(t.get_mpfr_t(), t.get_mpfr_t(), i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;}</div>
 <div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160; </div>
 <div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;RCP&lt;const Number&gt; RealMPFR::rpowreal(<span class="keyword">const</span> Complex &amp;other)<span class="keyword"> const</span></div>
@@ -638,7 +638,7 @@ $(function() {
 <div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;    mpfr_class t(get_prec());</div>
 <div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    mpfr_set_d(t.get_mpfr_t(), other.i, MPFR_RNDN);</div>
 <div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;    mpfr_pow(t.get_mpfr_t(), t.get_mpfr_t(), i.get_mpfr_t(), MPFR_RNDN);</div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
 <div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;}</div>
 <div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160; </div>
 <div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;RCP&lt;const Number&gt; RealMPFR::rpowreal(<span class="keyword">const</span> ComplexDouble &amp;other)<span class="keyword"> const</span></div>

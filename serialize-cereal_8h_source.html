@@ -662,7 +662,7 @@ $(function() {
 <div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const RealMPFR&gt; &amp;)</div>
 <div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;{</div>
 <div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> num;</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    <span class="keywordtype">unsigned</span> prec;</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    mpfr_prec_t prec;</div>
 <div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;    ar(num, prec);</div>
 <div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(mpfr_class(num, prec, 10));</div>
 <div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;}</div>

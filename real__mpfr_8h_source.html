@@ -431,7 +431,7 @@ $(function() {
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;<span class="keyword">inline</span> RCP&lt;const RealMPFR&gt; real_mpfr(mpfr_class x)</div>
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;{</div>
-<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">return</span> rcp(<span class="keyword">new</span> RealMPFR(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x)));</div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;}</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="preprocessor">#else</span></div>
