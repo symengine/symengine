@@ -643,6 +643,7 @@ IMPLEMENT_ONE_ARG_FUNC(exp)
 IMPLEMENT_ONE_ARG_FUNC(log)
 IMPLEMENT_ONE_ARG_FUNC(floor)
 IMPLEMENT_ONE_ARG_FUNC(ceiling)
+IMPLEMENT_ONE_ARG_FUNC(sign)
 
 #define IMPLEMENT_TWO_ARG_FUNC(func)                                           \
     CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a, const basic b)   \
