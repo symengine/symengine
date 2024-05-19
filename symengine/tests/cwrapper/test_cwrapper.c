@@ -1437,6 +1437,11 @@ void test_functions()
     basic_mul_vec(ans, vec);
     SYMENGINE_C_ASSERT(basic_eq(ans, twenty_four));
 
+    basic_sign(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+    basic_sign(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
     basic_free_stack(ans);
     basic_free_stack(res);
     basic_free_stack(pi);

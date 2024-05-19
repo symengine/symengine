@@ -352,6 +352,8 @@ CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
 CWRAPPER_OUTPUT_TYPE basic_floor(basic s, const basic a);
 //! Assigns s = ceiling(a).
 CWRAPPER_OUTPUT_TYPE basic_ceiling(basic s, const basic a);
+//! Assigns s = sign(a).
+CWRAPPER_OUTPUT_TYPE basic_sign(basic s, const basic a);
 
 //! Assigns s = atan2(a, b).
 CWRAPPER_OUTPUT_TYPE basic_atan2(basic s, const basic a, const basic b);
