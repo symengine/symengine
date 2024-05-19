@@ -163,20 +163,20 @@ jobs:
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 5.0
-            OS: macos-latest
+            OS: macos-13
             CC: clang
 
           - BUILD_TYPE: Release
             WITH_LLVM: 5.0
-            OS: macos-latest
+            OS: macos-13
             CC: clang
 
           - BUILD_TYPE: Debug
-            OS: macos-latest
+            OS: macos-13
             CC: gcc
 
           - BUILD_TYPE: Release
-            OS: macos-latest
+            OS: macos-13
             CC: gcc
 
           - BUILD_TYPE: Debug
