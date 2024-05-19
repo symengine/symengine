@@ -1,10 +1,10 @@
 <map id="SymEngine::SbmlPrinter" name="SymEngine::SbmlPrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="216,495,395,524"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="138,400,334,446"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="148,306,311,335"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,195,182,241"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,101,166,130"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="236,101,322,130"/>
-<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="282,203,468,232"/>
+<area shape="rect" id="node1" title=" " alt="" coords="216,494,395,523"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="138,398,334,444"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="148,304,311,333"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,193,182,239"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="21,99,166,128"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="236,99,322,128"/>
+<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="282,202,468,231"/>
 <area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="210,5,348,51"/>
 </map>

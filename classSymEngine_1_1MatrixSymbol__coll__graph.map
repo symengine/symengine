@@ -1,8 +1,8 @@
 <map id="SymEngine::MatrixSymbol" name="SymEngine::MatrixSymbol">
-<area shape="rect" id="node1" title=" " alt="" coords="90,290,283,319"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="24,196,197,225"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,109,177,138"/>
+<area shape="rect" id="node1" title=" " alt="" coords="90,287,283,316"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="24,193,197,222"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,108,177,137"/>
 <area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="225,196,311,225"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="200,101,339,147"/>
+<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="225,193,311,222"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="200,99,339,145"/>
 </map>

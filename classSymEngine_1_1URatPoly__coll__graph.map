@@ -1,10 +1,10 @@
 <map id="SymEngine::URatPoly" name="SymEngine::URatPoly">
-<area shape="rect" id="node1" title=" " alt="" coords="116,627,279,656"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="91,515,304,578"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="100,419,295,465"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="100,307,295,370"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="111,212,284,258"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,109,177,138"/>
+<area shape="rect" id="node1" title=" " alt="" coords="116,620,279,649"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="91,509,304,572"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="100,415,295,461"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="100,304,295,367"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="111,210,284,256"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,108,177,137"/>
 <area shape="rect" id="node7" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
-<area shape="rect" id="node8" title=" " alt="" coords="201,101,375,147"/>
+<area shape="rect" id="node8" title=" " alt="" coords="201,99,375,145"/>
 </map>

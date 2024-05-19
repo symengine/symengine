@@ -1,9 +1,9 @@
 <map id="SymEngine::MatrixMul" name="SymEngine::MatrixMul">
-<area shape="rect" id="node1" title=" " alt="" coords="810,75,978,104"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="528,14,702,43"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="267,14,404,43"/>
+<area shape="rect" id="node1" title=" " alt="" coords="808,75,977,104"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1MatrixExpr.html" title=" " alt="" coords="527,14,700,43"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="266,14,403,43"/>
 <area shape="rect" id="node4" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
-<area shape="rect" id="node5" title=" " alt="" coords="528,67,702,113"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="524,137,706,183"/>
-<area shape="rect" id="node7" title=" " alt="" coords="260,146,411,175"/>
+<area shape="rect" id="node5" title=" " alt="" coords="527,67,701,113"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="523,137,704,183"/>
+<area shape="rect" id="node7" title=" " alt="" coords="259,146,410,175"/>
 </map>

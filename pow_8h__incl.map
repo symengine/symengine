@@ -1,6 +1,6 @@
 <map id="/home/runner/work/symengine/symengine/symengine/pow.h" name="/home/runner/work/symengine/symengine/symengine/pow.h">
-<area shape="rect" id="node1" title=" " alt="" coords="421,5,641,51"/>
-<area shape="rect" id="node2" href="$functions_8h.html" title=" " alt="" coords="265,99,434,128"/>
+<area shape="rect" id="node1" title=" " alt="" coords="498,5,718,51"/>
+<area shape="rect" id="node2" href="$functions_8h.html" title=" " alt="" coords="313,99,482,128"/>
 <area shape="rect" id="node42" href="$constants_8h.html" title=" " alt="" coords="551,176,724,205"/>
 <area shape="rect" id="node48" href="$mul_8h.html" title=" " alt="" coords="806,330,941,359"/>
 <area shape="rect" id="node50" href="$ntheory_8h.html" title=" " alt="" coords="369,176,527,205"/>
@@ -8,8 +8,8 @@
 <area shape="rect" id="node21" href="$symengine__casts_8h_source.html" title=" " alt="" coords="145,809,314,855"/>
 <area shape="rect" id="node4" title=" " alt="" coords="547,647,621,676"/>
 <area shape="rect" id="node5" title=" " alt="" coords="1924,647,1999,676"/>
-<area shape="rect" id="node6" title=" " alt="" coords="1530,732,1580,761"/>
-<area shape="rect" id="node7" title=" " alt="" coords="1609,732,1671,761"/>
+<area shape="rect" id="node6" title=" " alt="" coords="1466,732,1516,761"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1805,732,1867,761"/>
 <area shape="rect" id="node8" title=" " alt="" coords="191,732,233,761"/>
 <area shape="rect" id="node9" title=" " alt="" coords="257,732,380,761"/>
 <area shape="rect" id="node10" title=" " alt="" coords="687,732,801,761"/>
@@ -19,7 +19,7 @@
 <area shape="rect" id="node14" title=" " alt="" coords="1026,647,1118,676"/>
 <area shape="rect" id="node15" title=" " alt="" coords="1142,647,1229,676"/>
 <area shape="rect" id="node16" title=" " alt="" coords="826,732,910,761"/>
-<area shape="rect" id="node17" title=" " alt="" coords="465,903,634,949"/>
+<area shape="rect" id="node17" title=" " alt="" coords="442,903,611,949"/>
 <area shape="rect" id="node18" href="$symengine__exception_8h_source.html" title=" " alt="" coords="94,638,263,684"/>
 <area shape="rect" id="node19" href="$dict_8h.html" title=" " alt="" coords="389,647,523,676"/>
 <area shape="rect" id="node38" href="$type__codes_8inc_source.html" title=" " alt="" coords="1252,647,1447,676"/>
@@ -32,17 +32,17 @@
 <area shape="rect" id="node26" title=" " alt="" coords="479,809,633,855"/>
 <area shape="rect" id="node27" title=" " alt="" coords="658,809,838,855"/>
 <area shape="rect" id="node28" title=" " alt="" coords="862,809,1029,855"/>
-<area shape="rect" id="node29" href="$symengine__rcp_8h_source.html" title=" " alt="" coords="1223,809,1393,855"/>
+<area shape="rect" id="node29" href="$symengine__rcp_8h_source.html" title=" " alt="" coords="1201,809,1370,855"/>
 <area shape="rect" id="node36" title=" " alt="" coords="1053,818,1094,847"/>
-<area shape="rect" id="node22" title=" " alt="" coords="658,912,737,941"/>
-<area shape="rect" id="node23" title=" " alt="" coords="190,912,248,941"/>
-<area shape="rect" id="node24" href="$symengine__assert_8h_source.html" title=" " alt="" coords="271,903,441,949"/>
-<area shape="rect" id="node30" title=" " alt="" coords="1273,912,1343,941"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1367,912,1452,941"/>
-<area shape="rect" id="node32" title=" " alt="" coords="1476,912,1535,941"/>
-<area shape="rect" id="node33" title=" " alt="" coords="1559,912,1630,941"/>
-<area shape="rect" id="node34" title=" " alt="" coords="762,903,953,949"/>
-<area shape="rect" id="node35" title=" " alt="" coords="978,903,1249,949"/>
+<area shape="rect" id="node22" title=" " alt="" coords="635,912,714,941"/>
+<area shape="rect" id="node23" title=" " alt="" coords="167,912,225,941"/>
+<area shape="rect" id="node24" href="$symengine__assert_8h_source.html" title=" " alt="" coords="249,903,418,949"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1251,912,1320,941"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1344,912,1429,941"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1454,912,1512,941"/>
+<area shape="rect" id="node33" title=" " alt="" coords="1536,912,1608,941"/>
+<area shape="rect" id="node34" title=" " alt="" coords="739,903,930,949"/>
+<area shape="rect" id="node35" title=" " alt="" coords="955,903,1226,949"/>
 <area shape="rect" id="node43" href="$integer_8h.html" title=" " alt="" coords="370,330,524,359"/>
 <area shape="rect" id="node46" href="$symbol_8h.html" title=" " alt="" coords="899,407,1056,436"/>
 <area shape="rect" id="node47" href="$infinity_8h.html" title=" " alt="" coords="675,253,827,282"/>
