@@ -256,8 +256,10 @@ CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b);
 //! Assign to s, derivative of expr with respect to sym.
 //! Returns SYMENGINE_RUNTIME_ERROR if sym is not a symbol.
 CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, const basic sym);
-//! Assign to s, series expansion of expr with respect to sym upto required precision prec
-CWRAPPER_OUTPUT_TYPE basic_series(basic s, const basic expr, basic const sym, unsigned int prec);
+//! Assign to s, series expansion of expr with respect to sym upto required
+//! precision prec
+CWRAPPER_OUTPUT_TYPE basic_series(basic s, const basic expr, basic const sym,
+                                  unsigned int prec);
 //! Returns 1 if both basic are equal, 0 if not
 int basic_eq(const basic a, const basic b);
 //! Returns 1 if both basic are not equal, 0 if they are

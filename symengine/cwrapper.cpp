@@ -525,10 +525,12 @@ CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)
     CWRAPPER_END
 }
 
-CWRAPPER_OUTPUT_TYPE basic_series(basic s, const basic expr, basic const sym, unsigned int prec)
+CWRAPPER_OUTPUT_TYPE basic_series(basic s, const basic expr, basic const sym,
+                                  unsigned int prec)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::series(expr->m, rcp_static_cast<const Symbol>(sym->m), prec);
+    s->m = SymEngine::series(expr->m, rcp_static_cast<const Symbol>(sym->m),
+                             prec);
     CWRAPPER_END
 }
 
