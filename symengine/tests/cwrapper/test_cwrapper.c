@@ -2387,7 +2387,8 @@ void test_series()
     basic_series(b, a, x, 6);
 
     s = basic_str(b);
-    SYMENGINE_C_ASSERT(strcmp(s, "(1/120)*x**5 + (-1/6)*x**3 + x + O(x**6)") == 0);
+    SYMENGINE_C_ASSERT(strcmp(s, "(1/120)*x**5 + (-1/6)*x**3 + x + O(x**6)")
+                       == 0);
     basic_str_free(s);
 
     basic_free_stack(x);
