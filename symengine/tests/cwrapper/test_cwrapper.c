@@ -2375,6 +2375,26 @@ void test_sets()
     basic_free_stack(x);
 }
 
+void test_series()
+{
+    basic x, a, b;
+    char *s;
+    basic_new_stack(x);
+    basic_new_stack(a);
+    basic_new_stack(b);
+    symbol_set(x, "x");
+    basic_sin(a, x);
+    basic_series(b, a, x, 6);
+
+    s = basic_str(b);
+    SYMENGINE_C_ASSERT(strcmp(s, "(1/120)*x**5 + (-1/6)*x**3 + x + O(x**6)") == 0);
+    basic_str_free(s);
+
+    basic_free_stack(x);
+    basic_free_stack(a);
+    basic_free_stack(b);
+}
+
 int main(int argc, char *argv[])
 {
     symengine_print_stack_on_segfault();
@@ -2417,5 +2437,6 @@ int main(int argc, char *argv[])
     test_lambda_double();
     test_cse();
     test_sets();
+    test_series();
     return 0;
 }
