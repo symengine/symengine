@@ -777,6 +777,12 @@ CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
 //! Wrapper for as_numer_denom
 CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
                                           const basic x);
+//! Wrapper for as_two_terms for expressions of type Add
+CWRAPPER_OUTPUT_TYPE basic_add_as_two_terms(basic term1, basic term2,
+                                            const basic s);
+//! Wrapper for as_two_terms for expressions of type Mul
+CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1, basic term2,
+                                            const basic s);
 
 //! Wrapper for LambdaRealDoubleVisitor
 typedef struct CLambdaRealDoubleVisitor CLambdaRealDoubleVisitor;

@@ -21,6 +21,7 @@ using SymEngine::LLVMLongDoubleVisitor;
 #define xstr(s) str(s)
 #define str(s) #s
 
+using SymEngine::Add;
 using SymEngine::Basic;
 using SymEngine::Complex;
 using SymEngine::ComplexBase;
@@ -34,6 +35,7 @@ using SymEngine::has_symbol;
 using SymEngine::Integer;
 using SymEngine::integer_class;
 using SymEngine::LambdaRealDoubleVisitor;
+using SymEngine::Mul;
 using SymEngine::Number;
 using SymEngine::Rational;
 using SymEngine::rational_class;
@@ -1829,6 +1831,26 @@ CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
     CWRAPPER_BEGIN
     SymEngine::as_numer_denom(x->m, SymEngine::outArg(numer->m),
                               SymEngine::outArg(denom->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_add_as_two_terms(basic term1, basic term2,
+                                            const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Add>(*(s->m)));
+    rcp_static_cast<const Add>(s->m)->as_two_terms(SymEngine::outArg(term1->m),
+                                                   SymEngine::outArg(term2->m));
+    CWRAPPER_END
+}
+
+CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1, basic term2,
+                                            const basic s)
+{
+    CWRAPPER_BEGIN
+    SYMENGINE_ASSERT(is_a<Mul>(*(s->m)));
+    rcp_static_cast<const Mul>(s->m)->as_two_terms(SymEngine::outArg(term1->m),
+                                                   SymEngine::outArg(term2->m));
     CWRAPPER_END
 }
 
