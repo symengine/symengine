@@ -611,75 +611,79 @@ $(function() {
 <div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160; </div>
 <div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,</div>
 <div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160;                                          <span class="keyword">const</span> basic x);</div>
-<div class="line"><a name="l00780"></a><span class="lineno">  780</span>&#160; </div>
-<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> <a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a>;</div>
-<div class="line"><a name="l00783"></a><span class="lineno">  783</span>&#160;<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *lambda_real_double_visitor_new(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;<span class="keywordtype">void</span> lambda_real_double_visitor_init(<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *<span class="keyword">self</span>,</div>
-<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;                                     <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
-<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;                                     <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse);</div>
-<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;<span class="keywordtype">void</span> lambda_real_double_visitor_call(<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *<span class="keyword">self</span>,</div>
-<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;                                     <span class="keywordtype">double</span> *<span class="keyword">const</span> outs,</div>
-<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;                                     <span class="keyword">const</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> inps);</div>
-<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;<span class="keywordtype">void</span> lambda_real_double_visitor_free(<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *<span class="keyword">self</span>);</div>
-<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160; </div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_LLVM</span></div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;<span class="comment">// double</span></div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMDoubleVisitor CLLVMDoubleVisitor;</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;CLLVMDoubleVisitor *llvm_double_visitor_new(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;<span class="keywordtype">void</span> llvm_double_visitor_init(CLLVMDoubleVisitor *<span class="keyword">self</span>, <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
-<div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;                              <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
-<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;                              <span class="keywordtype">int</span> opt_level);</div>
-<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;<span class="keywordtype">void</span> llvm_double_visitor_call(CLLVMDoubleVisitor *<span class="keyword">self</span>, <span class="keywordtype">double</span> *<span class="keyword">const</span> outs,</div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;                              <span class="keyword">const</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> inps);</div>
-<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;<span class="keywordtype">void</span> llvm_double_visitor_free(CLLVMDoubleVisitor *<span class="keyword">self</span>);</div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;<span class="comment">// float</span></div>
-<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMFloatVisitor CLLVMFloatVisitor;</div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;CLLVMFloatVisitor *llvm_float_visitor_new(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;<span class="keywordtype">void</span> llvm_float_visitor_init(CLLVMFloatVisitor *<span class="keyword">self</span>, <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
-<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;                             <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
-<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;                             <span class="keywordtype">int</span> opt_level);</div>
-<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;<span class="keywordtype">void</span> llvm_float_visitor_call(CLLVMFloatVisitor *<span class="keyword">self</span>, <span class="keywordtype">float</span> *<span class="keyword">const</span> outs,</div>
-<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;                             <span class="keyword">const</span> <span class="keywordtype">float</span> *<span class="keyword">const</span> inps);</div>
-<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;<span class="keywordtype">void</span> llvm_float_visitor_free(CLLVMFloatVisitor *<span class="keyword">self</span>);</div>
-<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160; </div>
-<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;<span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
-<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;<span class="comment">// long double</span></div>
-<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMLongDoubleVisitor CLLVMLongDoubleVisitor;</div>
-<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;CLLVMLongDoubleVisitor *llvm_long_double_visitor_new(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;<span class="keywordtype">void</span> llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *<span class="keyword">self</span>,</div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;                                   <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
-<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;                                   <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
-<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;                                   <span class="keywordtype">int</span> opt_level);</div>
-<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;<span class="keywordtype">void</span> llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *<span class="keyword">self</span>,</div>
-<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;                                   <span class="keywordtype">long</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> outs,</div>
-<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;                                   <span class="keyword">const</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> inps);</div>
-<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;<span class="keywordtype">void</span> llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *<span class="keyword">self</span>);</div>
-<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160; </div>
-<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;CWRAPPER_OUTPUT_TYPE basic_cse(<a class="code" href="structCVecBasic.html">CVecBasic</a> *replacement_syms,</div>
-<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;                               <a class="code" href="structCVecBasic.html">CVecBasic</a> *replacement_exprs,</div>
-<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;                               <a class="code" href="structCVecBasic.html">CVecBasic</a> *reduced_exprs,</div>
-<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;                               <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs);</div>
-<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160; </div>
-<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;<span class="keywordtype">void</span> symengine_print_stack_on_segfault(<span class="keywordtype">void</span>);</div>
-<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160; </div>
-<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
-<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;}</div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00781"></a><span class="lineno">  781</span>&#160;CWRAPPER_OUTPUT_TYPE basic_add_as_two_terms(basic term1, basic term2,</div>
+<div class="line"><a name="l00782"></a><span class="lineno">  782</span>&#160;                                            <span class="keyword">const</span> basic s);</div>
+<div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1, basic term2,</div>
+<div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;                                            <span class="keyword">const</span> basic s);</div>
+<div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160; </div>
+<div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> <a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a>;</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *lambda_real_double_visitor_new(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;<span class="keywordtype">void</span> lambda_real_double_visitor_init(<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *<span class="keyword">self</span>,</div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;                                     <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;                                     <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse);</div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;<span class="keywordtype">void</span> lambda_real_double_visitor_call(<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *<span class="keyword">self</span>,</div>
+<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;                                     <span class="keywordtype">double</span> *<span class="keyword">const</span> outs,</div>
+<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;                                     <span class="keyword">const</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> inps);</div>
+<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;<span class="keywordtype">void</span> lambda_real_double_visitor_free(<a class="code" href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a> *<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160; </div>
+<div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_LLVM</span></div>
+<div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;<span class="comment">// double</span></div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMDoubleVisitor CLLVMDoubleVisitor;</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;CLLVMDoubleVisitor *llvm_double_visitor_new(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;<span class="keywordtype">void</span> llvm_double_visitor_init(CLLVMDoubleVisitor *<span class="keyword">self</span>, <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;                              <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
+<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;                              <span class="keywordtype">int</span> opt_level);</div>
+<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;<span class="keywordtype">void</span> llvm_double_visitor_call(CLLVMDoubleVisitor *<span class="keyword">self</span>, <span class="keywordtype">double</span> *<span class="keyword">const</span> outs,</div>
+<div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;                              <span class="keyword">const</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> inps);</div>
+<div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;<span class="keywordtype">void</span> llvm_double_visitor_free(CLLVMDoubleVisitor *<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;<span class="comment">// float</span></div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMFloatVisitor CLLVMFloatVisitor;</div>
+<div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;CLLVMFloatVisitor *llvm_float_visitor_new(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160;<span class="keywordtype">void</span> llvm_float_visitor_init(CLLVMFloatVisitor *<span class="keyword">self</span>, <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
+<div class="line"><a name="l00813"></a><span class="lineno">  813</span>&#160;                             <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
+<div class="line"><a name="l00814"></a><span class="lineno">  814</span>&#160;                             <span class="keywordtype">int</span> opt_level);</div>
+<div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;<span class="keywordtype">void</span> llvm_float_visitor_call(CLLVMFloatVisitor *<span class="keyword">self</span>, <span class="keywordtype">float</span> *<span class="keyword">const</span> outs,</div>
+<div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;                             <span class="keyword">const</span> <span class="keywordtype">float</span> *<span class="keyword">const</span> inps);</div>
+<div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160;<span class="keywordtype">void</span> llvm_float_visitor_free(CLLVMFloatVisitor *<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160; </div>
+<div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;<span class="preprocessor">#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE</span></div>
+<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;<span class="comment">// long double</span></div>
+<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span>CLLVMLongDoubleVisitor CLLVMLongDoubleVisitor;</div>
+<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;CLLVMLongDoubleVisitor *llvm_long_double_visitor_new(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;<span class="keywordtype">void</span> llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *<span class="keyword">self</span>,</div>
+<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;                                   <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *args,</div>
+<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;                                   <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs, <span class="keywordtype">int</span> perform_cse,</div>
+<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;                                   <span class="keywordtype">int</span> opt_level);</div>
+<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;<span class="keywordtype">void</span> llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *<span class="keyword">self</span>,</div>
+<div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;                                   <span class="keywordtype">long</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> outs,</div>
+<div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;                                   <span class="keyword">const</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> *<span class="keyword">const</span> inps);</div>
+<div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160;<span class="keywordtype">void</span> llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *<span class="keyword">self</span>);</div>
+<div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160; </div>
+<div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;CWRAPPER_OUTPUT_TYPE basic_cse(<a class="code" href="structCVecBasic.html">CVecBasic</a> *replacement_syms,</div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;                               <a class="code" href="structCVecBasic.html">CVecBasic</a> *replacement_exprs,</div>
+<div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;                               <a class="code" href="structCVecBasic.html">CVecBasic</a> *reduced_exprs,</div>
+<div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;                               <span class="keyword">const</span> <a class="code" href="structCVecBasic.html">CVecBasic</a> *exprs);</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160; </div>
+<div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;<span class="keywordtype">void</span> symengine_print_stack_on_segfault(<span class="keywordtype">void</span>);</div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160; </div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;<span class="preprocessor">#ifdef __cplusplus</span></div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;}</div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a976db42c9dfad76ad2c95a6038cbc093"><div class="ttname"><a href="namespaceSymEngine.html#a976db42c9dfad76ad2c95a6038cbc093">SymEngine::TypeID</a></div><div class="ttdeci">TypeID</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00043">basic.h:43</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac1ffd806385fb08a9a48dd86a60915ee"><div class="ttname"><a href="namespaceSymEngine.html#ac1ffd806385fb08a9a48dd86a60915ee">SymEngine::is_a_Complex</a></div><div class="ttdeci">bool is_a_Complex(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="complex_8h_source.html#l00024">complex.h:24</a></div></div>
-<div class="ttc" id="astructCDenseMatrix_html"><div class="ttname"><a href="structCDenseMatrix.html">CDenseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01087">cwrapper.cpp:1087</a></div></div>
-<div class="ttc" id="astructCLambdaRealDoubleVisitor_html"><div class="ttname"><a href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01835">cwrapper.cpp:1835</a></div></div>
-<div class="ttc" id="astructCMapBasicBasic_html"><div class="ttname"><a href="structCMapBasicBasic.html">CMapBasicBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01491">cwrapper.cpp:1491</a></div></div>
+<div class="ttc" id="astructCDenseMatrix_html"><div class="ttname"><a href="structCDenseMatrix.html">CDenseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01089">cwrapper.cpp:1089</a></div></div>
+<div class="ttc" id="astructCLambdaRealDoubleVisitor_html"><div class="ttname"><a href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01857">cwrapper.cpp:1857</a></div></div>
+<div class="ttc" id="astructCMapBasicBasic_html"><div class="ttname"><a href="structCMapBasicBasic.html">CMapBasicBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01493">cwrapper.cpp:1493</a></div></div>
 <div class="ttc" id="astructCRCPBasic__C_html"><div class="ttname"><a href="structCRCPBasic__C.html">CRCPBasic_C</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8h_source.html#l00067">cwrapper.h:67</a></div></div>
-<div class="ttc" id="astructCRCPBasic_html"><div class="ttname"><a href="structCRCPBasic.html">CRCPBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l00110">cwrapper.cpp:110</a></div></div>
-<div class="ttc" id="astructCSetBasic_html"><div class="ttname"><a href="structCSetBasic.html">CSetBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l00114">cwrapper.cpp:114</a></div></div>
-<div class="ttc" id="astructCSparseMatrix_html"><div class="ttname"><a href="structCSparseMatrix.html">CSparseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01091">cwrapper.cpp:1091</a></div></div>
-<div class="ttc" id="astructCVecBasic_html"><div class="ttname"><a href="structCVecBasic.html">CVecBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01003">cwrapper.cpp:1003</a></div></div>
-<div class="ttc" id="astructCVectorInt_html"><div class="ttname"><a href="structCVectorInt.html">CVectorInt</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l00951">cwrapper.cpp:951</a></div></div>
+<div class="ttc" id="astructCRCPBasic_html"><div class="ttname"><a href="structCRCPBasic.html">CRCPBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l00112">cwrapper.cpp:112</a></div></div>
+<div class="ttc" id="astructCSetBasic_html"><div class="ttname"><a href="structCSetBasic.html">CSetBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l00116">cwrapper.cpp:116</a></div></div>
+<div class="ttc" id="astructCSparseMatrix_html"><div class="ttname"><a href="structCSparseMatrix.html">CSparseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01093">cwrapper.cpp:1093</a></div></div>
+<div class="ttc" id="astructCVecBasic_html"><div class="ttname"><a href="structCVecBasic.html">CVecBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01005">cwrapper.cpp:1005</a></div></div>
+<div class="ttc" id="astructCVectorInt_html"><div class="ttname"><a href="structCVectorInt.html">CVectorInt</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l00953">cwrapper.cpp:953</a></div></div>
 <div class="ttc" id="astructdcomplex_html"><div class="ttname"><a href="structdcomplex.html">dcomplex</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8h_source.html#l00046">cwrapper.h:46</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
