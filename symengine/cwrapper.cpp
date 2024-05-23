@@ -1838,10 +1838,8 @@ CWRAPPER_OUTPUT_TYPE basic_add_as_two_terms(basic term1, basic term2, const basi
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Add>(*(s->m)));
-    if (is_a<Add>(*(s->m))) {
-        rcp_static_cast<const Add>(s->m)->as_two_terms(
-            SymEngine::outArg(term1->m), SymEngine::outArg(term2->m));
-    }
+    rcp_static_cast<const Add>(s->m)->as_two_terms(
+        SymEngine::outArg(term1->m), SymEngine::outArg(term2->m));
     CWRAPPER_END
 }
 
@@ -1849,10 +1847,8 @@ CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1, basic term2, const basi
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(is_a<Mul>(*(s->m)));
-    if (is_a<Mul>(*(s->m))) {
-        rcp_static_cast<const Mul>(s->m)->as_two_terms(
-            SymEngine::outArg(term1->m), SymEngine::outArg(term2->m));
-    }
+    rcp_static_cast<const Mul>(s->m)->as_two_terms(
+        SymEngine::outArg(term1->m), SymEngine::outArg(term2->m));
     CWRAPPER_END
 }
 
