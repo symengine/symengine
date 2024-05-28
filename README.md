@@ -40,7 +40,7 @@ SymEngine mailinglist: http://groups.google.com/group/symengine
 
 ### Conan package manager
 
-    conan install symengine/<version>@
+    conan install --requires="symengine/[*]"
 
 ### Building from source
 
