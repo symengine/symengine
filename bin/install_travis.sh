@@ -19,39 +19,22 @@ fi
 if [[ "${CC}" == "" ]]; then
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         export CC=clang
-        export CXX=clang++
     else
         export CC=gcc
-        export CXX=g++
     fi
 fi
 
 if [[ "${CXX}" == "" ]]; then
-    if [[ "$CC" == gcc ]]; then
-        export CXX=g++
-    elif [[ "$CC" == clang ]]; then
-        export CXX=clang++
+    if echo "$CC" | grep -E '^gcc'; then
+        export CXX=$(echo "$CC" | sed -i 's/gcc/g++/g')
+        export GCOV_EXECUTABLE=$(echo "$CC" | sed -i 's/gcc/gcov/g')
+    elif echo "$CC" | grep -E '^clang'; then
+        export CXX=$(echo "$CC" | sed -i 's/clang/clang++/g')
+    else
+        >&2 echo "CXX environment variable not set, could not be deduced from CC=${CC}"
     fi
 fi
 export GCOV_EXECUTABLE=gcov
-
-if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
-    if [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-        export CC=gcc-12
-        export CXX=g++-12
-        export GCOV_EXECUTABLE=gcov-12
-    else
-        if grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
-            export CC=gcc-11
-            export CXX=g++-11
-            export GCOV_EXECUTABLE=gcov-11
-        else
-            export CC=gcc-9
-            export CXX=g++-9
-            export GCOV_EXECUTABLE=gcov-9
-        fi
-    fi
-fi
 
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
