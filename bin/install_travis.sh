@@ -26,10 +26,10 @@ fi
 
 if [[ "${CXX}" == "" ]]; then
     if echo "$CC" | grep -E '^gcc'; then
-        export CXX=$(echo "$CC" | sed -i 's/gcc/g++/g')
+        export CXX=$(echo "$CC" | sed 's/gcc/g++/g')
         export GCOV_EXECUTABLE=$(echo "$CC" | sed -i 's/gcc/gcov/g')
     elif echo "$CC" | grep -E '^clang'; then
-        export CXX=$(echo "$CC" | sed -i 's/clang/clang++/g')
+        export CXX=$(echo "$CC" | sed 's/clang/clang++/g')
         export CCACHE_CPP2=true  # recommended setting for ccache when using clang
     else
         >&2 echo "CXX environment variable not set, could not be deduced from CC=${CC}"
