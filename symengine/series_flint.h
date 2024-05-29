@@ -39,7 +39,7 @@ public:
         return s.mullow(r, prec);
     }
 // The GCC diagnostic pragma below is only used to allow
-// gcc-14 to be used in CI without dropping -Werror, we should fix the warning
+// gcc-13+ to be used in CI without dropping -Werror, we should fix the warning
 // and remove these preprocessor macros. Tracking issue:
 // symengine/symengine#2027
 #if defined(__GNUC__) && (__GNUC__ >= 13)
