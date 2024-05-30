@@ -24,6 +24,8 @@ if [[ "${CC}" == "" ]]; then
     fi
 fi
 
+export GCOV_EXECUTABLE=gcov
+
 if [[ "${CXX}" == "" ]]; then
     if echo "$CC" | grep -E '^gcc'; then
         export CXX=$(echo "$CC" | sed 's/gcc/g++/g')
@@ -35,7 +37,6 @@ if [[ "${CXX}" == "" ]]; then
         >&2 echo "CXX environment variable not set, could not be deduced from CC=${CC}"
     fi
 fi
-export GCOV_EXECUTABLE=gcov
 
 export SOURCE_DIR=`pwd`
 export our_install_dir="$HOME/our_usr"
@@ -116,7 +117,7 @@ if [[ "${BUILD_TUTORIALS}" == "yes" ]]; then
 fi
 
 retry_on_error () {
-  "$@" || (sleep 5 && "$@") || (sleep 30 && "$@") || (sleep 120 && "$@")
+  "$@" || (sleep 5 && "$@") || (sleep 10 && "$@") || (sleep 15 && "$@")
 }
 
 if [[ "${CONDA_ENV_FILE}" == "" ]]; then
@@ -137,7 +138,7 @@ ccache --show-stats
 
 if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
     git clone https://github.com/wbhart/flint2;
-    cd flint2 && git checkout v2.9.0 && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j2 install && cd ..;
+    cd flint2 && git checkout v2.9.0 && ./configure CC="ccache $CC" --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j$(nproc) install && cd ..;
 fi
 
 cd $SOURCE_DIR;
