@@ -111,6 +111,25 @@ symengine/tests/basic/test_nan
 symengine/tests/basic/test_relationals
 symengine/tests/basic/test_solve
 symengine/tests/basic/test_as_real_imag
+symengine/tests/basic/test_assumptions
+symengine/tests/basic/test_count_ops
+symengine/tests/basic/test_refine
+symengine/tests/basic/test_sbml_parser
+symengine/tests/basic/test_simplify
+symengine/tests/basic/test_test_visitors
+symengine/tests/basic/test_tribool
+symengine/tests/basic/test_tuple
+symengine/tests/matrix/test_matrixexpr
+symengine/tests/ntheory/test_ntheory_funcs
+symengine/utilities/matchpycpp/autogen_tests/test_case001
+symengine/utilities/matchpycpp/autogen_tests/test_case002
+symengine/utilities/matchpycpp/autogen_tests/test_case003
+symengine/utilities/matchpycpp/autogen_tests/test_case004
+symengine/utilities/matchpycpp/autogen_tests/test_case005
+symengine/utilities/matchpycpp/autogen_tests/test_case006
+symengine/utilities/matchpycpp/autogen_tests/test_case007
+symengine/utilities/matchpycpp/tests/bipartite/test_bipartite
+symengine/utilities/matchpycpp/tests/hopcroft_karp/test_hopcroft_karp
 
 # Benchmarks executables
 benchmarks/add1

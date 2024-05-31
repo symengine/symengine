@@ -980,6 +980,18 @@ TEST_CASE("Pow: arit", "[arit]")
     r2 = i4;
     REQUIRE(eq(*r1, *r2));
 
+    r1 = pow(integer(-8), div(i2, i3));
+    r2 = mul(i4, pow(im1, div(i2, i3)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(integer(-8), div(i2, im3));
+    r2 = mul(div(im1, i4), pow(im1, div(one, i3)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = pow(pow(minus_one, div(one, i4)), i4);
+    r2 = minus_one;
+    REQUIRE(eq(*r1, *r2));
+
     r1 = mul(pow(integer(8), x), pow(integer(8), sub(div(i2, i3), x)));
     r2 = i4;
     REQUIRE(eq(*r1, *r2));

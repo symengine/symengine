@@ -78,10 +78,28 @@ void test_cwrapper()
     basic_new_stack(numer);
     basic_new_stack(denom);
     basic_as_numer_denom(numer, denom, e);
+
+    basic term1, term2, term3, term4;
+    basic_new_stack(term1);
+    basic_new_stack(term2);
+    basic_new_stack(term3);
+    basic_new_stack(term4);
+    basic_mul_as_two_terms(term1, term2, e);
     basic_mul(e, e, z);
     SYMENGINE_C_ASSERT(basic_eq(numer, e) == 1);
     SYMENGINE_C_ASSERT(basic_eq(denom, z) == 1);
     basic_div(e, e, z);
+    basic_div(e, e, y);
+    SYMENGINE_C_ASSERT(basic_eq(term1, y) == 1);
+    SYMENGINE_C_ASSERT(basic_eq(term2, e) == 1);
+    basic_mul(e, e, y);
+    basic_add(e, e, z);
+    basic_add(e, e, y);
+    basic_add_as_two_terms(term3, term4, e);
+    SYMENGINE_C_ASSERT(basic_eq(term3, y) == 1);
+    basic_sub(e, e, y);
+    SYMENGINE_C_ASSERT(basic_eq(term4, e) == 1);
+    basic_sub(e, e, z);
 
     basic_diff(e, e, z);
     s = basic_str(e);
@@ -201,6 +219,10 @@ void test_cwrapper()
     basic_free_stack(b);
     basic_free_stack(numer);
     basic_free_stack(denom);
+    basic_free_stack(term1);
+    basic_free_stack(term2);
+    basic_free_stack(term3);
+    basic_free_stack(term4);
     basic_str_free(s);
 }
 
@@ -1436,6 +1458,11 @@ void test_functions()
 
     basic_mul_vec(ans, vec);
     SYMENGINE_C_ASSERT(basic_eq(ans, twenty_four));
+
+    basic_sign(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+    basic_sign(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
 
     basic_free_stack(ans);
     basic_free_stack(res);

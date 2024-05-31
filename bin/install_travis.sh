@@ -19,37 +19,22 @@ fi
 if [[ "${CC}" == "" ]]; then
     if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
         export CC=clang
-        export CXX=clang++
     else
         export CC=gcc
-        export CXX=g++
     fi
 fi
 
-if [[ "${CXX}" == "" ]]; then
-    if [[ "$CC" == gcc ]]; then
-        export CXX=g++
-    elif [[ "$CC" == clang ]]; then
-        export CXX=clang++
-    fi
-fi
 export GCOV_EXECUTABLE=gcov
 
-if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${CC}" == "gcc" ]]; then
-    if [[ "${WITH_LATEST_GCC}" == "yes" ]]; then
-        export CC=gcc-12
-        export CXX=g++-12
-        export GCOV_EXECUTABLE=gcov-12
+if [[ "${CXX}" == "" ]]; then
+    if echo "$CC" | grep -E '^gcc'; then
+        export CXX=$(echo "$CC" | sed 's/gcc/g++/g')
+        export GCOV_EXECUTABLE=$(echo "$CC" | sed -i 's/gcc/gcov/g')
+    elif echo "$CC" | grep -E '^clang'; then
+        export CXX=$(echo "$CC" | sed 's/clang/clang++/g')
+        export CCACHE_CPP2=true  # recommended setting for ccache when using clang
     else
-        if grep DISTRIB_CODENAME=jammy /etc/lsb-release >/dev/null; then
-            export CC=gcc-11
-            export CXX=g++-11
-            export GCOV_EXECUTABLE=gcov-11
-        else
-            export CC=gcc-9
-            export CXX=g++-9
-            export GCOV_EXECUTABLE=gcov-9
-        fi
+        >&2 echo "CXX environment variable not set, could not be deduced from CC=${CC}"
     fi
 fi
 
@@ -106,15 +91,17 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs arb=2.23.0"
 fi
 
-if [[ "${WITH_LLVM}" == "12" ]]; then
-    export LLVM_DIR=/usr/lib/llvm-12/share/llvm/
-elif [[ "${WITH_LLVM}" == "13" ]]; then
-    export LLVM_DIR=/usr/lib/llvm-13/share/llvm/
-elif [[ "${WITH_LLVM}" == "15" ]]; then
-    export LLVM_DIR=/usr/lib/llvm-15/share/llvm/
-elif [[ ! -z "${WITH_LLVM}" ]]; then
-    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
-    export LLVM_DIR=$our_install_dir/share/llvm/
+if [[ "${WITH_LLVM}" == "LATEST" ]]; then
+    WITH_LLVM=$(ls -d /usr/lib/llvm-?? | awk -F- '{print $2}' | sort -g | tail -n 1)
+fi
+
+if [[ ! -z "${WITH_LLVM}" ]]; then
+    if [[ "${EXTRA_APT_PACKAGES}" == *"llvm"* ]]; then
+        export LLVM_DIR="/usr/lib/llvm-${WITH_LLVM}/share/llvm/"
+    else
+        conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
+        export LLVM_DIR=$our_install_dir/share/llvm/
+    fi
 fi
 
 if [[ "${WITH_ECM}" == "yes" ]]; then
@@ -130,7 +117,7 @@ if [[ "${BUILD_TUTORIALS}" == "yes" ]]; then
 fi
 
 retry_on_error () {
-  "$@" || (sleep 5 && "$@") || (sleep 30 && "$@") || (sleep 120 && "$@")
+  "$@" || (sleep 5 && "$@") || (sleep 10 && "$@") || (sleep 15 && "$@")
 }
 
 if [[ "${CONDA_ENV_FILE}" == "" ]]; then
@@ -142,8 +129,6 @@ source activate $our_install_dir;
 
 conda install -q ccache
 
-export CXX="ccache ${CXX}"
-export CC="ccache ${CC}"
 export CCACHE_DIR=$HOME/.ccache
 export CCACHE_SLOPPINESS="pch_defines,time_macros"
 ccache -M 100M
@@ -153,7 +138,7 @@ ccache --show-stats
 
 if [[ "${WITH_FLINT_DEV}" == "yes" ]] && [[ "${WITH_ARB}" != "yes" ]]; then
     git clone https://github.com/wbhart/flint2;
-    cd flint2 && git checkout v2.9.0 && ./configure --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j2 install && cd ..;
+    cd flint2 && git checkout v2.9.0 && ./configure CC="ccache $CC" --prefix=$our_install_dir --with-gmp=$our_install_dir --with-mpfr=$our_install_dir && make -j$(nproc) install && cd ..;
 fi
 
 cd $SOURCE_DIR;

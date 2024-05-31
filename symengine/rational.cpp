@@ -194,20 +194,22 @@ RCP<const Basic> Rational::powrat(const Rational &other) const
 
 RCP<const Basic> Rational::rpowrat(const Integer &other) const
 {
-    if (not(mp_fits_ulong_p(SymEngine::get_den(i))))
-        throw SymEngineException("powrat: den of 'exp' does not fit ulong.");
-    unsigned long exp = mp_get_ui(SymEngine::get_den(i));
+    if (other.is_one()) {
+        return one;
+    }
     RCP<const Integer> res;
-    if (other.is_negative()) {
-        if (i_nth_root(outArg(res), *other.neg(), exp)) {
-            if (exp % 2 == 0) {
-                return I->pow(*get_num())->mul(*res->powint(*get_num()));
-            } else {
-                return SymEngine::neg(res->powint(*get_num()));
+    if (mp_fits_ulong_p(SymEngine::get_den(i))) {
+        unsigned long den = mp_get_ui(SymEngine::get_den(i));
+        if (other.is_negative()) {
+            RCP<const Integer> neg_other = other.neg();
+            if (not other.is_minus_one()
+                and i_nth_root(outArg(res), *neg_other, den)) {
+                return SymEngine::mul(this->rpowrat(*minus_one),
+                                      res->powint(*get_num()));
             }
-        }
-    } else {
-        if (i_nth_root(outArg(res), other, exp)) {
+        } else if (i_nth_root(outArg(res), other, den)) {
+            // res == other**(1/den)
+            // return res**num
             return res->powint(*get_num());
         }
     }
@@ -225,7 +227,7 @@ RCP<const Basic> Rational::rpowrat(const Integer &other) const
     if ((other.is_negative()) and den == 2) {
         imulnum(outArg(coef), I);
         // if other.neg() is one, no need to add it to dict
-        if (other.as_integer_class() != -1)
+        if (not other.is_minus_one())
             insert(surd, other.neg(),
                    Rational::from_mpq(rational_class(r, den)));
     } else {

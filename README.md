@@ -69,40 +69,41 @@ Run tests:
 
 ### Development
 
-The Travis-CI checks the code in both Release and Debug mode with all possible
-checks, so just sending a GitHub pull request is enough and you can use any
-mode you want to develop it. However, the best way to develop SymEngine on Linux
-is to use the Debug mode with `BFD` support on:
+[GitHub Actions checks](https://github.com/symengine/symengine/actions/workflows/ci.yml)
+the code in both Release and Debug mode with all possible checks, so just
+sending a GitHub pull request is enough and you can use any mode you want to
+develop it. However, the best way to develop SymEngine on Linux is to use the
+Debug mode with `BFD` support on:
 
     cmake -DCMAKE_BUILD_TYPE=Debug -DWITH_BFD=yes ..
 
-This `BFD` support turns on nice Python like stack traces on exceptions, assert
+This `BFD` support turns on nice Python-like stack traces on exceptions, assert
 errors or segfaults, and the Debug mode automatically turns on
 `WITH_SYMENGINE_RCP=no` (which uses `Teuchos::RCP` with full Debug time
 checking) and `WITH_SYMENGINE_ASSERT=yes`, so the code cannot segfault in Debug
 mode, as long as our style conventions (e.g. no raw pointers) are followed,
 which is easy to check by visual inspection of a given Pull Request. In Release
-mode, which is the default, the code is as performing as manual reference
+mode, which is the default, the code is as performing a manual reference
 counting and raw pointers (and if there is a bug, it could segfault, in which
 case all you have to do is to turn Debug mode on and get a nice exception with
 a stack trace).
 
 To make `WITH_BFD=yes` work, you need to install `binutils-dev` first,
-otherwise you will get a `CMake` error during configuring.
-For Debian based systems (Ubuntu etc.)
+otherwise, you will get a `CMake` error during configuring.
+For Debian-based systems (Ubuntu etc.)
 
     apt-get install binutils-dev
 
-For RPM based systems (Fedora etc.)
+For RPM-based systems (Fedora etc.)
 
     yum install binutils-devel
 
-On OpenSuSE you will additionally need `glibc-devel`.
+On OpenSuSE, you will additionally need `glibc-devel`.
 
 ## CMake Options
 
 Here are all the `CMake` options that you can use to configure the build, with
-their default values indicated below:
+their default values are indicated below:
 
     cmake -DCMAKE_INSTALL_PREFIX:PATH="/usr/local" \  # Installation prefix
         -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
@@ -153,7 +154,7 @@ dependency and all the code would be under permissive licenses, namely, MIT,
 BSD 3-clause and Boost License.
 
 Piranha (`WITH_PIRANHA`) depends on Boost, so it is off by default. The benchmarked
-code seems to depend on the order of which you
+code seems to depend on the order in which you
 execute the benchmarks in a given executable, due to internal malloc
 implementation. We have found that this order dependence is reduced by enabling
 `WITH_TCMALLOC=ON` and since it also speeds the benchmarks up, we recommend
@@ -179,14 +180,14 @@ Similarly, `-DPKG_INCLUDE_DIR` can be used for headers.
 #### For package managers
 
 For packaging symengine it is recommended to use `GMP, MPFR, MPC, FLINT, LLVM` as
-dependencies if they are available and build with thread safety on.
+dependencies if they are available and built with thread safety on.
 
     cmake -DWITH_GMP=on -DWITH_MPFR=on -DWITH_MPC=on -DINTEGER_CLASS=flint -DWITH_LLVM=on
     -DWITH_SYMENGINE_THREAD_SAFE=on ..
 
 #### Optimized build
 
-To build with more optimizations, you can use the above dependencies and options and also,
+To build with more optimizations, you can use the above dependencies and options, and also,
 
     CXXFLAGS="-march=native -O3" cmake -DWITH_TCMALLOC=on -DWITH_SYMENGINE_THREAD_SAFE=no ..
 
