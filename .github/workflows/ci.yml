@@ -94,6 +94,14 @@ jobs:
             OS: ubuntu-20.04
             CC: gcc
 
+          # Release build (recent LLVM)
+          - BUILD_TYPE: Release
+            OS: ubuntu-20.04
+            CC: clang
+            WITH_LLVM: 13
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
+            EXTRA_APT_PACKAGES: clang-13 llvm-13
+
           # Release build (recent LLVM + clang)
           - BUILD_TYPE: Release
             OS: ubuntu-20.04
@@ -110,6 +118,14 @@ jobs:
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
             EXTRA_APT_PACKAGES: llvm
 
+          ## In-tree builds (we just check a few configurations to make sure they work):
+          # Debug build
+          - BUILD_TYPE: Debug
+            WITH_BFD: yes
+            TEST_IN_TREE: yes
+            OS: ubuntu-20.04
+            CC: gcc
+
           - TEST_CLANG_FORMAT: yes
             OS: ubuntu-20.04
             CC: gcc
@@ -118,7 +134,6 @@ jobs:
             WITH_BFD: yes
             WITH_PIRANHA: yes
             BUILD_SHARED_LIBS: yes
-            TEST_IN_TREE: yes
             CC: gcc
             OS: ubuntu-22.04
 
@@ -144,6 +159,11 @@ jobs:
             OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
+            WITH_LLVM: 5.0
+            OS: macos-13
+            CC: clang
+
+          - BUILD_TYPE: Release
             WITH_LLVM: 5.0
             OS: macos-13
             CC: clang
