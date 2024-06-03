@@ -67,7 +67,7 @@ void StringBox::add_right(StringBox &other)
         smaller->lines_.insert(smaller->lines_.begin(), pad);
     }
     if (odd == 1) {
-        smaller->lines_.insert(lines_.begin(), pad);
+        smaller->lines_.insert(smaller->lines_.begin(), pad);
     }
     for (unsigned i = 0; i < lines_.size(); i++) {
         lines_[i].append(other.lines_[i]);
