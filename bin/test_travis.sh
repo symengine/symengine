@@ -19,7 +19,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
             export CC=clang-15
             export CXX=clang++-15
             which $CXX
-            cmake_line="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+            cmake_line="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
             LIBCXX_15_MSAN_ROOT=/opt/libcxx-15-msan
             # export PATH="/usr/lib/llvm-15/bin:$PATH"  # llvm-config
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp

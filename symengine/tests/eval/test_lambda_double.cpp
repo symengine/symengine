@@ -281,7 +281,7 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
     v.init({}, *Nan);
     REQUIRE(std::isnan(v.call({})));
     v.init({}, *Inf);
-    std::isinf(v.call({}));
+    REQUIRE(std::isinf(v.call({})));
     v.init({}, *NegInf);
     REQUIRE(std::isinf(v.call({})));
 }
