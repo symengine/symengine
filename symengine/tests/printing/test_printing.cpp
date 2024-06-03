@@ -1069,6 +1069,10 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     s = unicode(*tuple({}));
     CHECK(s == U8("()"));
+
+    // https://github.com/symengine/symengine/issues/2029
+    s = unicode(*mul(mul(x, x), y));
+    CHECK(s == U8(" 2  \nx \u22C5y"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
