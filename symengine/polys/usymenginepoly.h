@@ -52,7 +52,7 @@ public:
     static Container container_from_dict(const RCP<const Basic> &var,
                                          std::map<Key, Cf> &&d)
     {
-        return std::move(Container(d));
+        return Container(d);
     }
 
     template <typename FromPoly>

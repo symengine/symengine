@@ -24,7 +24,7 @@ public:
     IMPLEMENT_TYPEID(SYMENGINE_UNIVARIATESERIES)
     UnivariateSeries(const UExprDict &sp, const std::string varname,
                      const unsigned degree)
-        : SeriesBase(std::move(sp), varname, degree)
+        : SeriesBase(sp, varname, degree)
     {
         SYMENGINE_ASSIGN_TYPEID()
     }
