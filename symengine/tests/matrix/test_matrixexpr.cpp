@@ -305,10 +305,12 @@ TEST_CASE("Test Transpose", "[Transpose]")
     auto D1 = diagonal_matrix({integer(2), integer(23)});
     REQUIRE(eq(*transpose(D1), *D1));
 
-    auto A1 = immutable_dense_matrix(
-        2, 2, {integer(2), integer(23), integer(5), integer(9)});
-    auto A1T = immutable_dense_matrix(
-        2, 2, {integer(2), integer(5), integer(23), integer(9)});
+    auto A1 = immutable_dense_matrix(2, 3,
+                                     {integer(2), integer(23), integer(5),
+                                      integer(9), integer(7), integer(4)});
+    auto A1T = immutable_dense_matrix(3, 2,
+                                      {integer(2), integer(9), integer(23),
+                                       integer(7), integer(5), integer(4)});
     REQUIRE(eq(*transpose(A1), *A1T));
 
     REQUIRE(is_a<Transpose>(*AT));

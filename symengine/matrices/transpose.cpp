@@ -80,7 +80,7 @@ public:
 
         for (size_t i = 0; i < x.nrows(); i++)
             for (size_t j = 0; j < x.ncols(); j++)
-                t[j * x.ncols() + i] = x.get(i, j);
+                t[j * x.nrows() + i] = x.get(i, j);
 
         transpose_
             = make_rcp<const ImmutableDenseMatrix>(x.ncols(), x.nrows(), t);
