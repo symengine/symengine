@@ -3,7 +3,7 @@
 <area shape="rect" id="node2" href="$add_8cpp.html" title="Definitions for arithmatic." alt="" coords="5,99,234,145"/>
 <area shape="rect" id="node3" href="$complex_8cpp_source.html" title=" " alt="" coords="257,99,518,145"/>
 <area shape="rect" id="node4" href="$constants_8cpp_source.html" title=" " alt="" coords="542,99,809,145"/>
-<area shape="rect" id="node5" href="$infinity_8cpp_source.html" title=" " alt="" coords="115,424,362,470"/>
+<area shape="rect" id="node5" href="$infinity_8cpp_source.html" title=" " alt="" coords="114,424,362,470"/>
 <area shape="rect" id="node6" href="$mul_8cpp_source.html" title=" " alt="" coords="884,99,1113,145"/>
 <area shape="rect" id="node7" href="$pow_8cpp_source.html" title=" " alt="" coords="1136,99,1367,145"/>
 <area shape="rect" id="node8" href="$real__double_8h_source.html" title=" " alt="" coords="1293,193,1514,256"/>
@@ -20,15 +20,15 @@
 <area shape="rect" id="node46" href="$matrix_8h_source.html" title=" " alt="" coords="2251,202,2484,248"/>
 <area shape="rect" id="node50" href="$solve_8h.html" title=" " alt="" coords="2051,424,2276,470"/>
 <area shape="rect" id="node17" href="$assumptions_8cpp_source.html" title=" " alt="" coords="4724,313,5011,359"/>
-<area shape="rect" id="node18" href="$logic_8cpp_source.html" title=" " alt="" coords="5035,313,5271,359"/>
-<area shape="rect" id="node19" href="$sets_8cpp_source.html" title=" " alt="" coords="5295,313,5526,359"/>
+<area shape="rect" id="node18" href="$logic_8cpp_source.html" title=" " alt="" coords="5035,313,5270,359"/>
+<area shape="rect" id="node19" href="$sets_8cpp_source.html" title=" " alt="" coords="5294,313,5526,359"/>
 <area shape="rect" id="node20" href="$solve_8cpp_source.html" title=" " alt="" coords="7208,535,7447,581"/>
 <area shape="rect" id="node21" href="$subs_8h_source.html" title=" " alt="" coords="2796,424,3016,470"/>
 <area shape="rect" id="node22" href="$dense__matrix_8cpp_source.html" title=" " alt="" coords="2053,526,2274,589"/>
 <area shape="rect" id="node23" href="$derivative_8cpp_source.html" title=" " alt="" coords="6027,535,6297,581"/>
 <area shape="rect" id="node25" href="$as__real__imag_8cpp_source.html" title=" " alt="" coords="7217,415,7438,478"/>
 <area shape="rect" id="node26" href="$cse_8cpp_source.html" title=" " alt="" coords="6200,424,6426,470"/>
-<area shape="rect" id="node27" href="$derivative_8h.html" title=" " alt="" coords="6451,424,6706,470"/>
+<area shape="rect" id="node27" href="$derivative_8h.html" title=" " alt="" coords="6450,424,6706,470"/>
 <area shape="rect" id="node28" href="$eval__arb_8cpp_source.html" title=" " alt="" coords="6729,415,6950,478"/>
 <area shape="rect" id="node29" href="$eval__double_8cpp_source.html" title=" " alt="" coords="6973,415,7194,478"/>
 <area shape="rect" id="node30" href="$eval__mpc_8cpp_source.html" title=" " alt="" coords="3040,415,3260,478"/>
@@ -45,8 +45,8 @@
 <area shape="rect" id="node42" href="$is__symmetric_8cpp_source.html" title=" " alt="" coords="5632,415,5866,478"/>
 <area shape="rect" id="node43" href="$is__toeplitz_8cpp_source.html" title=" " alt="" coords="5890,415,6125,478"/>
 <area shape="rect" id="node44" href="$sparse__matrix_8cpp_source.html" title=" " alt="" coords="2300,415,2520,478"/>
-<area shape="rect" id="node35" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="1723,535,1986,581"/>
+<area shape="rect" id="node35" href="$cwrapper_8cpp_source.html" title=" " alt="" coords="1722,535,1986,581"/>
 <area shape="rect" id="node47" href="$diophantine_8h.html" title=" " alt="" coords="1792,313,2058,359"/>
-<area shape="rect" id="node48" href="$matrix_8cpp_source.html" title=" " alt="" coords="2083,313,2330,359"/>
-<area shape="rect" id="node49" href="$printers_8h_source.html" title=" " alt="" coords="1477,313,1717,359"/>
+<area shape="rect" id="node48" href="$matrix_8cpp_source.html" title=" " alt="" coords="2082,313,2330,359"/>
+<area shape="rect" id="node49" href="$printers_8h_source.html" title=" " alt="" coords="1477,313,1716,359"/>
 </map>

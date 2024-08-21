@@ -1,11 +1,11 @@
 <map id="/home/runner/work/symengine/symengine/symengine/infinity.h" name="/home/runner/work/symengine/symengine/symengine/infinity.h">
 <area shape="rect" id="node1" title=" " alt="" coords="5662,5,5894,51"/>
-<area shape="rect" id="node2" href="$constants_8cpp_source.html" title=" " alt="" coords="5103,424,5371,470"/>
+<area shape="rect" id="node2" href="$constants_8cpp_source.html" title=" " alt="" coords="5103,424,5370,470"/>
 <area shape="rect" id="node3" href="$constants_8h.html" title=" " alt="" coords="6364,99,6616,145"/>
 <area shape="rect" id="node9" href="$infinity_8cpp_source.html" title=" " alt="" coords="7244,313,7491,359"/>
 <area shape="rect" id="node11" href="$visitor_8h.html" title=" " alt="" coords="4517,526,4746,572"/>
 <area shape="rect" id="node4" href="$diophantine_8cpp_source.html" title=" " alt="" coords="6495,202,6776,248"/>
-<area shape="rect" id="node5" href="$fields_8cpp_source.html" title=" " alt="" coords="5395,424,5634,470"/>
+<area shape="rect" id="node5" href="$fields_8cpp_source.html" title=" " alt="" coords="5394,424,5634,470"/>
 <area shape="rect" id="node6" href="$finitediff_8cpp_source.html" title=" " alt="" coords="6800,202,7058,248"/>
 <area shape="rect" id="node7" href="$functions_8h.html" title=" " alt="" coords="7082,202,7331,248"/>
 <area shape="rect" id="node10" href="$ntheory__funcs_8h_source.html" title=" " alt="" coords="5658,415,5885,478"/>
@@ -19,7 +19,7 @@
 <area shape="rect" id="node8" href="$cse_8cpp_source.html" title=" " alt="" coords="7168,629,7394,675"/>
 <area shape="rect" id="node12" href="$as__real__imag_8cpp_source.html" title=" " alt="" coords="6091,620,6311,683"/>
 <area shape="rect" id="node13" href="$derivative_8cpp_source.html" title=" " alt="" coords="6356,740,6627,786"/>
-<area shape="rect" id="node14" href="$derivative_8h.html" title=" " alt="" coords="6387,629,6642,675"/>
+<area shape="rect" id="node14" href="$derivative_8h.html" title=" " alt="" coords="6386,629,6642,675"/>
 <area shape="rect" id="node15" href="$eval_8cpp_source.html" title=" " alt="" coords="6666,629,6898,675"/>
 <area shape="rect" id="node16" href="$eval__arb_8cpp_source.html" title=" " alt="" coords="6923,620,7143,683"/>
 <area shape="rect" id="node17" href="$eval__double_8cpp_source.html" title=" " alt="" coords="5,620,226,683"/>
@@ -45,8 +45,8 @@
 <area shape="rect" id="node37" href="$basic__conversions_8cpp_source.html" title=" " alt="" coords="5125,731,5346,794"/>
 <area shape="rect" id="node38" href="$basic__conversions_8h_source.html" title=" " alt="" coords="5199,620,5419,683"/>
 <area shape="rect" id="node39" href="$uexprpoly_8cpp_source.html" title=" " alt="" coords="5443,620,5663,683"/>
-<area shape="rect" id="node40" href="$codegen_8h_source.html" title=" " alt="" coords="5509,731,5736,794"/>
-<area shape="rect" id="node41" href="$mathml_8h_source.html" title=" " alt="" coords="5761,731,5988,794"/>
-<area shape="rect" id="node42" href="$sbml_8h_source.html" title=" " alt="" coords="6013,740,6288,786"/>
+<area shape="rect" id="node40" href="$codegen_8h_source.html" title=" " alt="" coords="5508,731,5736,794"/>
+<area shape="rect" id="node41" href="$mathml_8h_source.html" title=" " alt="" coords="5760,731,5988,794"/>
+<area shape="rect" id="node42" href="$sbml_8h_source.html" title=" " alt="" coords="6012,740,6288,786"/>
 <area shape="rect" id="node43" href="$strprinter_8h_source.html" title=" " alt="" coords="5738,620,5965,683"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="SymEngine::SeriesBase&lt; Poly, Coeff, Series &gt;" name="SymEngine::SeriesBase&lt; Poly, Coeff, Series &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="126,364,300,410"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="5,270,240,299"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="45,185,200,214"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="54,99,191,128"/>
+<area shape="rect" id="node1" title=" " alt="" coords="126,368,300,414"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1SeriesCoeffInterface.html" title=" " alt="" coords="5,274,240,303"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Number.html" title=" " alt="" coords="45,188,200,216"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="54,101,191,130"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="20,5,225,51"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="263,270,350,299"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="237,176,376,222"/>
+<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="263,274,350,303"/>
+<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="237,179,376,225"/>
 </map>

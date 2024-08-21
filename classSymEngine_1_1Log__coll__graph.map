@@ -1,8 +1,8 @@
 <map id="SymEngine::Log" name="SymEngine::Log">
-<area shape="rect" id="node1" title=" " alt="" coords="187,364,312,393"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="147,287,352,316"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,185,187,214"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,99,177,128"/>
+<area shape="rect" id="node1" title=" " alt="" coords="187,368,312,397"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1OneArgFunction.html" title=" " alt="" coords="147,290,352,319"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="29,188,187,216"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,101,177,130"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
-<area shape="rect" id="node6" title=" " alt="" coords="210,176,385,222"/>
+<area shape="rect" id="node6" title=" " alt="" coords="210,179,384,225"/>
 </map>

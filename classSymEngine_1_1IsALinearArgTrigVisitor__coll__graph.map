@@ -1,8 +1,8 @@
 <map id="SymEngine::IsALinearArgTrigVisitor" name="SymEngine::IsALinearArgTrigVisitor">
-<area shape="rect" id="node1" title=" " alt="" coords="929,69,1136,115"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="674,5,862,68"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1LocalStopVisitor.html" title=" " alt="" coords="419,22,626,51"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="198,22,371,51"/>
+<area shape="rect" id="node1" title=" " alt="" coords="933,74,1140,120"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="678,5,866,68"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1LocalStopVisitor.html" title=" " alt="" coords="422,22,629,51"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1StopVisitor.html" title=" " alt="" coords="199,22,372,51"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="5,22,150,51"/>
-<area shape="rect" id="node6" title=" " alt="" coords="685,93,851,139"/>
+<area shape="rect" id="node6" title=" " alt="" coords="689,92,855,138"/>
 </map>

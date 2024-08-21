@@ -1,7 +1,7 @@
 <map id="SymEngine::MultiArgFunction" name="SymEngine::MultiArgFunction">
 <area shape="rect" id="node1" title=" " alt="" coords="303,253,515,282"/>
 <area shape="rect" id="node5" href="$classSymEngine_1_1FunctionSymbol.html" title=" " alt="" coords="8,330,215,359"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1LeviCivita.html" title=" " alt="" coords="239,330,406,359"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1LeviCivita.html" title=" " alt="" coords="238,330,406,359"/>
 <area shape="rect" id="node8" href="$classSymEngine_1_1Max.html" title=" " alt="" coords="430,330,561,359"/>
 <area shape="rect" id="node9" href="$classSymEngine_1_1Min.html" title=" " alt="" coords="584,330,711,359"/>
 <area shape="rect" id="node2" href="$classSymEngine_1_1Function.html" title=" " alt="" coords="330,176,488,205"/>

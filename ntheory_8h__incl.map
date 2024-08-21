@@ -1,9 +1,9 @@
 <map id="/home/runner/work/symengine/symengine/symengine/ntheory.h" name="/home/runner/work/symengine/symengine/symengine/ntheory.h">
-<area shape="rect" id="node1" title=" " alt="" coords="1903,5,2140,51"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1902,5,2140,51"/>
 <area shape="rect" id="node2" href="$integer_8h.html" title=" " alt="" coords="1944,99,2098,128"/>
 <area shape="rect" id="node3" href="$number_8h.html" title=" " alt="" coords="1171,176,1330,205"/>
-<area shape="rect" id="node19" href="$symengine__exception_8h_source.html" title=" " alt="" coords="1937,407,2106,453"/>
-<area shape="rect" id="node22" href="$symengine__casts_8h_source.html" title=" " alt="" coords="1565,578,1734,624"/>
+<area shape="rect" id="node19" href="$symengine__exception_8h_source.html" title=" " alt="" coords="1936,407,2106,453"/>
+<area shape="rect" id="node22" href="$symengine__casts_8h_source.html" title=" " alt="" coords="1564,578,1734,624"/>
 <area shape="rect" id="node4" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="1100,330,1244,359"/>
 <area shape="rect" id="node43" href="$assumptions_8h_source.html" title=" " alt="" coords="1021,253,1213,282"/>
 <area shape="rect" id="node5" title=" " alt="" coords="1485,416,1560,445"/>
@@ -15,28 +15,28 @@
 <area shape="rect" id="node11" title=" " alt="" coords="5,501,120,530"/>
 <area shape="rect" id="node12" title=" " alt="" coords="308,416,377,445"/>
 <area shape="rect" id="node13" title=" " alt="" coords="401,416,463,445"/>
-<area shape="rect" id="node14" title=" " alt="" coords="487,416,564,445"/>
+<area shape="rect" id="node14" title=" " alt="" coords="486,416,564,445"/>
 <area shape="rect" id="node15" title=" " alt="" coords="588,416,679,445"/>
 <area shape="rect" id="node16" title=" " alt="" coords="703,416,790,445"/>
 <area shape="rect" id="node17" title=" " alt="" coords="144,501,229,530"/>
 <area shape="rect" id="node18" title=" " alt="" coords="1814,672,1983,718"/>
-<area shape="rect" id="node20" href="$dict_8h.html" title=" " alt="" coords="151,416,284,445"/>
+<area shape="rect" id="node20" href="$dict_8h.html" title=" " alt="" coords="150,416,284,445"/>
 <area shape="rect" id="node39" href="$type__codes_8inc_source.html" title=" " alt="" coords="813,416,1008,445"/>
 <area shape="rect" id="node40" href="$basic-methods_8inc_source.html" title=" " alt="" coords="1032,416,1173,445"/>
 <area shape="rect" id="node41" href="$basic-inl_8h_source.html" title=" " alt="" coords="1197,416,1285,445"/>
 <area shape="rect" id="node42" href="$tribool_8h_source.html" title=" " alt="" coords="1310,416,1461,445"/>
 <area shape="rect" id="node21" href="$mp__class_8h_source.html" title=" " alt="" coords="1079,501,1249,530"/>
-<area shape="rect" id="node38" title=" " alt="" coords="253,501,318,530"/>
+<area shape="rect" id="node38" title=" " alt="" coords="252,501,318,530"/>
 <area shape="rect" id="node26" title=" " alt="" coords="1402,587,1467,616"/>
 <area shape="rect" id="node27" title=" " alt="" coords="569,578,724,624"/>
 <area shape="rect" id="node28" title=" " alt="" coords="748,578,929,624"/>
 <area shape="rect" id="node29" title=" " alt="" coords="953,578,1119,624"/>
-<area shape="rect" id="node30" href="$symengine__rcp_8h_source.html" title=" " alt="" coords="1209,578,1378,624"/>
+<area shape="rect" id="node30" href="$symengine__rcp_8h_source.html" title=" " alt="" coords="1208,578,1378,624"/>
 <area shape="rect" id="node37" title=" " alt="" coords="1144,587,1184,616"/>
 <area shape="rect" id="node23" title=" " alt="" coords="1436,681,1516,710"/>
 <area shape="rect" id="node24" title=" " alt="" coords="1732,681,1790,710"/>
-<area shape="rect" id="node25" href="$symengine__assert_8h_source.html" title=" " alt="" coords="1539,672,1709,718"/>
-<area shape="rect" id="node31" title=" " alt="" coords="1055,681,1124,710"/>
+<area shape="rect" id="node25" href="$symengine__assert_8h_source.html" title=" " alt="" coords="1539,672,1708,718"/>
+<area shape="rect" id="node31" title=" " alt="" coords="1054,681,1124,710"/>
 <area shape="rect" id="node32" title=" " alt="" coords="1148,681,1233,710"/>
 <area shape="rect" id="node33" title=" " alt="" coords="1257,681,1316,710"/>
 <area shape="rect" id="node34" title=" " alt="" coords="1340,681,1412,710"/>

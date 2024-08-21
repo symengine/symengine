@@ -9,14 +9,14 @@
 <area shape="rect" id="node26" href="$uexprpoly_8h_source.html" title=" " alt="" coords="1570,185,1782,214"/>
 <area shape="rect" id="node29" href="$msymenginepoly_8h_source.html" title=" " alt="" coords="1201,99,1460,128"/>
 <area shape="rect" id="node31" href="$uratpoly_8h.html" title=" " alt="" coords="1021,185,1222,214"/>
-<area shape="rect" id="node32" href="$complex__mpc_8h_source.html" title=" " alt="" coords="2411,1023,2611,1052"/>
+<area shape="rect" id="node32" href="$complex__mpc_8h_source.html" title=" " alt="" coords="2410,1023,2611,1052"/>
 <area shape="rect" id="node34" href="$series__generic_8h.html" title=" " alt="" coords="1485,99,1688,128"/>
 <area shape="rect" id="node36" href="$series__piranha_8h_source.html" title=" " alt="" coords="1571,364,1776,393"/>
 <area shape="rect" id="node37" href="$series__flint_8h_source.html" title=" " alt="" coords="1902,364,2082,393"/>
-<area shape="rect" id="node38" href="$sets_8h.html" title=" " alt="" coords="439,518,575,547"/>
+<area shape="rect" id="node38" href="$sets_8h.html" title=" " alt="" coords="438,518,575,547"/>
 <area shape="rect" id="node41" href="$logic_8h.html" title=" " alt="" coords="318,595,458,624"/>
 <area shape="rect" id="node42" href="$fields_8h.html" title=" " alt="" coords="277,99,422,128"/>
-<area shape="rect" id="node43" href="$matrix_8h_source.html" title=" " alt="" coords="195,441,347,470"/>
+<area shape="rect" id="node43" href="$matrix_8h_source.html" title=" " alt="" coords="194,441,347,470"/>
 <area shape="rect" id="node44" href="$ntheory__funcs_8h_source.html" title=" " alt="" coords="835,441,1037,470"/>
 <area shape="rect" id="node45" href="$tuple_8h_source.html" title=" " alt="" coords="1768,672,1910,701"/>
 <area shape="rect" id="node46" href="$matrix__expressions_8h_source.html" title=" " alt="" coords="1669,749,1907,778"/>
@@ -25,7 +25,7 @@
 <area shape="rect" id="node9" href="$pow_8h.html" title=" " alt="" coords="1024,518,1160,547"/>
 <area shape="rect" id="node22" href="$add_8h.html" title="Classes and functions relating to the binary operation of addition." alt="" coords="1184,518,1317,547"/>
 <area shape="rect" id="node23" href="$expression_8h.html" title=" " alt="" coords="1387,441,1568,470"/>
-<area shape="rect" id="node24" title=" " alt="" coords="657,441,733,470"/>
+<area shape="rect" id="node24" title=" " alt="" coords="656,441,733,470"/>
 <area shape="rect" id="node5" title=" " alt="" coords="302,1185,471,1231"/>
 <area shape="rect" id="node6" href="$symengine__exception_8h_source.html" title=" " alt="" coords="2238,1185,2407,1231"/>
 <area shape="rect" id="node7" href="$dict_8h.html" title=" " alt="" coords="116,1194,249,1223"/>
@@ -47,6 +47,6 @@
 <area shape="rect" id="node40" title=" " alt="" coords="533,595,603,624"/>
 <area shape="rect" id="node47" href="$matrix__expr_8h_source.html" title=" " alt="" coords="1882,920,2036,966"/>
 <area shape="rect" id="node48" href="$size_8h_source.html" title=" " alt="" coords="1622,826,1776,872"/>
-<area shape="rect" id="node49" href="$identity__matrix_8h_source.html" title=" " alt="" coords="1800,826,1955,872"/>
+<area shape="rect" id="node49" href="$identity__matrix_8h_source.html" title=" " alt="" coords="1800,826,1954,872"/>
 <area shape="rect" id="node50" href="$zero__matrix_8h_source.html" title=" " alt="" coords="2030,826,2184,872"/>
 </map>
