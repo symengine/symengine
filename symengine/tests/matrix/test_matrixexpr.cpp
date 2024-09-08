@@ -311,6 +311,14 @@ TEST_CASE("Test Transpose", "[Transpose]")
         2, 2, {integer(2), integer(5), integer(23), integer(9)});
     REQUIRE(eq(*transpose(A1), *A1T));
 
+    auto A2 = immutable_dense_matrix(2, 3,
+                                     {integer(2), integer(23), integer(5),
+                                      integer(9), integer(7), integer(4)});
+    auto A2T = immutable_dense_matrix(3, 2,
+                                      {integer(2), integer(9), integer(23),
+                                       integer(7), integer(5), integer(4)});
+    REQUIRE(eq(*transpose(A2), *A2T));
+
     REQUIRE(is_a<Transpose>(*AT));
     REQUIRE(eq(*down_cast<const Transpose &>(*AT).get_arg(), *A));
     REQUIRE(eq(*transpose(AT), *A));
