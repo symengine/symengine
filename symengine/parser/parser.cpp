@@ -4,7 +4,7 @@
 #include <symengine/real_mpfr.h>
 #include <symengine/ntheory_funcs.h>
 #include <symengine/parser/tokenizer.h>
-#include <symengine/utilities/fast_float/fast_float.h>
+#include <fast_float/fast_float.h>
 
 namespace SymEngine
 {

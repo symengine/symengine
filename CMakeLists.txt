@@ -328,6 +328,14 @@ else()
 endif()
 include_directories(SYSTEM ${CEREAL_INCLUDE_DIRS})
 
+set(WITH_SYSTEM_FASTFLOAT no CACHE BOOL "Build with system fastfloat instead of vendored files")
+if (WITH_SYSTEM_FASTFLOAT)
+    find_package(FASTFLOAT REQUIRED)
+else()
+    set(FASTFLOAT_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/symengine/utilities/fast_float/include")
+endif()
+include_directories(SYSTEM ${FASTFLOAT_INCLUDE_DIRS})
+
 # PTHREAD
 set(WITH_PTHREAD no
 CACHE BOOL "Build with PTHREAD")
@@ -790,6 +798,8 @@ endif()
 
 message("WITH_OPENMP: ${WITH_OPENMP}")
 message("WITH_VIRTUAL_TYPEID: ${WITH_VIRTUAL_TYPEID}")
+message("WITH_SYSTEM_CEREAL: ${WITH_SYSTEM_CEREAL}")
+message("WITH_SYSTEM_FASTFLOAT: ${WITH_SYSTEM_FASTFLOAT}")
 message("LIBS: ${LIBS}")
 
 message("")
