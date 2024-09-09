@@ -270,11 +270,6 @@ if (NOT WITH_SYSTEM_CEREAL)
   set(HEADERS ${HEADERS} ${CEREAL_HEADERS})
 endif()
 
-if (NOT WITH_SYSTEM_FASTFLOAT)
-    file(GLOB_RECURSE FASTFLOAT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "utilities/fast_float/include/*")
-    set(HEADERS ${HEADERS} ${FASTFLOAT_HEADERS})
-endif()
-
 include(GNUInstallDirs)
 
 # Configure SymEngine using our CMake options:
