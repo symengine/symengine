@@ -248,7 +248,6 @@ set(HEADERS
     refine.h
     simplify.h
     utilities/stream_fmt.h
-    utilities/fast_float/fast_float.h
     tuple.h
     matrix_expressions.h
     matrices/matrix_expr.h
@@ -269,6 +268,11 @@ set(HEADERS
 if (NOT WITH_SYSTEM_CEREAL)
   file(GLOB_RECURSE CEREAL_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "utilities/cereal/include/*")
   set(HEADERS ${HEADERS} ${CEREAL_HEADERS})
+endif()
+
+if (NOT WITH_SYSTEM_FASTFLOAT)
+    file(GLOB_RECURSE FASTFLOAT_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "utilities/fast_float/include/*")
+    set(HEADERS ${HEADERS} ${FASTFLOAT_HEADERS})
 endif()
 
 include(GNUInstallDirs)
