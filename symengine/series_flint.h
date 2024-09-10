@@ -38,7 +38,18 @@ public:
     {
         return s.mullow(r, prec);
     }
+// The GCC diagnostic pragma below is only used to allow
+// gcc-13+ to be used in CI without dropping -Werror, we should fix the warning
+// and remove these preprocessor macros. Tracking issue:
+// symengine/symengine#2027
+#if defined(__GNUC__) && (__GNUC__ >= 13)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+#endif
     static fqp_t pow(const fqp_t &s, int n, unsigned prec);
+#if defined(__GNUC__) && (__GNUC__ >= 13)
+#pragma GCC diagnostic pop
+#endif
     static unsigned ldegree(const fqp_t &s);
     static inline fmpq_wrapper find_cf(const fqp_t &s, const fqp_t &var,
                                        unsigned deg)
