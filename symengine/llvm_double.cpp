@@ -46,10 +46,18 @@ using std::make_unique;
 #else
 using llvm::make_unique;
 #endif
+#if (LLVM_VERSION_MAJOR < 18)
+using CodeGenOptLevel = llvm::CodeGenOpt::Level;
+#else
+using CodeGenOptLevel = llvm::CodeGenOptLevel;
+#endif
 
 class IRBuilder : public llvm::IRBuilder<>
 {
 };
+
+LLVMVisitor::LLVMVisitor() = default;
+LLVMVisitor::~LLVMVisitor() = default;
 
 llvm::Value *LLVMVisitor::apply(const Basic &b)
 {
@@ -126,7 +134,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
-    context = std::make_shared<llvm::LLVMContext>();
+    context = make_unique<llvm::LLVMContext>();
     symbols = inputs;
 
     // Create some module to put our function into it.
@@ -260,10 +268,10 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Now we create the JIT.
     std::string error;
-    executionengine = std::shared_ptr<llvm::ExecutionEngine>(
+    executionengine = std::unique_ptr<llvm::ExecutionEngine>(
         llvm::EngineBuilder(std::move(module))
             .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(static_cast<llvm::CodeGenOpt::Level>(opt_level))
+            .setOptLevel(static_cast<CodeGenOptLevel>(opt_level))
             .setErrorStr(&error)
             .create());
 
@@ -301,6 +309,9 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     symbols.clear();
 }
 
+LLVMDoubleVisitor::LLVMDoubleVisitor() = default;
+LLVMDoubleVisitor::~LLVMDoubleVisitor() = default;
+
 double LLVMDoubleVisitor::call(const std::vector<double> &vec) const
 {
     double ret;
@@ -330,6 +341,9 @@ void LLVMLongDoubleVisitor::call(long double *outs,
 }
 #endif
 
+LLVMFloatVisitor::LLVMFloatVisitor() = default;
+LLVMFloatVisitor::~LLVMFloatVisitor() = default;
+
 float LLVMFloatVisitor::call(const std::vector<float> &vec) const
 {
     float ret;
@@ -354,6 +368,10 @@ void LLVMVisitor::bvisit(const Integer &x)
 }
 
 #ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+
+LLVMLongDoubleVisitor::LLVMLongDoubleVisitor() = default;
+LLVMLongDoubleVisitor::~LLVMLongDoubleVisitor() = default;
+
 void LLVMLongDoubleVisitor::convert_from_mpfr(const Basic &x)
 {
 #ifndef HAVE_SYMENGINE_MPFR
@@ -937,7 +955,7 @@ void LLVMVisitor::loads(const std::string &s)
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
-    context = std::make_shared<llvm::LLVMContext>();
+    context = make_unique<llvm::LLVMContext>();
 
     // Create some module to put our function into it.
     std::unique_ptr<llvm::Module> module
@@ -952,10 +970,10 @@ void LLVMVisitor::loads(const std::string &s)
     auto F = get_function_type(context.get());
 
     std::string error;
-    executionengine = std::shared_ptr<llvm::ExecutionEngine>(
+    executionengine = std::unique_ptr<llvm::ExecutionEngine>(
         llvm::EngineBuilder(std::move(module))
             .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(llvm::CodeGenOpt::Level::Aggressive)
+            .setOptLevel(CodeGenOptLevel::Aggressive)
             .setErrorStr(&error)
             .create());
 

@@ -78,6 +78,7 @@ void test_cwrapper()
     basic_new_stack(numer);
     basic_new_stack(denom);
     basic_as_numer_denom(numer, denom, e);
+
     basic_mul(e, e, z);
     SYMENGINE_C_ASSERT(basic_eq(numer, e) == 1);
     SYMENGINE_C_ASSERT(basic_eq(denom, z) == 1);
@@ -202,6 +203,39 @@ void test_cwrapper()
     basic_free_stack(numer);
     basic_free_stack(denom);
     basic_str_free(s);
+}
+
+void test_as_two_terms()
+{
+    char *s;
+    basic e, f, term1, term2, term3, term4;
+    basic_new_stack(e);
+    basic_new_stack(f);
+    basic_new_stack(term1);
+    basic_new_stack(term2);
+    basic_new_stack(term3);
+    basic_new_stack(term4);
+
+    s = "y*(456 + x)/z";
+    basic_parse(e, s);
+    basic_mul_as_two_terms(term1, term2, e);
+    basic_mul(f, term1, term2);
+    SYMENGINE_C_ASSERT(basic_eq(e, f) == 1);
+
+    s = "y + z + y*(456 + x)/z";
+    basic_parse(e, s);
+    basic_add_as_two_terms(term3, term4, e);
+    // Note that the terms depend on the platform.
+    // If checking for equality, check for all possiblities
+    basic_add(f, term3, term4);
+    SYMENGINE_C_ASSERT(basic_eq(e, f) == 1);
+
+    basic_free_stack(f);
+    basic_free_stack(e);
+    basic_free_stack(term1);
+    basic_free_stack(term2);
+    basic_free_stack(term3);
+    basic_free_stack(term4);
 }
 
 void test_basic()
@@ -1437,6 +1471,11 @@ void test_functions()
     basic_mul_vec(ans, vec);
     SYMENGINE_C_ASSERT(basic_eq(ans, twenty_four));
 
+    basic_sign(ans, zero);
+    SYMENGINE_C_ASSERT(basic_eq(ans, zero));
+    basic_sign(ans, pi);
+    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+
     basic_free_stack(ans);
     basic_free_stack(res);
     basic_free_stack(pi);
@@ -2375,6 +2414,7 @@ int main(int argc, char *argv[])
     symengine_print_stack_on_segfault();
     test_version();
     test_cwrapper();
+    test_as_two_terms();
     test_complex();
     test_complex_double();
     test_basic();

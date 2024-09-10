@@ -19,7 +19,7 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
             export CC=clang-15
             export CXX=clang++-15
             which $CXX
-            cmake_line="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+            cmake_line="-DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_POSITION_INDEPENDENT_CODE=ON"
             LIBCXX_15_MSAN_ROOT=/opt/libcxx-15-msan
             # export PATH="/usr/lib/llvm-15/bin:$PATH"  # llvm-config
             curl -Ls https://github.com/llvm/llvm-project/archive/llvmorg-${LLVM_ORG_VER}.tar.gz | tar xz -C /tmp
@@ -205,21 +205,27 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
 fi
 
 echo "=== Testing the installed SymEngine library simulating use by 3rd party lib"
-cd $SOURCE_DIR/benchmarks
+cd $SOURCE_DIR
+mkdir simulate_3rd_party
+cd simulate_3rd_party
+cp $SOURCE_DIR/benchmarks/expand1.cpp .
+cat >CMakeLists.txt <<'EOL'
+cmake_minimum_required(VERSION 3.13)
+project(expand1 LANGUAGES C CXX)
+find_package(SymEngine CONFIG REQUIRED)
+message(STATUS "SYMENGINE_LIBRARIES: ${SYMENGINE_LIBRARIES}")
+message(STATUS "SYMENGINE_INCLUDE_DIRS: ${SYMENGINE_INCLUDE_DIRS}")
+add_executable(expand1 expand1.cpp)
+target_compile_features(expand1 PUBLIC cxx_std_14)
+target_include_directories(expand1 PUBLIC ${SYMENGINE_INCLUDE_DIRS})
+target_link_libraries(expand1 PUBLIC ${SYMENGINE_LIBRARIES})
+EOL
 
-SymEngine_DIR="${our_install_dir}/lib/cmake/symengine"
-if [[ "${MSYSTEM}" != "" ]]; then
-  SymEngine_DIR="${our_install_dir}/CMake"
-fi
+mkdir build
+cd build
 cmake --version
-compile_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=COMPILE`
-link_flags=`cmake --find-package -DNAME=SymEngine -DSymEngine_DIR=$SymEngine_DIR  -DCOMPILER_ID=GNU -DLANGUAGE=C -DLANGUAGE=CXX -DMODE=LINK`
-if [[ $link_flags == *-lBoost::* ]]; then
-    # work-around for "Boost::" being part of library names
-    link_flags="-L${our_install_dir}/lib `echo $link_flags | sed 's/Boost::/boost_/g'`"
-fi
-${CXX} -std=c++14 $compile_flags expand1.cpp -o expand1 $link_flags
-export LD_LIBRARY_PATH=$our_install_dir/lib:$LD_LIBRARY_PATH
+cmake .. -DCMAKE_PREFIX_PATH="${our_install_dir}" -DCMAKE_BUILD_TYPE=Release
+make VERBOSE=1
 ./expand1
 
 echo "Checking whether all header files are installed:"

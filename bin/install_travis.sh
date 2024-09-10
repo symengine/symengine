@@ -106,15 +106,17 @@ if [[ "${WITH_ARB}" == "yes" ]]; then
     conda_pkgs="$conda_pkgs arb=2.23.0"
 fi
 
-if [[ "${WITH_LLVM}" == "12" ]]; then
-    export LLVM_DIR=/usr/lib/llvm-12/share/llvm/
-elif [[ "${WITH_LLVM}" == "13" ]]; then
-    export LLVM_DIR=/usr/lib/llvm-13/share/llvm/
-elif [[ "${WITH_LLVM}" == "15" ]]; then
-    export LLVM_DIR=/usr/lib/llvm-15/share/llvm/
-elif [[ ! -z "${WITH_LLVM}" ]]; then
-    conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
-    export LLVM_DIR=$our_install_dir/share/llvm/
+if [[ "${WITH_LLVM}" == "LATEST" ]]; then
+    WITH_LLVM=$(ls -d /usr/lib/llvm-?? | awk -F- '{print $2}' | sort -g | tail -n 1)
+fi
+
+if [[ ! -z "${WITH_LLVM}" ]]; then
+    if [[ "${EXTRA_APT_PACKAGES}" == *"llvm"* ]]; then
+        export LLVM_DIR="/usr/lib/llvm-${WITH_LLVM}/share/llvm/"
+    else
+        conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
+        export LLVM_DIR=$our_install_dir/share/llvm/
+    fi
 fi
 
 if [[ "${WITH_ECM}" == "yes" ]]; then

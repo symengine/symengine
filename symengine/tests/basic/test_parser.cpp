@@ -807,6 +807,11 @@ TEST_CASE("Parsing: doubles", "[parser]")
     REQUIRE(eq(*res, *real_double(1.324)));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
+    s = "+1.324";
+    res = parse(s);
+    REQUIRE(eq(*res, *real_double(1.324)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
     s = "0.0324*x + 2*3";
     res = parse(s);
     REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
@@ -815,6 +820,22 @@ TEST_CASE("Parsing: doubles", "[parser]")
     s = "0.324e-1x + 2*3";
     res = parse(s);
     REQUIRE(eq(*res, *add(mul(real_double(0.0324), x), integer(6))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = " +0.324e-19x+4.238";
+    res = parse(s);
+    CAPTURE(res->__str__());
+    REQUIRE(eq(*res, *add(mul(real_double(0.324e-19), x), real_double(4.238))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = ".32485123e-21";
+    res = parse(s);
+    REQUIRE(eq(*res, *real_double(0.32485123e-21)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "1345.35e13";
+    res = parse(s);
+    REQUIRE(eq(*res, *real_double(1345.35e13)));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
     s = "1.324/(2+3)";
