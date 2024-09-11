@@ -360,6 +360,18 @@ TEST_CASE("Parsing: functions", "[parser]")
         eq(*res, *add(pow(y, abs(add(sin(integer(3)), x))), sinh(integer(2)))));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
+    s = "y**(sign(3) + x)) + sinh(2)";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *add(pow(y, sign(integer(3), x)), sinh(integer(2)))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "sign(-8) * sign(sinh(2 + x))";
+    res = parse(s);
+    REQUIRE(
+        eq(*res, *mul(sign(neg(integer(8))), sign(sinh(add(integer(2), x))))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+    
     s = "2 + zeta(2, x) + zeta(ln(3))";
     res = parse(s);
     REQUIRE(eq(*res, *add(integer(2),
