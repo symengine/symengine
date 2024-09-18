@@ -9,13 +9,12 @@ on:
 jobs:
   build:
     runs-on: ${{ matrix.OS }}
-    name: ${{ matrix.NAME }}
+    name: "${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }} (${{ toJSON(matrix) }})"
     strategy:
       fail-fast: false
       matrix:
         include:
-          - NAME: debug_bfd_mpc
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_LATEST_GCC: yes
             WITH_COVERAGE: yes
@@ -25,8 +24,7 @@ jobs:
             CC: gcc
             EXTRA_APT_PACKAGES: g++-12 gcc-12
 
-          - NAME: debug_bfd_mpc_flint_in_tree
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_COVERAGE: yes
             TEST_IN_TREE: yes
@@ -36,24 +34,21 @@ jobs:
             CC: gcc
             OS: ubuntu-20.04
 
-          # Debug build (with BFD)
-          - NAME: debug_bfd
-            BUILD_TYPE: Debug
+            # Debug build (with BFD)
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
-          - NAME: debug_bfd_thread_safe
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_SYMENGINE_THREAD_SAFE: yes
             OS: ubuntu-20.04
             CC: gcc
 
           # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
-          - NAME: debug_bfd_ecm_primesieve_mpc
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_ECM: yes
             WITH_PRIMESIEVE: yes
@@ -62,8 +57,7 @@ jobs:
             CC: gcc
 
           # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
-          - NAME: debug_bfd_flint_arb_intflint
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_ARB: yes
             INTEGER_CLASS: flint
@@ -73,8 +67,7 @@ jobs:
             CC: gcc
 
           # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
-          - NAME: debug_bfd_mpfr_intgmpxx
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_SYMENGINE_RCP: yes
             WITH_MPFR: yes
             INTEGER_CLASS: gmpxx
@@ -82,8 +75,7 @@ jobs:
             CC: gcc
 
           # Debug build (with BFD and INTEGER_CLASS from boostmp)
-          - NAME: debug_bfd_intboost
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             INTEGER_CLASS: boostmp
             OS: ubuntu-22.04
@@ -92,29 +84,25 @@ jobs:
             EXTRA_APT_PACKAGES: g++-12 gcc-12
 
           # Debug build shared lib (with BFD)
-          - NAME: debug_bfd_shared_libs
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             BUILD_SHARED_LIBS: yes
             OS: ubuntu-20.04
             CC: gcc
 
           # Release build (with BFD)
-          - NAME: release_bfd
-            WITH_BFD: yes
+          - WITH_BFD: yes
             OS: ubuntu-20.04
             CC: gcc
 
           # Release shared build (with BFD)
-          - NAME: release_bfd_shared_libs
-            WITH_BFD: yes
+          - WITH_BFD: yes
             BUILD_SHARED_LIBS: yes
             OS: ubuntu-20.04
             CC: gcc
 
           # Release build (recent LLVM)
-          - NAME: release_llvm
-            BUILD_TYPE: Release
+          - BUILD_TYPE: Release
             OS: ubuntu-20.04
             CC: clang
             WITH_LLVM: 13
@@ -122,8 +110,7 @@ jobs:
             EXTRA_APT_PACKAGES: clang-13 llvm-13
 
           # Release build (recent LLVM + clang)
-          - NAME: release_llvm_clang
-            BUILD_TYPE: Release
+          - BUILD_TYPE: Release
             OS: ubuntu-20.04
             CC: clang-18
             CXX: clang++-18
@@ -132,9 +119,8 @@ jobs:
             EXTRA_APT_PACKAGES: clang-18 llvm-18
 
           # Release build (latest pre-release of LLVM)
-          - NAME: release_llvm_prerelease
-            BUILD_TYPE: Release
-            OS: ubuntu-20.04
+          - BUILD_TYPE: Release
+            OS: ubuntu-24.04
             CC: clang
             WITH_LLVM: "LATEST"
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
@@ -142,89 +128,76 @@ jobs:
 
           ## In-tree builds (we just check a few configurations to make sure they work):
           # Debug build
-          - NAME: debug_bfd_in_tree
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             TEST_IN_TREE: yes
             OS: ubuntu-20.04
             CC: gcc
 
-          - NAME: clang_format
-            TEST_CLANG_FORMAT: yes
+          - TEST_CLANG_FORMAT: yes
             OS: ubuntu-20.04
             CC: gcc
 
-          - NAME: debug_bfd_piranha_shared_libs
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_PIRANHA: yes
             BUILD_SHARED_LIBS: yes
             CC: gcc
             OS: ubuntu-22.04
 
-          - NAME: debug_bfd_piranha_intpiranha
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_PIRANHA: yes
             INTEGER_CLASS: piranha
             CC: gcc
             OS: ubuntu-22.04
 
-          - NAME: debug_bfd_llvm
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_LLVM: 12
             WITH_COVERAGE: yes
             CC: clang
             OS: ubuntu-20.04
 
-          - NAME: release_llvm_benchmarks
-            BUILD_TYPE: Release
+          - BUILD_TYPE: Release
             WITH_BENCHMARKS: yes
             WITH_BENCHMARKS_GOOGLE: yes
             WITH_LLVM: 14
             CC: clang
             OS: ubuntu-22.04
 
-          - NAME: debug_llvm_macos
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_LLVM: 5.0
             OS: macos-13
             CC: clang
 
-          - NAME: release_llvm_macos
-            BUILD_TYPE: Release
+          - BUILD_TYPE: Release
             WITH_LLVM: 5.0
             OS: macos-13
             CC: clang
 
-          - NAME: debug_gcc_macos
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             OS: macos-13
             CC: gcc
 
-          - NAME: release_gcc_macos
-            BUILD_TYPE: Release
+          - BUILD_TYPE: Release
             OS: macos-13
             CC: gcc
 
-          - NAME: debug_llvm_asan
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_SANITIZE: address
             WITH_LLVM: 12
             WITH_COTIRE: no
             CC: clang
             OS: ubuntu-20.04
 
-          - NAME: debug_llvm_ubsan
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_SANITIZE: undefined
             WITH_LLVM: 12
             CC: clang
             OS: ubuntu-20.04
 
-          - NAME: debug_rcp_msan
-            BUILD_TYPE: Debug
+          - BUILD_TYPE: Debug
             WITH_SANITIZE: memory
             WITH_SYMENGINE_RCP: yes
             WITH_BFD: no
@@ -235,32 +208,27 @@ jobs:
             CC: clang
             OS: ubuntu-22.04
 
-          - NAME: matchpycpp
-            CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
+          - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
             CC: gcc
             OS: ubuntu-20.04
     
-          - NAME: release_mingw64
-            MSYSTEM: MINGW64
+          - MSYSTEM: MINGW64
             ARCH: x86_64
             OS: windows-2019
             BUILD_TYPE: Release
 
-          - NAME: debug_mingw64
-            MSYSTEM: MINGW64
+          - MSYSTEM: MINGW64
             ARCH: x86_64
             OS: windows-2019
             BUILD_TYPE: Debug
 
-          - NAME: release_mpfr_mingw32
-            MSYSTEM: MINGW32
+          - MSYSTEM: MINGW32
             ARCH: i686
             OS: windows-2019
             BUILD_TYPE: Release
             WITH_MPFR: yes
 
-          - NAME: debug_mpfr_mpc_mingw32
-            MSYSTEM: MINGW32
+          - MSYSTEM: MINGW32
             ARCH: i686
             OS: windows-2019
             BUILD_TYPE: Debug
