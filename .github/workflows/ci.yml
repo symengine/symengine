@@ -138,7 +138,7 @@ jobs:
             CC: clang
             WITH_LLVM: "LATEST"
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble main'
-            EXTRA_APT_PACKAGES: llvm clang lldb lld clangd libllvmlibc-20-dev
+            EXTRA_APT_PACKAGES: llvm clang
 
           ## In-tree builds (we just check a few configurations to make sure they work):
           # Debug build
