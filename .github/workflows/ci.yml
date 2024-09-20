@@ -106,19 +106,19 @@ jobs:
 
           # Release build (recent LLVM + clang)
           - BUILD_TYPE: Release
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: clang-18
             CXX: clang++-18
             WITH_LLVM: 18
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-18 main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main'
             EXTRA_APT_PACKAGES: clang-18 llvm-18
 
           # Release build (latest pre-release of LLVM)
           - BUILD_TYPE: Release
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: clang
             WITH_LLVM: "LATEST"
-            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal main'
+            EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble main'
             EXTRA_APT_PACKAGES: llvm
 
           ## In-tree builds (we just check a few configurations to make sure they work):
@@ -299,3 +299,13 @@ jobs:
       if: matrix.MSYSTEM == ''
       run: |
         source bin/test_symengine_unix.sh
+
+  check:
+    if: always()
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
