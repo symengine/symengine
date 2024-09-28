@@ -93,6 +93,7 @@ init_parser_single_arg_functions()
             {"gamma", gamma},
             {"sqrt", sqrt},
             {"abs", abs},
+            {"sign", sign},
             {"exp", exp},
             {"erf", erf},
             {"erfc", erfc},
