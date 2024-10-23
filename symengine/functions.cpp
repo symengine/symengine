@@ -4,12 +4,12 @@
 namespace SymEngine
 {
 
-extern RCP<const Basic> i2;
-extern RCP<const Basic> i3;
-extern RCP<const Basic> i5;
-extern RCP<const Basic> im2;
-extern RCP<const Basic> im3;
-extern RCP<const Basic> im5;
+extern RCP<const Basic> &i2;
+extern RCP<const Basic> &i3;
+extern RCP<const Basic> &i5;
+extern RCP<const Basic> &im2;
+extern RCP<const Basic> &im3;
+extern RCP<const Basic> &im5;
 
 RCP<const Basic> sqrt(RCP<const Basic> &arg)
 {
@@ -20,25 +20,25 @@ RCP<const Basic> cbrt(RCP<const Basic> &arg)
     return pow(arg, div(one, i3));
 }
 
-extern RCP<const Basic> sq3;
-extern RCP<const Basic> sq2;
-extern RCP<const Basic> sq5;
+extern RCP<const Basic> &sq3;
+extern RCP<const Basic> &sq2;
+extern RCP<const Basic> &sq5;
 
-extern RCP<const Basic> C0;
-extern RCP<const Basic> C1;
-extern RCP<const Basic> C2;
-extern RCP<const Basic> C3;
-extern RCP<const Basic> C4;
-extern RCP<const Basic> C5;
-extern RCP<const Basic> C6;
+extern RCP<const Basic> &C0;
+extern RCP<const Basic> &C1;
+extern RCP<const Basic> &C2;
+extern RCP<const Basic> &C3;
+extern RCP<const Basic> &C4;
+extern RCP<const Basic> &C5;
+extern RCP<const Basic> &C6;
 
-extern RCP<const Basic> mC0;
-extern RCP<const Basic> mC1;
-extern RCP<const Basic> mC2;
-extern RCP<const Basic> mC3;
-extern RCP<const Basic> mC4;
-extern RCP<const Basic> mC5;
-extern RCP<const Basic> mC6;
+extern RCP<const Basic> &mC0;
+extern RCP<const Basic> &mC1;
+extern RCP<const Basic> &mC2;
+extern RCP<const Basic> &mC3;
+extern RCP<const Basic> &mC4;
+extern RCP<const Basic> &mC5;
+extern RCP<const Basic> &mC6;
 
 // sin_table()[n] represents the value of sin(pi*n/12) for n = 0..23
 static const RCP<const Basic> *sin_table()

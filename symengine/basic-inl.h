@@ -119,6 +119,11 @@ std::string to_string(const T &value)
 #endif
 }
 
+static struct ConstantInitializer {
+    ConstantInitializer();
+    ~ConstantInitializer();
+} constantInitializer; // static initializer for every translation unit
+
 } // namespace SymEngine
 
 // std namespace functions

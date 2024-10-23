@@ -56,26 +56,26 @@ inline RCP<const Constant> constant(const std::string &name)
 }
 
 // Constant Numbers
-extern SYMENGINE_EXPORT RCP<const Integer> zero;
-extern SYMENGINE_EXPORT RCP<const Integer> one;
-extern SYMENGINE_EXPORT RCP<const Integer> minus_one;
-extern SYMENGINE_EXPORT RCP<const Integer> two;
-extern SYMENGINE_EXPORT RCP<const Number> I;
+extern SYMENGINE_EXPORT RCP<const Integer> &zero;
+extern SYMENGINE_EXPORT RCP<const Integer> &one;
+extern SYMENGINE_EXPORT RCP<const Integer> &minus_one;
+extern SYMENGINE_EXPORT RCP<const Integer> &two;
+extern SYMENGINE_EXPORT RCP<const Number> &I;
 
 // Symbolic Constants
-extern SYMENGINE_EXPORT RCP<const Constant> pi;
-extern SYMENGINE_EXPORT RCP<const Constant> E;
-extern SYMENGINE_EXPORT RCP<const Constant> EulerGamma;
-extern SYMENGINE_EXPORT RCP<const Constant> Catalan;
-extern SYMENGINE_EXPORT RCP<const Constant> GoldenRatio;
+extern SYMENGINE_EXPORT RCP<const Constant> &pi;
+extern SYMENGINE_EXPORT RCP<const Constant> &E;
+extern SYMENGINE_EXPORT RCP<const Constant> &EulerGamma;
+extern SYMENGINE_EXPORT RCP<const Constant> &Catalan;
+extern SYMENGINE_EXPORT RCP<const Constant> &GoldenRatio;
 
 // Infinity
-extern SYMENGINE_EXPORT RCP<const Infty> Inf;
-extern SYMENGINE_EXPORT RCP<const Infty> NegInf;
-extern SYMENGINE_EXPORT RCP<const Infty> ComplexInf;
+extern SYMENGINE_EXPORT RCP<const Infty> &Inf;
+extern SYMENGINE_EXPORT RCP<const Infty> &NegInf;
+extern SYMENGINE_EXPORT RCP<const Infty> &ComplexInf;
 
 // Not a Number
-extern SYMENGINE_EXPORT RCP<const NaN> Nan;
+extern SYMENGINE_EXPORT RCP<const NaN> &Nan;
 } // namespace SymEngine
 
 #endif
