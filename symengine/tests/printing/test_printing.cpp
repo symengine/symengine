@@ -718,7 +718,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l27 = primepi(symbol("x"));
     RCP<const Basic> l28 = complexes();
     RCP<const Basic> l29 = parse(
-        "sqrt(1.0 - 1.3856406460551*abs(tau_tEd)*gamma_M0/f_y)*V_plvRd");
+        "sqrt(1.0 - 1.3856406460551*abs(tau_tEd)*gamma_M0/f_y)*V_plv_Rd");
 
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
@@ -760,7 +760,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l28) == "\\mathbb{C}");
     CHECK(latex(*l29)
           == "\\sqrt{1.0 - 1.3856406460551 \\frac{\\left|\\tau_{tEd}\\right| "
-             "\\gamma_{M0}}{f_y}} V_{plvRd}");
+             "\\gamma_{M0}}{f_y}} V_{plv_{Rd}}");
 
     RCP<const Basic> l = naturals();
     CHECK(latex(*l) == "\\mathbb{N}");
