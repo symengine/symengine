@@ -39,17 +39,33 @@ void LatexPrinter::bvisit(const Symbol &x)
            "rho",    "sigma", "Sigma", "tau",   "upsilon", "Upsilon", "phi",
            "Phi",    "chi",   "psi",   "Psi",   "omega",   "Omega"};
 
+    str_ = name;
     for (auto &letter : greeks) {
         if (name == letter) {
             str_ = "\\" + name;
-            return;
+            break;
         }
         if (name.size() > letter.size() and name.find(letter + "_") == 0) {
             str_ = "\\" + name;
-            return;
+            break;
         }
     }
-    str_ = name;
+
+    if (name.find("_") != std::string::npos) {
+        int count = 0;
+        std::string prev = str_;
+        str_ = "";
+        for (size_t i = 0; i < prev.size(); i++) {
+            const char &c = prev[i];
+            if (c == '_' and prev.size() > i + 2) {
+                str_ += "_{";
+                count++;
+            } else {
+                str_ += c;
+            }
+        }
+        str_ += std::string(count, '}');
+    }
     return;
 }
 
@@ -547,7 +563,7 @@ void LatexPrinter::bvisit(const Ceiling &x)
 void LatexPrinter::bvisit(const Abs &x)
 {
     std::ostringstream o;
-    o << "\\left|" << apply(x.get_arg()) << "}\\right|";
+    o << "\\left|" << apply(x.get_arg()) << "\\right|";
     str_ = o.str();
 }
 
