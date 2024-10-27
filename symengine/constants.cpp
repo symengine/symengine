@@ -3,6 +3,7 @@
 #include <symengine/infinity.h>
 #include <symengine/pow.h>
 #include <symengine/nan.h>
+#include <symengine/logic.h>
 #ifdef WITH_SYMENGINE_THREAD_SAFE
 #include <atomic>
 #endif
@@ -84,7 +85,9 @@ static int nifty_counter;
     DEFINE_CONSTANT(Basic, mC3, mul(minus_one, C3));                           \
     DEFINE_CONSTANT(Basic, mC4, mul(minus_one, C4));                           \
     DEFINE_CONSTANT(Basic, mC5, mul(minus_one, C5));                           \
-    DEFINE_CONSTANT(Basic, mC6, mul(minus_one, C6));
+    DEFINE_CONSTANT(Basic, mC6, mul(minus_one, C6));                           \
+    DEFINE_CONSTANT(BooleanAtom, boolTrue, make_rcp<BooleanAtom>(true));       \
+    DEFINE_CONSTANT(BooleanAtom, boolFalse, make_rcp<BooleanAtom>(false));
 
 #define DEFINE_CONSTANT(t, n, d)                                               \
     static typename std::aligned_storage<sizeof(RCP<const t>),                 \
