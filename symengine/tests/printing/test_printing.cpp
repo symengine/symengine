@@ -758,7 +758,9 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l26) == "\\mathbb{Q}");
     CHECK(latex(*l27) == "\\pi{\\left(x\\right)}");
     CHECK(latex(*l28) == "\\mathbb{C}");
-    CHECK(latex(*l29) == "\\sqrt{1.0 - 1.3856406460551 \\frac{\\left|\\tau_{tEd}\\right| \\gamma_{M0}}{f_{y}}} V_{plvRd}";
+    CHECK(latex(*l29)
+          == "\\sqrt{1.0 - 1.3856406460551 \\frac{\\left|\\tau_{tEd}\\right| "
+             "\\gamma_{M0}}{f_y}} V_{plvRd}");
 
     RCP<const Basic> l = naturals();
     CHECK(latex(*l) == "\\mathbb{N}");

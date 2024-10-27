@@ -55,8 +55,9 @@ void LatexPrinter::bvisit(const Symbol &x)
         int count = 0;
         std::string prev = str_;
         str_ = "";
-        for (auto &c : prev) {
-            if (c == '_') {
+        for (int i = 0; i < prev.size(); i++) {
+            const char &c = prev[i];
+            if (c == '_' and prev.size() > i + 2) {
                 str_ += "_{";
                 count++;
             } else {
