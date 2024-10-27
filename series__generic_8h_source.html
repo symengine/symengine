@@ -119,7 +119,7 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UnivariateSeries.html#a7eaee7a54ad819470ee1414e1ce4b399">   24</a></span>&#160;    <a class="code" href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a>(SYMENGINE_UNIVARIATESERIES)</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="code" href="classSymEngine_1_1UnivariateSeries.html">UnivariateSeries</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1UExprDict.html">UExprDict</a> &amp;sp, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> varname,</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;                     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> degree)</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        : <a class="code" href="classSymEngine_1_1SeriesBase.html">SeriesBase</a>(<a class="code" href="namespacestd.html">std</a>::move(sp), varname, degree)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        : <a class="code" href="classSymEngine_1_1SeriesBase.html">SeriesBase</a>(sp, varname, degree)</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        SYMENGINE_ASSIGN_TYPEID()</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    }</div>
@@ -191,7 +191,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1UnivariateSeries_html_a4855b46744a7f69b3edaf30bf451c89c"><div class="ttname"><a href="classSymEngine_1_1UnivariateSeries.html#a4855b46744a7f69b3edaf30bf451c89c">SymEngine::UnivariateSeries::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="series__generic_8cpp_source.html#l00022">series_generic.cpp:22</a></div></div>
 <div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="aseries_8h_html"><div class="ttname"><a href="series_8h.html">series.h</a></div></div>
 <div class="ttc" id="auintpoly_8h_html"><div class="ttname"><a href="uintpoly_8h.html">uintpoly.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
