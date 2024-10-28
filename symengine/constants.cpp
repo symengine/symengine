@@ -95,15 +95,16 @@ template <typename T>
 struct storage_for {
     alignas(T) std::byte data[sizeof(T)];
 };
+#else
+template <typename T>
+struct storage_for {
+    typename std::aligned_storage<sizeof(T), alignof(T)>::type data;
+};
+#endif
+
 #define DEFINE_CONSTANT(t, n, d)                                               \
     static storage_for<RCP<const t>> n##_buf;                                  \
     RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
-#else
-#define DEFINE_CONSTANT(t, n, d)                                               \
-    static typename std::aligned_storage<sizeof(RCP<const t>),                 \
-                                         alignof(RCP<const t>)>::type n##_buf; \
-    RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
-#endif
 
 DEFINE_CONSTANTS
 #undef DEFINE_CONSTANT
