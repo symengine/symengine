@@ -300,12 +300,12 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00240">240</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;{</div>
-<div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordflow">return</span> is_a&lt;And&gt;(o)</div>
-<div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;           and unified_eq(container_,</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;                          down_cast&lt;const And &amp;&gt;(o).get_container());</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00229">229</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;{</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">return</span> is_a&lt;And&gt;(o)</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;           and unified_eq(container_,</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                          down_cast&lt;const And &amp;&gt;(o).get_container());</div>
+<div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -335,13 +335,13 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00226">226</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;{</div>
-<div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;    hash_t seed = SYMENGINE_AND;</div>
-<div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00215">215</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;{</div>
+<div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;    hash_t seed = SYMENGINE_AND;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
+<div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>

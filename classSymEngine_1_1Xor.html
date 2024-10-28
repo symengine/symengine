@@ -296,12 +296,12 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00418">418</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;{</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;    <span class="keywordflow">return</span> is_a&lt;Xor&gt;(o)</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;           and unified_eq(container_,</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;                          down_cast&lt;const Xor &amp;&gt;(o).get_container());</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00407">407</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;{</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <span class="keywordflow">return</span> is_a&lt;Xor&gt;(o)</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;           and unified_eq(container_,</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;                          down_cast&lt;const Xor &amp;&gt;(o).get_container());</div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -331,13 +331,13 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00404">404</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;{</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    hash_t seed = SYMENGINE_XOR;</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00393">393</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;{</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;    hash_t seed = SYMENGINE_XOR;</div>
+<div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
+<div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -368,12 +368,12 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00425">425</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;{</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Xor&gt;(o))</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_,</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;                           down_cast&lt;const Xor &amp;&gt;(o).get_container());</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="logic_8cpp_source.html#l00414">414</a> of file <a class="el" href="logic_8cpp_source.html">logic.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;{</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Xor&gt;(o))</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_,</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;                           down_cast&lt;const Xor &amp;&gt;(o).get_container());</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment -->
 </div>

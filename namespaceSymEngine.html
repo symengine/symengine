@@ -113,6 +113,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Assumptions.html">Assumptions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSymEngine_1_1ConstantInitializer.html">ConstantInitializer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Basic.html">Basic</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The lowest unit of symbolic representation.  <a href="classSymEngine_1_1Basic.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -135,6 +137,8 @@ Data Structures</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classSymEngine_1_1Complex.html" title="Complex Class.">Complex</a> Double Class to hold std::complex&lt;double&gt; values.  <a href="classSymEngine_1_1ComplexDouble.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1ComplexMPC.html">ComplexMPC</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Constant.html">Constant</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -3197,123 +3201,246 @@ template&lt;typename... Args&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a3daa97435763d1989bbccad4f0e5bb20"><td class="memItemLeft" align="right" valign="top"><a id="a3daa97435763d1989bbccad4f0e5bb20"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>zero</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(0) ; return c; }()</td></tr>
-<tr class="separator:a3daa97435763d1989bbccad4f0e5bb20"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44051946ed56f8f4818ab36ee1813b99"><td class="memItemLeft" align="right" valign="top"><a id="a44051946ed56f8f4818ab36ee1813b99"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>one</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(1) ; return c; }()</td></tr>
-<tr class="separator:a44051946ed56f8f4818ab36ee1813b99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a361abb0f8ca4669ab6040580985eedf1"><td class="memItemLeft" align="right" valign="top"><a id="a361abb0f8ca4669ab6040580985eedf1"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>minus_one</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(-1) ; return c; }()</td></tr>
-<tr class="separator:a361abb0f8ca4669ab6040580985eedf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac87181baaa48ed1c6d6b4e0b9116b9a4"><td class="memItemLeft" align="right" valign="top"><a id="ac87181baaa48ed1c6d6b4e0b9116b9a4"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>two</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2) ; return c; }()</td></tr>
-<tr class="separator:ac87181baaa48ed1c6d6b4e0b9116b9a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7939c49aba5d9b5a96f1e90575c32dfc"><td class="memItemLeft" align="right" valign="top"><a id="a7939c49aba5d9b5a96f1e90575c32dfc"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>I</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; c = <a class="el" href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">Complex::from_two_nums</a>(*zero, *one) ; return c; }()</td></tr>
-<tr class="separator:a7939c49aba5d9b5a96f1e90575c32dfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a034dc976ed49954deac535b8eeb19cc6"><td class="memItemLeft" align="right" valign="top"><a id="a034dc976ed49954deac535b8eeb19cc6"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pi</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; c = <a class="el" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">constant</a>(&quot;pi&quot;) ; return c; }()</td></tr>
-<tr class="separator:a034dc976ed49954deac535b8eeb19cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ae04e22c7f96ec8e593be32a80f7621"><td class="memItemLeft" align="right" valign="top"><a id="a0ae04e22c7f96ec8e593be32a80f7621"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>E</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; c = <a class="el" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">constant</a>(&quot;E&quot;) ; return c; }()</td></tr>
-<tr class="separator:a0ae04e22c7f96ec8e593be32a80f7621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42dbab42055a02c8fbe33c6e3e01ac65"><td class="memItemLeft" align="right" valign="top"><a id="a42dbab42055a02c8fbe33c6e3e01ac65"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>EulerGamma</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; c = <a class="el" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">constant</a>(&quot;EulerGamma&quot;) ; return c; }()</td></tr>
-<tr class="separator:a42dbab42055a02c8fbe33c6e3e01ac65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a73c93ade9fb40978456aff6886170513"><td class="memItemLeft" align="right" valign="top"><a id="a73c93ade9fb40978456aff6886170513"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Catalan</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; c = <a class="el" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">constant</a>(&quot;Catalan&quot;) ; return c; }()</td></tr>
-<tr class="separator:a73c93ade9fb40978456aff6886170513"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a061224c44e11c41da956c210f8547aff"><td class="memItemLeft" align="right" valign="top"><a id="a061224c44e11c41da956c210f8547aff"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GoldenRatio</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; c = <a class="el" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">constant</a>(&quot;GoldenRatio&quot;) ; return c; }()</td></tr>
-<tr class="separator:a061224c44e11c41da956c210f8547aff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c20070b915762ca2704fef7109a5a54"><td class="memItemLeft" align="right" valign="top"><a id="a7c20070b915762ca2704fef7109a5a54"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Inf</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; c = <a class="el" href="classSymEngine_1_1Infty.html#a87a854f1c0bd8fc945dcf59c42f6fd46">Infty::from_int</a>(1) ; return c; }()</td></tr>
-<tr class="separator:a7c20070b915762ca2704fef7109a5a54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28dee364890d0b82f134e5177bd85b45"><td class="memItemLeft" align="right" valign="top"><a id="a28dee364890d0b82f134e5177bd85b45"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NegInf</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; c = <a class="el" href="classSymEngine_1_1Infty.html#a87a854f1c0bd8fc945dcf59c42f6fd46">Infty::from_int</a>(-1) ; return c; }()</td></tr>
-<tr class="separator:a28dee364890d0b82f134e5177bd85b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8efc963e44c3c75be338da4bae8fe6d"><td class="memItemLeft" align="right" valign="top"><a id="af8efc963e44c3c75be338da4bae8fe6d"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ComplexInf</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; c = <a class="el" href="classSymEngine_1_1Infty.html#a87a854f1c0bd8fc945dcf59c42f6fd46">Infty::from_int</a>(0) ; return c; }()</td></tr>
-<tr class="separator:af8efc963e44c3c75be338da4bae8fe6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5954e828161a21a1897715c3936fe22a"><td class="memItemLeft" align="right" valign="top"><a id="a5954e828161a21a1897715c3936fe22a"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Nan</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &gt; c = make_rcp&lt;<a class="el" href="classSymEngine_1_1NaN.html">NaN</a>&gt;() ; return c; }()</td></tr>
-<tr class="separator:a5954e828161a21a1897715c3936fe22a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab821c14086041feec89da396e4ea019"><td class="memItemLeft" align="right" valign="top"><a id="aab821c14086041feec89da396e4ea019"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>i2</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2) ; return c; }()</td></tr>
-<tr class="separator:aab821c14086041feec89da396e4ea019"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac15b4ffa4aa6ffebd9276bb9b77d550a"><td class="memItemLeft" align="right" valign="top"><a id="ac15b4ffa4aa6ffebd9276bb9b77d550a"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>i3</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(3) ; return c; }()</td></tr>
-<tr class="separator:ac15b4ffa4aa6ffebd9276bb9b77d550a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aca25c6ae00289537bf9d73502728a4d1"><td class="memItemLeft" align="right" valign="top"><a id="aca25c6ae00289537bf9d73502728a4d1"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>i5</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(5) ; return c; }()</td></tr>
-<tr class="separator:aca25c6ae00289537bf9d73502728a4d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e577631e595e5b65d58350df824f672"><td class="memItemLeft" align="right" valign="top"><a id="a5e577631e595e5b65d58350df824f672"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>im2</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(-2) ; return c; }()</td></tr>
-<tr class="separator:a5e577631e595e5b65d58350df824f672"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6e6ff9749ce5fb17ae3355bffebe39f"><td class="memItemLeft" align="right" valign="top"><a id="ad6e6ff9749ce5fb17ae3355bffebe39f"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>im3</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(-3) ; return c; }()</td></tr>
-<tr class="separator:ad6e6ff9749ce5fb17ae3355bffebe39f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec9be3c37beba460ff0fa6cd000b7150"><td class="memItemLeft" align="right" valign="top"><a id="aec9be3c37beba460ff0fa6cd000b7150"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>im5</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(-5) ; return c; }()</td></tr>
-<tr class="separator:aec9be3c37beba460ff0fa6cd000b7150"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af38567f48cfeb84cb78fbd6b2ae2ce6d"><td class="memItemLeft" align="right" valign="top"><a id="af38567f48cfeb84cb78fbd6b2ae2ce6d"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq3</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = sqrt_(i3) ; return c; }()</td></tr>
-<tr class="separator:af38567f48cfeb84cb78fbd6b2ae2ce6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a014f15b87dfb2875aab4a07a9d3a225f"><td class="memItemLeft" align="right" valign="top"><a id="a014f15b87dfb2875aab4a07a9d3a225f"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq2</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = sqrt_(i2) ; return c; }()</td></tr>
-<tr class="separator:a014f15b87dfb2875aab4a07a9d3a225f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82f7f893f59f02403333a07b47026632"><td class="memItemLeft" align="right" valign="top"><a id="a82f7f893f59f02403333a07b47026632"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq5</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = sqrt_(i5) ; return c; }()</td></tr>
-<tr class="separator:a82f7f893f59f02403333a07b47026632"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e3af3fb7e6e7b0d3082e5b9f32f5c6b"><td class="memItemLeft" align="right" valign="top"><a id="a7e3af3fb7e6e7b0d3082e5b9f32f5c6b"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C0</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(sq3, one), <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, sq2)) ; return c; }()</td></tr>
-<tr class="separator:a7e3af3fb7e6e7b0d3082e5b9f32f5c6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa97432c9d3f6cf07216b3d19b26dbfdf"><td class="memItemLeft" align="right" valign="top"><a id="aa97432c9d3f6cf07216b3d19b26dbfdf"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C1</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, i2) ; return c; }()</td></tr>
-<tr class="separator:aa97432c9d3f6cf07216b3d19b26dbfdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf4386be89ee0373bff378411408cc68"><td class="memItemLeft" align="right" valign="top"><a id="adf4386be89ee0373bff378411408cc68"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C2</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(sq2, i2) ; return c; }()</td></tr>
-<tr class="separator:adf4386be89ee0373bff378411408cc68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a7b96ad02c00696ed3e62569c501221"><td class="memItemLeft" align="right" valign="top"><a id="a2a7b96ad02c00696ed3e62569c501221"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C3</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(sq3, i2) ; return c; }()</td></tr>
-<tr class="separator:a2a7b96ad02c00696ed3e62569c501221"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a090bbddf8659d698ed8c2d61da9f86d4"><td class="memItemLeft" align="right" valign="top"><a id="a090bbddf8659d698ed8c2d61da9f86d4"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C4</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(sq3, one), <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(i2, sq2)) ; return c; }()</td></tr>
-<tr class="separator:a090bbddf8659d698ed8c2d61da9f86d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97f54acd2c3ab2b9297d235896bbd9d7"><td class="memItemLeft" align="right" valign="top"><a id="a97f54acd2c3ab2b9297d235896bbd9d7"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C5</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(sqrt_(<a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(i5, sqrt_(i5))), <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(8)) ; return c; }()</td></tr>
-<tr class="separator:a97f54acd2c3ab2b9297d235896bbd9d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b5e2351233e8d5898454827d4012c1a"><td class="memItemLeft" align="right" valign="top"><a id="a3b5e2351233e8d5898454827d4012c1a"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C6</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="el" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(sqrt_(i5), one), <a class="el" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(4)) ; return c; }()</td></tr>
-<tr class="separator:a3b5e2351233e8d5898454827d4012c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b7e5dcd8a17bd042e402ac04a80c1c2"><td class="memItemLeft" align="right" valign="top"><a id="a2b7e5dcd8a17bd042e402ac04a80c1c2"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC0</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C0) ; return c; }()</td></tr>
-<tr class="separator:a2b7e5dcd8a17bd042e402ac04a80c1c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad8be7de85b0796b4a035ae704efa161d"><td class="memItemLeft" align="right" valign="top"><a id="ad8be7de85b0796b4a035ae704efa161d"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC1</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C1) ; return c; }()</td></tr>
-<tr class="separator:ad8be7de85b0796b4a035ae704efa161d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc3eeea238e7191543446ccf8f8b748d"><td class="memItemLeft" align="right" valign="top"><a id="afc3eeea238e7191543446ccf8f8b748d"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC2</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C2) ; return c; }()</td></tr>
-<tr class="separator:afc3eeea238e7191543446ccf8f8b748d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa457d7350e05b8b7729843f06f27607e"><td class="memItemLeft" align="right" valign="top"><a id="aa457d7350e05b8b7729843f06f27607e"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC3</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C3) ; return c; }()</td></tr>
-<tr class="separator:aa457d7350e05b8b7729843f06f27607e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12ffd7d86feea12e6e64704234e5b4fb"><td class="memItemLeft" align="right" valign="top"><a id="a12ffd7d86feea12e6e64704234e5b4fb"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC4</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C4) ; return c; }()</td></tr>
-<tr class="separator:a12ffd7d86feea12e6e64704234e5b4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3baebfbdf61c81dbe8472bab483c0018"><td class="memItemLeft" align="right" valign="top"><a id="a3baebfbdf61c81dbe8472bab483c0018"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC5</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C5) ; return c; }()</td></tr>
-<tr class="separator:a3baebfbdf61c81dbe8472bab483c0018"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62782a7eee49c1ad9fc00a8d6244ed6e"><td class="memItemLeft" align="right" valign="top"><a id="a62782a7eee49c1ad9fc00a8d6244ed6e"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC6</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; c = <a class="el" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, C6) ; return c; }()</td></tr>
-<tr class="separator:a62782a7eee49c1ad9fc00a8d6244ed6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae33c200b79c5078a0ae235e6dc973edd"><td class="memItemLeft" align="right" valign="top"><a id="ae33c200b79c5078a0ae235e6dc973edd"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>boolTrue</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a>&gt; c = make_rcp&lt;<a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a>&gt;( true ); return c; }()</td></tr>
-<tr class="separator:ae33c200b79c5078a0ae235e6dc973edd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32f94e8e8c8cb811b914ec8d6161882a"><td class="memItemLeft" align="right" valign="top"><a id="a32f94e8e8c8cb811b914ec8d6161882a"></a>
-RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>boolFalse</b> = []() { static const RCP&lt;const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a>&gt; c = make_rcp&lt;<a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a>&gt;( false ); return c; }()</td></tr>
-<tr class="separator:a32f94e8e8c8cb811b914ec8d6161882a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19734b876a4ae68a5309a002578cb1c6"><td class="memItemLeft" align="right" valign="top"><a id="a19734b876a4ae68a5309a002578cb1c6"></a>
+static struct <a class="el" href="structSymEngine_1_1ConstantInitializer.html">SymEngine::ConstantInitializer</a>&#160;</td><td class="memItemRight" valign="bottom"><b>constantInitializer</b></td></tr>
+<tr class="separator:a19734b876a4ae68a5309a002578cb1c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ed4f1f8603018d84d620bb2b6e3a0fd"><td class="memItemLeft" align="right" valign="top"><a id="a3ed4f1f8603018d84d620bb2b6e3a0fd"></a>
+static int&#160;</td><td class="memItemRight" valign="bottom"><b>nifty_counter</b></td></tr>
+<tr class="separator:a3ed4f1f8603018d84d620bb2b6e3a0fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2ea4c0d28dbd0342d91cb79264984f6"><td class="memItemLeft" align="right" valign="top"><a id="ac2ea4c0d28dbd0342d91cb79264984f6"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>zero_buf</b></td></tr>
+<tr class="separator:ac2ea4c0d28dbd0342d91cb79264984f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5da938370179c89b853bec900e3d9b2"><td class="memItemLeft" align="right" valign="top"><a id="af5da938370179c89b853bec900e3d9b2"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>zero</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&gt;( zero_buf)</td></tr>
+<tr class="separator:af5da938370179c89b853bec900e3d9b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8e9c044a71a65e00b740f99d41c1f1d"><td class="memItemLeft" align="right" valign="top"><a id="ad8e9c044a71a65e00b740f99d41c1f1d"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>one_buf</b></td></tr>
+<tr class="separator:ad8e9c044a71a65e00b740f99d41c1f1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af41a87829c6f23a74816a3c533f1cc45"><td class="memItemLeft" align="right" valign="top"><a id="af41a87829c6f23a74816a3c533f1cc45"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>one</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&gt;( one_buf)</td></tr>
+<tr class="separator:af41a87829c6f23a74816a3c533f1cc45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e293a4a4ef456f3e40763ec9ca6f509"><td class="memItemLeft" align="right" valign="top"><a id="a6e293a4a4ef456f3e40763ec9ca6f509"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>minus_one_buf</b></td></tr>
+<tr class="separator:a6e293a4a4ef456f3e40763ec9ca6f509"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2293576d47af62b14e4607eca21ba8b3"><td class="memItemLeft" align="right" valign="top"><a id="a2293576d47af62b14e4607eca21ba8b3"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>minus_one</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&gt;( minus_one_buf)</td></tr>
+<tr class="separator:a2293576d47af62b14e4607eca21ba8b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae93974f9efeaa16351be3cf8bccf7748"><td class="memItemLeft" align="right" valign="top"><a id="ae93974f9efeaa16351be3cf8bccf7748"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>two_buf</b></td></tr>
+<tr class="separator:ae93974f9efeaa16351be3cf8bccf7748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4033993fdf5c00b987fd89eadd2394ea"><td class="memItemLeft" align="right" valign="top"><a id="a4033993fdf5c00b987fd89eadd2394ea"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>two</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Integer.html">Integer</a> &gt; &amp;&gt;( two_buf)</td></tr>
+<tr class="separator:a4033993fdf5c00b987fd89eadd2394ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af6352b1aea212d03b101cdc310509c98"><td class="memItemLeft" align="right" valign="top"><a id="af6352b1aea212d03b101cdc310509c98"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>I_buf</b></td></tr>
+<tr class="separator:af6352b1aea212d03b101cdc310509c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3b2d9c6caa08758935da999af51fe07"><td class="memItemLeft" align="right" valign="top"><a id="ac3b2d9c6caa08758935da999af51fe07"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>I</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Number.html">Number</a> &gt; &amp;&gt;( I_buf)</td></tr>
+<tr class="separator:ac3b2d9c6caa08758935da999af51fe07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa57377de40b553269951e8f92e80240"><td class="memItemLeft" align="right" valign="top"><a id="aaa57377de40b553269951e8f92e80240"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>pi_buf</b></td></tr>
+<tr class="separator:aaa57377de40b553269951e8f92e80240"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7069cdd43e3ad51eba33dc4c09d9c4f"><td class="memItemLeft" align="right" valign="top"><a id="aa7069cdd43e3ad51eba33dc4c09d9c4f"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>pi</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&gt;( pi_buf)</td></tr>
+<tr class="separator:aa7069cdd43e3ad51eba33dc4c09d9c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72a4641059a3fb50fd5727e9cbfc67fa"><td class="memItemLeft" align="right" valign="top"><a id="a72a4641059a3fb50fd5727e9cbfc67fa"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>E_buf</b></td></tr>
+<tr class="separator:a72a4641059a3fb50fd5727e9cbfc67fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9e7e6a151cd8ef29e9831ca610b8e2a"><td class="memItemLeft" align="right" valign="top"><a id="ab9e7e6a151cd8ef29e9831ca610b8e2a"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>E</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&gt;( E_buf)</td></tr>
+<tr class="separator:ab9e7e6a151cd8ef29e9831ca610b8e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d6595de424fe174ca14379b3f4d4221"><td class="memItemLeft" align="right" valign="top"><a id="a6d6595de424fe174ca14379b3f4d4221"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>EulerGamma_buf</b></td></tr>
+<tr class="separator:a6d6595de424fe174ca14379b3f4d4221"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a604f6f47d2d9dbae1b7cd43e7acbe815"><td class="memItemLeft" align="right" valign="top"><a id="a604f6f47d2d9dbae1b7cd43e7acbe815"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>EulerGamma</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&gt;( EulerGamma_buf)</td></tr>
+<tr class="separator:a604f6f47d2d9dbae1b7cd43e7acbe815"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04da1d4bcee87a396021724c19209c72"><td class="memItemLeft" align="right" valign="top"><a id="a04da1d4bcee87a396021724c19209c72"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Catalan_buf</b></td></tr>
+<tr class="separator:a04da1d4bcee87a396021724c19209c72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b8557c1e0193ad561293a974f9780de"><td class="memItemLeft" align="right" valign="top"><a id="a2b8557c1e0193ad561293a974f9780de"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Catalan</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&gt;( Catalan_buf)</td></tr>
+<tr class="separator:a2b8557c1e0193ad561293a974f9780de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad21abe36bc949e768246dc7fa7202275"><td class="memItemLeft" align="right" valign="top"><a id="ad21abe36bc949e768246dc7fa7202275"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>GoldenRatio_buf</b></td></tr>
+<tr class="separator:ad21abe36bc949e768246dc7fa7202275"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4017b819dcaf9b2adc3b9311cc8531fb"><td class="memItemLeft" align="right" valign="top"><a id="a4017b819dcaf9b2adc3b9311cc8531fb"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>GoldenRatio</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Constant.html">Constant</a> &gt; &amp;&gt;( GoldenRatio_buf)</td></tr>
+<tr class="separator:a4017b819dcaf9b2adc3b9311cc8531fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a126e123ff56f245304e899916497d904"><td class="memItemLeft" align="right" valign="top"><a id="a126e123ff56f245304e899916497d904"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Inf_buf</b></td></tr>
+<tr class="separator:a126e123ff56f245304e899916497d904"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b9ac62e66b588b3b3707eeeb61cc0b8"><td class="memItemLeft" align="right" valign="top"><a id="a5b9ac62e66b588b3b3707eeeb61cc0b8"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Inf</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;&gt;( Inf_buf)</td></tr>
+<tr class="separator:a5b9ac62e66b588b3b3707eeeb61cc0b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a354da0831edb6ed780c0e2906ca51a6c"><td class="memItemLeft" align="right" valign="top"><a id="a354da0831edb6ed780c0e2906ca51a6c"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>NegInf_buf</b></td></tr>
+<tr class="separator:a354da0831edb6ed780c0e2906ca51a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a280c9a8becdff5bc8b9743e90061453e"><td class="memItemLeft" align="right" valign="top"><a id="a280c9a8becdff5bc8b9743e90061453e"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>NegInf</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;&gt;( NegInf_buf)</td></tr>
+<tr class="separator:a280c9a8becdff5bc8b9743e90061453e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9cf17e5626db3bb87db469cd41e8d87"><td class="memItemLeft" align="right" valign="top"><a id="ab9cf17e5626db3bb87db469cd41e8d87"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ComplexInf_buf</b></td></tr>
+<tr class="separator:ab9cf17e5626db3bb87db469cd41e8d87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a989a6ae2c289992c2e454c953df308a3"><td class="memItemLeft" align="right" valign="top"><a id="a989a6ae2c289992c2e454c953df308a3"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ComplexInf</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Infty.html">Infty</a> &gt; &amp;&gt;( ComplexInf_buf)</td></tr>
+<tr class="separator:a989a6ae2c289992c2e454c953df308a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fda5901c019b13029c889e9a5cb174d"><td class="memItemLeft" align="right" valign="top"><a id="a2fda5901c019b13029c889e9a5cb174d"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>Nan_buf</b></td></tr>
+<tr class="separator:a2fda5901c019b13029c889e9a5cb174d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adaeb02513ceb83d62bb2bafbc09da4bf"><td class="memItemLeft" align="right" valign="top"><a id="adaeb02513ceb83d62bb2bafbc09da4bf"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>Nan</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1NaN.html">NaN</a> &gt; &amp;&gt;( Nan_buf)</td></tr>
+<tr class="separator:adaeb02513ceb83d62bb2bafbc09da4bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7977af8d4c46cc6d2de8f4ea57a850a8"><td class="memItemLeft" align="right" valign="top"><a id="a7977af8d4c46cc6d2de8f4ea57a850a8"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>i2_buf</b></td></tr>
+<tr class="separator:a7977af8d4c46cc6d2de8f4ea57a850a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cbc7c7bcab2fecc59910e7c1313c841"><td class="memItemLeft" align="right" valign="top"><a id="a2cbc7c7bcab2fecc59910e7c1313c841"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>i2</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( i2_buf)</td></tr>
+<tr class="separator:a2cbc7c7bcab2fecc59910e7c1313c841"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b574cb7d03dfdbf07d809f3541e2536"><td class="memItemLeft" align="right" valign="top"><a id="a2b574cb7d03dfdbf07d809f3541e2536"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>i3_buf</b></td></tr>
+<tr class="separator:a2b574cb7d03dfdbf07d809f3541e2536"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a658cc1795199df14078d5eebf60a8c49"><td class="memItemLeft" align="right" valign="top"><a id="a658cc1795199df14078d5eebf60a8c49"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>i3</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( i3_buf)</td></tr>
+<tr class="separator:a658cc1795199df14078d5eebf60a8c49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adafd344022fd5d83ebfe60f203245245"><td class="memItemLeft" align="right" valign="top"><a id="adafd344022fd5d83ebfe60f203245245"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>i5_buf</b></td></tr>
+<tr class="separator:adafd344022fd5d83ebfe60f203245245"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc2ef7f3cd58c285db30190ad8acfa76"><td class="memItemLeft" align="right" valign="top"><a id="afc2ef7f3cd58c285db30190ad8acfa76"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>i5</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( i5_buf)</td></tr>
+<tr class="separator:afc2ef7f3cd58c285db30190ad8acfa76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96e6aacf3eafb8fa0096bd5d538eba94"><td class="memItemLeft" align="right" valign="top"><a id="a96e6aacf3eafb8fa0096bd5d538eba94"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>im2_buf</b></td></tr>
+<tr class="separator:a96e6aacf3eafb8fa0096bd5d538eba94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b22b7acbaa5fa0e19e149bce5b4b036"><td class="memItemLeft" align="right" valign="top"><a id="a0b22b7acbaa5fa0e19e149bce5b4b036"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>im2</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( im2_buf)</td></tr>
+<tr class="separator:a0b22b7acbaa5fa0e19e149bce5b4b036"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e388b6f82d033dc22787f21792f6ae2"><td class="memItemLeft" align="right" valign="top"><a id="a8e388b6f82d033dc22787f21792f6ae2"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>im3_buf</b></td></tr>
+<tr class="separator:a8e388b6f82d033dc22787f21792f6ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad509f7042ceb97cc3bb7dee61dbdcfa5"><td class="memItemLeft" align="right" valign="top"><a id="ad509f7042ceb97cc3bb7dee61dbdcfa5"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>im3</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( im3_buf)</td></tr>
+<tr class="separator:ad509f7042ceb97cc3bb7dee61dbdcfa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e56738c589792d55c9f081a48a67d68"><td class="memItemLeft" align="right" valign="top"><a id="a3e56738c589792d55c9f081a48a67d68"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>im5_buf</b></td></tr>
+<tr class="separator:a3e56738c589792d55c9f081a48a67d68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a518770a03a77e058969a8fe47b80ce71"><td class="memItemLeft" align="right" valign="top"><a id="a518770a03a77e058969a8fe47b80ce71"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>im5</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( im5_buf)</td></tr>
+<tr class="separator:a518770a03a77e058969a8fe47b80ce71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c85b5cc51cef25803553e1f067ff4f2"><td class="memItemLeft" align="right" valign="top"><a id="a2c85b5cc51cef25803553e1f067ff4f2"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq3_buf</b></td></tr>
+<tr class="separator:a2c85b5cc51cef25803553e1f067ff4f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5a9d281a0c2f8e8724743f98b0e8dfc4"><td class="memItemLeft" align="right" valign="top"><a id="a5a9d281a0c2f8e8724743f98b0e8dfc4"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sq3</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( sq3_buf)</td></tr>
+<tr class="separator:a5a9d281a0c2f8e8724743f98b0e8dfc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5b65523f459c04ccf38a1a26cc004e5"><td class="memItemLeft" align="right" valign="top"><a id="ac5b65523f459c04ccf38a1a26cc004e5"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq2_buf</b></td></tr>
+<tr class="separator:ac5b65523f459c04ccf38a1a26cc004e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3587e252eb77fa9c17de2cd846124158"><td class="memItemLeft" align="right" valign="top"><a id="a3587e252eb77fa9c17de2cd846124158"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sq2</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( sq2_buf)</td></tr>
+<tr class="separator:a3587e252eb77fa9c17de2cd846124158"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7374debfc82d07f97ce3f7b895950a58"><td class="memItemLeft" align="right" valign="top"><a id="a7374debfc82d07f97ce3f7b895950a58"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>sq5_buf</b></td></tr>
+<tr class="separator:a7374debfc82d07f97ce3f7b895950a58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5aa912705bffa9345f57d78de9bb4d1a"><td class="memItemLeft" align="right" valign="top"><a id="a5aa912705bffa9345f57d78de9bb4d1a"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sq5</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( sq5_buf)</td></tr>
+<tr class="separator:a5aa912705bffa9345f57d78de9bb4d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26e262434895aceaf9d5cba250a55139"><td class="memItemLeft" align="right" valign="top"><a id="a26e262434895aceaf9d5cba250a55139"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C0_buf</b></td></tr>
+<tr class="separator:a26e262434895aceaf9d5cba250a55139"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20c0742498b1dc501eb950213b3f15e6"><td class="memItemLeft" align="right" valign="top"><a id="a20c0742498b1dc501eb950213b3f15e6"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C0</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C0_buf)</td></tr>
+<tr class="separator:a20c0742498b1dc501eb950213b3f15e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6bb8fb3026cd37c957db59b9b3367a34"><td class="memItemLeft" align="right" valign="top"><a id="a6bb8fb3026cd37c957db59b9b3367a34"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C1_buf</b></td></tr>
+<tr class="separator:a6bb8fb3026cd37c957db59b9b3367a34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a856d31be5a3ca45f5e438497ebe65820"><td class="memItemLeft" align="right" valign="top"><a id="a856d31be5a3ca45f5e438497ebe65820"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C1</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C1_buf)</td></tr>
+<tr class="separator:a856d31be5a3ca45f5e438497ebe65820"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a839a446e22ac010020fa596ab02e8705"><td class="memItemLeft" align="right" valign="top"><a id="a839a446e22ac010020fa596ab02e8705"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C2_buf</b></td></tr>
+<tr class="separator:a839a446e22ac010020fa596ab02e8705"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acaa33ba066d1a8eb08f90c89fd1dfb28"><td class="memItemLeft" align="right" valign="top"><a id="acaa33ba066d1a8eb08f90c89fd1dfb28"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C2</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C2_buf)</td></tr>
+<tr class="separator:acaa33ba066d1a8eb08f90c89fd1dfb28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac143695e5d7048dedd8121cf83e5a9ed"><td class="memItemLeft" align="right" valign="top"><a id="ac143695e5d7048dedd8121cf83e5a9ed"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C3_buf</b></td></tr>
+<tr class="separator:ac143695e5d7048dedd8121cf83e5a9ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a377fd998ffae7c072adcb2d7d6b9376c"><td class="memItemLeft" align="right" valign="top"><a id="a377fd998ffae7c072adcb2d7d6b9376c"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C3</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C3_buf)</td></tr>
+<tr class="separator:a377fd998ffae7c072adcb2d7d6b9376c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08ab9d6c4a4825558e3d7d37353274e7"><td class="memItemLeft" align="right" valign="top"><a id="a08ab9d6c4a4825558e3d7d37353274e7"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C4_buf</b></td></tr>
+<tr class="separator:a08ab9d6c4a4825558e3d7d37353274e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3bcad0e4f40939ce58360cdf474f1313"><td class="memItemLeft" align="right" valign="top"><a id="a3bcad0e4f40939ce58360cdf474f1313"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C4</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C4_buf)</td></tr>
+<tr class="separator:a3bcad0e4f40939ce58360cdf474f1313"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abea4ef715bb583dec2a268be8d02428c"><td class="memItemLeft" align="right" valign="top"><a id="abea4ef715bb583dec2a268be8d02428c"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C5_buf</b></td></tr>
+<tr class="separator:abea4ef715bb583dec2a268be8d02428c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a172691e76b209fe04b2038277a6c0cd4"><td class="memItemLeft" align="right" valign="top"><a id="a172691e76b209fe04b2038277a6c0cd4"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C5</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C5_buf)</td></tr>
+<tr class="separator:a172691e76b209fe04b2038277a6c0cd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb97ee571ccfaf6bf59e3d5e829cb581"><td class="memItemLeft" align="right" valign="top"><a id="adb97ee571ccfaf6bf59e3d5e829cb581"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>C6_buf</b></td></tr>
+<tr class="separator:adb97ee571ccfaf6bf59e3d5e829cb581"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4038c38e517a8d2cfb22bb3373fe6b8d"><td class="memItemLeft" align="right" valign="top"><a id="a4038c38e517a8d2cfb22bb3373fe6b8d"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>C6</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( C6_buf)</td></tr>
+<tr class="separator:a4038c38e517a8d2cfb22bb3373fe6b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82e012f9711f527223dbe39cc3b2ea08"><td class="memItemLeft" align="right" valign="top"><a id="a82e012f9711f527223dbe39cc3b2ea08"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC0_buf</b></td></tr>
+<tr class="separator:a82e012f9711f527223dbe39cc3b2ea08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a373dc81ed3e6dd7b832fe2283350eb65"><td class="memItemLeft" align="right" valign="top"><a id="a373dc81ed3e6dd7b832fe2283350eb65"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC0</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC0_buf)</td></tr>
+<tr class="separator:a373dc81ed3e6dd7b832fe2283350eb65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1da42a5ec94c69a62db02e427c9d516d"><td class="memItemLeft" align="right" valign="top"><a id="a1da42a5ec94c69a62db02e427c9d516d"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC1_buf</b></td></tr>
+<tr class="separator:a1da42a5ec94c69a62db02e427c9d516d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a761bef3cc2dfbd6fbcbab42b0733d10d"><td class="memItemLeft" align="right" valign="top"><a id="a761bef3cc2dfbd6fbcbab42b0733d10d"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC1</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC1_buf)</td></tr>
+<tr class="separator:a761bef3cc2dfbd6fbcbab42b0733d10d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04856f9209d20d7e1aceb459d6f1dd65"><td class="memItemLeft" align="right" valign="top"><a id="a04856f9209d20d7e1aceb459d6f1dd65"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC2_buf</b></td></tr>
+<tr class="separator:a04856f9209d20d7e1aceb459d6f1dd65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a741a7266b80cdc682d46db9e5360286b"><td class="memItemLeft" align="right" valign="top"><a id="a741a7266b80cdc682d46db9e5360286b"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC2</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC2_buf)</td></tr>
+<tr class="separator:a741a7266b80cdc682d46db9e5360286b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42ad3df02cce9f08b1c1725da7e1e88b"><td class="memItemLeft" align="right" valign="top"><a id="a42ad3df02cce9f08b1c1725da7e1e88b"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC3_buf</b></td></tr>
+<tr class="separator:a42ad3df02cce9f08b1c1725da7e1e88b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadf35a57dcd2f1c9bdff35a9c921332d"><td class="memItemLeft" align="right" valign="top"><a id="aadf35a57dcd2f1c9bdff35a9c921332d"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC3</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC3_buf)</td></tr>
+<tr class="separator:aadf35a57dcd2f1c9bdff35a9c921332d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac435be7b7f3cb27a41441fa118885e19"><td class="memItemLeft" align="right" valign="top"><a id="ac435be7b7f3cb27a41441fa118885e19"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC4_buf</b></td></tr>
+<tr class="separator:ac435be7b7f3cb27a41441fa118885e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe6b25e153d1e59cfdb2f8b5de6cc174"><td class="memItemLeft" align="right" valign="top"><a id="afe6b25e153d1e59cfdb2f8b5de6cc174"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC4</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC4_buf)</td></tr>
+<tr class="separator:afe6b25e153d1e59cfdb2f8b5de6cc174"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1067e4f05fc940a1ad48246f50ff7e9e"><td class="memItemLeft" align="right" valign="top"><a id="a1067e4f05fc940a1ad48246f50ff7e9e"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC5_buf</b></td></tr>
+<tr class="separator:a1067e4f05fc940a1ad48246f50ff7e9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5e913eab2b4ca21247e56950641aec0"><td class="memItemLeft" align="right" valign="top"><a id="ab5e913eab2b4ca21247e56950641aec0"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC5</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC5_buf)</td></tr>
+<tr class="separator:ab5e913eab2b4ca21247e56950641aec0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4d1264531836b060c98cbe422480748"><td class="memItemLeft" align="right" valign="top"><a id="ac4d1264531836b060c98cbe422480748"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mC6_buf</b></td></tr>
+<tr class="separator:ac4d1264531836b060c98cbe422480748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add9bb154ac28d7a1129405f633b8d1ab"><td class="memItemLeft" align="right" valign="top"><a id="add9bb154ac28d7a1129405f633b8d1ab"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>mC6</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;&gt;( mC6_buf)</td></tr>
+<tr class="separator:add9bb154ac28d7a1129405f633b8d1ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabb1fbbc6a10688e8864c995cc92c0a4"><td class="memItemLeft" align="right" valign="top"><a id="aabb1fbbc6a10688e8864c995cc92c0a4"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>boolTrue_buf</b></td></tr>
+<tr class="separator:aabb1fbbc6a10688e8864c995cc92c0a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa899390922dd2755a487678a47ac350c"><td class="memItemLeft" align="right" valign="top"><a id="aa899390922dd2755a487678a47ac350c"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>boolTrue</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &amp;&gt;( boolTrue_buf)</td></tr>
+<tr class="separator:aa899390922dd2755a487678a47ac350c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a883bbcb30cad1ab52ed873f16e48703c"><td class="memItemLeft" align="right" valign="top"><a id="a883bbcb30cad1ab52ed873f16e48703c"></a>
+static <a class="el" href="structSymEngine_1_1storage__for.html">storage_for</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>boolFalse_buf</b></td></tr>
+<tr class="separator:a883bbcb30cad1ab52ed873f16e48703c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14fd417f2f095c9dfdeafc8287b15e2e"><td class="memItemLeft" align="right" valign="top"><a id="a14fd417f2f095c9dfdeafc8287b15e2e"></a>
+RCP&lt; const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>boolFalse</b> = reinterpret_cast&lt;RCP&lt;const <a class="el" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &gt; &amp;&gt;( boolFalse_buf)</td></tr>
+<tr class="separator:a14fd417f2f095c9dfdeafc8287b15e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Main namespace for <a class="el" href="namespaceSymEngine.html" title="Main namespace for SymEngine package.">SymEngine</a> package. </p>
