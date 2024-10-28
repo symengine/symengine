@@ -91,9 +91,12 @@ static int nifty_counter;
     DEFINE_CONSTANT(BooleanAtom, boolFalse, make_rcp<BooleanAtom>(false));
 
 #if __cplusplus >= 201703L
+template <typename T>
+struct storage_for {
+    alignas(T) std::byte data[sizeof(T)];
+};
 #define DEFINE_CONSTANT(t, n, d)                                               \
-    static alignas(RCP<const t>)                                               \
-        std::byte t_buff[sizeof(RCP<const t>)] n##_buf;                        \
+    static storage_for<RCP<const t>> n##_buf;                                  \
     RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
 #else
 #define DEFINE_CONSTANT(t, n, d)                                               \
