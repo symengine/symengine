@@ -7,6 +7,7 @@
 #ifdef WITH_SYMENGINE_THREAD_SAFE
 #include <atomic>
 #endif
+#include <cstddef>
 
 namespace SymEngine
 {
@@ -89,10 +90,18 @@ static int nifty_counter;
     DEFINE_CONSTANT(BooleanAtom, boolTrue, make_rcp<BooleanAtom>(true));       \
     DEFINE_CONSTANT(BooleanAtom, boolFalse, make_rcp<BooleanAtom>(false));
 
+#if __cplusplus >= 201703L
+#define DEFINE_CONSTANT(t, n, d)                                               \
+    static alignas(RCP<const t>)                                               \
+        std::byte t_buff[sizeof(RCP<const t>)] n##_buf;                        \
+    RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
+#else
 #define DEFINE_CONSTANT(t, n, d)                                               \
     static typename std::aligned_storage<sizeof(RCP<const t>),                 \
                                          alignof(RCP<const t>)>::type n##_buf; \
     RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
+#endif
+
 DEFINE_CONSTANTS
 #undef DEFINE_CONSTANT
 
