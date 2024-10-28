@@ -6,7 +6,7 @@
 namespace SymEngine
 {
 
-extern RCP<const Basic> i2;
+extern RCP<const Basic> &i2;
 
 // Needs create(vec_basic) method to be used.
 template <typename T>

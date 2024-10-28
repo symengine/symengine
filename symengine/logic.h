@@ -40,8 +40,8 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolTrue;
-extern SYMENGINE_EXPORT RCP<const BooleanAtom> boolFalse;
+extern SYMENGINE_EXPORT RCP<const BooleanAtom> &boolTrue;
+extern SYMENGINE_EXPORT RCP<const BooleanAtom> &boolFalse;
 
 inline RCP<const BooleanAtom> boolean(bool b)
 {

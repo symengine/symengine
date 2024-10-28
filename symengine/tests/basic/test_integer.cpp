@@ -1,17 +1,23 @@
 #include "catch.hpp"
 
 #include <symengine/integer.h>
+#include <symengine/mul.h>
 #include <symengine/symengine_exception.h>
 
+using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::integer_class;
 using SymEngine::isqrt;
 using SymEngine::mp_get_hex_str;
 using SymEngine::mp_set_str;
+using SymEngine::neg;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
 using SymEngine::SymEngineException;
+
+RCP<const Basic> i100 = integer(100);
+RCP<const Basic> im100 = neg(i100);
 
 TEST_CASE("isqrt: integer", "[integer]")
 {
