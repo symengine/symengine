@@ -30,6 +30,8 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
                   $cmake_line \
                   -DCMAKE_BUILD_TYPE=Debug \
                   -DCMAKE_INSTALL_PREFIX=$LIBCXX_15_MSAN_ROOT \
+                  -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+                  -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
                   -DLLVM_USE_SANITIZER=MemoryWithOrigins \
                   -DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind;compiler-rt" \
                   -DCOMPILER_RT_BUILD_ORC=OFF \
@@ -94,7 +96,11 @@ if [[ "${TEST_IN_TREE}" != "yes" ]]; then
 fi
 # We build the command line here. If the variable is empty, we skip it,
 # otherwise we pass it to cmake.
-cmake_line="$cmake_line -DCMAKE_INSTALL_PREFIX=$our_install_dir -DCMAKE_PREFIX_PATH=$our_install_dir"
+cmake_line="$cmake_line\
+ -DCMAKE_INSTALL_PREFIX=$our_install_dir\
+ -DCMAKE_PREFIX_PATH=$our_install_dir\
+ -DCMAKE_C_COMPILER_LAUNCHER=ccache\
+ -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 if [[ "${BUILD_TYPE}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 fi
