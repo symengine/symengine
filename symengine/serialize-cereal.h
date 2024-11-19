@@ -290,8 +290,9 @@ inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
     ar(CEREAL_NVP(id));
 
     if (id & cereal::detail::msb_32bit) {
-        ar(ptr->get_type_code());
-        switch (ptr->get_type_code()) {
+        TypeID type_code = ptr->get_type_code();
+        save_typeid(ar, type_code);
+        switch (type_code) {
 #define SYMENGINE_ENUM(type, Class)                                            \
     case type:                                                                 \
         save_basic(ar, static_cast<const Class &>(*ptr));                      \
@@ -661,6 +662,26 @@ RCP<const Basic> load_basic(
                              << "Loading of this type is not implemented.");
 }
 
+template <class Archive>
+inline void save_typeid(Archive &ar, TypeID &t)
+{
+    uint8_t i = t;
+    static_assert(TypeID::TypeID_Count < (1 << 8),
+                  "TypeID cannot be saved to a 8 bit int.");
+    ar(i);
+}
+
+template <class Archive>
+inline void load_typeid(Archive &ar, TypeID &t)
+{
+    uint8_t i;
+    ar(i);
+    if (i >= TypeID::TypeID_Count) {
+        throw SerializationError("TypeID out of range");
+    }
+    t = static_cast<TypeID>(i);
+}
+
 //! Loading for SymEngine::RCP
 template <class Archive, class T>
 inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
@@ -671,12 +692,12 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 
         if (id & cereal::detail::msb_32bit) {
             TypeID type_code;
-            ar(type_code);
+            load_typeid(ar, type_code);
             switch (type_code) {
 #define SYMENGINE_ENUM(type_enum, Class)                                       \
     case type_enum: {                                                          \
         if (not std::is_base_of<T, Class>::value) {                            \
-            throw std::runtime_error("Cannot convert to type.");               \
+            throw SerializationError("Cannot convert to given type");          \
         } else {                                                               \
             RCP<const Class> dummy_ptr;                                        \
             RCP<const Basic> basic_ptr = load_basic(ar, dummy_ptr);            \
@@ -687,7 +708,7 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
                 default:
-                    throw SerializationError("Unknown type");
+                    throw SerializationError("Unknown typeID");
             }
             std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
                 std::make_shared<RCP<const Basic>>(
@@ -695,7 +716,7 @@ inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 
             ar.registerSharedPointer(id, sharedPtr);
         } else if (id == 0) {
-            throw SerializationError("Unknown type");
+            throw SerializationError("Unknown serialization error");
         } else {
             std::shared_ptr<RCP<const Basic>> sharedPtr
                 = std::static_pointer_cast<RCP<const Basic>>(

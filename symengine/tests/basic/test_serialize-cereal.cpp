@@ -78,11 +78,12 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
 TEST_CASE("Test serialization exception", "[serialize-cereal]")
 {
     RCP<const Basic> expr = se::parse("x + y");
-    std::string data = expr->dumps();
-    data[45] = char(5);
-    CHECK_THROWS_AS(Basic::loads(data), se::SerializationError);
+    std::string orig_data = expr->dumps();
+    std::vector<int> positions = {4, 8, 9, 15, 16};
 
-    data = expr->dumps();
-    data[47] = char(5);
-    CHECK_THROWS_AS(Basic::loads(data), se::SerializationError);
+    for (auto &pos : positions) {
+        std::string data = orig_data;
+        data[pos] = char(9);
+        CHECK_THROWS_AS(Basic::loads(data), se::SerializationError);
+    }
 }
