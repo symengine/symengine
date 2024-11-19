@@ -63,6 +63,8 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     // Add
     check_string_serialization_roundtrip(
         se::add(se::symbol("y"), se::integer(3)));
+    check_string_serialization_roundtrip(
+        se::add(se::symbol("y"), se::integer(-3)));
     // Pow
     check_string_serialization_roundtrip(
         se::pow(se::symbol("y"), se::integer(2)));

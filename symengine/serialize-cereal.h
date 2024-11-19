@@ -368,6 +368,17 @@ void load_helper(Archive &ar, integer_class &intgr)
 {
     std::string int_str;
     ar(int_str);
+    if (int_str.size() == 0) {
+        throw SerializationError("invalid integer");
+    }
+    if (not(int_str[0] == '-' or std::isdigit(int_str[0]))) {
+        throw SerializationError("invalid integer");
+    }
+    for (auto it = ++int_str.begin(); it < int_str.end(); it++) {
+        if (not std::isdigit(*it)) {
+            throw SerializationError("invalid integer");
+        }
+    }
     intgr = integer_class(std::move(int_str));
 }
 template <typename Archive>
@@ -404,9 +415,9 @@ RCP<const Basic> load_basic(Archive &ar, const URatPoly &b)
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Integer> &)
 {
-    std::string int_str;
-    ar(int_str);
-    return integer(integer_class(int_str));
+    integer_class c;
+    load_helper(ar, c);
+    return integer(std::move(c));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Constant> &)
