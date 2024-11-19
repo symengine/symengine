@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include <symengine/basic.h>
+#include <symengine/parser.h>
 #include <symengine/serialize-cereal.h>
 #include <cereal/archives/binary.hpp>
 
@@ -72,4 +73,16 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     check_string_serialization_roundtrip(
         real_mpfr(mpfr_class("0.35", 100, 10)));
 #endif
+}
+
+TEST_CASE("Test serialization exception", "[serialize-cereal]")
+{
+    RCP<const Basic> expr = se::parse("x + y");
+    std::string data = expr->dumps();
+    data[45] = char(5);
+    CHECK_THROWS_AS(Basic::loads(data), se::SerializationError);
+
+    data = expr->dumps();
+    data[47] = char(5);
+    CHECK_THROWS_AS(Basic::loads(data), se::SerializationError);
 }

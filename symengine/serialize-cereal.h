@@ -665,37 +665,46 @@ RCP<const Basic> load_basic(
 template <class Archive, class T>
 inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 {
-    uint32_t id;
-    ar(CEREAL_NVP(id));
+    try {
+        uint32_t id;
+        ar(CEREAL_NVP(id));
 
-    if (id & cereal::detail::msb_32bit) {
-        TypeID type_code;
-        ar(type_code);
-        switch (type_code) {
+        if (id & cereal::detail::msb_32bit) {
+            TypeID type_code;
+            ar(type_code);
+            switch (type_code) {
 #define SYMENGINE_ENUM(type_enum, Class)                                       \
     case type_enum: {                                                          \
         if (not std::is_base_of<T, Class>::value) {                            \
             throw std::runtime_error("Cannot convert to type.");               \
         } else {                                                               \
             RCP<const Class> dummy_ptr;                                        \
-            ptr = rcp_static_cast<const T>(                                    \
-                rcp_static_cast<const Basic>(load_basic(ar, dummy_ptr)));      \
+            RCP<const Basic> basic_ptr = load_basic(ar, dummy_ptr);            \
+            ptr = rcp_dynamic_cast<const T>(basic_ptr);                        \
             break;                                                             \
         }                                                                      \
     }
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
-            default:
-                throw std::runtime_error("Unknown type");
-        }
-        std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
-            std::make_shared<RCP<const Basic>>(ptr));
+                default:
+                    throw SerializationError("Unknown type");
+            }
+            std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
+                std::make_shared<RCP<const Basic>>(
+                    rcp_static_cast<const Basic>(ptr)));
 
-        ar.registerSharedPointer(id, sharedPtr);
-    } else {
-        std::shared_ptr<RCP<const T>> sharedPtr
-            = std::static_pointer_cast<RCP<const T>>(ar.getSharedPointer(id));
-        ptr = *sharedPtr.get();
+            ar.registerSharedPointer(id, sharedPtr);
+        } else if (id == 0) {
+            throw SerializationError("Unknown type");
+        } else {
+            std::shared_ptr<RCP<const Basic>> sharedPtr
+                = std::static_pointer_cast<RCP<const Basic>>(
+                    ar.getSharedPointer(id));
+            RCP<const Basic> basic_ptr = *sharedPtr.get();
+            ptr = rcp_dynamic_cast<const T>(basic_ptr);
+        }
+    } catch (cereal::Exception &e) {
+        throw SerializationError(e.what());
     }
 }
 } // namespace SymEngine
