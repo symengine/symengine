@@ -1,5 +1,8 @@
 #ifndef SYMENGINE_SERIALIZE_CEREAL_H
 #define SYMENGINE_SERIALIZE_CEREAL_H
+
+#include <cctype>
+
 #include <symengine/basic.h>
 #include <symengine/number.h>
 #include <symengine/integer.h>
