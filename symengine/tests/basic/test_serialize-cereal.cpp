@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
 #include <symengine/basic.h>
+#include <symengine/parser.h>
 #include <symengine/serialize-cereal.h>
 #include <cereal/archives/binary.hpp>
 
@@ -62,6 +63,8 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     // Add
     check_string_serialization_roundtrip(
         se::add(se::symbol("y"), se::integer(3)));
+    check_string_serialization_roundtrip(
+        se::add(se::symbol("y"), se::integer(-3)));
     // Pow
     check_string_serialization_roundtrip(
         se::pow(se::symbol("y"), se::integer(2)));
@@ -72,4 +75,19 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     check_string_serialization_roundtrip(
         real_mpfr(mpfr_class("0.35", 100, 10)));
 #endif
+}
+
+TEST_CASE("Test serialization exception", "[serialize-cereal]")
+{
+    RCP<const Basic> expr = se::parse("x + y");
+    std::string orig_data = expr->dumps();
+    // These positions were chosen because they do not try to create an object
+    // that fails asserts.
+    std::vector<int> positions = {4, 8, 9, 15, 16};
+
+    for (auto &pos : positions) {
+        std::string data = orig_data;
+        data[pos] = char(9);
+        CHECK_THROWS_AS(Basic::loads(data), se::SerializationError);
+    }
 }
