@@ -81,6 +81,8 @@ TEST_CASE("Test serialization exception", "[serialize-cereal]")
 {
     RCP<const Basic> expr = se::parse("x + y");
     std::string orig_data = expr->dumps();
+    // These positions were chosen because they do not try to create an object
+    // that fails asserts.
     std::vector<int> positions = {4, 8, 9, 15, 16};
 
     for (auto &pos : positions) {
