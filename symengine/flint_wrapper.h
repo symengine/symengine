@@ -241,7 +241,8 @@ public:
     mpz_view_flint(const fmpz_wrapper &i)
     {
         if (!COEFF_IS_MPZ(*i.get_fmpz_t())) {
-            mpz_init_set_si(m, *i.get_fmpz_t());
+            mpz_init(m);
+            fmpz_get_mpz(m, i.get_fmpz_t());
         } else {
             ptr = COEFF_TO_PTR(*i.get_fmpz_t());
         }
