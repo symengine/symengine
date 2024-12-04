@@ -138,3 +138,8 @@ add_test(test_tuple ${PROJECT_BINARY_DIR}/test_tuple)
 add_executable(test_tribool test_tribool.cpp)
 target_link_libraries(test_tribool symengine catch)
 add_test(test_tribool ${PROJECT_BINARY_DIR}/test_tribool)
+
+# tests for integrals
+add_executable(test_integral test_integral.cpp)
+target_link_libraries(test_integral symengine catch)
+add_test(test_integral ${PROJECT_BINARY_DIR}/test_integral)
