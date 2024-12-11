@@ -125,6 +125,15 @@ public:
         }
     }
 
+// The GCC diagnostic pragma below is only used to allow
+// gcc-13+ to be used in CI without dropping -Werror, we should fix the warning
+// and remove these preprocessor macros. Tracking issue:
+// symengine/symengine#2027
+#if defined(__GNUC__) && (__GNUC__ >= 13)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverloaded-virtual"
+#endif
+
     RCP<const Number> pow(const Number &other) const override
     {
         auto deg = degree_;
@@ -162,6 +171,10 @@ public:
             Series::var(var_), deg);
         return make_rcp<Series>(p, var_, deg);
     }
+
+#if defined(__GNUC__) && (__GNUC__ >= 13)
+#pragma GCC diagnostic pop
+#endif
 
     RCP<const Number> rpow(const Number &other) const override
     {

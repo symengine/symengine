@@ -289,9 +289,9 @@ public:
     friend void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
                                                          const DenseMatrix &b,
                                                          DenseMatrix &x);
-    friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                                 const DenseMatrix &b,
-                                                 DenseMatrix &x, bool pivot);
+    friend int fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+                                                const DenseMatrix &b,
+                                                DenseMatrix &x, bool pivot);
 
     // Matrix Decomposition
     friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
@@ -318,7 +318,7 @@ public:
     friend void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_LU(const DenseMatrix &A, DenseMatrix &B);
     friend void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B);
-    friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+    friend int inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
     // Vector-specific methods
     friend void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
@@ -527,15 +527,15 @@ void cholesky(const DenseMatrix &A, DenseMatrix &L);
 // Inverse
 void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
 
-void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+int inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
 
 // Solving Ax = b
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                             DenseMatrix &x);
 
-void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                      const DenseMatrix &b, DenseMatrix &x,
-                                      bool pivot = true);
+int fraction_free_gauss_jordan_solve(const DenseMatrix &A,
+                                     const DenseMatrix &b, DenseMatrix &x,
+                                     bool pivot = true);
 
 void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
 void pivoted_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
