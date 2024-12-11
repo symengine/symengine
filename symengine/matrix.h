@@ -131,6 +131,12 @@ public:
         return col_;
     }
 
+    //! Returns a string of the instance serialized.
+    std::string dumps() const;
+
+    //! Creates an instance of a serialized string.
+    static DenseMatrix loads(const std::string &);
+
     virtual bool is_lower() const;
     virtual bool is_upper() const;
     virtual tribool is_zero() const;

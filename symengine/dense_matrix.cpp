@@ -3,6 +3,7 @@
 #include <symengine/add.h>
 #include <symengine/functions.h>
 #include <symengine/pow.h>
+#include <symengine/serialize-cereal.h>
 #include <symengine/subs.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/polys/uexprpoly.h>
@@ -2054,6 +2055,35 @@ void zeros(DenseMatrix &A)
     for (unsigned i = 0; i < A.row_ * A.col_; i++) {
         A.m_[i] = zero;
     }
+}
+
+std::string DenseMatrix::dumps() const
+{
+    std::ostringstream oss;
+    unsigned short major = SYMENGINE_MAJOR_VERSION;
+    unsigned short minor = SYMENGINE_MINOR_VERSION;
+    cereal::PortableBinaryOutputArchive{oss}(major, minor, row_, col_, m_);
+    return oss.str();
+}
+
+DenseMatrix DenseMatrix::loads(const std::string &serialized)
+{
+    unsigned short major, minor;
+    unsigned row, col;
+    vec_basic obj;
+    std::istringstream iss(serialized);
+    cereal::PortableBinaryInputArchive iarchive{iss};
+    iarchive(major, minor);
+    if (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {
+        throw SerializationError(StreamFmt()
+                                 << "SymEngine-" << SYMENGINE_MAJOR_VERSION
+                                 << "." << SYMENGINE_MINOR_VERSION
+                                 << " was asked to deserialize an object "
+                                 << "created using SymEngine-" << major << "."
+                                 << minor << ".");
+    }
+    iarchive(row, col, obj);
+    return DenseMatrix(row, col, std::move(obj));
 }
 
 } // namespace SymEngine
