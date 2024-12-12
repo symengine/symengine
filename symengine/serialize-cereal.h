@@ -37,7 +37,7 @@ public:
         (*this)(addr);
 
         auto id = _addresses.find(addr);
-        bool first_seen = (id == _addresses.end());
+        int8_t first_seen = (id == _addresses.end());
         (*this)(first_seen);
 
         if (not first_seen) {
@@ -77,7 +77,7 @@ public:
             uintptr_t addr;
             (*this)(addr);
 
-            bool first_seen;
+            int8_t first_seen;
             (*this)(first_seen);
 
             if (not first_seen) {
