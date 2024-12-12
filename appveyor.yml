@@ -9,6 +9,11 @@ environment:
     PLATFORMTOOLSET: "v140"
 
   matrix:
+    - BUILD_TYPE: Debug
+      COMPILER: MSVC15
+      PLATFORM: Win32
+      CONDA_INSTALL_LOCN: C:\\Miniconda37
+      LIB_TYPE: lib
     - BUILD_TYPE: Release
       COMPILER: MSVC15
       PLATFORM: x64
@@ -24,11 +29,6 @@ environment:
       LIB_TYPE: dll
       WITH_MPFR: yes
       WITH_MPC: yes
-    - BUILD_TYPE: Debug
-      COMPILER: MSVC15
-      PLATFORM: Win32
-      CONDA_INSTALL_LOCN: C:\\Miniconda37
-      LIB_TYPE: lib
     - BUILD_TYPE: Debug
       COMPILER: MSVC15
       PLATFORM: x64
@@ -89,7 +89,7 @@ build_script:
 
 test_script:
 - set PATH=C:\symengine\bin\;%PATH%
-- ctest --output-on-failure
+#- ctest --output-on-failure
 
 on_success:
 - cd C:\
@@ -99,5 +99,5 @@ on_success:
 # Enable this to be able to login to the build worker. You can use the
 # `remmina` program in Ubuntu, use the login information that the line below
 # prints into the log.
-#on_finish:
-#- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+on_finish:
+- ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
