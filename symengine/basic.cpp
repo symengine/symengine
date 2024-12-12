@@ -53,8 +53,8 @@ std::string Basic::dumps() const
     std::ostringstream oss;
     unsigned short major = SYMENGINE_MAJOR_VERSION;
     unsigned short minor = SYMENGINE_MINOR_VERSION;
-    cereal::PortableBinaryOutputArchive{oss}(major, minor,
-                                             this->rcp_from_this());
+    RCPBasicAwareOutputArchive<cereal::PortableBinaryOutputArchive>{oss}(
+        major, minor, this->rcp_from_this());
     return oss.str();
 }
 
@@ -63,7 +63,7 @@ RCP<const Basic> Basic::loads(const std::string &serialized)
     unsigned short major, minor;
     RCP<const Basic> obj;
     std::istringstream iss(serialized);
-    cereal::PortableBinaryInputArchive iarchive{iss};
+    RCPBasicAwareInputArchive<cereal::PortableBinaryInputArchive> iarchive{iss};
     iarchive(major, minor);
     if (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {
         throw SerializationError(StreamFmt()
