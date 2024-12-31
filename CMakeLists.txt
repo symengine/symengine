@@ -778,7 +778,7 @@ message("WITH_LLVM: ${WITH_LLVM}")
 if (WITH_LLVM)
     message("LLVM VERSION: ${LLVM_VERSION}")
     message("LLVM_INCLUDE_DIRS: ${LLVM_INCLUDE_DIRS}")
-    message("WITH_LLVM DYLIB: ${WITH_LLVM_DYLIB}")
+    message("WITH_LLVM_DYLIB: ${WITH_LLVM_DYLIB}")
 endif()
 
 message("WITH_BOOST: ${WITH_BOOST}")
