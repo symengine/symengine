@@ -106,7 +106,7 @@ Here are all the `CMake` options that you can use to configure the build, with
 their default values are indicated below:
 
     cmake -DCMAKE_INSTALL_PREFIX:PATH="/usr/local" \  # Installation prefix
-        -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug or Release
+        -DCMAKE_BUILD_TYPE:STRING="Release" \         # Type of build, one of: Debug, Release, RelWithDebInfo, MinSizeRel
         -DWITH_BFD:BOOL=OFF \                         # Install with BFD library (requires binutils-dev)s
         -DWITH_SYMENGINE_ASSERT:BOOL=OFF \            # Test all SYMENGINE_ASSERT statements in the code
         -DWITH_SYMENGINE_RCP:BOOL=ON \                # Use our faster special implementation of RCP
