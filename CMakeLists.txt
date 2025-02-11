@@ -612,7 +612,7 @@ else()
     set(DEF_INSTALL_CMAKE_DIR lib/cmake/symengine)
     set(DEF_INSTALL_CMAKE_DIR_REL ../../..)
 endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE STRING
     "Installation directory for CMake files")
 
 if (TARGET teuchos)
