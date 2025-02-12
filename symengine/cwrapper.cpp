@@ -18,8 +18,8 @@ using SymEngine::LLVMLongDoubleVisitor;
 #endif
 #endif
 
-#define xstr(s) str(s)
-#define str(s) #s
+#define xstr(s) ystr(s)
+#define ystr(s) #s
 
 using SymEngine::Add;
 using SymEngine::Basic;

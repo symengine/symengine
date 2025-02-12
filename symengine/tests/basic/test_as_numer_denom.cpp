@@ -1,7 +1,8 @@
 #include "catch.hpp"
 
 #include <symengine/eval_double.h>
-#include <symengine/numer_denom.cpp>
+#include <symengine/basic.h>
+#include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Add;
