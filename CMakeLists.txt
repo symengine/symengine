@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.13)
 
 if (POLICY CMP0074)
   cmake_policy(SET CMP0074 NEW)
@@ -26,9 +26,12 @@ if (NOT CMAKE_BUILD_TYPE)
         CACHE STRING "Build type (Debug, Release)" FORCE)
 endif ()
 if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
-        CMAKE_BUILD_TYPE STREQUAL "Release"))
+         CMAKE_BUILD_TYPE STREQUAL "Release" OR
+         CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR
+         CMAKE_BUILD_TYPE STREQUAL "MinSizeRel"))
     message("${CMAKE_BUILD_TYPE}")
-    message(FATAL_ERROR "CMAKE_BUILD_TYPE must be one of: Debug, Release (current value: '${CMAKE_BUILD_TYPE}')")
+    message(FATAL_ERROR
+            "CMAKE_BUILD_TYPE must be one of: Debug, Release, RelWithDebInfo, MinSizeRel (current value: '${CMAKE_BUILD_TYPE}')")
 endif ()
 
 set(BUILD_FOR_DISTRIBUTION no
@@ -140,7 +143,7 @@ endif()
 try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkstdtostring.cpp"
 	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}")
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
+if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (NOT CMAKE_BUILD_TYPE STREQUAL "Debug"))
     try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkclang.cpp")
     if (NOT ${CHECK_CLANG})
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__extern_always_inline=inline" )
@@ -615,7 +618,7 @@ else()
     set(DEF_INSTALL_CMAKE_DIR lib/cmake/symengine)
     set(DEF_INSTALL_CMAKE_DIR_REL ../../..)
 endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE STRING
     "Installation directory for CMake files")
 
 if (TARGET teuchos)
