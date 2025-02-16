@@ -89,15 +89,15 @@ TEST_CASE("Test serialization exception", "[serialize-cereal]")
 
     // These positions were chosen because they do not try to create an object
     // that throws std::bad_alloc
-
-#if defined(_MSC_VER) && defined(_DEBUG) && !defined(_WIN64)
-    std::vector<int> positions = {29, 30, 31, 32};
-#else
     std::vector<int> positions
         = {29, 30, 31, 32, 56, 57, 58, 59, 75, 76, 77, 78, 94, 95, 96, 97};
+#if defined(_MSC_VER) && defined(_DEBUG) && !defined(_WIN64)
+    size_t end = 55;
+#else
+    size_t end = orig_data.size();
 #endif
 
-    for (size_t pos = 0; pos < orig_data.size(); pos++) {
+    for (size_t pos = 0; pos < end; pos++) {
         if (std::find(positions.begin(), positions.end(), pos)
             != positions.end()) {
             continue;
