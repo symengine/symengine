@@ -91,7 +91,7 @@ TEST_CASE("Test serialization exception", "[serialize-cereal]")
     // that throws std::bad_alloc
     std::vector<int> positions
         = {29, 30, 31, 32, 56, 57, 58, 59, 75, 76, 77, 78, 94, 95, 96, 97};
-#if defined(_MSC_VER) && defined(_DEBUG) && !defined(_WIN64)
+#if defined(_MSC_VER) && defined(_DEBUG)
     size_t end = 55;
 #else
     size_t end = orig_data.size();
