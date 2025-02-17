@@ -11,13 +11,12 @@ jobs:
         include:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
-            WITH_LATEST_GCC: yes
             WITH_COVERAGE: yes
             WITH_MPC: yes
             USE_GLIBCXX_DEBUG: yes
-            OS: ubuntu-22.04
-            CC: gcc
-            EXTRA_APT_PACKAGES: g++-12 gcc-12
+            OS: ubuntu-24.04
+            CC: gcc-14
+            EXTRA_APT_PACKAGES: g++-14 gcc-14
 
           - BUILD_TYPE: Debug
             WITH_BFD: yes
@@ -26,14 +25,14 @@ jobs:
             WITH_FLINT: yes
             WITH_FLINT_DEV: yes
             WITH_MPC: yes
-            CC: gcc
-            OS: ubuntu-20.04
+            CC: gcc  # gcc-13 in noble (24.04)
+            OS: ubuntu-24.04
 
             # Debug build (with BFD)
           - BUILD_TYPE: Debug
             WITH_BFD: yes
-            OS: ubuntu-20.04
-            CC: gcc
+            OS: ubuntu-22.04
+            CC: gcc  # gcc-11 in jammy (22.04)
 
           # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
           - BUILD_TYPE: Debug
@@ -74,8 +73,7 @@ jobs:
             WITH_BFD: yes
             INTEGER_CLASS: boostmp
             OS: ubuntu-22.04
-            WITH_LATEST_GCC: yes
-            CC: gcc
+            CC: gcc-12
             EXTRA_APT_PACKAGES: g++-12 gcc-12
 
           # Debug build shared lib (with BFD)
@@ -108,7 +106,6 @@ jobs:
           - BUILD_TYPE: Release
             OS: ubuntu-24.04
             CC: clang-18
-            CXX: clang++-18
             WITH_LLVM: 18
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble-18 main'
             EXTRA_APT_PACKAGES: clang-18 llvm-18
@@ -249,18 +246,16 @@ jobs:
       EXTRA_APT_PACKAGES: ${{ matrix.EXTRA_APT_PACKAGES }}
       TEST_CLANG_FORMAT: ${{ matrix.TEST_CLANG_FORMAT }}
       WITH_ECM: ${{ matrix.WITH_ECM }}
-      WITH_LATEST_GCC: ${{ matrix.WITH_LATEST_GCC }}
       OS: ${{ matrix.OS }}
       WITH_FLINT_DEV: ${{ matrix.WITH_FLINT_DEV }}
       CC: ${{ matrix.CC }}
-      CXX: ${{ matrix.CXX }}
       WITH_COTIRE: ${{ matrix.WITH_COTIRE }}
       WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
       WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
       WITH_MPC: ${{ matrix.WITH_MPC }}
       BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
-      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.CONDA_ENV_FILE }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.TEST_CLANG_FORMAT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_COTIRE }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}
+      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.CONDA_ENV_FILE }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.TEST_CLANG_FORMAT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_COTIRE }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}
       CCACHE_DIR: 'D:\a\_temp\msys\msys64\home\runneradmin\.ccache'
 
     steps:
