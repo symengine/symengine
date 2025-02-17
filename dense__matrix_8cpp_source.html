@@ -2162,31 +2162,32 @@ $(function() {
 <div class="line"><a name="l02062"></a><span class="lineno"> 2062</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> oss;</div>
 <div class="line"><a name="l02063"></a><span class="lineno"> 2063</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major = SYMENGINE_MAJOR_VERSION;</div>
 <div class="line"><a name="l02064"></a><span class="lineno"> 2064</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> minor = SYMENGINE_MINOR_VERSION;</div>
-<div class="line"><a name="l02065"></a><span class="lineno"> 2065</span>&#160;    cereal::PortableBinaryOutputArchive{oss}(major, minor, row_, col_, m_);</div>
-<div class="line"><a name="l02066"></a><span class="lineno"> 2066</span>&#160;    <span class="keywordflow">return</span> oss.<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
-<div class="line"><a name="l02067"></a><span class="lineno"> 2067</span>&#160;}</div>
-<div class="line"><a name="l02068"></a><span class="lineno"> 2068</span>&#160; </div>
-<div class="line"><a name="l02069"></a><span class="lineno"><a class="line" href="classSymEngine_1_1DenseMatrix.html#aa2a78b6ae52c80319f67464d2d696b1e"> 2069</a></span>&#160;<a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> DenseMatrix::loads(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;serialized)</div>
-<div class="line"><a name="l02070"></a><span class="lineno"> 2070</span>&#160;{</div>
-<div class="line"><a name="l02071"></a><span class="lineno"> 2071</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major, minor;</div>
-<div class="line"><a name="l02072"></a><span class="lineno"> 2072</span>&#160;    <span class="keywordtype">unsigned</span> row, col;</div>
-<div class="line"><a name="l02073"></a><span class="lineno"> 2073</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> obj;</div>
-<div class="line"><a name="l02074"></a><span class="lineno"> 2074</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a> iss(serialized);</div>
-<div class="line"><a name="l02075"></a><span class="lineno"> 2075</span>&#160;    cereal::PortableBinaryInputArchive iarchive{iss};</div>
-<div class="line"><a name="l02076"></a><span class="lineno"> 2076</span>&#160;    iarchive(major, minor);</div>
-<div class="line"><a name="l02077"></a><span class="lineno"> 2077</span>&#160;    <span class="keywordflow">if</span> (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {</div>
-<div class="line"><a name="l02078"></a><span class="lineno"> 2078</span>&#160;        <span class="keywordflow">throw</span> SerializationError(StreamFmt()</div>
-<div class="line"><a name="l02079"></a><span class="lineno"> 2079</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;SymEngine-&quot;</span> &lt;&lt; SYMENGINE_MAJOR_VERSION</div>
-<div class="line"><a name="l02080"></a><span class="lineno"> 2080</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; SYMENGINE_MINOR_VERSION</div>
-<div class="line"><a name="l02081"></a><span class="lineno"> 2081</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot; was asked to deserialize an object &quot;</span></div>
-<div class="line"><a name="l02082"></a><span class="lineno"> 2082</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;created using SymEngine-&quot;</span> &lt;&lt; major &lt;&lt; <span class="stringliteral">&quot;.&quot;</span></div>
-<div class="line"><a name="l02083"></a><span class="lineno"> 2083</span>&#160;                                 &lt;&lt; minor &lt;&lt; <span class="stringliteral">&quot;.&quot;</span>);</div>
-<div class="line"><a name="l02084"></a><span class="lineno"> 2084</span>&#160;    }</div>
-<div class="line"><a name="l02085"></a><span class="lineno"> 2085</span>&#160;    iarchive(row, col, obj);</div>
-<div class="line"><a name="l02086"></a><span class="lineno"> 2086</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a>(row, col, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(obj));</div>
-<div class="line"><a name="l02087"></a><span class="lineno"> 2087</span>&#160;}</div>
-<div class="line"><a name="l02088"></a><span class="lineno"> 2088</span>&#160; </div>
-<div class="line"><a name="l02089"></a><span class="lineno"> 2089</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l02065"></a><span class="lineno"> 2065</span>&#160;    <a class="code" href="classSymEngine_1_1RCPBasicAwareOutputArchive.html">RCPBasicAwareOutputArchive&lt;cereal::PortableBinaryOutputArchive&gt;</a>{oss}(</div>
+<div class="line"><a name="l02066"></a><span class="lineno"> 2066</span>&#160;        major, minor, row_, col_, m_);</div>
+<div class="line"><a name="l02067"></a><span class="lineno"> 2067</span>&#160;    <span class="keywordflow">return</span> oss.<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><a name="l02068"></a><span class="lineno"> 2068</span>&#160;}</div>
+<div class="line"><a name="l02069"></a><span class="lineno"> 2069</span>&#160; </div>
+<div class="line"><a name="l02070"></a><span class="lineno"><a class="line" href="classSymEngine_1_1DenseMatrix.html#aa2a78b6ae52c80319f67464d2d696b1e"> 2070</a></span>&#160;<a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> DenseMatrix::loads(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;serialized)</div>
+<div class="line"><a name="l02071"></a><span class="lineno"> 2071</span>&#160;{</div>
+<div class="line"><a name="l02072"></a><span class="lineno"> 2072</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major, minor;</div>
+<div class="line"><a name="l02073"></a><span class="lineno"> 2073</span>&#160;    <span class="keywordtype">unsigned</span> row, col;</div>
+<div class="line"><a name="l02074"></a><span class="lineno"> 2074</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> obj;</div>
+<div class="line"><a name="l02075"></a><span class="lineno"> 2075</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a> iss(serialized);</div>
+<div class="line"><a name="l02076"></a><span class="lineno"> 2076</span>&#160;    <a class="code" href="classSymEngine_1_1RCPBasicAwareInputArchive.html">RCPBasicAwareInputArchive&lt;cereal::PortableBinaryInputArchive&gt;</a> iarchive{iss};</div>
+<div class="line"><a name="l02077"></a><span class="lineno"> 2077</span>&#160;    iarchive(major, minor);</div>
+<div class="line"><a name="l02078"></a><span class="lineno"> 2078</span>&#160;    <span class="keywordflow">if</span> (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {</div>
+<div class="line"><a name="l02079"></a><span class="lineno"> 2079</span>&#160;        <span class="keywordflow">throw</span> SerializationError(StreamFmt()</div>
+<div class="line"><a name="l02080"></a><span class="lineno"> 2080</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;SymEngine-&quot;</span> &lt;&lt; SYMENGINE_MAJOR_VERSION</div>
+<div class="line"><a name="l02081"></a><span class="lineno"> 2081</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;.&quot;</span> &lt;&lt; SYMENGINE_MINOR_VERSION</div>
+<div class="line"><a name="l02082"></a><span class="lineno"> 2082</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot; was asked to deserialize an object &quot;</span></div>
+<div class="line"><a name="l02083"></a><span class="lineno"> 2083</span>&#160;                                 &lt;&lt; <span class="stringliteral">&quot;created using SymEngine-&quot;</span> &lt;&lt; major &lt;&lt; <span class="stringliteral">&quot;.&quot;</span></div>
+<div class="line"><a name="l02084"></a><span class="lineno"> 2084</span>&#160;                                 &lt;&lt; minor &lt;&lt; <span class="stringliteral">&quot;.&quot;</span>);</div>
+<div class="line"><a name="l02085"></a><span class="lineno"> 2085</span>&#160;    }</div>
+<div class="line"><a name="l02086"></a><span class="lineno"> 2086</span>&#160;    iarchive(row, col, obj);</div>
+<div class="line"><a name="l02087"></a><span class="lineno"> 2087</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a>(row, col, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(obj));</div>
+<div class="line"><a name="l02088"></a><span class="lineno"> 2088</span>&#160;}</div>
+<div class="line"><a name="l02089"></a><span class="lineno"> 2089</span>&#160; </div>
+<div class="line"><a name="l02090"></a><span class="lineno"> 2090</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
 <div class="ttc" id="abasic_istringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a></div></div>
 <div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
@@ -2195,6 +2196,8 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::Add::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1DenseMatrix_html"><div class="ttname"><a href="classSymEngine_1_1DenseMatrix.html">SymEngine::DenseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="matrix_8h_source.html#l00104">matrix.h:105</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareInputArchive_html"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareInputArchive.html">SymEngine::RCPBasicAwareInputArchive</a></div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00068">serialize-cereal.h:69</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareOutputArchive_html"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareOutputArchive.html">SymEngine::RCPBasicAwareOutputArchive</a></div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00029">serialize-cereal.h:30</a></div></div>
 <div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/clear.html">std::vector::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
 <div class="ttc" id="adiv_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/div.html">std::div</a></div><div class="ttdeci">T div(T... args)</div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
