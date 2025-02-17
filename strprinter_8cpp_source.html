@@ -603,7 +603,7 @@ $(function() {
 <div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    RCP&lt;const Number&gt; imag = x.imaginary_part();</div>
 <div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    <span class="keywordflow">if</span> (imag-&gt;is_negative()) {</div>
 <div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = this-&gt;apply(imag);</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        str = str.substr(1, str.length() - 1);</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;        str = str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(1, str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() - 1);</div>
 <div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;        str_ = this-&gt;apply(x.real_part()) + <span class="stringliteral">&quot; - &quot;</span> + str + print_mul()</div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;               + get_imag_symbol();</div>
 <div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    } <span class="keywordflow">else</span> {</div>
@@ -1320,7 +1320,7 @@ $(function() {
 <div class="ttc" id="anumeric_limits_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits</a></div></div>
 <div class="ttc" id="aprecision_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/ios_base/precision.html">std::ostringstream::precision</a></div><div class="ttdeci">T precision(T... args)</div></div>
 <div class="ttc" id="around_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/round.html">std::lround</a></div><div class="ttdeci">T lround(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">std::string::size</a></div><div class="ttdeci">T size(T... args)</div></div>
+<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">std::string::length</a></div><div class="ttdeci">T length(T... args)</div></div>
 <div class="ttc" id="astr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">std::ostringstream::str</a></div><div class="ttdeci">T str(T... args)</div></div>
 <div class="ttc" id="astructSymEngine_1_1PrinterBasicCmp_html"><div class="ttname"><a href="structSymEngine_1_1PrinterBasicCmp.html">SymEngine::PrinterBasicCmp</a></div><div class="ttdoc">Less operator (&lt;) using cmp:</div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8cpp_source.html#l00008">strprinter.cpp:8</a></div></div>
 <div class="ttc" id="astructSymEngine_1_1PrinterBasicCmp_html_a1fe4897b01a7c8b4270566cd5098f608"><div class="ttname"><a href="structSymEngine_1_1PrinterBasicCmp.html#a1fe4897b01a7c8b4270566cd5098f608">SymEngine::PrinterBasicCmp::operator()</a></div><div class="ttdeci">bool operator()(const RCP&lt; const Basic &gt; &amp;x, const RCP&lt; const Basic &gt; &amp;y) const</div><div class="ttdoc">true if x &lt; y, false otherwise</div><div class="ttdef"><b>Definition:</b> <a href="strprinter_8cpp_source.html#l00010">strprinter.cpp:10</a></div></div>

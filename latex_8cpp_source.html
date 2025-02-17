@@ -215,7 +215,7 @@ $(function() {
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    RCP&lt;const Number&gt; imag = x.imaginary_part();</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">if</span> (imag-&gt;is_negative()) {</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = apply(imag);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        str = str.substr(1, str.length() - 1);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        str = str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/substr.html">substr</a>(1, str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() - 1);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        str_ = apply(x.real_part()) + <span class="stringliteral">&quot; - &quot;</span> + str + <span class="stringliteral">&quot;j&quot;</span>;</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;        str_ = apply(x.real_part()) + <span class="stringliteral">&quot; + &quot;</span> + apply(imag) + <span class="stringliteral">&quot;j&quot;</span>;</div>
