@@ -1,6 +1,7 @@
 #include "catch.hpp"
 
-#include <symengine/as_real_imag.cpp>
+#include <symengine/visitor.h>
+#include <symengine/basic.h>
 #include <symengine/symengine_casts.h>
 
 using SymEngine::Abs;
