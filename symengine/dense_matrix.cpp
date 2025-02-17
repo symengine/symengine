@@ -2062,7 +2062,8 @@ std::string DenseMatrix::dumps() const
     std::ostringstream oss;
     unsigned short major = SYMENGINE_MAJOR_VERSION;
     unsigned short minor = SYMENGINE_MINOR_VERSION;
-    cereal::PortableBinaryOutputArchive{oss}(major, minor, row_, col_, m_);
+    RCPBasicAwareOutputArchive<cereal::PortableBinaryOutputArchive>{oss}(
+        major, minor, row_, col_, m_);
     return oss.str();
 }
 
@@ -2072,7 +2073,7 @@ DenseMatrix DenseMatrix::loads(const std::string &serialized)
     unsigned row, col;
     vec_basic obj;
     std::istringstream iss(serialized);
-    cereal::PortableBinaryInputArchive iarchive{iss};
+    RCPBasicAwareInputArchive<cereal::PortableBinaryInputArchive> iarchive{iss};
     iarchive(major, minor);
     if (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {
         throw SerializationError(StreamFmt()
