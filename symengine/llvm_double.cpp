@@ -52,6 +52,12 @@ using CodeGenOptLevel = llvm::CodeGenOpt::Level;
 using CodeGenOptLevel = llvm::CodeGenOptLevel;
 #endif
 
+#if (LLVM_VERSION_MAJOR >= 21)
+#define AddNoCapture(A) A.addCapturesAttr(llvm::CaptureInfo::none())
+#else
+#define AddNoCapture(A) A.addAttribute(llvm::Attribute::NoCapture)
+#endif
+
 class IRBuilder : public llvm::IRBuilder<>
 {
 };
@@ -89,14 +95,14 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
         {
             llvm::AttrBuilder B;
             B.addAttribute(llvm::Attribute::ReadOnly);
-            B.addAttribute(llvm::Attribute::NoCapture);
+            AddNoCapture(B);
             PAS = llvm::AttributeSet::get(mod->getContext(), 1U, B);
         }
 
         attrs.push_back(PAS);
         {
             llvm::AttrBuilder B;
-            B.addAttribute(llvm::Attribute::NoCapture);
+            AddNoCapture(B);
             PAS = llvm::AttributeSet::get(mod->getContext(), 2U, B);
         }
 
@@ -114,8 +120,15 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
     }
 #else
     F->addParamAttr(0, llvm::Attribute::ReadOnly);
+#if (LLVM_VERSION_MAJOR >= 21)
+    F->addParamAttr(1, llvm::Attribute::getWithCaptureInfo(
+                           *context, llvm::CaptureInfo::none()));
+    F->addParamAttr(0, llvm::Attribute::getWithCaptureInfo(
+                           *context, llvm::CaptureInfo::none()));
+#else
     F->addParamAttr(0, llvm::Attribute::NoCapture);
     F->addParamAttr(1, llvm::Attribute::NoCapture);
+#endif
     F->addFnAttr(llvm::Attribute::NoUnwind);
 #if (LLVM_VERSION_MAJOR < 15)
     F->addFnAttr(llvm::Attribute::UWTable);

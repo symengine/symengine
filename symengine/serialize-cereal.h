@@ -26,6 +26,117 @@ namespace SymEngine
 {
 
 template <class Archive>
+class RCPBasicAwareOutputArchive : public Archive
+{
+    using Archive::Archive;
+
+public:
+    void save_rcp_basic(const RCP<const Basic> &ptr)
+    {
+        uintptr_t addr = (uintptr_t)(void *)ptr.get();
+        (*this)(addr);
+
+        auto id = _addresses.find(addr);
+        uint8_t first_seen = (id == _addresses.end());
+        (*this)(first_seen);
+
+        if (not first_seen) {
+            return;
+        }
+        TypeID type_code = ptr->get_type_code();
+        save_typeid(*this, type_code);
+        switch (type_code) {
+#define SYMENGINE_ENUM(type, Class)                                            \
+    case type:                                                                 \
+        save_basic(*this, static_cast<const Class &>(*ptr));                   \
+        break;
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+            default:
+                save_basic(*this, *ptr);
+        }
+        _addresses.insert(addr);
+    }
+
+private:
+    std::set<uintptr_t> _addresses;
+    //! Overload the rtti function to enable dynamic_cast
+    void rtti(){};
+};
+
+template <class Archive>
+class RCPBasicAwareInputArchive : public Archive
+{
+    using Archive::Archive;
+
+public:
+    template <class T>
+    RCP<const T> load_rcp_basic()
+    {
+        try {
+            uintptr_t addr;
+            (*this)(addr);
+
+            uint8_t first_seen;
+            (*this)(first_seen);
+
+            if (first_seen >= 2) {
+                throw SerializationError("Invalid input");
+            }
+
+            if (not first_seen) {
+                auto it = _rcp_map.find(addr);
+                if (it == _rcp_map.end()) {
+                    throw SerializationError("Invalid shared pointer");
+                }
+                RCP<const Basic> b = it->second;
+                switch (b->get_type_code()) {
+#define SYMENGINE_ENUM(type_enum, Class)                                       \
+    case type_enum: {                                                          \
+        if (not std::is_base_of<T, Class>::value) {                            \
+            throw SerializationError("Cannot convert to given type");          \
+        } else {                                                               \
+            return rcp_static_cast<const T>(b);                                \
+        }                                                                      \
+    }
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+                    default:
+                        throw SerializationError("Unknown typeID");
+                }
+            }
+
+            TypeID type_code;
+            load_typeid(*this, type_code);
+            switch (type_code) {
+#define SYMENGINE_ENUM(type_enum, Class)                                       \
+    case type_enum: {                                                          \
+        RCP<const Class> dummy_ptr;                                            \
+        RCP<const Basic> basic_ptr = load_basic(*this, dummy_ptr);             \
+        _rcp_map[addr] = basic_ptr;                                            \
+        if (not std::is_base_of<T, Class>::value) {                            \
+            throw SerializationError("Cannot convert to given type");          \
+        } else {                                                               \
+            return rcp_static_cast<const T>(basic_ptr);                        \
+        }                                                                      \
+    }
+#include "symengine/type_codes.inc"
+#undef SYMENGINE_ENUM
+                default:
+                    throw SerializationError("Unknown typeID");
+            }
+        } catch (cereal::Exception &e) {
+            throw SerializationError(e.what());
+        }
+    }
+
+private:
+    std::unordered_map<uintptr_t, RCP<const Basic>> _rcp_map;
+    //! Overload the rtti function to enable dynamic_cast
+    void rtti(){};
+};
+
+template <class Archive>
 inline void save_basic(Archive &ar, const Basic &b)
 {
     const auto t_code = b.get_type_code();
@@ -280,39 +391,16 @@ inline void save_basic(Archive &ar, const FunctionWrapper &b)
     throw NotImplementedError("FunctionWrapper saving is not implemented yet.");
 }
 
-template <class Archive>
-inline void save_basic(Archive &ar, RCP<const Basic> const &ptr)
-{
-#if CEREAL_VERSION >= 10301
-    std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
-        std::make_shared<RCP<const Basic>>(ptr));
-    uint32_t id = ar.registerSharedPointer(sharedPtr);
-#else
-    uint32_t id = ar.registerSharedPointer(ptr.get());
-#endif
-    ar(CEREAL_NVP(id));
-
-    if (id & cereal::detail::msb_32bit) {
-        TypeID type_code = ptr->get_type_code();
-        save_typeid(ar, type_code);
-        switch (type_code) {
-#define SYMENGINE_ENUM(type, Class)                                            \
-    case type:                                                                 \
-        save_basic(ar, static_cast<const Class &>(*ptr));                      \
-        break;
-#include "symengine/type_codes.inc"
-#undef SYMENGINE_ENUM
-            default:
-                save_basic(ar, *ptr);
-        }
-    }
-}
-
 //! Saving for SymEngine::RCP
 template <class Archive, class T>
 inline void CEREAL_SAVE_FUNCTION_NAME(Archive &ar, RCP<const T> const &ptr)
 {
-    save_basic(ar, rcp_static_cast<const Basic>(ptr));
+    RCPBasicAwareOutputArchive<Archive> *ar_ptr
+        = dynamic_cast<RCPBasicAwareOutputArchive<Archive> *>(&ar);
+    if (not ar_ptr) {
+        throw SerializationError("Need a RCPBasicAwareOutputArchive");
+    }
+    ar_ptr->save_rcp_basic(rcp_static_cast<const Basic>(ptr));
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const RealDouble> &)
@@ -700,47 +788,12 @@ inline void load_typeid(Archive &ar, TypeID &t)
 template <class Archive, class T>
 inline void CEREAL_LOAD_FUNCTION_NAME(Archive &ar, RCP<const T> &ptr)
 {
-    try {
-        uint32_t id;
-        ar(CEREAL_NVP(id));
-
-        if (id & cereal::detail::msb_32bit) {
-            TypeID type_code;
-            load_typeid(ar, type_code);
-            switch (type_code) {
-#define SYMENGINE_ENUM(type_enum, Class)                                       \
-    case type_enum: {                                                          \
-        if (not std::is_base_of<T, Class>::value) {                            \
-            throw SerializationError("Cannot convert to given type");          \
-        } else {                                                               \
-            RCP<const Class> dummy_ptr;                                        \
-            RCP<const Basic> basic_ptr = load_basic(ar, dummy_ptr);            \
-            ptr = rcp_dynamic_cast<const T>(basic_ptr);                        \
-            break;                                                             \
-        }                                                                      \
+    RCPBasicAwareInputArchive<Archive> *ar_ptr
+        = dynamic_cast<RCPBasicAwareInputArchive<Archive> *>(&ar);
+    if (not ar_ptr) {
+        throw SerializationError("Need a RCPBasicAwareInputArchive");
     }
-#include "symengine/type_codes.inc"
-#undef SYMENGINE_ENUM
-                default:
-                    throw SerializationError("Unknown typeID");
-            }
-            std::shared_ptr<void> sharedPtr = std::static_pointer_cast<void>(
-                std::make_shared<RCP<const Basic>>(
-                    rcp_static_cast<const Basic>(ptr)));
-
-            ar.registerSharedPointer(id, sharedPtr);
-        } else if (id == 0) {
-            throw SerializationError("Unknown serialization error");
-        } else {
-            std::shared_ptr<RCP<const Basic>> sharedPtr
-                = std::static_pointer_cast<RCP<const Basic>>(
-                    ar.getSharedPointer(id));
-            RCP<const Basic> basic_ptr = *sharedPtr.get();
-            ptr = rcp_dynamic_cast<const T>(basic_ptr);
-        }
-    } catch (cereal::Exception &e) {
-        throw SerializationError(e.what());
-    }
+    ptr = ar_ptr->template load_rcp_basic<T>();
 }
 } // namespace SymEngine
 #endif // SYMENGINE_SERIALIZE_CEREAL_H

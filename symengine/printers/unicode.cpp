@@ -9,7 +9,7 @@
 namespace SymEngine
 {
 //! Less operator `(<)` using cmp:
-struct PrinterBasicCmp {
+struct PrinterBasicCmpUnicode {
     //! true if `x < y`, false otherwise
     bool operator()(const RCP<const Basic> &x, const RCP<const Basic> &y) const
     {
@@ -398,7 +398,7 @@ void UnicodePrinter::bvisit(const Add &x)
 {
     StringBox box;
     bool first = true;
-    std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmp> dict(
+    std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmpUnicode> dict(
         x.get_dict().begin(), x.get_dict().end());
 
     if (neq(*(x.get_coef()), *zero)) {
