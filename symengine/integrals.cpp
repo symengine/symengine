@@ -1,4 +1,4 @@
-#include "integral.h"
+#include "integrals.h"
 #include <symengine/basic.h>
 #include <symengine/visitor.h>
 #include <symengine/add.h>
@@ -118,17 +118,47 @@ void IntegralVisitor::bvisit(const Constant &x) {
     result_ = mul(x.rcp_from_this(), var_);
 }
 
-// Fallback for unimplemented types
-void IntegralVisitor::bvisit(const Basic &) {
-    throw std::runtime_error("Integration not implemented for this type.");
+// // Fallback for unimplemented types
+// void IntegralVisitor::bvisit(const Basic &) {
+//     throw std::runtime_error("Integration not implemented for this type.");
+// }
+
+void IntegralVisitor::bvisit(const FunctionSymbol &self) {
+    bool depends = false;
+    for (const auto &arg : self.get_args()) {
+        if (has_symbol(*arg, *var_)) {
+            depends = true;
+            break;
+        }
+    }
+    if (depends) {
+        result_ = Integral::create(self.rcp_from_this(), var_);
+    } else {
+        result_ = mul(self.rcp_from_this(), var_);
+    }
+}
+
+void IntegralVisitor::bvisit(const Basic &x) {
+    if (has_symbol(x, *var_)) {
+        result_ = Integral::create(x.rcp_from_this(), var_);
+    } 
+    else {
+        result_ = mul(x.rcp_from_this(), var_);
+    }
 }
 
 // Integration entry point
+// RCP<const Basic> integrate(const RCP<const Basic> &expr, const RCP<const Symbol> &var) {
+//     IntegralVisitor v;
+//     v.set_var(var);
+//     expr->accept(v);
+//     return v.result_;
+// }
 RCP<const Basic> integrate(const RCP<const Basic> &expr, const RCP<const Symbol> &var) {
-    IntegralVisitor v;
-    v.set_var(var);
-    expr->accept(v);
-    return v.result_;
+    IntegralVisitor visitor;
+    visitor.set_var(var);
+    expr->accept(visitor);
+    return visitor.result_;
 }
 
 } // namespace SymEngine

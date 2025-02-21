@@ -1,4 +1,4 @@
-#include <symengine/integral.h>
+#include <symengine/integrals.h>
 #include <symengine/basic.h>
 #include <symengine/symbol.h>
 #include <symengine/add.h>

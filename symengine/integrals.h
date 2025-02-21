@@ -15,19 +15,16 @@
 
 namespace SymEngine {
 
-/* Class for Integral Visitor 
-*/
 class IntegralVisitor : public BaseVisitor<IntegralVisitor, Visitor> {
 public:
     RCP<const Symbol> var_; // Variable of integration
-    RCP<const Basic> result_; // result of evaluated integral 
+    RCP<const Basic> result_;
 
     IntegralVisitor() : result_{zero} {}
-    // IntegralVisitor Class functions
     bool depends_on(const RCP<const Basic> &expr, const RCP<const Symbol> &sym);
     void set_var(const RCP<const Symbol> &var) { var_ = var; }
 
-    // general bvisit functions
+
     void bvisit(const Integer &x);
     void bvisit(const Rational &x);
     void bvisit(const Constant &x);
@@ -38,9 +35,9 @@ public:
     void bvisit(const Sin &x);
     void bvisit(const Cos &x);
     void bvisit(const Basic &x);
+    void bvisit(const FunctionSymbol &self);
 };
 
-// Integrate function that fully evaluates integral
 RCP<const Basic> integrate(const RCP<const Basic> &expr, const RCP<const Symbol> &var);
 
 } // namespace SymEngine
