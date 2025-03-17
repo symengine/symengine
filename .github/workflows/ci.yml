@@ -90,11 +90,10 @@ jobs:
             OS: ubuntu-20.04
             CC: gcc
 
-          # No-RTTI Release build (with BFD)
-          - WITH_BFD: yes
+          # No-RTTI Release build
+          - NO_RTTI: yes
             OS: ubuntu-20.04
             CC: gcc
-            NO_RTTI: yes
 
           # Release shared build (with BFD)
           - WITH_BFD: yes
