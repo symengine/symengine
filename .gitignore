@@ -133,6 +133,7 @@ symengine/utilities/matchpycpp/tests/hopcroft_karp/test_hopcroft_karp
 
 # Benchmarks executables
 benchmarks/add1
+benchmarks/diff_cache
 benchmarks/eval_double1
 benchmarks/expand1
 benchmarks/expand2

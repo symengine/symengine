@@ -50,8 +50,10 @@ TEST_CASE("Rational", "[rational]")
 
     CHECK_THROWS_AS(q->pow(*q10_25), NotImplementedError);
 
+#if HAVE_SYMENGINE_RTTI
     RCP<const Basic> r3 = Basic::loads(r1->dumps());
     REQUIRE(eq(*r1, *r3));
+#endif
 }
 
 TEST_CASE("Rational compare", "[rational compare]")

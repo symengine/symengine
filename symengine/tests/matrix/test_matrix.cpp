@@ -190,7 +190,9 @@ TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
                            {add(integer(3), symbol("a")),
                             add(symbol("b"), integer(2)),
                             add(symbol("c"), integer(-3)), symbol("d")}));
+#if HAVE_SYMENGINE_RTTI
     REQUIRE(DenseMatrix::loads(C.dumps()) == C);
+#endif
 
     C = DenseMatrix(2, 3);
     A = DenseMatrix(2, 3,
@@ -200,7 +202,9 @@ TEST_CASE("test_dense_dense_addition(): matrices", "[matrices]")
                     {integer(10), integer(13), integer(5), integer(-7),
                      symbol("c"), symbol("d")});
     add_dense_dense(A, B, C);
+#if HAVE_SYMENGINE_RTTI
     REQUIRE(DenseMatrix::loads(C.dumps()) == C);
+#endif
 
     REQUIRE(C
             == DenseMatrix(2, 3,

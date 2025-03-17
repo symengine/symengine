@@ -13,11 +13,12 @@ using SymEngine::Add;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
+using SymEngine::is_a;
 using SymEngine::Mul;
 using SymEngine::multinomial_coefficients;
 using SymEngine::Pow;
 using SymEngine::RCP;
-using SymEngine::rcp_dynamic_cast;
+using SymEngine::rcp_static_cast;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::umap_basic_num;
@@ -45,8 +46,9 @@ int main(int argc, char *argv[])
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
+    assert(is_a<Add>(*r));
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r)->get_dict().size() << std::endl;
+              << rcp_static_cast<const Add>(r)->get_dict().size() << std::endl;
 
     return 0;
 }

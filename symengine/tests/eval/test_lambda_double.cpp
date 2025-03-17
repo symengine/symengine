@@ -267,8 +267,12 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         RCP<const Basic> expr1 = std::get<0>(testvec[i]);
+#if HAVE_SYMENGINE_RTTI
         RCP<const Basic> expr2
             = Basic::loads(expr1->dumps()); // test serialization
+#else
+        RCP<const Basic> expr2 = expr1;
+#endif
         const auto arg = std::get<1>(testvec[i]);
         const auto ref = std::get<2>(testvec[i]);
         std::array<RCP<const Basic>, 2> exprs{{expr1, expr2}};

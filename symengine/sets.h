@@ -625,7 +625,7 @@ inline RCP<const Set> imageset(const RCP<const Basic> &sym,
                                const RCP<const Basic> &expr,
                                const RCP<const Set> &base)
 {
-    if (not is_a_sub<Symbol>(*sym))
+    if (not is_a_Symbol(*sym))
         throw SymEngineException("first arg is expected to be a symbol");
 
     if (eq(*expr, *sym) or eq(*base, *emptyset()))

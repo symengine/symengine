@@ -38,11 +38,13 @@ inline bool is_a(const Basic &b)
     return T::type_code_id == b.get_type_code();
 }
 
+#if HAVE_SYMENGINE_RTTI
 template <class T>
 inline bool is_a_sub(const Basic &b)
 {
     return dynamic_cast<const T *>(&b) != nullptr;
 }
+#endif
 
 inline bool is_same_type(const Basic &a, const Basic &b)
 {

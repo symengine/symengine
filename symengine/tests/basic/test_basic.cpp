@@ -87,6 +87,7 @@ TEST_CASE("Symbol hash: Basic", "[basic]")
 
 TEST_CASE("Symbol string serialization: Basic", "[basic]")
 {
+#if HAVE_SYMENGINE_RTTI
     RCP<const Symbol> x = symbol("x");
     RCP<const Symbol> x2
         = rcp_static_cast<const Symbol>(Basic::loads(x->dumps()));
@@ -100,6 +101,7 @@ TEST_CASE("Symbol string serialization: Basic", "[basic]")
     std::hash<Basic> hash_fn;
     // Hashes of x and x2 must be the same:
     REQUIRE(hash_fn(*x) == hash_fn(*x2));
+#endif
 }
 
 TEST_CASE("Symbol dict: Basic", "[basic]")

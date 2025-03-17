@@ -124,6 +124,9 @@ set(HAVE_SYMENGINE_IS_CONSTRUCTIBLE yes
 set(HAVE_SYMENGINE_RESERVE yes
     CACHE BOOL "C++ compiler supports std::unordered_map<>::reserve()")
 
+set(HAVE_SYMENGINE_RTTI yes
+    CACHE BOOL "C++ compiler supports rtti")
+
 if (MSVC)
     # MSVC doesn't have cxxabi.h
     set(HAVE_GCC_ABI_DEMANGLE no)
