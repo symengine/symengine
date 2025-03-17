@@ -80,6 +80,9 @@ elif [[ "$(uname)" == "Linux" ]]; then
         export CXXFLAGS="$CXXFLAGS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC"
     fi
 fi
+if [[ "${NO_RTTI}" == "yes" ]]; then
+    export CXXFLAGS="$CXXFLAGS -fno-rtti"
+fi
 
 echo "=== Generating cmake command from environment variables"
 
@@ -163,6 +166,9 @@ if [[ "${BUILD_DOXYGEN}" != "" ]]; then
 fi
 if [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
     cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
+fi
+if [[ "${NO_RTTI}" == "yes" ]]; then
+    cmake_line="$cmake_line -DHAVE_SYMENGINE_RTTI=no"
 fi
 
 echo "=== Generating build scripts for SymEngine using cmake"
