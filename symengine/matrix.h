@@ -18,7 +18,7 @@ class MatrixBase
 public:
     virtual ~MatrixBase(){};
 
-    virtual MatrixTypeID get_type_code() const;
+    virtual MatrixTypeID get_type_code() const = 0;
 
     bool is_square() const
     {
