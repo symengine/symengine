@@ -296,8 +296,8 @@ endif ()
 
 # for msvc use the static macro to bypass import/export macros logic and rely on the automatic export
 if (MSVC AND BUILD_SHARED_LIBS)
-    set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-    target_compile_definitions(symengine PUBLIC "SYMENGINE_STATIC_DEFINE")
+    set_target_properties(symengine PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+    target_compile_definitions(symengine PUBLIC SYMENGINE_STATIC_DEFINE)
 endif()
 
 if (BUILD_SHARED_LIBS)
