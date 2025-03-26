@@ -12,7 +12,7 @@
 
 namespace SymEngine
 {
-class GaloisFieldDict
+class SYMENGINE_EXPORT GaloisFieldDict
 {
 public:
     std::vector<integer_class> dict_;
@@ -544,7 +544,8 @@ public:
     }
 };
 
-class GaloisField : public UIntPolyBase<GaloisFieldDict, GaloisField>
+class SYMENGINE_EXPORT GaloisField
+    : public UIntPolyBase<GaloisFieldDict, GaloisField>
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_GALOISFIELD)

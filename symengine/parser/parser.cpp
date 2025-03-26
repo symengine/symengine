@@ -1,3 +1,4 @@
+#include <symengine/parser.h>
 #include <symengine/parser/parser.h>
 #include <symengine/parser/parser.tab.hh>
 #include <symengine/real_double.h>

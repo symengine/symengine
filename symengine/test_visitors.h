@@ -6,7 +6,7 @@
 namespace SymEngine
 {
 
-class ZeroVisitor : public BaseVisitor<ZeroVisitor>
+class SYMENGINE_EXPORT ZeroVisitor : public BaseVisitor<ZeroVisitor>
 {
 private:
     tribool is_zero_;
@@ -32,7 +32,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class PositiveVisitor : public BaseVisitor<PositiveVisitor>
+class SYMENGINE_EXPORT PositiveVisitor : public BaseVisitor<PositiveVisitor>
 {
 private:
     tribool is_positive_;
@@ -55,7 +55,8 @@ public:
     tribool apply(const Basic &b);
 };
 
-class NonPositiveVisitor : public BaseVisitor<NonPositiveVisitor>
+class SYMENGINE_EXPORT NonPositiveVisitor
+    : public BaseVisitor<NonPositiveVisitor>
 {
 private:
     tribool is_nonpositive_;
@@ -77,7 +78,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class NegativeVisitor : public BaseVisitor<NegativeVisitor>
+class SYMENGINE_EXPORT NegativeVisitor : public BaseVisitor<NegativeVisitor>
 {
 private:
     tribool is_negative_;
@@ -99,7 +100,8 @@ public:
     tribool apply(const Basic &b);
 };
 
-class NonNegativeVisitor : public BaseVisitor<NonNegativeVisitor>
+class SYMENGINE_EXPORT NonNegativeVisitor
+    : public BaseVisitor<NonNegativeVisitor>
 {
 private:
     tribool is_nonnegative_;
@@ -121,7 +123,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class IntegerVisitor : public BaseVisitor<IntegerVisitor>
+class SYMENGINE_EXPORT IntegerVisitor : public BaseVisitor<IntegerVisitor>
 {
 private:
     tribool is_integer_;
@@ -170,7 +172,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class RealVisitor : public BaseVisitor<RealVisitor>
+class SYMENGINE_EXPORT RealVisitor : public BaseVisitor<RealVisitor>
 {
 private:
     tribool is_real_;
@@ -206,7 +208,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class ComplexVisitor : public BaseVisitor<ComplexVisitor>
+class SYMENGINE_EXPORT ComplexVisitor : public BaseVisitor<ComplexVisitor>
 {
 private:
     tribool is_complex_;
@@ -317,7 +319,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class PolynomialVisitor : public BaseVisitor<PolynomialVisitor>
+class SYMENGINE_EXPORT PolynomialVisitor : public BaseVisitor<PolynomialVisitor>
 {
 private:
     bool is_polynomial_ = true;
@@ -357,9 +359,10 @@ public:
  * all free symbols in b are considered to be variables. All symbols that
  * are not variables will be considered to be constants.
  */
-bool is_polynomial(const Basic &b, const set_basic &variables = {});
+SYMENGINE_EXPORT bool is_polynomial(const Basic &b,
+                                    const set_basic &variables = {});
 
-class RationalVisitor : public BaseVisitor<RationalVisitor>
+class SYMENGINE_EXPORT RationalVisitor : public BaseVisitor<RationalVisitor>
 {
 private:
     bool rational_; // are we testing for rational or irrational?
@@ -406,7 +409,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class FiniteVisitor : public BaseVisitor<FiniteVisitor>
+class SYMENGINE_EXPORT FiniteVisitor : public BaseVisitor<FiniteVisitor>
 {
 private:
     tribool is_finite_;
@@ -430,7 +433,7 @@ public:
     tribool apply(const Basic &b);
 };
 
-class AlgebraicVisitor : public BaseVisitor<AlgebraicVisitor>
+class SYMENGINE_EXPORT AlgebraicVisitor : public BaseVisitor<AlgebraicVisitor>
 {
 private:
     tribool is_algebraic_;
