@@ -76,12 +76,12 @@ public:
     }
 };
 
-void hash_combine_impl(hash_t &, mpfr_srcptr);
+SYMENGINE_EXPORT void hash_combine_impl(hash_t &, mpfr_srcptr);
 
-RCP<const Number> number(mpfr_ptr x);
+SYMENGINE_EXPORT RCP<const Number> number(mpfr_ptr x);
 
 //! RealMPFR Class to hold mpfr_t values
-class RealMPFR : public Number
+class SYMENGINE_EXPORT RealMPFR : public Number
 {
 public:
     mpfr_class i;

@@ -210,16 +210,9 @@ if (MSVC)
     endforeach()
 endif()
 
-if (BUILD_SHARED_LIBS)
-    if (WIN32)
-        if (MSVC)
-            # Use CMake 3.4 feature
-            set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
-        else()
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
-        endif()
-    endif()
-endif()
+if (BUILD_SHARED_LIBS AND MSVC)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
+endif ()
 
 # ECM
 set(WITH_ECM no
