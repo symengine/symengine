@@ -15,7 +15,7 @@
 namespace SymEngine
 {
 
-class Constant : public Basic
+class SYMENGINE_EXPORT Constant : public Basic
 {
 private:
     //! name of Constant

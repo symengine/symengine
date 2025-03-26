@@ -8,7 +8,7 @@
 namespace SymEngine
 {
 
-class CodePrinter : public BaseVisitor<CodePrinter, StrPrinter>
+class SYMENGINE_EXPORT CodePrinter : public BaseVisitor<CodePrinter, StrPrinter>
 {
 public:
     using StrPrinter::apply;
@@ -43,7 +43,8 @@ public:
     void bvisit(const GaloisField &x);
 };
 
-class C89CodePrinter : public BaseVisitor<C89CodePrinter, CodePrinter>
+class SYMENGINE_EXPORT C89CodePrinter
+    : public BaseVisitor<C89CodePrinter, CodePrinter>
 {
 public:
     using CodePrinter::apply;
@@ -54,7 +55,8 @@ public:
                     const RCP<const Basic> &b) override;
 };
 
-class C99CodePrinter : public BaseVisitor<C99CodePrinter, C89CodePrinter>
+class SYMENGINE_EXPORT C99CodePrinter
+    : public BaseVisitor<C99CodePrinter, C89CodePrinter>
 {
 public:
     using C89CodePrinter::apply;
@@ -67,7 +69,8 @@ public:
     void bvisit(const LogGamma &x);
 };
 
-class JSCodePrinter : public BaseVisitor<JSCodePrinter, CodePrinter>
+class SYMENGINE_EXPORT JSCodePrinter
+    : public BaseVisitor<JSCodePrinter, CodePrinter>
 {
 public:
     using CodePrinter::apply;

@@ -6,7 +6,7 @@
 namespace SymEngine
 {
 
-class Tuple : public Basic
+class SYMENGINE_EXPORT Tuple : public Basic
 {
 private:
     vec_basic container_;
@@ -26,7 +26,7 @@ public:
     }
 };
 
-RCP<const Basic> tuple(const vec_basic &arg);
+SYMENGINE_EXPORT RCP<const Basic> tuple(const vec_basic &arg);
 
 } // namespace SymEngine
 #endif
