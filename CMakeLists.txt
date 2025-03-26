@@ -210,6 +210,10 @@ if (MSVC)
     endforeach()
 endif()
 
+if (BUILD_SHARED_LIBS AND MSVC)
+  set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
+endif ()
+
 # ECM
 set(WITH_ECM no
     CACHE BOOL "Build with ECM (libecm-dev) support")
