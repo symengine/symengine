@@ -55,6 +55,7 @@ set(SRC
     functions.cpp
     infinity.cpp
     integer.cpp
+    integrals.cpp
     logic.cpp
     matrix.cpp
     monomials.cpp
@@ -185,6 +186,7 @@ set(HEADERS
     functions.h
     infinity.h
     integer.h
+    integrals.h
     lambda_double.h
     llvm_double.h
     logic.h

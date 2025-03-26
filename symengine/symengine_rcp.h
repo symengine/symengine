@@ -360,11 +360,11 @@ private:
 #endif
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 };
 
 template <typename T, typename... Args>
-inline RCP<T> make_rcp(Args &&...args)
+inline RCP<T> make_rcp(Args &&... args)
 {
 #if defined(WITH_SYMENGINE_RCP)
     return rcp(new T(std::forward<Args>(args)...));
