@@ -1554,7 +1554,7 @@ $(function() {
 <div class="line"><a name="l01454"></a><span class="lineno"> 1454</span>&#160;                                const RCP&lt;const Boolean&gt; &amp;condition)</div>
 <div class="line"><a name="l01455"></a><span class="lineno"> 1455</span>&#160;{</div>
 <div class="line"><a name="l01456"></a><span class="lineno"> 1456</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *boolFalse) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*condition, *boolTrue)</div>
-<div class="line"><a name="l01457"></a><span class="lineno"> 1457</span>&#160;        or not is_a_sub&lt;Symbol&gt;(*sym)) {</div>
+<div class="line"><a name="l01457"></a><span class="lineno"> 1457</span>&#160;        or not is_a_Symbol(*sym)) {</div>
 <div class="line"><a name="l01458"></a><span class="lineno"> 1458</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01459"></a><span class="lineno"> 1459</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
 <div class="line"><a name="l01460"></a><span class="lineno"> 1460</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -1669,7 +1669,7 @@ $(function() {
 <div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
 <div class="line"><a name="l01570"></a><span class="lineno"> 1570</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)</div>
 <div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;{</div>
-<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;    <span class="keywordflow">if</span> (not is_a_sub&lt;Symbol&gt;(*sym) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*expr, *sym) or <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*expr)</div>
+<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;    <span class="keywordflow">if</span> (not is_a_Symbol(*sym) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*expr, *sym) or <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*expr)</div>
 <div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;        or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*base, *<a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>()))</div>
 <div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01575"></a><span class="lineno"> 1575</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>

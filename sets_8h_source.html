@@ -712,7 +712,7 @@ $(function() {
 <div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;                               <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
 <div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;                               <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)</div>
 <div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;{</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    <span class="keywordflow">if</span> (not is_a_sub&lt;Symbol&gt;(*sym))</div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    <span class="keywordflow">if</span> (not is_a_Symbol(*sym))</div>
 <div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;first arg is expected to be a symbol&quot;</span>);</div>
 <div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160; </div>
 <div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*expr, *sym) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*base, *<a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>()))</div>

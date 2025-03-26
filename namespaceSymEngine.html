@@ -811,6 +811,10 @@ Enumerations</h2></td></tr>
 , <b>Symbolic</b> = 2
  }</td></tr>
 <tr class="separator:a04157cdfeef154e7bc8690bfd7a22160"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dd15347b0c9fcc085f239aa4a4f367c"><td class="memItemLeft" align="right" valign="top"><a id="a8dd15347b0c9fcc085f239aa4a4f367c"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>MatrixTypeID</b> { <b>SYMENGINE_DENSE_MATRIX</b>
+, <b>SYMENGINE_CSR_MATRIX</b>
+ }</td></tr>
+<tr class="separator:a8dd15347b0c9fcc085f239aa4a4f367c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa6fa61ab9fb7fc6ab83d8ddf49161c9c"><td class="memItemLeft" align="right" valign="top"><a id="aa6fa61ab9fb7fc6ab83d8ddf49161c9c"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>PrecedenceEnum</b> { <br />
 &#160;&#160;<b>Relational</b>
 , <b>Add</b>
@@ -854,9 +858,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>as_real_imag</b> (con
 <tr class="memitem:a69193ed0d011c3b3f44db8a4f66792a4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a69193ed0d011c3b3f44db8a4f66792a4">is_a</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="memdesc:a69193ed0d011c3b3f44db8a4f66792a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Templatised version to check is_a type.  <a href="namespaceSymEngine.html#a69193ed0d011c3b3f44db8a4f66792a4">More...</a><br /></td></tr>
 <tr class="separator:a69193ed0d011c3b3f44db8a4f66792a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1332ce13683324e522ca2bd00aa9da05"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a1332ce13683324e522ca2bd00aa9da05"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a1332ce13683324e522ca2bd00aa9da05">is_a_sub</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
-<tr class="separator:a1332ce13683324e522ca2bd00aa9da05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab40c04716d1563b3df15fc731fef31f6"><td class="memItemLeft" align="right" valign="top"><a id="ab40c04716d1563b3df15fc731fef31f6"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ab40c04716d1563b3df15fc731fef31f6">is_same_type</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;a, const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="memdesc:ab40c04716d1563b3df15fc731fef31f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if <code>a</code> and <code>b</code> are exactly the same type <code>T</code>. <br /></td></tr>
@@ -897,6 +898,9 @@ const char *&#160;</td><td class="memItemRight" valign="bottom"><b>get_version</
 bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a9b828cb692f763f05e2ee78d7cde30f0">is_a_Atom</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
 <tr class="memdesc:a9b828cb692f763f05e2ee78d7cde30f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if <code>b</code> is an atom. i.e. b.get_args returns an empty vector. <br /></td></tr>
 <tr class="separator:a9b828cb692f763f05e2ee78d7cde30f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1332ce13683324e522ca2bd00aa9da05"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a1332ce13683324e522ca2bd00aa9da05"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a1332ce13683324e522ca2bd00aa9da05">is_a_sub</a> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
+<tr class="separator:a1332ce13683324e522ca2bd00aa9da05"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac104d13f145416cd18c61b0121017eb6"><td class="memItemLeft" align="right" valign="top"><a id="ac104d13f145416cd18c61b0121017eb6"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">expand</a> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;self, bool deep=true)</td></tr>
 <tr class="memdesc:ac104d13f145416cd18c61b0121017eb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expands <code>self</code> <br /></td></tr>
@@ -3111,6 +3115,9 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Dummy.html">Dummy</a> &gt;&#
 <tr class="memitem:a6907d6b16813f4436d225f07a2eeaed7"><td class="memItemLeft" align="right" valign="top"><a id="a6907d6b16813f4436d225f07a2eeaed7"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Dummy.html">Dummy</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dummy</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name)</td></tr>
 <tr class="separator:a6907d6b16813f4436d225f07a2eeaed7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1576feaadcfaca889a2eb060b42d54fd"><td class="memItemLeft" align="right" valign="top"><a id="a1576feaadcfaca889a2eb060b42d54fd"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_a_Symbol</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</td></tr>
+<tr class="separator:a1576feaadcfaca889a2eb060b42d54fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb01d26ef4318eb02328f31e7fdf4a4d"><td class="memTemplParams" colspan="2"><a id="afb01d26ef4318eb02328f31e7fdf4a4d"></a>
 template&lt;typename To , typename From &gt; </td></tr>
 <tr class="memitem:afb01d26ef4318eb02328f31e7fdf4a4d"><td class="memTemplItemLeft" align="right" valign="top">To&#160;</td><td class="memTemplItemRight" valign="bottom"><b>implicit_cast</b> (const From &amp;f)</td></tr>
@@ -4319,11 +4326,11 @@ hash_t seed2 = 0;
 hash_combine&lt;Basic&gt;(seed2, *x);
 hash_combine&lt;Basic&gt;(seed2, *y);
 </pre> 
-<p class="definition">Definition at line <a class="el" href="basic-inl_8h_source.html#l00095">95</a> of file <a class="el" href="basic-inl_8h_source.html">basic-inl.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;{</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <a class="code" href="namespaceSymEngine.html#abb24605f1aae71927876f7237e221544">hash_combine_impl</a>(seed, v);</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_abb24605f1aae71927876f7237e221544"><div class="ttname"><a href="namespaceSymEngine.html#abb24605f1aae71927876f7237e221544">SymEngine::hash_combine_impl</a></div><div class="ttdeci">void hash_combine_impl(hash_t &amp;seed, const T &amp;v, typename std::enable_if&lt; std::is_base_of&lt; Basic, T &gt;::value &gt;::type *=nullptr)</div><div class="ttdoc">Templatised version to combine hash.</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00061">basic-inl.h:61</a></div></div>
+<p class="definition">Definition at line <a class="el" href="basic-inl_8h_source.html#l00097">97</a> of file <a class="el" href="basic-inl_8h_source.html">basic-inl.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;{</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <a class="code" href="namespaceSymEngine.html#abb24605f1aae71927876f7237e221544">hash_combine_impl</a>(seed, v);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_abb24605f1aae71927876f7237e221544"><div class="ttname"><a href="namespaceSymEngine.html#abb24605f1aae71927876f7237e221544">SymEngine::hash_combine_impl</a></div><div class="ttdeci">void hash_combine_impl(hash_t &amp;seed, const T &amp;v, typename std::enable_if&lt; std::is_base_of&lt; Basic, T &gt;::value &gt;::type *=nullptr)</div><div class="ttdoc">Templatised version to combine hash.</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00063">basic-inl.h:63</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4692,9 +4699,6 @@ template&lt;class T &gt; </div>
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool SymEngine::is_a_sub </td>
@@ -4704,20 +4708,10 @@ template&lt;class T &gt; </div>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 <p>Returns true if <code>b</code> is of type T or any of its subclasses. Example: </p><pre class="fragment"> is_a_sub&lt;Symbol&gt;(b)  // true if `b` is of type `Symbol` or any Symbol's
 </pre><p> subclass </p>
 
-<p class="definition">Definition at line <a class="el" href="basic-inl_8h_source.html#l00042">42</a> of file <a class="el" href="basic-inl_8h_source.html">basic-inl.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;{</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">dynamic_cast&lt;</span><span class="keyword">const </span>T *<span class="keyword">&gt;</span>(&amp;b) != <span class="keyword">nullptr</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
-</div><!-- fragment -->
 </div>
 </div>
 <a id="a9ffc26946356777955b29d4aaf210894"></a>
@@ -5258,12 +5252,12 @@ template&lt;class T &gt; </div>
 <p>This <code>&lt;&lt;</code> overloaded function simply calls <code>p.__str__</code>, so it allows any <a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a> type to be printed.</p>
 <p>This prints using: <code><a class="elRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::cout</a> &lt;&lt; *x;</code> </p>
 
-<p class="definition">Definition at line <a class="el" href="basic-inl_8h_source.html#l00053">53</a> of file <a class="el" href="basic-inl_8h_source.html">basic-inl.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;{</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    out &lt;&lt; p.<a class="code" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">__str__</a>();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> out;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
-<div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00046">basic.cpp:46</a></div></div>
+<p class="definition">Definition at line <a class="el" href="basic-inl_8h_source.html#l00055">55</a> of file <a class="el" href="basic-inl_8h_source.html">basic-inl.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;{</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    out &lt;&lt; p.<a class="code" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">__str__</a>();</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> out;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00048">basic.cpp:48</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

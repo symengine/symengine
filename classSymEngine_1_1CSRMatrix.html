@@ -97,6 +97,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a>  </div>
   <div class="headertitle">
@@ -146,6 +147,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9bc50c781fdbe2abf8e596fc7e448703"><td class="memItemLeft" align="right" valign="top"><a id="a9bc50c781fdbe2abf8e596fc7e448703"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b> (const <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a> &amp;)=default</td></tr>
 <tr class="separator:a9bc50c781fdbe2abf8e596fc7e448703"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5aa37c541b40473044a88de6244c2a7"><td class="memItemLeft" align="right" valign="top"><a id="ac5aa37c541b40473044a88de6244c2a7"></a>
+virtual MatrixTypeID&#160;</td><td class="memItemRight" valign="bottom"><b>get_type_code</b> () const</td></tr>
+<tr class="separator:ac5aa37c541b40473044a88de6244c2a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a996c0a87508bb58750570e59c3fd24cf"><td class="memItemLeft" align="right" valign="top"><a id="a996c0a87508bb58750570e59c3fd24cf"></a>
 <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/tuple.html">std::tuple</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>as_vectors</b> () const</td></tr>
 <tr class="separator:a996c0a87508bb58750570e59c3fd24cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -265,6 +269,12 @@ static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;
 static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>jacobian</b> (const <a class="el" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> &amp;A, const <a class="el" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> &amp;x, bool diff_cache=true)</td></tr>
 <tr class="separator:a86772d4c12b7f36932c401513ff1d1cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ac3a026b7e792c323405021fd685eca63"><td class="memItemLeft" align="right" valign="top"><a id="ac3a026b7e792c323405021fd685eca63"></a>
+static const MatrixTypeID&#160;</td><td class="memItemRight" valign="bottom"><b>type_code_id</b> = SYMENGINE_CSR_MATRIX</td></tr>
+<tr class="separator:ac3a026b7e792c323405021fd685eca63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ad7d3703bdc0105fd935988d52de1daf2"><td class="memItemLeft" align="right" valign="top"><a id="ad7d3703bdc0105fd935988d52de1daf2"></a>
@@ -306,7 +316,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>csr_binop_csr_canonic
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00348">348</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00361">361</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="sparse__matrix_8cpp_source.html">sparse_matrix.cpp</a></li>

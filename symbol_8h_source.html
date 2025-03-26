@@ -165,9 +165,15 @@ $(function() {
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Dummy&gt;(name);</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="keyword">inline</span> <span class="keywordtype">bool</span> is_a_Symbol(<span class="keyword">const</span> Basic &amp;b)</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;{</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">return</span> b.get_type_code() == SYMENGINE_SYMBOL</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;           || b.get_type_code() == SYMENGINE_DUMMY;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="abasic_8h_html_a945f4a70c3ac1d14cb0637ef01a81b69"><div class="ttname"><a href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a></div><div class="ttdeci">#define IMPLEMENT_TYPEID(SYMENGINE_ID)</div><div class="ttdoc">Inline members and functions.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00340">basic.h:340</a></div></div>
 <div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>

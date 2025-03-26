@@ -98,6 +98,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Data Fields</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="#friends">Friends</a>  </div>
@@ -147,6 +148,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a89e115484c2ec6dff59e51e50fa96306"><td class="memItemLeft" align="right" valign="top"><a id="a89e115484c2ec6dff59e51e50fa96306"></a>
 <a class="el" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> &amp;other)=default</td></tr>
 <tr class="separator:a89e115484c2ec6dff59e51e50fa96306"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6942c2d6381fe92a8af825843034b04"><td class="memItemLeft" align="right" valign="top"><a id="ac6942c2d6381fe92a8af825843034b04"></a>
+virtual MatrixTypeID&#160;</td><td class="memItemRight" valign="bottom"><b>get_type_code</b> () const</td></tr>
+<tr class="separator:ac6942c2d6381fe92a8af825843034b04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a422c8a4f7095cf51519a99af7e93c3ab"><td class="memItemLeft" align="right" valign="top"><a id="a422c8a4f7095cf51519a99af7e93c3ab"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>resize</b> (unsigned i, unsigned j)</td></tr>
 <tr class="separator:a422c8a4f7095cf51519a99af7e93c3ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -303,6 +307,12 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a4a8559f85c15b2ab58516076434b07b0"><td class="memItemLeft" align="right" valign="top"><a id="a4a8559f85c15b2ab58516076434b07b0"></a>
 friend&#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b></td></tr>
 <tr class="separator:a4a8559f85c15b2ab58516076434b07b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:abe5444428aa6469d227830543c0af2fe"><td class="memItemLeft" align="right" valign="top"><a id="abe5444428aa6469d227830543c0af2fe"></a>
+static const MatrixTypeID&#160;</td><td class="memItemRight" valign="bottom"><b>type_code_id</b> = SYMENGINE_DENSE_MATRIX</td></tr>
+<tr class="separator:abe5444428aa6469d227830543c0af2fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -486,7 +496,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>zeros</b> (<a class="
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00104">104</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="matrix_8h_source.html#l00111">111</a> of file <a class="el" href="matrix_8h_source.html">matrix.h</a>.</p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="matrix_8h_source.html">matrix.h</a></li>
 <li>/home/runner/work/symengine/symengine/symengine/<a class="el" href="dense__matrix_8cpp_source.html">dense_matrix.cpp</a></li>
