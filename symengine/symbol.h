@@ -95,6 +95,12 @@ inline RCP<const Dummy> dummy(const std::string &name)
     return make_rcp<const Dummy>(name);
 }
 
+inline bool is_a_Symbol(const Basic &b)
+{
+    return b.get_type_code() == SYMENGINE_SYMBOL
+           || b.get_type_code() == SYMENGINE_DUMMY;
+}
+
 } // namespace SymEngine
 
 #endif

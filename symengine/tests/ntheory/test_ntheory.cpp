@@ -40,7 +40,6 @@ using SymEngine::quotient_mod_f;
 using SymEngine::Rational;
 using SymEngine::rational;
 using SymEngine::RCP;
-using SymEngine::rcp_dynamic_cast;
 using SymEngine::rcp_static_cast;
 using SymEngine::real_double;
 using SymEngine::RealDouble;
@@ -418,7 +417,9 @@ void _test_prime_factor_multiplicities(const RCP<const Integer> &a)
     for (auto it : prime_mul) {
         multiplicity = it.second;
         while (multiplicity) {
-            _a = rcp_dynamic_cast<const Integer>(div(_a, it.first));
+            RCP<const Basic> b = div(_a, it.first);
+            REQUIRE(is_a<Integer>(*b));
+            _a = rcp_static_cast<const Integer>(b);
             multiplicity--;
         }
     }

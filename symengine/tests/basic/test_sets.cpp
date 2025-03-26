@@ -61,7 +61,7 @@ using SymEngine::rational_class;
 using SymEngine::Rationals;
 using SymEngine::rationals;
 using SymEngine::RCP;
-using SymEngine::rcp_dynamic_cast;
+using SymEngine::rcp_static_cast;
 using SymEngine::real_double;
 using SymEngine::Reals;
 using SymEngine::reals;
@@ -205,7 +205,8 @@ TEST_CASE("Interval : Basic", "[basic]")
     REQUIRE(eq(*r1, *emptyset()));
 
     r1 = interval(zero, one);
-    RCP<const Interval> r5 = rcp_dynamic_cast<const Interval>(r1);
+    REQUIRE(is_a<Interval>(*r1));
+    RCP<const Interval> r5 = rcp_static_cast<const Interval>(r1);
 
     r2 = interval(zero, one, false, false);
     REQUIRE(eq(*r5->close(), *r1));
@@ -958,7 +959,8 @@ TEST_CASE("Union : Basic", "[basic]")
     i2 = interval(integer(3), integer(4));
     i3 = interval(integer(2), integer(3));
     RCP<const Set> r2 = set_union({i1, i2, i3});
-    RCP<const Union> u = rcp_dynamic_cast<const Union>(r2);
+    REQUIRE(is_a<Union>(*r2));
+    RCP<const Union> u = rcp_static_cast<const Union>(r2);
     REQUIRE(u->get_container().size() == 2);
     REQUIRE(u->get_container().find(interval(zero, one))
             != u->get_container().end());
@@ -981,7 +983,9 @@ TEST_CASE("Union : Basic", "[basic]")
 
     r2 = set_union({i1, i2, i3});
     r1 = set_union({finiteset({zero}), i2});
-    u = rcp_dynamic_cast<const Union>(set_union({r1, r2}));
+    auto r3 = set_union({r1, r2});
+    REQUIRE(is_a<Union>(*r3));
+    u = rcp_static_cast<const Union>(r3);
     REQUIRE(u->get_container().find(interval(integer(2), integer(4)))
             != u->get_container().end());
     REQUIRE(u->get_container().find(interval(zero, one))

@@ -42,7 +42,7 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::Rational;
 using SymEngine::rational_class;
 using SymEngine::RCP;
-using SymEngine::rcp_dynamic_cast;
+using SymEngine::rcp_static_cast;
 using SymEngine::real_double;
 using SymEngine::RealDouble;
 using SymEngine::set_basic;
@@ -1199,9 +1199,9 @@ TEST_CASE("Expand1: arit", "[arit]")
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
+    REQUIRE(is_a<Add>(*r2));
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r2)->get_dict().size()
-              << std::endl;
+              << rcp_static_cast<const Add>(r2)->get_dict().size() << std::endl;
 }
 
 TEST_CASE("Expand2: arit", "[arit]")
@@ -1451,8 +1451,9 @@ TEST_CASE("Expand3: arit", "[arit]")
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
+    REQUIRE(is_a<Add>(*r));
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r)->get_dict().size() << std::endl;
+              << rcp_static_cast<const Add>(r)->get_dict().size() << std::endl;
 
     RCP<const Number> rc1, rc2, c1;
     rc1 = Rational::from_two_ints(*integer(2), *integer(1));
@@ -1469,8 +1470,9 @@ TEST_CASE("Expand3: arit", "[arit]")
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
+    REQUIRE(is_a<Add>(*r));
     std::cout << "number of terms: "
-              << rcp_dynamic_cast<const Add>(r)->get_dict().size() << std::endl;
+              << rcp_static_cast<const Add>(r)->get_dict().size() << std::endl;
 
     e = pow(c1, integer(-40));
 

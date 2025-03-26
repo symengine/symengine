@@ -72,6 +72,9 @@
 /* Define if the C++ compiler has std::to_string */
 #cmakedefine HAVE_SYMENGINE_STD_TO_STRING
 
+/* Define if the C++ compiler has RTTI */
+#cmakedefine01 HAVE_SYMENGINE_RTTI
+
 #define SYMENGINE_GMPXX 0
 #define SYMENGINE_PIRANHA 1
 #define SYMENGINE_FLINT 2

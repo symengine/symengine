@@ -115,7 +115,7 @@ using SymEngine::print_stack_on_segfault;
 using SymEngine::rational;
 using SymEngine::Rational;
 using SymEngine::RCP;
-using SymEngine::rcp_dynamic_cast;
+using SymEngine::rcp_static_cast;
 using SymEngine::real_double;
 using SymEngine::RealDouble;
 using SymEngine::sec;
@@ -842,7 +842,9 @@ TEST_CASE("Csc: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // csc(pi/5 + y) unchanged
-    r1 = rcp_dynamic_cast<const Csc>(csc(add(div(pi, i5), y)))->get_arg();
+    r1 = csc(add(div(pi, i5), y));
+    REQUIRE(is_a<Csc>(*r1));
+    r1 = rcp_static_cast<const Csc>(r1)->get_arg();
     r2 = add(div(pi, i5), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -976,7 +978,9 @@ TEST_CASE("Sec: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     // sec(pi/3 + y) unchanged
-    r1 = rcp_dynamic_cast<const Sec>(sec(add(div(pi, i3), y)))->get_arg();
+    r1 = sec(add(div(pi, i3), y));
+    REQUIRE(is_a<Sec>(*r1));
+    r1 = rcp_static_cast<const Sec>(r1)->get_arg();
     r2 = add(div(pi, i3), y);
     REQUIRE(eq(*r1, *r2));
 
@@ -3331,7 +3335,8 @@ TEST_CASE("LogGamma: functions", "[functions]")
     REQUIRE(eq(*r1, *Inf));
 
     r1 = loggamma(x);
-    r1 = SymEngine::rcp_dynamic_cast<const LogGamma>(r1)->rewrite_as_gamma();
+    REQUIRE(is_a<LogGamma>(*r1));
+    r1 = SymEngine::rcp_static_cast<const LogGamma>(r1)->rewrite_as_gamma();
     REQUIRE(eq(*r1, *log(gamma(x))));
 
     r1 = loggamma(x)->diff(x);
@@ -3693,13 +3698,15 @@ TEST_CASE("Polygamma: functions", "[functions]")
     r1 = polygamma(i2, im2);
     REQUIRE(eq(*r1, *ComplexInf));
 
-    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i2, x))
-             ->rewrite_as_zeta();
+    r1 = polygamma(i2, x);
+    REQUIRE(is_a<PolyGamma>(*r1));
+    r1 = SymEngine::rcp_static_cast<const PolyGamma>(r1)->rewrite_as_zeta();
     r2 = neg(mul(i2, zeta(i3, x)));
     REQUIRE(eq(*r1, *r2));
 
-    r1 = SymEngine::rcp_dynamic_cast<const PolyGamma>(polygamma(i3, x))
-             ->rewrite_as_zeta();
+    r1 = polygamma(i3, x);
+    REQUIRE(is_a<PolyGamma>(*r1));
+    r1 = SymEngine::rcp_static_cast<const PolyGamma>(r1)->rewrite_as_zeta();
     r2 = mul(integer(6), zeta(i4, x));
     REQUIRE(eq(*r1, *r2));
 

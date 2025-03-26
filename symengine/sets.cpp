@@ -1454,7 +1454,7 @@ bool ConditionSet::is_canonical(const RCP<const Basic> &sym,
                                 const RCP<const Boolean> &condition)
 {
     if (eq(*condition, *boolFalse) or eq(*condition, *boolTrue)
-        or not is_a_sub<Symbol>(*sym)) {
+        or not is_a_Symbol(*sym)) {
         return false;
     } else if (is_a<Contains>(*condition)) {
         return false;
@@ -1569,7 +1569,7 @@ bool ImageSet::is_canonical(const RCP<const Basic> &sym,
                             const RCP<const Basic> &expr,
                             const RCP<const Set> &base)
 {
-    if (not is_a_sub<Symbol>(*sym) or eq(*expr, *sym) or is_a_Number(*expr)
+    if (not is_a_Symbol(*sym) or eq(*expr, *sym) or is_a_Number(*expr)
         or eq(*base, *emptyset()))
         return false;
     return true;
