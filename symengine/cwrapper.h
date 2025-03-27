@@ -82,7 +82,7 @@ struct CRCPBasic_C {
 //
 //  For C, define a dummy struct with the right size, so that it can be
 //  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
-#ifdef __cplusplus
+#ifdef symengine_EXPORTS
 typedef struct CRCPBasic basic_struct;
 #else
 typedef struct CRCPBasic_C basic_struct;
