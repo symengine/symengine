@@ -80,9 +80,11 @@ struct CRCPBasic_C {
 //  Assignment should be done only by using basic_assign(). Before the variable
 //  goes out of scope, basic_free_stack() must be called.
 //
-//  For C, define a dummy struct with the right size, so that it can be
-//  allocated on the stack. For C++, the CRCPBasic is declared in cwrapper.cpp.
-#ifdef __cplusplus
+//  For downstream projects, define a dummy struct with the right size, so
+//  that it can be allocated on the stack. When building the library in
+//  cwrapper.cpp, the CRCPBasic is declared in cwrapper.cpp which removes
+//  the need to cast the C struct to C++ struct every time.
+#ifdef symengine_EXPORTS
 typedef struct CRCPBasic basic_struct;
 #else
 typedef struct CRCPBasic_C basic_struct;
