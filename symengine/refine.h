@@ -8,7 +8,8 @@
 namespace SymEngine
 {
 
-class RefineVisitor : public BaseVisitor<RefineVisitor, TransformVisitor>
+class SYMENGINE_EXPORT RefineVisitor
+    : public BaseVisitor<RefineVisitor, TransformVisitor>
 {
 private:
     const Assumptions *assumptions_;
@@ -34,6 +35,7 @@ public:
     void bvisit(const Interval &x);
 };
 
+SYMENGINE_EXPORT
 RCP<const Basic> refine(const RCP<const Basic> &x,
                         const Assumptions *assumptions);
 
