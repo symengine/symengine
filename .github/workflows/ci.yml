@@ -27,19 +27,19 @@ jobs:
             WITH_FLINT_DEV: yes
             WITH_MPC: yes
             CC: gcc
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
 
             # Debug build (with BFD)
           - BUILD_TYPE: Debug
             WITH_BFD: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Debug build (with BFD and SYMENGINE_THREAD_SAFE)
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_SYMENGINE_THREAD_SAFE: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Debug build (with BFD, ECM, PRIMESIEVE and MPC)
@@ -48,7 +48,7 @@ jobs:
             WITH_ECM: yes
             WITH_PRIMESIEVE: yes
             WITH_MPC: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Debug build (with BFD, Flint and Arb and INTEGER_CLASS from flint)
@@ -58,7 +58,7 @@ jobs:
             INTEGER_CLASS: flint
             WITH_MPC: yes
             TEST_IN_TREE: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Debug build (with BFD, MPFR and INTEGER_CLASS from gmpxx)
@@ -66,7 +66,7 @@ jobs:
             WITH_SYMENGINE_RCP: yes
             WITH_MPFR: yes
             INTEGER_CLASS: gmpxx
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Debug build (with BFD and INTEGER_CLASS from boostmp)
@@ -82,28 +82,28 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             BUILD_SHARED_LIBS: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Release build (with BFD)
           - WITH_BFD: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # No-RTTI Release build
           - NO_RTTI: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Release shared build (with BFD)
           - WITH_BFD: yes
             BUILD_SHARED_LIBS: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           # Release build (recent LLVM)
           - BUILD_TYPE: Release
-            OS: ubuntu-20.04
+            OS: ubuntu-22.04
             CC: clang
             WITH_LLVM: 13
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/focal/ llvm-toolchain-focal-13 main'
@@ -131,11 +131,11 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             TEST_IN_TREE: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           - TEST_CLANG_FORMAT: yes
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
             CC: gcc
 
           - BUILD_TYPE: Debug
@@ -157,7 +157,7 @@ jobs:
             WITH_LLVM: 12
             WITH_COVERAGE: yes
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
 
           - BUILD_TYPE: Release
             WITH_BENCHMARKS: yes
@@ -189,13 +189,13 @@ jobs:
             WITH_LLVM: 12
             WITH_COTIRE: no
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
 
           - BUILD_TYPE: Debug
             WITH_SANITIZE: undefined
             WITH_LLVM: 12
             CC: clang
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
 
           - BUILD_TYPE: Debug
             WITH_SANITIZE: memory
@@ -210,7 +210,7 @@ jobs:
 
           - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
             CC: gcc
-            OS: ubuntu-20.04
+            OS: ubuntu-24.04
     
           - MSYSTEM: MINGW64
             ARCH: x86_64

@@ -22,15 +22,17 @@ void print_rational_class(const rational_class &r, std::ostringstream &s)
 
 void LatexPrinter::bvisit(const Symbol &x)
 {
-    std::string name = x.get_name();
+    str_ = _print_symbol(x.get_name());
+}
 
+std::string LatexPrinter::_print_symbol(const std::string &name)
+{
     if (name.find('\\') != std::string::npos
         or name.find('{') != std::string::npos) {
-        str_ = name;
-        return;
+        return name;
     }
     if (name[0] == '_') {
-        name = name.substr(1, name.size());
+        return _print_symbol(name.substr(1, name.size() - 1));
     }
     std::vector<std::string> greeks
         = {"alpha",  "beta",  "gamma", "Gamma", "delta",   "Delta",   "epsilon",
@@ -39,34 +41,23 @@ void LatexPrinter::bvisit(const Symbol &x)
            "rho",    "sigma", "Sigma", "tau",   "upsilon", "Upsilon", "phi",
            "Phi",    "chi",   "psi",   "Psi",   "omega",   "Omega"};
 
-    str_ = name;
     for (auto &letter : greeks) {
         if (name == letter) {
-            str_ = "\\" + name;
-            break;
-        }
-        if (name.size() > letter.size() and name.find(letter + "_") == 0) {
-            str_ = "\\" + name;
-            break;
+            return "\\" + name;
         }
     }
 
-    if (name.find("_") != std::string::npos) {
-        int count = 0;
-        std::string prev = str_;
-        str_ = "";
-        for (size_t i = 0; i < prev.size(); i++) {
-            const char &c = prev[i];
-            if (c == '_' and prev.size() > i + 2) {
-                str_ += "_{";
-                count++;
-            } else {
-                str_ += c;
-            }
-        }
-        str_ += std::string(count, '}');
+    size_t idx = name.find("_");
+    if (idx == std::string::npos || idx == name.size() - 1) {
+        return name;
+    } else if (idx < name.size() - 2) {
+        return _print_symbol(name.substr(0, idx)) + "_{"
+               + _print_symbol(name.substr(idx + 1, name.size() - idx - 1))
+               + "}";
+    } else {
+        return _print_symbol(name.substr(0, idx)) + "_"
+               + name.substr(idx + 1, name.size() - idx - 1);
     }
-    return;
 }
 
 void LatexPrinter::bvisit(const Rational &x)
