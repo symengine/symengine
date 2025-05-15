@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class Trace : public Basic
+class SYMENGINE_EXPORT Trace : public Basic
 {
 private:
     RCP<const Basic> arg_;
@@ -25,7 +25,7 @@ public:
     vec_basic get_args() const override;
 };
 
-RCP<const Basic> trace(const RCP<const MatrixExpr> &arg);
+SYMENGINE_EXPORT RCP<const Basic> trace(const RCP<const MatrixExpr> &arg);
 } // namespace SymEngine
 
 #endif

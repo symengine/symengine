@@ -13,7 +13,7 @@ environment:
       COMPILER: MSVC15
       PLATFORM: Win32
       CONDA_INSTALL_LOCN: C:\\Miniconda37
-      LIB_TYPE: lib
+      LIB_TYPE: dll
     - BUILD_TYPE: Debug
       COMPILER: MSVC15
       PLATFORM: x64

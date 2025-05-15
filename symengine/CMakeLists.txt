@@ -288,6 +288,10 @@ add_library(symengine ${SRC})
 include(GenerateExportHeader)
 generate_export_header(symengine)
 set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
+if (BUILD_SHARED_LIBS AND MSVC)
+    target_compile_definitions(symengine PUBLIC SYMENGINE_STATIC_DEFINE)
+endif ()
+
 if (BUILD_SHARED_LIBS)
     set_target_properties(
         symengine

@@ -13,7 +13,7 @@ namespace SymEngine
 
 using pp_t = piranha::polynomial<piranha::rational, piranha::monomial<short>>;
 // Univariate Rational Coefficient Power SeriesBase using Piranha
-class URatPSeriesPiranha
+class SYMENGINE_EXPORT URatPSeriesPiranha
     : public SeriesBase<pp_t, piranha::rational, URatPSeriesPiranha>
 {
 public:
@@ -47,7 +47,8 @@ public:
 
 using p_expr = piranha::polynomial<Expression, piranha::monomial<int>>;
 // Univariate Rational Coefficient Power SeriesBase using Piranha
-class UPSeriesPiranha : public SeriesBase<p_expr, Expression, UPSeriesPiranha>
+class SYMENGINE_EXPORT UPSeriesPiranha
+    : public SeriesBase<p_expr, Expression, UPSeriesPiranha>
 {
 public:
     UPSeriesPiranha(const p_expr p, const std::string varname,

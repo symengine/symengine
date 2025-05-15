@@ -35,7 +35,8 @@ public:
     }
 }; // URatDict
 
-class URatPoly : public USymEnginePoly<URatDict, URatPolyBase, URatPoly>
+class SYMENGINE_EXPORT URatPoly
+    : public USymEnginePoly<URatDict, URatPolyBase, URatPoly>
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_URATPOLY)
@@ -47,6 +48,7 @@ public:
 }; // URatPoly
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
+SYMENGINE_EXPORT
 bool divides_upoly(const URatPoly &a, const URatPoly &b,
                    const Ptr<RCP<const URatPoly>> &res);
 

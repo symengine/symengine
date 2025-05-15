@@ -17,7 +17,7 @@ namespace SymEngine
 /** This class holds "infinity"
  *  It includes a direction (like -infinity).
  **/
-class Infty : public Number
+class SYMENGINE_EXPORT Infty : public Number
 {
     RCP<const Number> _direction;
 
@@ -112,7 +112,7 @@ inline RCP<const Infty> infty(int n = 1)
     return make_rcp<Infty>(integer(n));
 }
 
-RCP<const Infty> infty(const RCP<const Number> &direction);
+SYMENGINE_EXPORT RCP<const Infty> infty(const RCP<const Number> &direction);
 
 } // namespace SymEngine
 #endif
