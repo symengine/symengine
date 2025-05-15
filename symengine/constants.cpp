@@ -103,6 +103,7 @@ struct storage_for {
 #endif
 
 #define DEFINE_CONSTANT(t, n, d)                                               \
+    SYMENGINE_EXPORT                                                           \
     static storage_for<RCP<const t>> n##_buf;                                  \
     RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
 
