@@ -7,7 +7,8 @@
 namespace SymEngine
 {
 
-std::pair<RCP<const Basic>, RCP<const Basic>> size(const MatrixExpr &m);
+SYMENGINE_EXPORT std::pair<RCP<const Basic>, RCP<const Basic>>
+size(const MatrixExpr &m);
 
 }
 

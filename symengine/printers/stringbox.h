@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
 
+#include <symengine/basic.h>
+
 namespace SymEngine
 {
 
-class StringBox
+class SYMENGINE_EXPORT StringBox
 {
 private:
     std::vector<std::string> lines_;

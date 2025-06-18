@@ -126,7 +126,7 @@ public:
     }
 };
 
-bool has_symbol(const Basic &b, const Basic &x);
+SYMENGINE_EXPORT bool has_symbol(const Basic &b, const Basic &x);
 
 class CoeffVisitor : public BaseVisitor<CoeffVisitor, StopVisitor>
 {
@@ -225,15 +225,16 @@ public:
     }
 };
 
-RCP<const Basic> coeff(const Basic &b, const Basic &x, const Basic &n);
+SYMENGINE_EXPORT RCP<const Basic> coeff(const Basic &b, const Basic &x,
+                                        const Basic &n);
 
-set_basic free_symbols(const Basic &b);
+SYMENGINE_EXPORT set_basic free_symbols(const Basic &b);
 
-set_basic free_symbols(const MatrixBase &m);
+SYMENGINE_EXPORT set_basic free_symbols(const MatrixBase &m);
 
-set_basic function_symbols(const Basic &b);
+SYMENGINE_EXPORT set_basic function_symbols(const Basic &b);
 
-class TransformVisitor : public BaseVisitor<TransformVisitor>
+class SYMENGINE_EXPORT TransformVisitor : public BaseVisitor<TransformVisitor>
 {
 protected:
     RCP<const Basic> result_;
@@ -316,7 +317,7 @@ inline set_basic atoms(const Basic &b)
     return visitor.apply(b);
 };
 
-class CountOpsVisitor : public BaseVisitor<CountOpsVisitor>
+class SYMENGINE_EXPORT CountOpsVisitor : public BaseVisitor<CountOpsVisitor>
 {
 protected:
     std::unordered_map<RCP<const Basic>, unsigned, RCPBasicHash, RCPBasicKeyEq>
@@ -335,7 +336,7 @@ public:
     void bvisit(const Basic &x);
 };
 
-unsigned count_ops(const vec_basic &a);
+SYMENGINE_EXPORT unsigned count_ops(const vec_basic &a);
 
 } // namespace SymEngine
 

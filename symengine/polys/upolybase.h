@@ -348,7 +348,7 @@ public:
     }
 };
 
-umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
+SYMENGINE_EXPORT umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
 
 template <typename Container, typename Poly>
 class UPolyBase : public Basic

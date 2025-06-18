@@ -16,7 +16,7 @@ namespace SymEngine
  * This serves as a place holder for numeric values that are indeterminate.
  *  Most operations on NaN, produce another NaN.
  **/
-class NaN : public Number
+class SYMENGINE_EXPORT NaN : public Number
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_NOT_A_NUMBER)
