@@ -1,5 +1,9 @@
 #include <symengine/prime_sieve.h>
+#if __cplusplus <= 201703L
 #include <ciso646>
+#else
+#include <version>
+#endif
 #include <cmath>
 #include <valarray>
 #include <algorithm>
