@@ -2025,6 +2025,39 @@ int Derivative::compare(const Basic &o) const
     return cmp;
 }
 
+Integral::Integral(const RCP<const Basic> &integrand, const RCP<const Symbol> &var)
+    : integrand_(integrand), var_(var) {
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(integrand, var))
+}
+
+hash_t Integral::__hash__() const {
+    hash_t seed = SYMENGINE_INTEGRAL;
+    hash_combine<Basic>(seed, *integrand_);
+    hash_combine<Basic>(seed, *var_);
+    return seed;
+}
+
+bool Integral::__eq__(const Basic &o) const {
+    if (is_a<Integral>(o)) {
+        const Integral &other = down_cast<const Integral &>(o);
+        return eq(*integrand_, *other.integrand_) && eq(*var_, *other.var_);
+    }
+    return false;
+}
+
+int Integral::compare(const Basic &o) const {
+    SYMENGINE_ASSERT(is_a<Integral>(o))
+    const Integral &other = down_cast<const Integral &>(o);
+    int cmp = integrand_->__cmp__(*other.integrand_);
+    if (cmp != 0) return cmp;
+    return var_->__cmp__(*other.var_);
+}
+
+bool Integral::is_canonical(const RCP<const Basic> &integrand, const RCP<const Symbol> &var) const {
+    return has_symbol(*integrand, *var);
+}
+
 // Subs class
 Subs::Subs(const RCP<const Basic> &arg, const map_basic_basic &dict)
     : arg_{arg}, dict_{dict}
