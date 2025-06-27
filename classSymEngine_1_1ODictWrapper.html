@@ -112,7 +112,7 @@ $(function() {
 <div class="center"><img src="classSymEngine_1_1ODictWrapper__coll__graph.png" border="0" usemap="#aSymEngine_1_1ODictWrapper_3_01Key_00_01Value_00_01Wrapper_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1ODictWrapper_3_01Key_00_01Value_00_01Wrapper_01_4_coll__map" id="aSymEngine_1_1ODictWrapper_3_01Key_00_01Value_00_01Wrapper_01_4_coll__map">
 <area shape="rect" title=" " alt="" coords="5,99,199,145"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/map.html" title=" " alt="" coords="14,5,190,34"/>
+<area shape="rect" title=" " alt="" coords="14,5,190,34"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -128,16 +128,16 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (const int &amp;i)</td></tr>
 <tr class="separator:a182202377b64ee6bd79b03a5c3083fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a849b13b2db636c0d8b3620faac9eff65"><td class="memItemLeft" align="right" valign="top"><a id="a849b13b2db636c0d8b3620faac9eff65"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Value &gt; &amp;p)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (const std::map&lt; Key, Value &gt; &amp;p)</td></tr>
 <tr class="separator:a849b13b2db636c0d8b3620faac9eff65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b29968f6c315bcde3e853296c4f2ea0"><td class="memItemLeft" align="right" valign="top"><a id="a3b29968f6c315bcde3e853296c4f2ea0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Value &gt; &amp;&amp;p)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (std::map&lt; Key, Value &gt; &amp;&amp;p)</td></tr>
 <tr class="separator:a3b29968f6c315bcde3e853296c4f2ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb54d8ccc3106bd94e1ff94c3d6ed79c"><td class="memItemLeft" align="right" valign="top"><a id="adb54d8ccc3106bd94e1ff94c3d6ed79c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (const Value &amp;p)</td></tr>
 <tr class="separator:adb54d8ccc3106bd94e1ff94c3d6ed79c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8991bde52c5867836a41190ea895f5d5"><td class="memItemLeft" align="right" valign="top"><a id="a8991bde52c5867836a41190ea895f5d5"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> s)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ODictWrapper</b> (std::string s)</td></tr>
 <tr class="separator:a8991bde52c5867836a41190ea895f5d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2898ebb7ba52c611420489423d3f73df"><td class="memItemLeft" align="right" valign="top"><a id="a2898ebb7ba52c611420489423d3f73df"></a>
 Wrapper &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (Wrapper &amp;&amp;other) SYMENGINE_NOEXCEPT</td></tr>
@@ -158,7 +158,7 @@ Wrapper &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*=</
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const Wrapper &amp;other) const</td></tr>
 <tr class="separator:a0861e4f61da83419b7c94c5ab7376c51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa177af82e8106fe2418b06edfa81e6ca"><td class="memItemLeft" align="right" valign="top"><a id="aa177af82e8106fe2418b06edfa81e6ca"></a>
-const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Value &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
+const std::map&lt; Key, Value &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
 <tr class="separator:aa177af82e8106fe2418b06edfa81e6ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3366ed7acf35fe1ce4d10077971fd5d"><td class="memItemLeft" align="right" valign="top"><a id="ae3366ed7acf35fe1ce4d10077971fd5d"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
@@ -179,7 +179,7 @@ Value&#160;</td><td class="memItemRight" valign="bottom"><b>get_lc</b> () const<
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:af0bdd93d7f05924c905b6c3e483ac917"><td class="memItemLeft" align="right" valign="top"><a id="af0bdd93d7f05924c905b6c3e483ac917"></a>
-static Wrapper&#160;</td><td class="memItemRight" valign="bottom"><b>from_vec</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; Value &gt; &amp;v)</td></tr>
+static Wrapper&#160;</td><td class="memItemRight" valign="bottom"><b>from_vec</b> (const std::vector&lt; Value &gt; &amp;v)</td></tr>
 <tr class="separator:af0bdd93d7f05924c905b6c3e483ac917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa75e61687ba51a548a3e0788660f2e0"><td class="memItemLeft" align="right" valign="top"><a id="aaa75e61687ba51a548a3e0788660f2e0"></a>
 static Wrapper&#160;</td><td class="memItemRight" valign="bottom"><b>mul</b> (const Wrapper &amp;a, const Wrapper &amp;b)</td></tr>
@@ -195,7 +195,7 @@ template&lt;typename FromPoly &gt; </td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:aa6b761513958632fb04416ccfd497eb9"><td class="memItemLeft" align="right" valign="top"><a id="aa6b761513958632fb04416ccfd497eb9"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Value &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dict_</b></td></tr>
+std::map&lt; Key, Value &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dict_</b></td></tr>
 <tr class="separator:aa6b761513958632fb04416ccfd497eb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>

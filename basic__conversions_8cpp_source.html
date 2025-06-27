@@ -113,21 +113,21 @@ $(function() {
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="comment">// the generators are pow(it.first, it.second)</span></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="comment">// those which are not Pow are stored as (x, one)</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="comment">// numbers must always be positive and of the form (1/d, d belongs to N)</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> gen_set;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    umap_basic_num gen_set;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    umap_basic_num apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    {</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;        b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(gen_set);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        <span class="keywordflow">return</span> std::move(gen_set);</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="comment">// adds curr to gen_set, or updates already existing gen</span></div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordtype">void</span> add_to_gen_set(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;base,</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                        <span class="keyword">const</span> RCP&lt;const Number&gt; &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>)</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">auto</span> it = gen_set.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">find</a>(base);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">if</span> (it == gen_set.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>()) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keyword">auto</span> it = gen_set.find(base);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keywordflow">if</span> (it == gen_set.end()) {</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            gen_set[base] = <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;            <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        }</div>
@@ -164,7 +164,7 @@ $(function() {
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;            add_to_gen_set(base, <a class="code" href="namespaceSymEngine.html#a3a256ad1d1c10f9d7a93523868fd6776">divnum</a>(one, r-&gt;get_den()));</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> pow_pairs</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            umap_basic_num pow_pairs</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                = _find_gens_poly_pow(x.<a class="code" href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">get_exp</a>(), x.<a class="code" href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">get_base</a>());</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> it : pow_pairs)</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                add_to_gen_set(pow(x.<a class="code" href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">get_base</a>(), it.first), it.second);</div>
@@ -200,15 +200,15 @@ $(function() {
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// the generators are mul(it.first, it.second) not Pow</span></div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// the_base is the base of the Pow (whose exp we are currently dealing)</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// numbers must always be positive and of the form (1/d, d belongs to N)</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> gen_set;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    umap_basic_num gen_set;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    RCP&lt;const Basic&gt; the_base;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;base)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    umap_basic_num apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;base)</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    {</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        the_base = base;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(gen_set);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> std::move(gen_set);</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Add.html">Add</a> &amp;x)</div>
@@ -242,7 +242,7 @@ $(function() {
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            divx = down_cast&lt;const Rational &amp;&gt;(*x.get_coef()).get_den();</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160; </div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        <span class="keyword">auto</span> dict = x.get_dict();</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        gen_set[<a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(mulx, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict))] = <a class="code" href="namespaceSymEngine.html#a3a256ad1d1c10f9d7a93523868fd6776">divnum</a>(one, divx);</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        gen_set[<a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(mulx, std::move(dict))] = <a class="code" href="namespaceSymEngine.html#a3a256ad1d1c10f9d7a93523868fd6776">divnum</a>(one, divx);</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;    }</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Number.html">Number</a> &amp;x)</div>
@@ -262,7 +262,7 @@ $(function() {
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    }</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;};</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160; </div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> _find_gens_poly(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x)</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;umap_basic_num _find_gens_poly(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x)</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;{</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <a class="code" href="classSymEngine_1_1PolyGeneratorVisitor.html">PolyGeneratorVisitor</a> v;</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;    <span class="keywordflow">return</span> v.apply(*x);</div>
@@ -291,9 +291,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Pow_html"><div class="ttname"><a href="classSymEngine_1_1Pow.html">SymEngine::Pow</a></div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00017">pow.h:18</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html_a8210eaaee4900725026ce3beefbcf9b3"><div class="ttname"><a href="classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3">SymEngine::Pow::get_exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_exp() const</div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00042">pow.h:42</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html_ab00b6e8bc69e4ce7a524d7af87771255"><div class="ttname"><a href="classSymEngine_1_1Pow.html#ab00b6e8bc69e4ce7a524d7af87771255">SymEngine::Pow::get_base</a></div><div class="ttdeci">RCP&lt; const Basic &gt; get_base() const</div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00037">pow.h:37</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">std::unordered_map::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="afind_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/find.html">std::unordered_map::find</a></div><div class="ttdeci">T find(T... args)</div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1f7b70ff3cc168dd61eeb32c7c48bf6d"><div class="ttname"><a href="namespaceSymEngine.html#a1f7b70ff3cc168dd61eeb32c7c48bf6d">SymEngine::mulnum</a></div><div class="ttdeci">RCP&lt; const Number &gt; mulnum(const RCP&lt; const Number &gt; &amp;self, const RCP&lt; const Number &gt; &amp;other)</div><div class="ttdoc">Multiply self and other</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00093">number.h:93</a></div></div>
@@ -301,7 +298,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a6f8ad0107dc645c6ce7249c600385705"><div class="ttname"><a href="namespaceSymEngine.html#a6f8ad0107dc645c6ce7249c600385705">SymEngine::lcm</a></div><div class="ttdeci">RCP&lt; const Integer &gt; lcm(const Integer &amp;a, const Integer &amp;b)</div><div class="ttdoc">Least Common Multiple.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00050">ntheory.cpp:50</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
-<div class="ttc" id="aunordered_map_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Number &gt;, RCPBasicHash, RCPBasicKeyEq &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

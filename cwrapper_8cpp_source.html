@@ -155,10 +155,10 @@ $(function() {
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">using</span> SymEngine::rcp_static_cast;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="keyword">using</span> <a class="code" href="structSymEngine_1_1RCPBasicKeyLess.html">SymEngine::RCPBasicKeyLess</a>;</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="keyword">using</span> <a class="code" href="classSymEngine_1_1Set.html">SymEngine::Set</a>;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">using</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">SymEngine::set_basic</a>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">using</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">SymEngine::vec_basic</a>;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">using</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">SymEngine::vec_pair</a>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">using</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">SymEngine::vec_sym</a>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">using</span> SymEngine::set_basic;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">using</span> SymEngine::vec_basic;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="keyword">using</span> SymEngine::vec_pair;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">using</span> SymEngine::vec_sym;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="keyword">using</span> SymEngine::get_mpq_t;</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">using</span> SymEngine::get_mpz_t;</div>
@@ -187,7 +187,7 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> 0 == <span class="keyword">reinterpret_cast&lt;</span>uintptr_t<span class="keyword">&gt;</span>(p) % n;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">static</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> _str(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;a)</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">static</span> std::string _str(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;a)</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;{</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> a.<a class="code" href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">__str__</a>();</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
@@ -214,13 +214,13 @@ $(function() {
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;};</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
 <div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="structCSetBasic.html">  116</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structCSetBasic.html">CSetBasic</a> {</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">SymEngine::set_basic</a> m;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    SymEngine::set_basic m;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;};</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;static_assert(<span class="keyword">sizeof</span>(<a class="code" href="structCRCPBasic.html">CRCPBasic</a>) == <span class="keyword">sizeof</span>(<a class="code" href="structCRCPBasic__C.html">CRCPBasic_C</a>),</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;              <span class="stringliteral">&quot;Size of &#39;basic&#39; is not correct&quot;</span>);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;static_assert(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/alignment_of.html">std::alignment_of&lt;CRCPBasic&gt;::value</a></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                  == <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/alignment_of.html">std::alignment_of&lt;CRCPBasic_C&gt;::value</a>,</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;static_assert(std::alignment_of&lt;CRCPBasic&gt;::value</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                  == std::alignment_of&lt;CRCPBasic_C&gt;::value,</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;              <span class="stringliteral">&quot;Alignment of &#39;basic&#39; is not correct&quot;</span>);</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="keywordtype">void</span> basic_new_stack(basic s)</div>
@@ -250,7 +250,7 @@ $(function() {
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160; </div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;<span class="keywordtype">void</span> basic_const_set(basic s, <span class="keyword">const</span> <span class="keywordtype">char</span> *c)</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;{</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    s-&gt;m = <a class="code" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">SymEngine::constant</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(c));</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    s-&gt;m = <a class="code" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">SymEngine::constant</a>(std::string(c));</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;}</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160; </div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;<span class="keywordtype">void</span> basic_const_zero(basic s)</div>
@@ -320,7 +320,7 @@ $(function() {
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160; </div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;TypeID basic_get_class_id(<span class="keyword">const</span> <span class="keywordtype">char</span> *c)</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;{</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keyword">static</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;std::string, TypeID&gt;</a> names = {</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;    <span class="keyword">static</span> std::map&lt;std::string, TypeID&gt; names = {</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="preprocessor">#define SYMENGINE_INCLUDE_ALL</span></div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;<span class="preprocessor">#define SYMENGINE_ENUM(type, Class) {xstr(Class), type},</span></div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#include &quot;symengine/type_codes.inc&quot;</span></div>
@@ -328,12 +328,12 @@ $(function() {
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;<span class="preprocessor">#undef SYMENGINE_INCLUDE_ALL</span></div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        {<span class="stringliteral">&quot;&quot;</span>, SYMENGINE_TypeID_Count}};</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160; </div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">return</span> names[<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(c)];</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keywordflow">return</span> names[std::string(c)];</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;}</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160; </div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;<span class="keywordtype">char</span> *basic_get_class_from_id(TypeID <span class="keywordtype">id</span>)</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;{</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keyword">static</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;TypeID, std::string&gt;</a> names = {</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;    <span class="keyword">static</span> std::map&lt;TypeID, std::string&gt; names = {</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;<span class="preprocessor">#define SYMENGINE_INCLUDE_ALL</span></div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;<span class="preprocessor">#define SYMENGINE_ENUM(type, Class) {type, xstr(Class)},</span></div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;<span class="preprocessor">#include &quot;symengine/type_codes.inc&quot;</span></div>
@@ -341,9 +341,9 @@ $(function() {
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;<span class="preprocessor">#undef SYMENGINE_INCLUDE_ALL</span></div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;        {SYMENGINE_TypeID_Count, <span class="stringliteral">&quot;&quot;</span>}};</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160; </div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name = names[id];</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[name.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() + 1];</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcpy.html">std::strcpy</a>(cc, name.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/c_str.html">c_str</a>());</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    std::string name = names[id];</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[name.length() + 1];</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    std::strcpy(cc, name.c_str());</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;    <span class="keywordflow">return</span> cc;</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;}</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160; </div>
@@ -355,7 +355,7 @@ $(function() {
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;CWRAPPER_OUTPUT_TYPE symbol_set(basic s, <span class="keyword">const</span> <span class="keywordtype">char</span> *c)</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;{</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    CWRAPPER_BEGIN</div>
-<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    s-&gt;m = <a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">SymEngine::symbol</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(c));</div>
+<div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    s-&gt;m = <a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">SymEngine::symbol</a>(std::string(c));</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    CWRAPPER_END</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;}</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160; </div>
@@ -438,7 +438,7 @@ $(function() {
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;    CWRAPPER_BEGIN</div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    mpfr_class mc = mpfr_class(prec);</div>
 <div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;    mpfr_set_d(mc.get_mpfr_t(), d, MPFR_RNDN);</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    s-&gt;m = SymEngine::real_mpfr(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(mc));</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    s-&gt;m = SymEngine::real_mpfr(std::move(mc));</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;    CWRAPPER_END</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;}</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
@@ -603,17 +603,17 @@ $(function() {
 <div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160; </div>
 <div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;<span class="keywordtype">char</span> *basic_dumps(<span class="keyword">const</span> basic s, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> *size)</div>
 <div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;{</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = s-&gt;m-&gt;dumps();</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    *size = str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>();</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    std::string str = s-&gt;m-&gt;dumps();</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    *size = str.length();</div>
 <div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[*size];</div>
-<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/copy.html">copy</a>(cc, *size);</div>
+<div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    str.copy(cc, *size);</div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    <span class="keywordflow">return</span> cc;</div>
 <div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;}</div>
 <div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160; </div>
 <div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;CWRAPPER_OUTPUT_TYPE basic_loads(basic s, <span class="keyword">const</span> <span class="keywordtype">char</span> *c, <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> size)</div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;{</div>
 <div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;    CWRAPPER_BEGIN</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> data(c, size);</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    std::string data(c, size);</div>
 <div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    s-&gt;m = Basic::loads(data);</div>
 <div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;    CWRAPPER_END</div>
 <div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;}</div>
@@ -805,11 +805,11 @@ $(function() {
 <div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;                                        <span class="keywordtype">int</span> right_open)</div>
 <div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;{</div>
 <div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;    SYMENGINE_ASSERT(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*(start-&gt;m)));</div>
-<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;    SYMENGINE_ASSERT(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*(<a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>-&gt;m)));</div>
+<div class="line"><a name="l00708"></a><span class="lineno">  708</span>&#160;    SYMENGINE_ASSERT(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*(end-&gt;m)));</div>
 <div class="line"><a name="l00709"></a><span class="lineno">  709</span>&#160; </div>
 <div class="line"><a name="l00710"></a><span class="lineno">  710</span>&#160;    CWRAPPER_BEGIN</div>
 <div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;    s-&gt;m = <a class="code" href="namespaceSymEngine.html#a0662566ef725c03a0bfcbff19655d799">SymEngine::interval</a>(rcp_static_cast&lt;const Number&gt;(start-&gt;m),</div>
-<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;                               rcp_static_cast&lt;const Number&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>-&gt;m),</div>
+<div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;                               rcp_static_cast&lt;const Number&gt;(end-&gt;m),</div>
 <div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;                               (<span class="keywordtype">bool</span>)left_open, (<span class="keywordtype">bool</span>)right_open);</div>
 <div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    CWRAPPER_END</div>
 <div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;}</div>
@@ -953,47 +953,47 @@ $(function() {
 <div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;<span class="keywordtype">int</span> symengine_have_component(<span class="keyword">const</span> <span class="keywordtype">char</span> *c)</div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;{</div>
 <div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_MPFR</span></div>
-<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;mpfr&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;mpfr&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00859"></a><span class="lineno">  859</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_MPC</span></div>
-<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;mpc&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;mpc&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_FLINT</span></div>
-<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;flint&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;flint&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_ARB</span></div>
-<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;arb&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;arb&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_ECM</span></div>
-<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;ecm&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;ecm&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_PRIMESIEVE</span></div>
-<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;primesieve&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;primesieve&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_PIRANHA</span></div>
-<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;piranha&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;piranha&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_BOOST</span></div>
-<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;boost&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;boost&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_PTHREAD</span></div>
-<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;pthread&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;pthread&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_LLVM</span></div>
-<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;llvm&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;llvm&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;<span class="preprocessor">#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE</span></div>
-<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;    <span class="keywordflow">if</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a>(<span class="stringliteral">&quot;llvm_long_double&quot;</span>, c) == 0)</div>
+<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;    <span class="keywordflow">if</span> (std::strcmp(<span class="stringliteral">&quot;llvm_long_double&quot;</span>, c) == 0)</div>
 <div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;        <span class="keywordflow">return</span> 1;</div>
 <div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;    <span class="keywordflow">return</span> 0;</div>
@@ -1051,7 +1051,7 @@ $(function() {
 <div class="line"><a name="l00951"></a><span class="lineno">  951</span>&#160;<span class="comment">// C wrapper for std::vector&lt;int&gt;</span></div>
 <div class="line"><a name="l00952"></a><span class="lineno">  952</span>&#160; </div>
 <div class="line"><a name="l00953"></a><span class="lineno"><a class="line" href="structCVectorInt.html">  953</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structCVectorInt.html">CVectorInt</a> {</div>
-<div class="line"><a name="l00954"></a><span class="lineno">  954</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;int&gt;</a> m;</div>
+<div class="line"><a name="l00954"></a><span class="lineno">  954</span>&#160;    std::vector&lt;int&gt; m;</div>
 <div class="line"><a name="l00955"></a><span class="lineno">  955</span>&#160;};</div>
 <div class="line"><a name="l00956"></a><span class="lineno">  956</span>&#160; </div>
 <div class="line"><a name="l00957"></a><span class="lineno">  957</span>&#160;<a class="code" href="structCVectorInt.html">CVectorInt</a> *vectorint_new()</div>
@@ -1103,7 +1103,7 @@ $(function() {
 <div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;<span class="comment">// C wrapper for vec_basic</span></div>
 <div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160; </div>
 <div class="line"><a name="l01005"></a><span class="lineno"><a class="line" href="structCVecBasic.html"> 1005</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structCVecBasic.html">CVecBasic</a> {</div>
-<div class="line"><a name="l01006"></a><span class="lineno"> 1006</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">SymEngine::vec_basic</a> m;</div>
+<div class="line"><a name="l01006"></a><span class="lineno"> 1006</span>&#160;    SymEngine::vec_basic m;</div>
 <div class="line"><a name="l01007"></a><span class="lineno"> 1007</span>&#160;};</div>
 <div class="line"><a name="l01008"></a><span class="lineno"> 1008</span>&#160; </div>
 <div class="line"><a name="l01009"></a><span class="lineno"> 1009</span>&#160;<a class="code" href="structCVecBasic.html">CVecBasic</a> *vecbasic_new()</div>
@@ -1245,17 +1245,17 @@ $(function() {
 <div class="line"><a name="l01145"></a><span class="lineno"> 1145</span>&#160; </div>
 <div class="line"><a name="l01146"></a><span class="lineno"> 1146</span>&#160;<span class="keywordtype">char</span> *dense_matrix_str(<span class="keyword">const</span> <a class="code" href="structCDenseMatrix.html">CDenseMatrix</a> *s)</div>
 <div class="line"><a name="l01147"></a><span class="lineno"> 1147</span>&#160;{</div>
-<div class="line"><a name="l01148"></a><span class="lineno"> 1148</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = s-&gt;m.__str__();</div>
-<div class="line"><a name="l01149"></a><span class="lineno"> 1149</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() + 1];</div>
-<div class="line"><a name="l01150"></a><span class="lineno"> 1150</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcpy.html">std::strcpy</a>(cc, str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/c_str.html">c_str</a>());</div>
+<div class="line"><a name="l01148"></a><span class="lineno"> 1148</span>&#160;    std::string str = s-&gt;m.__str__();</div>
+<div class="line"><a name="l01149"></a><span class="lineno"> 1149</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.length() + 1];</div>
+<div class="line"><a name="l01150"></a><span class="lineno"> 1150</span>&#160;    std::strcpy(cc, str.c_str());</div>
 <div class="line"><a name="l01151"></a><span class="lineno"> 1151</span>&#160;    <span class="keywordflow">return</span> cc;</div>
 <div class="line"><a name="l01152"></a><span class="lineno"> 1152</span>&#160;}</div>
 <div class="line"><a name="l01153"></a><span class="lineno"> 1153</span>&#160; </div>
 <div class="line"><a name="l01154"></a><span class="lineno"> 1154</span>&#160;<span class="keywordtype">char</span> *sparse_matrix_str(<span class="keyword">const</span> <a class="code" href="structCSparseMatrix.html">CSparseMatrix</a> *s)</div>
 <div class="line"><a name="l01155"></a><span class="lineno"> 1155</span>&#160;{</div>
-<div class="line"><a name="l01156"></a><span class="lineno"> 1156</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = s-&gt;m.__str__();</div>
-<div class="line"><a name="l01157"></a><span class="lineno"> 1157</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() + 1];</div>
-<div class="line"><a name="l01158"></a><span class="lineno"> 1158</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcpy.html">std::strcpy</a>(cc, str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/c_str.html">c_str</a>());</div>
+<div class="line"><a name="l01156"></a><span class="lineno"> 1156</span>&#160;    std::string str = s-&gt;m.__str__();</div>
+<div class="line"><a name="l01157"></a><span class="lineno"> 1157</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.length() + 1];</div>
+<div class="line"><a name="l01158"></a><span class="lineno"> 1158</span>&#160;    std::strcpy(cc, str.c_str());</div>
 <div class="line"><a name="l01159"></a><span class="lineno"> 1159</span>&#160;    <span class="keywordflow">return</span> cc;</div>
 <div class="line"><a name="l01160"></a><span class="lineno"> 1160</span>&#160;}</div>
 <div class="line"><a name="l01161"></a><span class="lineno"> 1161</span>&#160; </div>
@@ -1570,12 +1570,12 @@ $(function() {
 <div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160; </div>
 <div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;<span class="keywordtype">void</span> setbasic_get(<a class="code" href="structCSetBasic.html">CSetBasic</a> *<span class="keyword">self</span>, <span class="keywordtype">int</span> n, basic result)</div>
 <div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;{</div>
-<div class="line"><a name="l01473"></a><span class="lineno"> 1473</span>&#160;    result-&gt;m = *<a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a>((self-&gt;m).begin(), n);</div>
+<div class="line"><a name="l01473"></a><span class="lineno"> 1473</span>&#160;    result-&gt;m = *std::next((self-&gt;m).begin(), n);</div>
 <div class="line"><a name="l01474"></a><span class="lineno"> 1474</span>&#160;}</div>
 <div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160; </div>
 <div class="line"><a name="l01476"></a><span class="lineno"> 1476</span>&#160;<span class="keywordtype">int</span> setbasic_find(<a class="code" href="structCSetBasic.html">CSetBasic</a> *<span class="keyword">self</span>, basic value)</div>
 <div class="line"><a name="l01477"></a><span class="lineno"> 1477</span>&#160;{</div>
-<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">self</span>-&gt;m.find(value-&gt;m) != (<span class="keyword">self</span>-&gt;m).<a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>() ? 1 : 0;</div>
+<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">self</span>-&gt;m.find(value-&gt;m) != (<span class="keyword">self</span>-&gt;m).end() ? 1 : 0;</div>
 <div class="line"><a name="l01479"></a><span class="lineno"> 1479</span>&#160;}</div>
 <div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160; </div>
 <div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160;<span class="keywordtype">int</span> setbasic_erase(<a class="code" href="structCSetBasic.html">CSetBasic</a> *<span class="keyword">self</span>, <span class="keyword">const</span> basic value)</div>
@@ -1591,7 +1591,7 @@ $(function() {
 <div class="line"><a name="l01491"></a><span class="lineno"> 1491</span>&#160;<span class="comment">// C Wrapper for map_basic_basic</span></div>
 <div class="line"><a name="l01492"></a><span class="lineno"> 1492</span>&#160; </div>
 <div class="line"><a name="l01493"></a><span class="lineno"><a class="line" href="structCMapBasicBasic.html"> 1493</a></span>&#160;<span class="keyword">struct </span><a class="code" href="structCMapBasicBasic.html">CMapBasicBasic</a> {</div>
-<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">SymEngine::map_basic_basic</a> m;</div>
+<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160;    SymEngine::map_basic_basic m;</div>
 <div class="line"><a name="l01495"></a><span class="lineno"> 1495</span>&#160;};</div>
 <div class="line"><a name="l01496"></a><span class="lineno"> 1496</span>&#160; </div>
 <div class="line"><a name="l01497"></a><span class="lineno"> 1497</span>&#160;<a class="code" href="structCMapBasicBasic.html">CMapBasicBasic</a> *mapbasicbasic_new()</div>
@@ -1681,9 +1681,9 @@ $(function() {
 <div class="line"><a name="l01581"></a><span class="lineno"> 1581</span>&#160;<span class="keywordtype">char</span> *function_symbol_get_name(<span class="keyword">const</span> basic b)</div>
 <div class="line"><a name="l01582"></a><span class="lineno"> 1582</span>&#160;{</div>
 <div class="line"><a name="l01583"></a><span class="lineno"> 1583</span>&#160;    SYMENGINE_ASSERT(is_a&lt;FunctionSymbol&gt;(*(b-&gt;m)));</div>
-<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = down_cast&lt;const FunctionSymbol &amp;&gt;(*(b-&gt;m)).get_name();</div>
-<div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() + 1];</div>
-<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcpy.html">std::strcpy</a>(cc, str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/c_str.html">c_str</a>());</div>
+<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;    std::string str = down_cast&lt;const FunctionSymbol &amp;&gt;(*(b-&gt;m)).get_name();</div>
+<div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.length() + 1];</div>
+<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;    std::strcpy(cc, str.c_str());</div>
 <div class="line"><a name="l01587"></a><span class="lineno"> 1587</span>&#160;    <span class="keywordflow">return</span> cc;</div>
 <div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;}</div>
 <div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160; </div>
@@ -1703,7 +1703,7 @@ $(function() {
 <div class="line"><a name="l01603"></a><span class="lineno"> 1603</span>&#160;    CWRAPPER_BEGIN</div>
 <div class="line"><a name="l01604"></a><span class="lineno"> 1604</span>&#160;    vec_basic vb = sym-&gt;m;</div>
 <div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160;    SYMENGINE_ASSERT(</div>
-<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/all_any_none_of.html">std::all_of</a>(vb.cbegin(), vb.cend(),</div>
+<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160;        std::all_of(vb.cbegin(), vb.cend(),</div>
 <div class="line"><a name="l01607"></a><span class="lineno"> 1607</span>&#160;                    [](RCP&lt;const Basic&gt; b) { return is_a&lt;const Symbol&gt;(*b); }));</div>
 <div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;    vec_sym vs(vb.size());</div>
 <div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; vb.size(); i++)</div>
@@ -1717,9 +1717,9 @@ $(function() {
 <div class="line"><a name="l01617"></a><span class="lineno"> 1617</span>&#160;{</div>
 <div class="line"><a name="l01618"></a><span class="lineno"> 1618</span>&#160;    CWRAPPER_BEGIN</div>
 <div class="line"><a name="l01619"></a><span class="lineno"> 1619</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Symbol&gt;(*(s-&gt;m)));</div>
-<div class="line"><a name="l01620"></a><span class="lineno"> 1620</span>&#160;    RCP&lt;const Set&gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set</a></div>
+<div class="line"><a name="l01620"></a><span class="lineno"> 1620</span>&#160;    RCP&lt;const Set&gt; set</div>
 <div class="line"><a name="l01621"></a><span class="lineno"> 1621</span>&#160;        = SymEngine::solve_poly(f-&gt;m, rcp_static_cast&lt;const Symbol&gt;(s-&gt;m));</div>
-<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;    <span class="keywordflow">if</span> (not is_a&lt;FiniteSet&gt;(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set</a>)) {</div>
+<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;    <span class="keywordflow">if</span> (not is_a&lt;FiniteSet&gt;(*set)) {</div>
 <div class="line"><a name="l01623"></a><span class="lineno"> 1623</span>&#160;        <span class="keywordflow">return</span> SYMENGINE_NOT_IMPLEMENTED;</div>
 <div class="line"><a name="l01624"></a><span class="lineno"> 1624</span>&#160;    }</div>
 <div class="line"><a name="l01625"></a><span class="lineno"> 1625</span>&#160;    r-&gt;m = down_cast&lt;const FiniteSet &amp;&gt;(*set).get_container();</div>
@@ -1730,9 +1730,9 @@ $(function() {
 <div class="line"><a name="l01630"></a><span class="lineno"> 1630</span>&#160; </div>
 <div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;<span class="keywordtype">char</span> *ascii_art_str()</div>
 <div class="line"><a name="l01632"></a><span class="lineno"> 1632</span>&#160;{</div>
-<div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> str = SymEngine::ascii_art();</div>
-<div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">length</a>() + 1];</div>
-<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/strcpy.html">std::strcpy</a>(cc, str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/c_str.html">c_str</a>());</div>
+<div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160;    std::string str = SymEngine::ascii_art();</div>
+<div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;    <span class="keyword">auto</span> cc = <span class="keyword">new</span> <span class="keywordtype">char</span>[str.length() + 1];</div>
+<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;    std::strcpy(cc, str.c_str());</div>
 <div class="line"><a name="l01636"></a><span class="lineno"> 1636</span>&#160;    <span class="keywordflow">return</span> cc;</div>
 <div class="line"><a name="l01637"></a><span class="lineno"> 1637</span>&#160;}</div>
 <div class="line"><a name="l01638"></a><span class="lineno"> 1638</span>&#160; </div>
@@ -2077,8 +2077,8 @@ $(function() {
 <div class="line"><a name="l01978"></a><span class="lineno"> 1978</span>&#160;    vec_pair replacements;</div>
 <div class="line"><a name="l01979"></a><span class="lineno"> 1979</span>&#160;    SymEngine::cse(replacements, reduced_exprs-&gt;m, exprs-&gt;m);</div>
 <div class="line"><a name="l01980"></a><span class="lineno"> 1980</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : replacements) {</div>
-<div class="line"><a name="l01981"></a><span class="lineno"> 1981</span>&#160;        replacement_syms-&gt;m.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(p.first);</div>
-<div class="line"><a name="l01982"></a><span class="lineno"> 1982</span>&#160;        replacement_exprs-&gt;m.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(p.second);</div>
+<div class="line"><a name="l01981"></a><span class="lineno"> 1981</span>&#160;        replacement_syms-&gt;m.push_back(p.first);</div>
+<div class="line"><a name="l01982"></a><span class="lineno"> 1982</span>&#160;        replacement_exprs-&gt;m.push_back(p.second);</div>
 <div class="line"><a name="l01983"></a><span class="lineno"> 1983</span>&#160;    }</div>
 <div class="line"><a name="l01984"></a><span class="lineno"> 1984</span>&#160;    CWRAPPER_END</div>
 <div class="line"><a name="l01985"></a><span class="lineno"> 1985</span>&#160;}</div>
@@ -2087,10 +2087,6 @@ $(function() {
 <div class="line"><a name="l01989"></a><span class="lineno"> 1989</span>&#160;    SymEngine::print_stack_on_segfault();</div>
 <div class="line"><a name="l01990"></a><span class="lineno"> 1990</span>&#160;}</div>
 <div class="line"><a name="l01991"></a><span class="lineno"> 1991</span>&#160;}</div>
-<div class="ttc" id="aalignment_of_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/alignment_of.html">std::alignment_of</a></div></div>
-<div class="ttc" id="aall_any_none_of_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/all_any_none_of.html">std::all_of</a></div><div class="ttdeci">T all_of(T... args)</div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="ac_str_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/c_str.html">std::string::c_str</a></div><div class="ttdeci">T c_str(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html"><div class="ttname"><a href="classSymEngine_1_1Add.html">SymEngine::Add</a></div><div class="ttdoc">The base class for representing addition in symbolic expressions.</div><div class="ttdef"><b>Definition:</b> <a href="add_8h_source.html#l00026">add.h:27</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html_a905153d35107acc23b37e04e1b430420"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a905153d35107acc23b37e04e1b430420">SymEngine::Basic::__str__</a></div><div class="ttdeci">std::string __str__() const</div><div class="ttdef"><b>Definition:</b> <a href="basic_8cpp_source.html#l00048">basic.cpp:48</a></div></div>
@@ -2116,11 +2112,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1RealMPFR_html"><div class="ttname"><a href="classSymEngine_1_1RealMPFR.html">SymEngine::RealMPFR</a></div><div class="ttdef"><b>Definition:</b> <a href="real__mpfr_8h_source.html#l00371">real_mpfr.h:372</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Set_html"><div class="ttname"><a href="classSymEngine_1_1Set.html">SymEngine::Set</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00025">sets.h:26</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Symbol_html"><div class="ttname"><a href="classSymEngine_1_1Symbol.html">SymEngine::Symbol</a></div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00014">symbol.h:15</a></div></div>
-<div class="ttc" id="acopy_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/copy.html">std::string::copy</a></div><div class="ttdeci">T copy(T... args)</div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="aeval_8h_html"><div class="ttname"><a href="eval_8h.html">eval.h</a></div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a0662566ef725c03a0bfcbff19655d799"><div class="ttname"><a href="namespaceSymEngine.html#a0662566ef725c03a0bfcbff19655d799">SymEngine::interval</a></div><div class="ttdeci">RCP&lt; const Set &gt; interval(const RCP&lt; const Number &gt; &amp;start, const RCP&lt; const Number &gt; &amp;end, const bool left_open=false, const bool right_open=false)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00611">sets.h:611</a></div></div>
@@ -2164,13 +2156,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_ac7ed31f65bb252b7b4b3f1f45fdeec34"><div class="ttname"><a href="namespaceSymEngine.html#ac7ed31f65bb252b7b4b3f1f45fdeec34">SymEngine::rationals</a></div><div class="ttdeci">RCP&lt; const Rationals &gt; rationals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00566">sets.h:566</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_acde8c189ba1160ef22f427dec4701ded"><div class="ttname"><a href="namespaceSymEngine.html#acde8c189ba1160ef22f427dec4701ded">SymEngine::quotient_mod</a></div><div class="ttdeci">void quotient_mod(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;q, const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;r, const Integer &amp;n, const Integer &amp;d)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00077">ntheory.cpp:77</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aff0d65ef819e6ee1328757e4acf3fb1e"><div class="ttname"><a href="namespaceSymEngine.html#aff0d65ef819e6ee1328757e4acf3fb1e">SymEngine::lucas2</a></div><div class="ttdeci">void lucas2(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;g, const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;s, unsigned long n)</div><div class="ttdoc">Lucas number n and n-1.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00135">ntheory.cpp:135</a></div></div>
-<div class="ttc" id="anext_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a></div><div class="ttdeci">T next(T... args)</div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt; RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">std::string::length</a></div><div class="ttdeci">T length(T... args)</div></div>
 <div class="ttc" id="asolve_8h_html"><div class="ttname"><a href="solve_8h.html">solve.h</a></div></div>
-<div class="ttc" id="astrcmp_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/byte/strcmp.html">std::strcmp</a></div><div class="ttdeci">T strcmp(T... args)</div></div>
-<div class="ttc" id="astrcpy_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/byte/strcpy.html">std::strcpy</a></div><div class="ttdeci">T strcpy(T... args)</div></div>
 <div class="ttc" id="astructCDenseMatrix_html"><div class="ttname"><a href="structCDenseMatrix.html">CDenseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01089">cwrapper.cpp:1089</a></div></div>
 <div class="ttc" id="astructCLambdaRealDoubleVisitor_html"><div class="ttname"><a href="structCLambdaRealDoubleVisitor.html">CLambdaRealDoubleVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01857">cwrapper.cpp:1857</a></div></div>
 <div class="ttc" id="astructCMapBasicBasic_html"><div class="ttname"><a href="structCMapBasicBasic.html">CMapBasicBasic</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8cpp_source.html#l01493">cwrapper.cpp:1493</a></div></div>
@@ -2183,7 +2169,6 @@ $(function() {
 <div class="ttc" id="astructSymEngine_1_1RCPBasicKeyLess_html"><div class="ttname"><a href="structSymEngine_1_1RCPBasicKeyLess.html">SymEngine::RCPBasicKeyLess</a></div><div class="ttdoc">Our less operator (&lt;):</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00228">basic.h:228</a></div></div>
 <div class="ttc" id="astructdcomplex_html"><div class="ttname"><a href="structdcomplex.html">dcomplex</a></div><div class="ttdef"><b>Definition:</b> <a href="cwrapper_8h_source.html#l00046">cwrapper.h:46</a></div></div>
 <div class="ttc" id="asymbol_8h_html"><div class="ttname"><a href="symbol_8h.html">symbol.h</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

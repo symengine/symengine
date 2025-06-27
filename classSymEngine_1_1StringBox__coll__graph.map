@@ -1,7 +1,6 @@
 <map id="SymEngine::StringBox" name="SymEngine::StringBox">
-<area shape="rect" id="node1" title=" " alt="" coords="25,289,190,318"/>
-<area shape="rect" id="node2" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="5,195,93,224"/>
-<area shape="rect" id="node3" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="116,195,302,224"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="166,101,252,130"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="140,5,278,51"/>
+<area shape="rect" id="node1" title=" " alt="" coords="15,289,181,318"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,195,191,224"/>
+<area shape="rect" id="node3" title=" " alt="" coords="55,101,141,130"/>
+<area shape="rect" id="node4" title=" " alt="" coords="29,5,167,51"/>
 </map>

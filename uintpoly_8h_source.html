@@ -110,12 +110,12 @@ $(function() {
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> bit_length(T t)</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/count.html">count</a> = 0;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> count = 0;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordflow">while</span> (t &gt; 0) {</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/count.html">count</a>++;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        count++;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        t = t &gt;&gt; 1;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    }</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/count.html">count</a>;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keywordflow">return</span> count;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classSymEngine_1_1UIntDict.html">   24</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>&lt;unsigned int, integer_class, UIntDict&gt;</div>
@@ -125,11 +125,11 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>() SYMENGINE_NOEXCEPT {}</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    ~<a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>() SYMENGINE_NOEXCEPT {}</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>(<a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a> &amp;&amp;other) SYMENGINE_NOEXCEPT</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        : <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other))</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        : <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>(std::move(other))</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    {</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    }</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;i) : <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>(i) {}</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_uint_mpz</a> &amp;p) : <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>(p) {}</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>(<span class="keyword">const</span> map_uint_mpz &amp;p) : <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>(p) {}</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>(<span class="keyword">const</span> integer_class &amp;i) : <a class="code" href="classSymEngine_1_1ODictWrapper.html">ODictWrapper</a>(i) {}</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1UIntDict.html">UIntDict</a> &amp;) = <span class="keywordflow">default</span>;</div>
@@ -154,7 +154,7 @@ $(function() {
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <span class="keywordtype">int</span> mul = 1;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> N = bit_length(<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(a.degree() + 1, b.degree() + 1))</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> N = bit_length(std::min(a.degree() + 1, b.degree() + 1))</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;                         + bit_length(a.max_abs_coef())</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                         + bit_length(b.max_abs_coef());</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
@@ -232,10 +232,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1UIntPoly_html_ac98b4087541dc4221429686dc70d785f"><div class="ttname"><a href="classSymEngine_1_1UIntPoly.html#ac98b4087541dc4221429686dc70d785f">SymEngine::UIntPoly::UIntPoly</a></div><div class="ttdeci">UIntPoly(const RCP&lt; const Basic &gt; &amp;var, UIntDict &amp;&amp;dict)</div><div class="ttdoc">Constructor of UIntPoly class.</div><div class="ttdef"><b>Definition:</b> <a href="uintpoly_8cpp_source.html#l00006">uintpoly.cpp:6</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UIntPoly_html_afbe715f0f43e21a460077abf549be90d"><div class="ttname"><a href="classSymEngine_1_1UIntPoly.html#afbe715f0f43e21a460077abf549be90d">SymEngine::UIntPoly::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="uintpoly_8cpp_source.html#l00011">uintpoly.cpp:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1USymEnginePoly_html"><div class="ttname"><a href="classSymEngine_1_1USymEnginePoly.html">SymEngine::USymEnginePoly</a></div><div class="ttdef"><b>Definition:</b> <a href="usymenginepoly_8h_source.html#l00011">usymenginepoly.h:12</a></div></div>
-<div class="ttc" id="acount_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/count.html">std::count</a></div><div class="ttdeci">T count(T... args)</div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
-<div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>

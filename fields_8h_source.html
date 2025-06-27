@@ -112,7 +112,7 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisFieldDict.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> dict_;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::vector&lt;integer_class&gt; dict_;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    integer_class modulo_;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">public</span>:</div>
@@ -125,8 +125,8 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;            <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                <span class="keywordflow">return</span> a.degree() &lt; b.degree();</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        }</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;GaloisFieldDict, unsigned&gt;</a> &amp;a,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                        <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;GaloisFieldDict, unsigned&gt;</a> &amp;b)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keywordtype">bool</span> operator()(<span class="keyword">const</span> std::pair&lt;GaloisFieldDict, unsigned&gt; &amp;a,</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                        <span class="keyword">const</span> std::pair&lt;GaloisFieldDict, unsigned&gt; &amp;b)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="keyword">        </span>{</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;            <span class="keywordflow">if</span> (a.first.degree() == b.first.degree())</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                <span class="keywordflow">return</span> a.first.dict_ &lt; b.first.dict_;</div>
@@ -137,15 +137,15 @@ $(function() {
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>() SYMENGINE_NOEXCEPT {}</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    ~<a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>() SYMENGINE_NOEXCEPT {}</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    GaloisFieldDict(GaloisFieldDict &amp;&amp;other) SYMENGINE_NOEXCEPT</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        : dict_(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.dict_)),</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;          modulo_(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.modulo_))</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        : dict_(std::move(other.dict_)),</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;          modulo_(std::move(other.modulo_))</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;i, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> map_uint_mpz &amp;p, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> integer_class &amp;i, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">static</span> GaloisFieldDict from_vec(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> &amp;v,</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">static</span> GaloisFieldDict from_vec(<span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;v,</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                    <span class="keyword">const</span> integer_class &amp;modulo);</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> GaloisFieldDict &amp;) = <span class="keywordflow">default</span>;</div>
@@ -171,7 +171,7 @@ $(function() {
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// representation in `modulo_`</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// A vector of pair is returned where each element is a factor and each</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">// pair&#39;s first raised to power of second gives the factor.</span></div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;</a>&gt; gf_sqf_list() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::vector&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;&gt; gf_sqf_list() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="comment">// Returns the square free part of the polynomaial in `modulo_`</span></div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    GaloisFieldDict gf_sqf_part() <span class="keyword">const</span>;</div>
@@ -180,7 +180,7 @@ $(function() {
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                                   <span class="keyword">const</span> GaloisFieldDict &amp;h) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="comment">// returns `x**(i * modullo_) % (*this)` for `i` in [0, n)</span></div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="comment">// where n = this-&gt;degree()</span></div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;GaloisFieldDict&gt;</a> gf_frobenius_monomial_base() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    std::vector&lt;GaloisFieldDict&gt; gf_frobenius_monomial_base() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">// computes `f**n % (*this)` in modulo_</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    GaloisFieldDict gf_pow_mod(<span class="keyword">const</span> GaloisFieldDict &amp;f,</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;                               <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> &amp;n) <span class="keyword">const</span>;</div>
@@ -188,20 +188,20 @@ $(function() {
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="comment">// i.e. `(*this)**modulo_ % g`</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    GaloisFieldDict</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    gf_frobenius_map(<span class="keyword">const</span> GaloisFieldDict &amp;g,</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                     <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;GaloisFieldDict&gt;</a> &amp;b) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;GaloisFieldDict, GaloisFieldDict&gt;</a></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;                     <span class="keyword">const</span> std::vector&lt;GaloisFieldDict&gt; &amp;b) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::pair&lt;GaloisFieldDict, GaloisFieldDict&gt;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    gf_trace_map(<span class="keyword">const</span> GaloisFieldDict &amp;a, <span class="keyword">const</span> GaloisFieldDict &amp;b,</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;                 <span class="keyword">const</span> GaloisFieldDict &amp;c, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> &amp;n) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    GaloisFieldDict _gf_trace_map(<span class="keyword">const</span> GaloisFieldDict &amp;f,</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                                  <span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> &amp;n,</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                                  <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;GaloisFieldDict&gt;</a> &amp;b) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                                  <span class="keyword">const</span> std::vector&lt;GaloisFieldDict&gt; &amp;b) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="comment">// For a monic square-free polynomial in modulo_, it returns its distinct</span></div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="comment">// degree factorization. Each element&#39;s first is a factor and second</span></div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="comment">// is used by equal degree factorization. (Zassenhaus&#39;s algorithm)</span></div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;</a>&gt; gf_ddf_zassenhaus() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    std::vector&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;&gt; gf_ddf_zassenhaus() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="comment">// Computes `f**((modulo_**n - 1) // 2) % *this`</span></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    GaloisFieldDict _gf_pow_pnm1d2(<span class="keyword">const</span> GaloisFieldDict &amp;f, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> &amp;n,</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                   <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;GaloisFieldDict&gt;</a> &amp;b) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                   <span class="keyword">const</span> std::vector&lt;GaloisFieldDict&gt; &amp;b) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="comment">// Generates a random polynomial in `modulo_` of degree `n`.</span></div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    GaloisFieldDict gf_random(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> &amp;n_val,</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                              mp_randstate &amp;state) <span class="keyword">const</span>;</div>
@@ -209,22 +209,22 @@ $(function() {
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="comment">// Given a monic square-free polynomial and an integer `n`, such that `n`</span></div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="comment">// divides `this-&gt;degree()`,</span></div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="comment">// returns all irreducible factors, each of degree `n`.</span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt;GaloisFieldDict, DictLess&gt;</a></div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    std::set&lt;GaloisFieldDict, DictLess&gt;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    gf_edf_zassenhaus(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> &amp;n) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="comment">// For a monic square-free polynomial in modulo_, it returns its distinct</span></div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="comment">// degree factorization. Each element&#39;s first is a factor and second</span></div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="comment">// is used by equal degree factorization. (Shoup&#39;s algorithm)</span></div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="comment">// Factors a polynomial in field of modulo_</span></div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;</a>&gt; gf_ddf_shoup() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    std::vector&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;&gt; gf_ddf_shoup() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="comment">// Equal degree factorization using Shoup&#39;s algorithm.</span></div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt;GaloisFieldDict, DictLess&gt;</a> gf_edf_shoup(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> &amp;n) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    std::set&lt;GaloisFieldDict, DictLess&gt; gf_edf_shoup(<span class="keyword">const</span> <span class="keywordtype">unsigned</span> &amp;n) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="comment">// Factors a square free polynomial in field of modulo_ using Zassenhaus&#39;s</span></div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="comment">// algorithm.</span></div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="comment">// References :</span></div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    <span class="comment">//     1.) J. von zur Gathen, J. Gerhard, Modern Computer Algebra, 1999</span></div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="comment">//     2.) K. Geddes, S. R. Czapor, G. Labahn, Algorithms for Computer</span></div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="comment">//     Algebra, 1992</span></div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt;GaloisFieldDict, DictLess&gt;</a> gf_zassenhaus() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    std::set&lt;GaloisFieldDict, DictLess&gt; gf_zassenhaus() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="comment">// Factors a square free polynomial in field of modulo_ using Shoup&#39;s</span></div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="comment">// algorithm.</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="comment">// References :</span></div>
@@ -236,16 +236,16 @@ $(function() {
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    <span class="comment">//     Factoring Polynomials, 1992</span></div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    <span class="comment">//     4.) V. Shoup, A Fast Deterministic Algorithm for Factoring</span></div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    <span class="comment">//     Polynomials over Finite Fields of Small Characteristic, 1991</span></div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt;GaloisFieldDict, DictLess&gt;</a> gf_shoup() <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;integer_class,</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;              <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;</a>, DictLess&gt;&gt;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    std::set&lt;GaloisFieldDict, DictLess&gt; gf_shoup() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    std::pair&lt;integer_class,</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;              std::set&lt;std::pair&lt;GaloisFieldDict, unsigned&gt;, DictLess&gt;&gt;</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    gf_factor() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160; </div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    GaloisFieldDict &amp;operator=(GaloisFieldDict &amp;&amp;other) SYMENGINE_NOEXCEPT</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    {</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        <span class="keywordflow">if</span> (<span class="keyword">this</span> != &amp;other) {</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            dict_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.dict_);</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            modulo_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.modulo_);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;            dict_ = std::move(other.dict_);</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;            modulo_ = std::move(other.modulo_);</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        }</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    }</div>
@@ -264,7 +264,7 @@ $(function() {
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Error: field must be same.&quot;</span>);</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="keywordflow">if</span> (other.dict_.size() == 0)</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">if</span> (this-&gt;dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() == 0) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <span class="keywordflow">if</span> (this-&gt;dict_.size() == 0) {</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            *<span class="keyword">this</span> = other;</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;        }</div>
@@ -279,7 +279,7 @@ $(function() {
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;                dict_[i] = temp;</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            }</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; dict_.size(); i++) {</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                integer_class temp;</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;                temp += dict_[i];</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;                temp += other.dict_[i];</div>
@@ -291,7 +291,7 @@ $(function() {
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            <span class="keywordflow">if</span> (other.dict_.size() == this-&gt;dict_.size())</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;                gf_istrip();</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/insert.html">insert</a>(dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), other.dict_.begin() + dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(),</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                dict_.insert(dict_.end(), other.dict_.begin() + dict_.size(),</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                             other.dict_.end());</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        }</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
@@ -299,12 +299,12 @@ $(function() {
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    GaloisFieldDict &amp;operator+=(<span class="keyword">const</span> integer_class &amp;other)</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;    {</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <span class="keywordflow">if</span> (dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/empty.html">empty</a>() or other == integer_class(0))</div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;        <span class="keywordflow">if</span> (dict_.empty() or other == integer_class(0))</div>
 <div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;        integer_class temp = dict_[0] + other;</div>
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;        mp_fdiv_r(temp, temp, modulo_);</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;        dict_[0] = temp;</div>
-<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="keywordflow">if</span> (dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() == 1)</div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="keywordflow">if</span> (dict_.size() == 1)</div>
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;            gf_istrip();</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    }</div>
@@ -340,7 +340,7 @@ $(function() {
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Error: field must be same.&quot;</span>);</div>
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <span class="keywordflow">if</span> (other.dict_.size() == 0)</div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">if</span> (this-&gt;dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() == 0) {</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">if</span> (this-&gt;dict_.size() == 0) {</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            *<span class="keyword">this</span> = -other;</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        }</div>
@@ -355,7 +355,7 @@ $(function() {
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;                dict_[i] = temp;</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;            }</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
+<div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; dict_.size(); i++) {</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;                integer_class temp;</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                temp += dict_[i];</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                temp -= other.dict_[i];</div>
@@ -367,8 +367,8 @@ $(function() {
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            <span class="keywordflow">if</span> (other.dict_.size() == this-&gt;dict_.size())</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;                gf_istrip();</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;            <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                <span class="keyword">auto</span> orig_size = dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>();</div>
-<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(other.dict_.size());</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;                <span class="keyword">auto</span> orig_size = dict_.size();</div>
+<div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;                dict_.resize(other.dict_.size());</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">auto</span> i = orig_size; i &lt; other.dict_.size(); i++) {</div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;                    dict_[i] = -other.dict_[i];</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                    <span class="keywordflow">if</span> (dict_[i] != 0_z)</div>
@@ -390,11 +390,11 @@ $(function() {
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;    GaloisFieldDict &amp;operator*=(<span class="keyword">const</span> integer_class &amp;other)</div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;    {</div>
-<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">if</span> (dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/empty.html">empty</a>())</div>
+<div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">if</span> (dict_.empty())</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160; </div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        <span class="keywordflow">if</span> (other == integer_class(0)) {</div>
-<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            dict_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/clear.html">clear</a>();</div>
+<div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;            dict_.clear();</div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;        }</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160; </div>
@@ -489,14 +489,14 @@ $(function() {
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;            }</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        }</div>
-<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> dict_out;</div>
+<div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        std::vector&lt;integer_class&gt; dict_out;</div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        <span class="keywordtype">size_t</span> deg_dividend = this-&gt;degree();</div>
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;        <span class="keywordtype">size_t</span> deg_divisor = other.degree();</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;        <span class="keywordflow">if</span> (deg_dividend &lt; deg_divisor) {</div>
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;            dict_.clear();</div>
 <div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;        }</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        dict_out.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/swap.html">swap</a>(dict_);</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;        dict_out.swap(dict_);</div>
 <div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;        dict_.resize(deg_dividend - deg_divisor + 1);</div>
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;        integer_class coeff;</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> riter = deg_dividend; riter &gt;= deg_divisor; --riter) {</div>
@@ -504,7 +504,7 @@ $(function() {
 <div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;            <span class="keyword">auto</span> lb = deg_divisor + riter &gt; deg_dividend</div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;                          ? deg_divisor + riter - deg_dividend</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;                          : 0;</div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;            <span class="keyword">auto</span> ub = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(riter + 1, deg_divisor);</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;            <span class="keyword">auto</span> ub = std::min(riter + 1, deg_divisor);</div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> j = lb; j &lt; ub; ++j) {</div>
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;                mp_addmul(coeff, dict_out[riter - j + deg_divisor],</div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;                          -dict_divisor[j]);</div>
@@ -554,13 +554,13 @@ $(function() {
 <div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;            dict_.clear();</div>
 <div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        }</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> dict_out;</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;        std::vector&lt;integer_class&gt; dict_out;</div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;        <span class="keywordtype">size_t</span> deg_dividend = this-&gt;degree();</div>
 <div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keywordtype">size_t</span> deg_divisor = other.degree();</div>
 <div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keywordflow">if</span> (deg_dividend &lt; deg_divisor) {</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;            <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;        }</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        dict_out.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/swap.html">swap</a>(dict_);</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        dict_out.swap(dict_);</div>
 <div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;        dict_.resize(deg_divisor);</div>
 <div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        integer_class coeff;</div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = deg_dividend + 1; it-- != 0;) {</div>
@@ -568,7 +568,7 @@ $(function() {
 <div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;            <span class="keyword">auto</span> lb = deg_divisor + it &gt; deg_dividend</div>
 <div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;                          ? deg_divisor + it - deg_dividend</div>
 <div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;                          : 0;</div>
-<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;            <span class="keyword">auto</span> ub = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(it + 1, deg_divisor);</div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;            <span class="keyword">auto</span> ub = std::min(it + 1, deg_divisor);</div>
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = lb; j &lt; ub; ++j) {</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;                mp_addmul(coeff, dict_out[it - j + deg_divisor],</div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;                          -dict_divisor[j]);</div>
@@ -618,7 +618,7 @@ $(function() {
 <div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;        <span class="keywordflow">return</span> numeric_cast&lt;unsigned&gt;(dict_.size()) - 1;</div>
 <div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;    }</div>
 <div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160; </div>
-<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> &amp;get_dict()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160;    <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;get_dict()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;        <span class="keywordflow">return</span> dict_;</div>
 <div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;    }</div>
@@ -658,7 +658,7 @@ $(function() {
 <div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_dict(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
 <div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;                                            <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;d);</div>
 <div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_vec(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;                                           <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> &amp;v,</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;                                           <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;v,</div>
 <div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;                                           <span class="keyword">const</span> integer_class &amp;modulo);</div>
 <div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_uintpoly(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1UIntPoly.html">UIntPoly</a> &amp;a,</div>
 <div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;                                                <span class="keyword">const</span> integer_class &amp;modulo);</div>
@@ -668,7 +668,7 @@ $(function() {
 <div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;        <span class="keywordflow">return</span> get_poly().gf_eval(x);</div>
 <div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;    }</div>
 <div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160; </div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_integer_class</a> multieval(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_integer_class</a> &amp;v)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    vec_integer_class multieval(<span class="keyword">const</span> vec_integer_class &amp;v)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;        <span class="keywordflow">return</span> get_poly().gf_multi_eval(v);</div>
 <div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;    }</div>
@@ -698,7 +698,7 @@ $(function() {
 <div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    }</div>
 <div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160; </div>
 <div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;    vec_basic <a class="code" href="classSymEngine_1_1GaloisField.html#adc157d8144d9de88ae99168b160c55b4">get_args</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;integer_class&gt;</a> &amp;get_dict()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;get_dict()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_;</div>
 <div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    }</div>
@@ -714,20 +714,20 @@ $(function() {
 <div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; gf_poly(RCP&lt;const Basic&gt; i,</div>
 <div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;                                      GaloisFieldDict &amp;&amp;dict)</div>
 <div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;{</div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, std::move(dict));</div>
 <div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;}</div>
 <div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160; </div>
 <div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; gf_poly(RCP&lt;const Basic&gt; i, map_uint_mpz &amp;&amp;dict,</div>
 <div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;                                      integer_class modulo_)</div>
 <div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;{</div>
 <div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    GaloisFieldDict wrapper(dict, modulo_);</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(wrapper));</div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, std::move(wrapper));</div>
 <div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;}</div>
 <div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160; </div>
 <div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; pow_upoly(<span class="keyword">const</span> GaloisField &amp;a, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> p)</div>
 <div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;{</div>
 <div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;    <span class="keyword">auto</span> dict = GaloisField::container_type::pow(a.get_poly(), p);</div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_container(a.get_var(), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_container(a.get_var(), std::move(dict));</div>
 <div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;}</div>
 <div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160; </div>
@@ -744,23 +744,11 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1GaloisField_html_aef391ecda49ccc1372774267bd08e240"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html#aef391ecda49ccc1372774267bd08e240">SymEngine::GaloisField::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="fields_8cpp_source.html#l00041">fields.cpp:41</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UIntPolyBase_html"><div class="ttname"><a href="classSymEngine_1_1UIntPolyBase.html">SymEngine::UIntPolyBase</a></div><div class="ttdef"><b>Definition:</b> <a href="upolybase_8h_source.html#l00501">upolybase.h:502</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UIntPoly_html"><div class="ttname"><a href="classSymEngine_1_1UIntPoly.html">SymEngine::UIntPoly</a></div><div class="ttdef"><b>Definition:</b> <a href="uintpoly_8h_source.html#l00115">uintpoly.h:116</a></div></div>
-<div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/clear.html">std::vector::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
 <div class="ttc" id="adict_8h_html"><div class="ttname"><a href="dict_8h.html">dict.h</a></div></div>
-<div class="ttc" id="aempty_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/empty.html">std::vector::empty</a></div><div class="ttdeci">T empty(T... args)</div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/insert.html">std::vector::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
-<div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2cee70993b6160daf2870c1a5dc0a532"><div class="ttname"><a href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">SymEngine::mod</a></div><div class="ttdeci">RCP&lt; const Integer &gt; mod(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdoc">modulo round toward zero</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00067">ntheory.cpp:67</a></div></div>
-<div class="ttc" id="apair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a></div></div>
-<div class="ttc" id="aresize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/resize.html">std::vector::resize</a></div><div class="ttdeci">T resize(T... args)</div></div>
-<div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
 <div class="ttc" id="astructSymEngine_1_1GaloisFieldDict_1_1DictLess_html"><div class="ttname"><a href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">SymEngine::GaloisFieldDict::DictLess</a></div><div class="ttdef"><b>Definition:</b> <a href="fields_8h_source.html#l00022">fields.h:22</a></div></div>
-<div class="ttc" id="aswap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/swap.html">std::vector::swap</a></div><div class="ttdeci">T swap(T... args)</div></div>
 <div class="ttc" id="auintpoly_8h_html"><div class="ttname"><a href="uintpoly_8h.html">uintpoly.h</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; integer_class &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

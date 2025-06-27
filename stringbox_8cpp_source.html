@@ -110,15 +110,15 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> StringBox::pad_lines(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> new_width)</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keywordtype">void</span> StringBox::pad_lines(std::size_t new_width)</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">auto</span> diff = new_width - width_;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keyword">auto</span> half = diff / 2;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">auto</span> odd = diff % 2;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;line : lines_) {</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        line.insert(0, <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(half + odd, <span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordflow">for</span> (std::string &amp;line : lines_) {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;        line.insert(0, std::string(half + odd, <span class="charliteral">&#39; &#39;</span>));</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;        <span class="keywordflow">if</span> (half &gt; 0) {</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            line.append(<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(half, <span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            line.append(std::string(half, <span class="charliteral">&#39; &#39;</span>));</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;        }</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    }</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
@@ -137,10 +137,10 @@ $(function() {
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">void</span> StringBox::add_below_unicode_line(StringBox &amp;other)</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">auto</span> new_width = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(width_, other.width_);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> bar;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">auto</span> new_width = std::max(width_, other.width_);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    std::string bar;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; new_width; i++) {</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        bar.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/append.html">append</a>(U8(<span class="stringliteral">&quot;\u2015&quot;</span>));</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        bar.append(U8(<span class="stringliteral">&quot;\u2015&quot;</span>));</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    }</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    StringBox barbox(bar, new_width);</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    add_below(barbox);</div>
@@ -158,10 +158,10 @@ $(function() {
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        smaller = &amp;other;</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">auto</span> diff</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a>(other_size, this_size) - <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(other_size, this_size);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;        = std::max(other_size, this_size) - std::min(other_size, this_size);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keyword">auto</span> half = diff / 2;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keyword">auto</span> odd = diff % 2;</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> pad(smaller-&gt;width_, <span class="charliteral">&#39; &#39;</span>);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::string pad(smaller-&gt;width_, <span class="charliteral">&#39; &#39;</span>);</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; half; i++) {</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        smaller-&gt;lines_.push_back(pad);</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;        smaller-&gt;lines_.insert(smaller-&gt;lines_.begin(), pad);</div>
@@ -177,20 +177,20 @@ $(function() {
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keywordtype">void</span> StringBox::add_power(StringBox &amp;other)</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;{</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;line : lines_) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        line.append(<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(other.width_, <span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">for</span> (std::string &amp;line : lines_) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        line.append(std::string(other.width_, <span class="charliteral">&#39; &#39;</span>));</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    }</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;line : other.lines_) {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        lines_.insert(lines_.begin(), <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(width_, <span class="charliteral">&#39; &#39;</span>) + line);</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordflow">for</span> (std::string &amp;line : other.lines_) {</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        lines_.insert(lines_.begin(), std::string(width_, <span class="charliteral">&#39; &#39;</span>) + line);</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    width_ += other.width_;</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;}</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="keywordtype">void</span> StringBox::enclose_abs()</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;{</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;line : lines_) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        line.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/insert.html">insert</a>(0, U8(<span class="stringliteral">&quot;\u2502&quot;</span>));</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        line.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/append.html">append</a>(U8(<span class="stringliteral">&quot;\u2502&quot;</span>));</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">for</span> (std::string &amp;line : lines_) {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        line.insert(0, U8(<span class="stringliteral">&quot;\u2502&quot;</span>));</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        line.append(U8(<span class="stringliteral">&quot;\u2502&quot;</span>));</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    }</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    width_ += 2;</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;}</div>
@@ -263,12 +263,12 @@ $(function() {
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        lines_[0].insert(0, U8(<span class="stringliteral">&quot;\u23A7&quot;</span>));</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        lines_[1].insert(0, U8(<span class="stringliteral">&quot;\u23A9&quot;</span>));</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        lines_.insert(lines_.begin() + 1,</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                      U8(<span class="stringliteral">&quot;\u23A8&quot;</span>) + <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(width_, <span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                      U8(<span class="stringliteral">&quot;\u23A8&quot;</span>) + std::string(width_, <span class="charliteral">&#39; &#39;</span>));</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        lines_[0].insert(0, U8(<span class="stringliteral">&quot;\u23A7&quot;</span>));</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        lines_.back().insert(0, U8(<span class="stringliteral">&quot;\u23A9&quot;</span>));</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> mid = lines_.size() / 2;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> i = 1; i &lt; lines_.size() - 1; i++) {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        std::size_t mid = lines_.size() / 2;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;        <span class="keywordflow">for</span> (std::size_t i = 1; i &lt; lines_.size() - 1; i++) {</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;            <span class="keywordflow">if</span> (i == mid) {</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;                lines_[i].insert(0, U8(<span class="stringliteral">&quot;\u23A8&quot;</span>));</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;            } <span class="keywordflow">else</span> {</div>
@@ -287,12 +287,12 @@ $(function() {
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        lines_[0].append(U8(<span class="stringliteral">&quot;\u23AB&quot;</span>));</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        lines_[1].append(U8(<span class="stringliteral">&quot;\u23AD&quot;</span>));</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        lines_.insert(lines_.begin() + 1,</div>
-<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                      <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(width_, <span class="charliteral">&#39; &#39;</span>) + U8(<span class="stringliteral">&quot;\u23AC&quot;</span>));</div>
+<div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;                      std::string(width_, <span class="charliteral">&#39; &#39;</span>) + U8(<span class="stringliteral">&quot;\u23AC&quot;</span>));</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;        lines_[0].append(U8(<span class="stringliteral">&quot;\u23AB&quot;</span>));</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        lines_.back().append(U8(<span class="stringliteral">&quot;\u23AD&quot;</span>));</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> mid = lines_.size() / 2;</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> i = 1; i &lt; lines_.size() - 1; i++) {</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        std::size_t mid = lines_.size() / 2;</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">for</span> (std::size_t i = 1; i &lt; lines_.size() - 1; i++) {</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">if</span> (i == mid) {</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                lines_[i].append(U8(<span class="stringliteral">&quot;\u23AC&quot;</span>));</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            } <span class="keywordflow">else</span> {</div>
@@ -341,53 +341,40 @@ $(function() {
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;<span class="keywordtype">void</span> StringBox::enclose_sqrt()</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;{</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> len = lines_.size();</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a> i = len;</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordflow">for</span> (<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;line : lines_) {</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;    std::size_t len = lines_.size();</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;    std::size_t i = len;</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;    <span class="keywordflow">for</span> (std::string &amp;line : lines_) {</div>
 <div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;        <span class="keywordflow">if</span> (i == 1) {</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            line.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/insert.html">insert</a>(0, U8(<span class="stringliteral">&quot;\u2572\u2571&quot;</span>) + <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(len - i, <span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            line.insert(0, U8(<span class="stringliteral">&quot;\u2572\u2571&quot;</span>) + std::string(len - i, <span class="charliteral">&#39; &#39;</span>));</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            line.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/insert.html">insert</a>(0, <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(i, <span class="charliteral">&#39; &#39;</span>) + U8(<span class="stringliteral">&quot;\u2571&quot;</span>)</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                               + <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(len - i, <span class="charliteral">&#39; &#39;</span>));</div>
+<div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;            line.insert(0, std::string(i, <span class="charliteral">&#39; &#39;</span>) + U8(<span class="stringliteral">&quot;\u2571&quot;</span>)</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                               + std::string(len - i, <span class="charliteral">&#39; &#39;</span>));</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;        }</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;        i--;</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;    }</div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    lines_.insert(lines_.begin(),</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                  <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(len + 1, <span class="charliteral">&#39; &#39;</span>) + <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>(width_, <span class="charliteral">&#39;_&#39;</span>));</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                  std::string(len + 1, <span class="charliteral">&#39; &#39;</span>) + std::string(width_, <span class="charliteral">&#39;_&#39;</span>));</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    width_ += len + 1;</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;}</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> StringBox::get_string()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;std::string StringBox::get_string()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> os;</div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keyword">auto</span> b = <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/begin.html">begin</a>(lines_), e = <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>(lines_);</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;    std::ostringstream os;</div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;    <span class="keyword">auto</span> b = begin(lines_), e = end(lines_);</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160; </div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    <span class="keywordflow">if</span> (b != e) {</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a>(b, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/prev.html">prev</a>(e), <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/ostream_iterator.html">std::ostream_iterator&lt;std::string&gt;</a>(os, <span class="stringliteral">&quot;\n&quot;</span>));</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        b = <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/prev.html">prev</a>(e);</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        std::copy(b, prev(e), std::ostream_iterator&lt;std::string&gt;(os, <span class="stringliteral">&quot;\n&quot;</span>));</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;        b = prev(e);</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;    }</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;    <span class="keywordflow">if</span> (b != e) {</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        os &lt;&lt; *b;</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    }</div>
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160; </div>
-<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordflow">return</span> os.<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;    <span class="keywordflow">return</span> os.str();</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160;}</div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160; </div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;}; <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="aappend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/append.html">std::string::append</a></div><div class="ttdeci">T append(T... args)</div></div>
-<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/begin.html">std::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
-<div class="ttc" id="acopy_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/copy.html">std::copy</a></div><div class="ttdeci">T copy(T... args)</div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/insert.html">std::string::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
-<div class="ttc" id="amax_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a></div><div class="ttdeci">T max(T... args)</div></div>
-<div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="aostream_iterator_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/ostream_iterator.html">std::ostream_iterator</a></div></div>
-<div class="ttc" id="aprev_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/prev.html">std::prev</a></div><div class="ttdeci">T prev(T... args)</div></div>
-<div class="ttc" id="asize_t_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/size_t.html">std::size_t</a></div></div>
-<div class="ttc" id="astr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">std::ostringstream::str</a></div><div class="ttdeci">T str(T... args)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

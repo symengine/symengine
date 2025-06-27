@@ -134,10 +134,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Cf</b> = typename Ba
 using&#160;</td><td class="memItemRight" valign="bottom"><b>Key</b> = typename Container::key_type</td></tr>
 <tr class="separator:a3daa78499249ab8e4ad4050487fa04b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a135d080e7bbc405c640cddb779718b55"><td class="memItemLeft" align="right" valign="top"><a id="a135d080e7bbc405c640cddb779718b55"></a>
-typedef <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Cf &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b></td></tr>
+typedef std::map&lt; Key, Cf &gt;::const_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b></td></tr>
 <tr class="separator:a135d080e7bbc405c640cddb779718b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50990cc8a4adf9e45aa54893f9047360"><td class="memItemLeft" align="right" valign="top"><a id="a50990cc8a4adf9e45aa54893f9047360"></a>
-typedef <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Cf &gt;::const_reverse_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>r_iterator</b></td></tr>
+typedef std::map&lt; Key, Cf &gt;::const_reverse_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>r_iterator</b></td></tr>
 <tr class="separator:a50990cc8a4adf9e45aa54893f9047360"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -155,7 +155,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_canonical</b> (con
 Cf&#160;</td><td class="memItemRight" valign="bottom"><b>eval</b> (const Cf &amp;x) const</td></tr>
 <tr class="separator:aed18292849a677bd5587034cb53a0414"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66000c6d572d0224afb2caba042f0353"><td class="memItemLeft" align="right" valign="top"><a id="a66000c6d572d0224afb2caba042f0353"></a>
-const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Cf &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
+const std::map&lt; Key, Cf &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
 <tr class="separator:a66000c6d572d0224afb2caba042f0353"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a50a0593d8735e178337e62f2c3877530"><td class="memItemLeft" align="right" valign="top"><a id="a50a0593d8735e178337e62f2c3877530"></a>
 Cf&#160;</td><td class="memItemRight" valign="bottom"><b>get_coeff</b> (Key x) const</td></tr>
@@ -179,10 +179,10 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a7ac26e6f845a5b43fdb413440a364f60"><td class="memItemLeft" align="right" valign="top"><a id="a7ac26e6f845a5b43fdb413440a364f60"></a>
-static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>from_vec</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; Cf &gt; &amp;v)</td></tr>
+static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>from_vec</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, const std::vector&lt; Cf &gt; &amp;v)</td></tr>
 <tr class="separator:a7ac26e6f845a5b43fdb413440a364f60"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad4204f2dc8eab496efae32afb1e8cdf1"><td class="memItemLeft" align="right" valign="top"><a id="ad4204f2dc8eab496efae32afb1e8cdf1"></a>
-static Container&#160;</td><td class="memItemRight" valign="bottom"><b>container_from_dict</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; Key, Cf &gt; &amp;&amp;d)</td></tr>
+static Container&#160;</td><td class="memItemRight" valign="bottom"><b>container_from_dict</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, std::map&lt; Key, Cf &gt; &amp;&amp;d)</td></tr>
 <tr class="separator:ad4204f2dc8eab496efae32afb1e8cdf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a776a231f90fa6afb14b3ea2adffe64fa"><td class="memTemplParams" colspan="2"><a id="a776a231f90fa6afb14b3ea2adffe64fa"></a>
 template&lt;typename FromPoly &gt; </td></tr>

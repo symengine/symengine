@@ -137,7 +137,7 @@ $(function() {
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">return</span> arg_-&gt;compare(*down_cast&lt;const Transpose &amp;&gt;(o).arg_);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Transpose.html#a13ed52c47f13a68ab5d7580333bcb7c2">   40</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1Transpose.html#a13ed52c47f13a68ab5d7580333bcb7c2">Transpose::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Transpose.html#a13ed52c47f13a68ab5d7580333bcb7c2">   40</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Transpose.html#a13ed52c47f13a68ab5d7580333bcb7c2">Transpose::get_args</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keywordflow">return</span> {arg_};</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;}</div>
@@ -176,7 +176,7 @@ $(function() {
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImmutableDenseMatrix.html">ImmutableDenseMatrix</a> &amp;x)</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    {</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">auto</span> values = x.get_values();</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> t(values.size());</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        vec_basic t(values.size());</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; x.nrows(); i++)</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; x.ncols(); j++)</div>
@@ -193,20 +193,20 @@ $(function() {
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixAdd.html">MatrixAdd</a> &amp;x)</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    {</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> t;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        vec_basic t;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : x.get_terms()) {</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            e-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            t.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(transpose_);</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            t.push_back(transpose_);</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        }</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        transpose_ = make_rcp&lt;const MatrixAdd&gt;(t);</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    }</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1HadamardProduct.html">HadamardProduct</a> &amp;x)</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    {</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> t;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        vec_basic t;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : x.get_factors()) {</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;            e-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            t.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(transpose_);</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            t.push_back(transpose_);</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        }</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        transpose_ = make_rcp&lt;const HadamardProduct&gt;(t);</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
@@ -242,8 +242,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Transpose_html_a83f43dcf5aa9d9591b076efc967a3884"><div class="ttname"><a href="classSymEngine_1_1Transpose.html#a83f43dcf5aa9d9591b076efc967a3884">SymEngine::Transpose::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="transpose_8cpp_source.html#l00009">transpose.cpp:9</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ZeroMatrix_html"><div class="ttname"><a href="classSymEngine_1_1ZeroMatrix.html">SymEngine::ZeroMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="zero__matrix_8h_source.html#l00010">zero_matrix.h:11</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

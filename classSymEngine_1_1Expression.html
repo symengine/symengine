@@ -122,17 +122,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aea4a1840ff3c11a8ad81d188eac41a0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1fbb141ebc8a0f5536f98cdf381a1078"><td class="memTemplParams" colspan="2"><a id="a1fbb141ebc8a0f5536f98cdf381a1078"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:a1fbb141ebc8a0f5536f98cdf381a1078"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a1fbb141ebc8a0f5536f98cdf381a1078">Expression</a> (T n, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_integral.html">std::is_integral</a>&lt; T &gt;::value &gt;::type *=nullptr)</td></tr>
+<tr class="memitem:a1fbb141ebc8a0f5536f98cdf381a1078"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a1fbb141ebc8a0f5536f98cdf381a1078">Expression</a> (T n, typename std::enable_if&lt; std::is_integral&lt; T &gt;::value &gt;::type *=nullptr)</td></tr>
 <tr class="memdesc:a1fbb141ebc8a0f5536f98cdf381a1078"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classSymEngine_1_1Expression.html">Expression</a> from integral types. <br /></td></tr>
 <tr class="separator:a1fbb141ebc8a0f5536f98cdf381a1078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01c7016ccd03a98e52ef981c3435097f"><td class="memTemplParams" colspan="2"><a id="a01c7016ccd03a98e52ef981c3435097f"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:a01c7016ccd03a98e52ef981c3435097f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a01c7016ccd03a98e52ef981c3435097f">Expression</a> (T n, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_floating_point.html">std::is_floating_point</a>&lt; T &gt;::value &gt;::type *=nullptr)</td></tr>
+<tr class="memitem:a01c7016ccd03a98e52ef981c3435097f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a01c7016ccd03a98e52ef981c3435097f">Expression</a> (T n, typename std::enable_if&lt; std::is_floating_point&lt; T &gt;::value &gt;::type *=nullptr)</td></tr>
 <tr class="memdesc:a01c7016ccd03a98e52ef981c3435097f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classSymEngine_1_1Expression.html">Expression</a> from floating point types. <br /></td></tr>
 <tr class="separator:a01c7016ccd03a98e52ef981c3435097f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af614630575cdc22392406c7070627924"><td class="memTemplParams" colspan="2"><a id="af614630575cdc22392406c7070627924"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:af614630575cdc22392406c7070627924"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#af614630575cdc22392406c7070627924">Expression</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex</a>&lt; T &gt; n, typename <a class="elRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/types/is_floating_point.html">std::is_floating_point</a>&lt; T &gt;::value &gt;::type *=nullptr)</td></tr>
+<tr class="memitem:af614630575cdc22392406c7070627924"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#af614630575cdc22392406c7070627924">Expression</a> (std::complex&lt; T &gt; n, typename std::enable_if&lt; std::is_floating_point&lt; T &gt;::value &gt;::type *=nullptr)</td></tr>
 <tr class="memdesc:af614630575cdc22392406c7070627924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct <a class="el" href="classSymEngine_1_1Expression.html">Expression</a> from std::complex&lt;&gt; types. <br /></td></tr>
 <tr class="separator:af614630575cdc22392406c7070627924"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0999bc6aedfbe44ec3fe7a5d38d22017"><td class="memItemLeft" align="right" valign="top"><a id="a0999bc6aedfbe44ec3fe7a5d38d22017"></a>
@@ -148,7 +148,7 @@ template&lt;class T &gt; </td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>Expression</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;o)</td></tr>
 <tr class="separator:aa21695c202b0cb36c012bc3c316a7378"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9cf1e27937bb9bfa0a25ccdcb4308dea"><td class="memItemLeft" align="right" valign="top"><a id="a9cf1e27937bb9bfa0a25ccdcb4308dea"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Expression</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Expression</b> (const std::string &amp;s)</td></tr>
 <tr class="separator:a9cf1e27937bb9bfa0a25ccdcb4308dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0f8c7218c0888c7916eb841d6bfff82e"><td class="memItemLeft" align="right" valign="top"><a id="a0f8c7218c0888c7916eb841d6bfff82e"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a0f8c7218c0888c7916eb841d6bfff82e">Expression</a> (const <a class="el" href="classSymEngine_1_1Expression.html">Expression</a> &amp;)=default</td></tr>
@@ -189,7 +189,7 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memdesc:a99092662b5eb9f2b5d9e3e1ff262c718"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differentiation. <br /></td></tr>
 <tr class="separator:a99092662b5eb9f2b5d9e3e1ff262c718"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a706914d92af7503a26dc47203dfb0c25"><td class="memItemLeft" align="right" valign="top"><a id="a706914d92af7503a26dc47203dfb0c25"></a>
-<a class="el" href="classSymEngine_1_1Expression.html">Expression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a706914d92af7503a26dc47203dfb0c25">subs</a> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;subs_map) const</td></tr>
+<a class="el" href="classSymEngine_1_1Expression.html">Expression</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#a706914d92af7503a26dc47203dfb0c25">subs</a> (const map_basic_basic &amp;subs_map) const</td></tr>
 <tr class="memdesc:a706914d92af7503a26dc47203dfb0c25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Substitution. <br /></td></tr>
 <tr class="separator:a706914d92af7503a26dc47203dfb0c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a57643e96bb47fcd94b6981470719fe1c"><td class="memTemplParams" colspan="2"><a id="a57643e96bb47fcd94b6981470719fe1c"></a>
@@ -258,7 +258,7 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
 <tr class="memitem:ab319752ba5ebd9e34e380088701d38c4"><td class="memItemLeft" align="right" valign="top"><a id="ab319752ba5ebd9e34e380088701d38c4"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#ab319752ba5ebd9e34e380088701d38c4">operator&lt;&lt;</a> (<a class="elRef" href="http://en.cppreference.com/w/cpp/io/basic_ostream.html">std::ostream</a> &amp;os, const <a class="el" href="classSymEngine_1_1Expression.html">Expression</a> &amp;expr)</td></tr>
+std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1Expression.html#ab319752ba5ebd9e34e380088701d38c4">operator&lt;&lt;</a> (std::ostream &amp;os, const <a class="el" href="classSymEngine_1_1Expression.html">Expression</a> &amp;expr)</td></tr>
 <tr class="memdesc:ab319752ba5ebd9e34e380088701d38c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload stream operator. <br /></td></tr>
 <tr class="separator:ab319752ba5ebd9e34e380088701d38c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33fc06b4b9651898b178a776c8f3d2ab"><td class="memItemLeft" align="right" valign="top"><a id="a33fc06b4b9651898b178a776c8f3d2ab"></a>

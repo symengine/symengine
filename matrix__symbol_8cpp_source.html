@@ -126,13 +126,12 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">return</span> name_ &lt; s.name_ ? -1 : 1;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;RCP&lt;const MatrixExpr&gt; matrix_symbol(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;RCP&lt;const MatrixExpr&gt; matrix_symbol(<span class="keyword">const</span> std::string &amp;name)</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const MatrixSymbol&gt;(name);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixSymbol_html"><div class="ttname"><a href="classSymEngine_1_1MatrixSymbol.html">SymEngine::MatrixSymbol</a></div><div class="ttdef"><b>Definition:</b> <a href="matrix__symbol_8h_source.html#l00010">matrix_symbol.h:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixSymbol_html_a3936e530d60e54e804578a2994e6143c"><div class="ttname"><a href="classSymEngine_1_1MatrixSymbol.html#a3936e530d60e54e804578a2994e6143c">SymEngine::MatrixSymbol::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="matrix__symbol_8cpp_source.html#l00006">matrix_symbol.cpp:6</a></div></div>

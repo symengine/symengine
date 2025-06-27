@@ -109,10 +109,10 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno"><a class="line" href="classSymEngine_1_1MathMLPrinter.html">    9</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1MathMLPrinter.html">MathMLPrinter</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;MathMLPrinter, StrPrinter&gt;</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    std::ostringstream s;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names_;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::vector&lt;std::string&gt; names_;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Symbol.html">Symbol</a> &amp;x);</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;x);</div>
@@ -154,13 +154,11 @@ $(function() {
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1RealMPFR.html">RealMPFR</a> &amp;x);</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// void bvisit(const NumberWrapper &amp;x);</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b);</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::string apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b);</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;};</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_MATHML_H</span></div>
-<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html"><div class="ttname"><a href="classSymEngine_1_1Add.html">SymEngine::Add</a></div><div class="ttdoc">The base class for representing addition in symbolic expressions.</div><div class="ttdef"><b>Definition:</b> <a href="add_8h_source.html#l00026">add.h:27</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1And_html"><div class="ttname"><a href="classSymEngine_1_1And.html">SymEngine::And</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00104">logic.h:105</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1BaseVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BaseVisitor.html">SymEngine::BaseVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00047">visitor.h:48</a></div></div>
@@ -201,7 +199,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Union_html"><div class="ttname"><a href="classSymEngine_1_1Union.html">SymEngine::Union</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00368">sets.h:369</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Xor_html"><div class="ttname"><a href="classSymEngine_1_1Xor.html">SymEngine::Xor</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00162">logic.h:163</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; std::string &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

@@ -120,7 +120,7 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">using</span> Cf = <span class="keyword">typename</span> BaseType&lt;Container, Poly&gt;::coef_type;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    UFlintPoly(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var, Container &amp;&amp;dict)</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        : BaseType&lt;Container, Poly&gt;(var, <a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(dict))</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        : BaseType&lt;Container, Poly&gt;(var, std::move(dict))</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    {</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    }</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
@@ -147,7 +147,7 @@ $(function() {
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keyword">static</span> Container container_from_dict(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                         <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;unsigned, Cf&gt;</a> &amp;&amp;d)</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;                                         std::map&lt;unsigned, Cf&gt; &amp;&amp;d)</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        Container f;</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span> &amp;p : d) {</div>
@@ -160,17 +160,17 @@ $(function() {
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    }</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keyword">static</span> RCP&lt;const Poly&gt; from_vec(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                                    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;Cf&gt;</a> &amp;v)</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                                    <span class="keyword">const</span> std::vector&lt;Cf&gt; &amp;v)</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;        <span class="comment">// TODO improve this (we already know the degree)</span></div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        Container f;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; v.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; v.size(); i++) {</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordflow">if</span> (v[i] != 0) {</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                <span class="keyword">typename</span> Container::internal_coef_type r(get_mp_t(v[i]));</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;                f.set_coeff(i, r);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            }</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const Poly&gt;(var, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const Poly&gt;(var, std::move(f));</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    }</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> FromPoly&gt;</div>
@@ -182,7 +182,7 @@ $(function() {
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;            <span class="keyword">typename</span> Container::internal_coef_type r(get_mp_t(it-&gt;second));</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;            f.set_coeff(it-&gt;first, r);</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        }</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">return</span> Poly::from_container(p.get_var(), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keywordflow">return</span> Poly::from_container(p.get_var(), std::move(f));</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    }</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    Cf eval(<span class="keyword">const</span> Cf &amp;x)<span class="keyword"> const</span></div>
@@ -204,11 +204,11 @@ $(function() {
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keyword">typedef</span> ContainerForIter&lt;Poly, Cf&gt; iterator;</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keyword">typedef</span> ContainerRevIter&lt;Poly, Cf&gt; r_iterator;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    iterator <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/begin.html">begin</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    iterator begin()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">return</span> iterator(this-&gt;<span class="keyword">template</span> rcp_from_this_cast&lt;Poly&gt;(), 0);</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    iterator <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    iterator end()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        <span class="keywordflow">return</span> iterator(this-&gt;<span class="keyword">template</span> rcp_from_this_cast&lt;Poly&gt;(), size());</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    }</div>
@@ -247,21 +247,21 @@ $(function() {
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Container, <span class="keyword">template</span> &lt;<span class="keyword">typename</span> X, <span class="keyword">typename</span> Y&gt; <span class="keyword">class </span>BaseType,</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;          <span class="keyword">typename</span> Poly&gt;</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;RCP&lt;const Poly&gt;</a>, <span class="keywordtype">long</span>&gt;&gt;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;std::vector&lt;std::pair&lt;RCP&lt;const Poly&gt;, <span class="keywordtype">long</span>&gt;&gt;</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;factors(<span class="keyword">const</span> UFlintPoly&lt;Container, BaseType, Poly&gt; &amp;a)</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;{</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    <span class="keyword">auto</span> fac_wrapper = a.get_poly().factors();</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    <span class="keyword">auto</span> &amp;fac = fac_wrapper.get_fmpz_poly_factor_t();</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;RCP&lt;const Poly&gt;</a>, <span class="keywordtype">long</span>&gt;&gt; S;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    std::vector&lt;std::pair&lt;RCP&lt;const Poly&gt;, <span class="keywordtype">long</span>&gt;&gt; S;</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordflow">if</span> (fac-&gt;c != 1_z)</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        S.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        S.push_back(std::make_pair(</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;            make_rcp&lt;const Poly&gt;(a.get_var(), numeric_cast&lt;int&gt;(fac-&gt;c)), 1));</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    SYMENGINE_ASSERT(fac-&gt;p != NULL and fac-&gt;exp != NULL)</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">long</span> i = 0; i &lt; fac-&gt;num; i++) {</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        fzp_t z;</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        z.swap_fmpz_poly_t(fac-&gt;p[i]);</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        S.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            make_rcp&lt;const Poly&gt;(a.get_var(), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(z)), fac-&gt;exp[i]));</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;        S.push_back(std::make_pair(</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;            make_rcp&lt;const Poly&gt;(a.get_var(), std::move(z)), fac-&gt;exp[i]));</div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    }</div>
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keywordflow">return</span> S;</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;}</div>
@@ -306,7 +306,7 @@ $(function() {
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160; </div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    b.get_poly().divrem(q, r, a.get_poly());</div>
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    <span class="keywordflow">if</span> (r == 0) {</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        *res = make_rcp&lt;Poly&gt;(a.get_var(), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(q));</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        *res = make_rcp&lt;Poly&gt;(a.get_var(), std::move(q));</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
@@ -318,18 +318,9 @@ $(function() {
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160; </div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_UINTPOLY_FLINT_H</span></div>
 <div class="ttc" id="abasic_8h_html_a945f4a70c3ac1d14cb0637ef01a81b69"><div class="ttname"><a href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a></div><div class="ttdeci">#define IMPLEMENT_TYPEID(SYMENGINE_ID)</div><div class="ttdoc">Inline members and functions.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00340">basic.h:340</a></div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/begin.html">std::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1fmpq__poly__wrapper_html"><div class="ttname"><a href="classSymEngine_1_1fmpq__poly__wrapper.html">SymEngine::fmpq_poly_wrapper</a></div><div class="ttdef"><b>Definition:</b> <a href="flint__wrapper_8h_source.html#l00692">flint_wrapper.h:693</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1fmpz__poly__wrapper_html"><div class="ttname"><a href="classSymEngine_1_1fmpz__poly__wrapper.html">SymEngine::fmpz_poly_wrapper</a></div><div class="ttdef"><b>Definition:</b> <a href="flint__wrapper_8h_source.html#l00519">flint_wrapper.h:520</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

@@ -144,9 +144,9 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keywordtype">bool</span> MatrixMul::is_canonical(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;scalar,</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                             <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;factors)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                             <span class="keyword">const</span> vec_basic &amp;factors)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (factors.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() == 0 || (factors.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() == 1 &amp;&amp; <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*scalar, *one))) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordflow">if</span> (factors.size() == 0 || (factors.size() == 1 &amp;&amp; <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*scalar, *one))) {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <span class="keywordtype">size_t</span> num_diag = 0;</div>
@@ -371,8 +371,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_aaf56a84de825e1940da213fd1ae6ff65"><div class="ttname"><a href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">SymEngine::factor</a></div><div class="ttdeci">int factor(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n, double B1)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00371">ntheory.cpp:371</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

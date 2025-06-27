@@ -132,9 +132,9 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(terms_, other.terms_);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;}</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">bool</span> MatrixAdd::is_canonical(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;terms)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keywordtype">bool</span> MatrixAdd::is_canonical(<span class="keyword">const</span> vec_basic &amp;terms)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">if</span> (terms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() &lt; 2) {</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">if</span> (terms.size() &lt; 2) {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordtype">size_t</span> num_diag = 0;</div>
@@ -196,7 +196,7 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;term : terms) {</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;const MatrixAdd&gt;(*term)) {</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;            <span class="keyword">auto</span> container = down_cast&lt;const MatrixAdd &amp;&gt;(*term).get_terms();</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            expanded.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/insert.html">insert</a>(expanded.end(), container.begin(), container.end());</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            expanded.insert(expanded.end(), container.begin(), container.end());</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            expanded.push_back(term);</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        }</div>
@@ -215,7 +215,7 @@ $(function() {
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                vec_basic container;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; diag-&gt;get_container().size(); i++) {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                    container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                    container.push_back(</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                        <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(diag-&gt;get_container()[i],</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                            down_cast&lt;const DiagonalMatrix &amp;&gt;(*term)</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                                .get_container()[i]));</div>
@@ -249,7 +249,7 @@ $(function() {
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; dense-&gt;nrows(); i++) {</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; dense-&gt;ncols(); j++) {</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                    <span class="keywordflow">if</span> (i == j) {</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                        sum.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(dense-&gt;get(i, j), diag-&gt;get(i)));</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                        sum.push_back(<a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(dense-&gt;get(i, j), diag-&gt;get(i)));</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                        sum.push_back(dense-&gt;get(i, j));</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                    }</div>
@@ -280,14 +280,10 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1MatrixAdd_html_a1931f7b3f3ee6d0f4841b2449acddbdf"><div class="ttname"><a href="classSymEngine_1_1MatrixAdd.html#a1931f7b3f3ee6d0f4841b2449acddbdf">SymEngine::MatrixAdd::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="matrix__add_8cpp_source.html#l00019">matrix_add.cpp:19</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixAdd_html_a379ac832d9922f59cc9b96579f61dab7"><div class="ttname"><a href="classSymEngine_1_1MatrixAdd.html#a379ac832d9922f59cc9b96579f61dab7">SymEngine::MatrixAdd::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="matrix__add_8cpp_source.html#l00028">matrix_add.cpp:28</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixAdd_html_a97671ddd2e73a3bb431cd536ae011e67"><div class="ttname"><a href="classSymEngine_1_1MatrixAdd.html#a97671ddd2e73a3bb431cd536ae011e67">SymEngine::MatrixAdd::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="matrix__add_8cpp_source.html#l00010">matrix_add.cpp:10</a></div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/insert.html">std::vector::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

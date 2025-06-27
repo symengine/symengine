@@ -120,7 +120,7 @@ $(function() {
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;DenseMatrix::DenseMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col) : row_(row), col_(col)</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;{</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    m_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Basic&gt;</a>&gt;(row * col);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    m_ = std::vector&lt;RCP&lt;const Basic&gt;&gt;(row * col);</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;}</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;DenseMatrix::DenseMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col, <span class="keyword">const</span> vec_basic &amp;l)</div>
@@ -401,16 +401,16 @@ $(function() {
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160; </div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    <span class="keyword">auto</span> A = *<span class="keyword">this</span>;</div>
-<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;DenseMatrix&gt;</a> B;</div>
+<div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;    std::unique_ptr&lt;DenseMatrix&gt; B;</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    <span class="keyword">const</span> DenseMatrix *H;</div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;    <span class="keywordflow">if</span> (!is_true(A.is_hermitian())) {</div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        <span class="keywordflow">if</span> (!A.is_square())</div>
 <div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;            <span class="keywordflow">return</span> tribool::trifalse;</div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        DenseMatrix tmp1 = DenseMatrix(A.row_, A.col_);</div>
-<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        B = <a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;DenseMatrix&gt;</a>(<span class="keyword">new</span> DenseMatrix(A.row_, A.col_));</div>
+<div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        B = std::unique_ptr&lt;DenseMatrix&gt;(<span class="keyword">new</span> DenseMatrix(A.row_, A.col_));</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160;        A.conjugate_transpose(tmp1);</div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        add_dense_dense(A, tmp1, *B.<a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr/get.html">get</a>());</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        H = B.<a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr/get.html">get</a>();</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        add_dense_dense(A, tmp1, *B.get());</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        H = B.get();</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        H = <span class="keyword">this</span>;</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;    }</div>
@@ -420,7 +420,7 @@ $(function() {
 <div class="line"><a name="l00320"></a><span class="lineno">  320</span>&#160;        <span class="keywordflow">return</span> shortcut;</div>
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160; </div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;    <span class="keywordflow">if</span> (!B) {</div>
-<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        B = <a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;DenseMatrix&gt;</a>(<span class="keyword">new</span> DenseMatrix(A));</div>
+<div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        B = std::unique_ptr&lt;DenseMatrix&gt;(<span class="keyword">new</span> DenseMatrix(A));</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;    }</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;    <span class="keywordflow">return</span> B-&gt;is_positive_definite_GE();</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;}</div>
@@ -932,7 +932,7 @@ $(function() {
 <div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;    <span class="keywordtype">unsigned</span> col = A.col_;</div>
 <div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160; </div>
 <div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> k = 0; k &lt; A.col_; k++)</div>
-<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(A.m_[i * col + k], A.m_[j * col + k]);</div>
+<div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;        std::swap(A.m_[i * col + k], A.m_[j * col + k]);</div>
 <div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;}</div>
 <div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160; </div>
 <div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;<span class="keywordtype">void</span> row_mul_scalar_dense(DenseMatrix &amp;A, <span class="keywordtype">unsigned</span> i, RCP&lt;const Basic&gt; &amp;c)</div>
@@ -971,7 +971,7 @@ $(function() {
 <div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;    <span class="keywordtype">unsigned</span> col = A.col_;</div>
 <div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160; </div>
 <div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> k = 0; k &lt; A.row_; k++)</div>
-<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(A.m_[k * col + i], A.m_[k * col + j]);</div>
+<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;        std::swap(A.m_[k * col + i], A.m_[k * col + j]);</div>
 <div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160;}</div>
 <div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160; </div>
 <div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;<span class="comment">// ------------------------------ Gaussian Elimination -----------------------//</span></div>
@@ -998,7 +998,7 @@ $(function() {
 <div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;            pl.push_back({k, index});</div>
 <div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;        }</div>
 <div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160; </div>
-<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;        scale = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, B.m_[index * col + i]);</div>
+<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;        scale = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, B.m_[index * col + i]);</div>
 <div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;        row_mul_scalar_dense(B, index, scale);</div>
 <div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160; </div>
 <div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;        <span class="keywordflow">for</span> (j = i + 1; j &lt; row; j++) {</div>
@@ -1031,7 +1031,7 @@ $(function() {
 <div class="line"><a name="l00931"></a><span class="lineno">  931</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[j * col + i], B.m_[i * col + k]));</div>
 <div class="line"><a name="l00932"></a><span class="lineno">  932</span>&#160;                <span class="keywordflow">if</span> (i &gt; 0)</div>
 <div class="line"><a name="l00933"></a><span class="lineno">  933</span>&#160;                    B.m_[j * col + k]</div>
-<div class="line"><a name="l00934"></a><span class="lineno">  934</span>&#160;                        = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(B.m_[j * col + k], B.m_[i * col - col + i - 1]);</div>
+<div class="line"><a name="l00934"></a><span class="lineno">  934</span>&#160;                        = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(B.m_[j * col + k], B.m_[i * col - col + i - 1]);</div>
 <div class="line"><a name="l00935"></a><span class="lineno">  935</span>&#160;            }</div>
 <div class="line"><a name="l00936"></a><span class="lineno">  936</span>&#160;            B.m_[j * col + i] = zero;</div>
 <div class="line"><a name="l00937"></a><span class="lineno">  937</span>&#160;        }</div>
@@ -1066,7 +1066,7 @@ $(function() {
 <div class="line"><a name="l00966"></a><span class="lineno">  966</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[j * col + i], B.m_[i * col + k]));</div>
 <div class="line"><a name="l00967"></a><span class="lineno">  967</span>&#160;                <span class="keywordflow">if</span> (i &gt; 0)</div>
 <div class="line"><a name="l00968"></a><span class="lineno">  968</span>&#160;                    B.m_[j * col + k]</div>
-<div class="line"><a name="l00969"></a><span class="lineno">  969</span>&#160;                        = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(B.m_[j * col + k], B.m_[i * col - col + i - 1]);</div>
+<div class="line"><a name="l00969"></a><span class="lineno">  969</span>&#160;                        = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(B.m_[j * col + k], B.m_[i * col - col + i - 1]);</div>
 <div class="line"><a name="l00970"></a><span class="lineno">  970</span>&#160;            }</div>
 <div class="line"><a name="l00971"></a><span class="lineno">  971</span>&#160;            B.m_[j * col + i] = zero;</div>
 <div class="line"><a name="l00972"></a><span class="lineno">  972</span>&#160;        }</div>
@@ -1097,7 +1097,7 @@ $(function() {
 <div class="line"><a name="l00997"></a><span class="lineno">  997</span>&#160;            pl.push_back({k, index});</div>
 <div class="line"><a name="l00998"></a><span class="lineno">  998</span>&#160;        }</div>
 <div class="line"><a name="l00999"></a><span class="lineno">  999</span>&#160; </div>
-<div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;        scale = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, B.m_[index * col + i]);</div>
+<div class="line"><a name="l01000"></a><span class="lineno"> 1000</span>&#160;        scale = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, B.m_[index * col + i]);</div>
 <div class="line"><a name="l01001"></a><span class="lineno"> 1001</span>&#160;        row_mul_scalar_dense(B, index, scale);</div>
 <div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160; </div>
 <div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;        <span class="keywordflow">for</span> (j = 0; j &lt; row; j++) {</div>
@@ -1137,7 +1137,7 @@ $(function() {
 <div class="line"><a name="l01037"></a><span class="lineno"> 1037</span>&#160;                            = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[i * col + i], B.m_[j * col + k]),</div>
 <div class="line"><a name="l01038"></a><span class="lineno"> 1038</span>&#160;                                  <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[j * col + i], B.m_[i * col + k]));</div>
 <div class="line"><a name="l01039"></a><span class="lineno"> 1039</span>&#160;                        <span class="keywordflow">if</span> (i &gt; 0)</div>
-<div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;                            B.m_[j * col + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(B.m_[j * col + k], d);</div>
+<div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;                            B.m_[j * col + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(B.m_[j * col + k], d);</div>
 <div class="line"><a name="l01041"></a><span class="lineno"> 1041</span>&#160;                    }</div>
 <div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;                }</div>
 <div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;        <span class="keywordflow">for</span> (j = 0; j &lt; row; j++)</div>
@@ -1181,7 +1181,7 @@ $(function() {
 <div class="line"><a name="l01081"></a><span class="lineno"> 1081</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[j * col + i], B.m_[index * col + k]));</div>
 <div class="line"><a name="l01082"></a><span class="lineno"> 1082</span>&#160;                <span class="keywordflow">if</span> (index == 0)</div>
 <div class="line"><a name="l01083"></a><span class="lineno"> 1083</span>&#160;                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;                B.m_[j * col + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(B.m_[j * col + k], d);</div>
+<div class="line"><a name="l01084"></a><span class="lineno"> 1084</span>&#160;                B.m_[j * col + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(B.m_[j * col + k], d);</div>
 <div class="line"><a name="l01085"></a><span class="lineno"> 1085</span>&#160;            }</div>
 <div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;        }</div>
 <div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160; </div>
@@ -1221,7 +1221,7 @@ $(function() {
 <div class="line"><a name="l01121"></a><span class="lineno"> 1121</span>&#160;            <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l01122"></a><span class="lineno"> 1122</span>&#160;        pivot_cols.push_back(col);</div>
 <div class="line"><a name="l01123"></a><span class="lineno"> 1123</span>&#160;        <span class="keywordflow">if</span> (row == 0 and normalize_last) {</div>
-<div class="line"><a name="l01124"></a><span class="lineno"> 1124</span>&#160;            RCP&lt;const Basic&gt; m = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, b.get(row, col));</div>
+<div class="line"><a name="l01124"></a><span class="lineno"> 1124</span>&#160;            RCP&lt;const Basic&gt; m = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, b.get(row, col));</div>
 <div class="line"><a name="l01125"></a><span class="lineno"> 1125</span>&#160;            b.mul_scalar(m, b);</div>
 <div class="line"><a name="l01126"></a><span class="lineno"> 1126</span>&#160;        }</div>
 <div class="line"><a name="l01127"></a><span class="lineno"> 1127</span>&#160;        row++;</div>
@@ -1240,7 +1240,7 @@ $(function() {
 <div class="line"><a name="l01140"></a><span class="lineno"> 1140</span>&#160;    <span class="comment">// No checks are done to see if the diagonal entries are zero</span></div>
 <div class="line"><a name="l01141"></a><span class="lineno"> 1141</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> k = 0; k &lt; sys; k++) {</div>
 <div class="line"><a name="l01142"></a><span class="lineno"> 1142</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; A.col_; i++) {</div>
-<div class="line"><a name="l01143"></a><span class="lineno"> 1143</span>&#160;            x.m_[i * sys + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(b.m_[i * sys + k], A.m_[i * A.col_ + i]);</div>
+<div class="line"><a name="l01143"></a><span class="lineno"> 1143</span>&#160;            x.m_[i * sys + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(b.m_[i * sys + k], A.m_[i * A.col_ + i]);</div>
 <div class="line"><a name="l01144"></a><span class="lineno"> 1144</span>&#160;        }</div>
 <div class="line"><a name="l01145"></a><span class="lineno"> 1145</span>&#160;    }</div>
 <div class="line"><a name="l01146"></a><span class="lineno"> 1146</span>&#160;}</div>
@@ -1262,7 +1262,7 @@ $(function() {
 <div class="line"><a name="l01162"></a><span class="lineno"> 1162</span>&#160;                x.m_[i * sys + k]</div>
 <div class="line"><a name="l01163"></a><span class="lineno"> 1163</span>&#160;                    = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(x.m_[i * sys + k],</div>
 <div class="line"><a name="l01164"></a><span class="lineno"> 1164</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(U.m_[i * col + j], x.m_[j * sys + k]));</div>
-<div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160;            x.m_[i * sys + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(x.m_[i * sys + k], U.m_[i * col + i]);</div>
+<div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160;            x.m_[i * sys + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(x.m_[i * sys + k], U.m_[i * col + i]);</div>
 <div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;        }</div>
 <div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;    }</div>
 <div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;}</div>
@@ -1286,7 +1286,7 @@ $(function() {
 <div class="line"><a name="l01186"></a><span class="lineno"> 1186</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.m_[j * col + i], x.m_[i * sys + k]));</div>
 <div class="line"><a name="l01187"></a><span class="lineno"> 1187</span>&#160;                <span class="keywordflow">if</span> (i &gt; 0)</div>
 <div class="line"><a name="l01188"></a><span class="lineno"> 1188</span>&#160;                    x.m_[j * sys + k]</div>
-<div class="line"><a name="l01189"></a><span class="lineno"> 1189</span>&#160;                        = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(x.m_[j * sys + k], A.m_[(i - 1) * col + i - 1]);</div>
+<div class="line"><a name="l01189"></a><span class="lineno"> 1189</span>&#160;                        = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(x.m_[j * sys + k], A.m_[(i - 1) * col + i - 1]);</div>
 <div class="line"><a name="l01190"></a><span class="lineno"> 1190</span>&#160;            }</div>
 <div class="line"><a name="l01191"></a><span class="lineno"> 1191</span>&#160;        }</div>
 <div class="line"><a name="l01192"></a><span class="lineno"> 1192</span>&#160;    }</div>
@@ -1311,7 +1311,7 @@ $(function() {
 <div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;                    = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[i * col + i], b_.m_[j * bcol + k]),</div>
 <div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[j * col + i], b_.m_[i * bcol + k]));</div>
 <div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;                <span class="keywordflow">if</span> (i &gt; 0)</div>
-<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;                    b_.m_[j * bcol + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(b_.m_[j * bcol + k],</div>
+<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;                    b_.m_[j * bcol + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(b_.m_[j * bcol + k],</div>
 <div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;                                              A_.m_[i * col - col + i - 1]);</div>
 <div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;            }</div>
 <div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160; </div>
@@ -1321,7 +1321,7 @@ $(function() {
 <div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[j * col + i], A_.m_[i * col + k]));</div>
 <div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;                <span class="keywordflow">if</span> (i &gt; 0)</div>
 <div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;                    A_.m_[j * col + k]</div>
-<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;                        = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(A_.m_[j * col + k], A_.m_[i * col - col + i - 1]);</div>
+<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;                        = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(A_.m_[j * col + k], A_.m_[i * col - col + i - 1]);</div>
 <div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;            }</div>
 <div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;            A_.m_[j * col + i] = zero;</div>
 <div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;        }</div>
@@ -1335,7 +1335,7 @@ $(function() {
 <div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;                b_.m_[i * bcol + k]</div>
 <div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;                    = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(b_.m_[i * bcol + k],</div>
 <div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;                          <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[i * col + j], x.m_[j * bcol + k]));</div>
-<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;            x.m_[i * bcol + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(b_.m_[i * bcol + k], A_.m_[i * col + i]);</div>
+<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;            x.m_[i * bcol + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(b_.m_[i * bcol + k], A_.m_[i * col + i]);</div>
 <div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;        }</div>
 <div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;    }</div>
 <div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;}</div>
@@ -1365,10 +1365,10 @@ $(function() {
 <div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;            <span class="keywordflow">if</span> (p != i) {</div>
 <div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;                <span class="comment">// pivot A</span></div>
 <div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;                <span class="keywordflow">for</span> (k = i; k &lt; col; k++) {</div>
-<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(A_.m_[p * col + k], A_.m_[i * col + k]);</div>
+<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;                    std::swap(A_.m_[p * col + k], A_.m_[i * col + k]);</div>
 <div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;                }</div>
 <div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;                <span class="keywordflow">for</span> (k = 0; k &lt; bcol; k++) {</div>
-<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(b_.m_[p * bcol + k], b_.m_[i * bcol + k]);</div>
+<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;                    std::swap(b_.m_[p * bcol + k], b_.m_[i * bcol + k]);</div>
 <div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;                }</div>
 <div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;            }</div>
 <div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;        }</div>
@@ -1379,7 +1379,7 @@ $(function() {
 <div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;                        = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[i * col + i], b_.m_[j * bcol + k]),</div>
 <div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;                              <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[j * col + i], b_.m_[i * bcol + k]));</div>
 <div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;                    <span class="keywordflow">if</span> (i &gt; 0)</div>
-<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;                        b_.m_[j * bcol + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(b_.m_[j * bcol + k], d);</div>
+<div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;                        b_.m_[j * bcol + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(b_.m_[j * bcol + k], d);</div>
 <div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;                }</div>
 <div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160; </div>
 <div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;                <span class="keywordflow">for</span> (k = 0; k &lt; col; k++) {</div>
@@ -1388,7 +1388,7 @@ $(function() {
 <div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;                            = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[i * col + i], A_.m_[j * col + k]),</div>
 <div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160;                                  <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A_.m_[j * col + i], A_.m_[i * col + k]));</div>
 <div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;                        <span class="keywordflow">if</span> (i &gt; 0)</div>
-<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;                            A_.m_[j * col + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(A_.m_[j * col + k], d);</div>
+<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;                            A_.m_[j * col + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(A_.m_[j * col + k], d);</div>
 <div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;                    }</div>
 <div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;                }</div>
 <div class="line"><a name="l01294"></a><span class="lineno"> 1294</span>&#160;            }</div>
@@ -1401,7 +1401,7 @@ $(function() {
 <div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160;    <span class="comment">// No checks are done to see if the diagonal entries are zero</span></div>
 <div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;    <span class="keywordflow">for</span> (k = 0; k &lt; bcol; k++)</div>
 <div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; col; i++)</div>
-<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;            x.m_[i * bcol + k] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(b_.m_[i * bcol + k], A_.m_[i * col + i]);</div>
+<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;            x.m_[i * bcol + k] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(b_.m_[i * bcol + k], A_.m_[i * col + i]);</div>
 <div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;}</div>
 <div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160; </div>
 <div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160;<span class="keywordtype">void</span> fraction_free_LU_solve(<span class="keyword">const</span> DenseMatrix &amp;A, <span class="keyword">const</span> DenseMatrix &amp;b,</div>
@@ -1481,7 +1481,7 @@ $(function() {
 <div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;                                       <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(LU.m_[j * n + i], LU.m_[i * n + k]));</div>
 <div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;                <span class="keywordflow">if</span> (i)</div>
 <div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;                    LU.m_[j * n + k]</div>
-<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;                        = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(LU.m_[j * n + k], LU.m_[i * n - n + i - 1]);</div>
+<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;                        = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(LU.m_[j * n + k], LU.m_[i * n - n + i - 1]);</div>
 <div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;            }</div>
 <div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;}</div>
 <div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160; </div>
@@ -1512,7 +1512,7 @@ $(function() {
 <div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;                                      <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(U.m_[i * n + k], U.m_[k * n + j]));</div>
 <div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;        }</div>
 <div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160; </div>
-<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;        scale = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, U.m_[j * n + j]);</div>
+<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;        scale = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, U.m_[j * n + j]);</div>
 <div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160; </div>
 <div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;        <span class="keywordflow">for</span> (i = j + 1; i &lt; n; i++)</div>
 <div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;            U.m_[i * n + j] = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(U.m_[i * n + j], scale);</div>
@@ -1564,7 +1564,7 @@ $(function() {
 <div class="line"><a name="l01464"></a><span class="lineno"> 1464</span>&#160;            row_exchange_dense(LU, pivot, j);</div>
 <div class="line"><a name="l01465"></a><span class="lineno"> 1465</span>&#160;            pl.push_back({pivot, j});</div>
 <div class="line"><a name="l01466"></a><span class="lineno"> 1466</span>&#160;        }</div>
-<div class="line"><a name="l01467"></a><span class="lineno"> 1467</span>&#160;        scale = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, LU.m_[j * n + j]);</div>
+<div class="line"><a name="l01467"></a><span class="lineno"> 1467</span>&#160;        scale = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, LU.m_[j * n + j]);</div>
 <div class="line"><a name="l01468"></a><span class="lineno"> 1468</span>&#160; </div>
 <div class="line"><a name="l01469"></a><span class="lineno"> 1469</span>&#160;        <span class="keywordflow">for</span> (i = j + 1; i &lt; n; i++)</div>
 <div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160;            LU.m_[i * n + j] = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(LU.m_[i * n + j], scale);</div>
@@ -1631,7 +1631,7 @@ $(function() {
 <div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;            L.m_[i * col + k] = U.m_[i * col + k];</div>
 <div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160;            <span class="keywordflow">for</span> (j = k + 1; j &lt; col; j++)</div>
 <div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;                U.m_[i * col + j]</div>
-<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;                    = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(U.m_[k * col + k], U.m_[i * col + j]),</div>
+<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;                    = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(U.m_[k * col + k], U.m_[i * col + j]),</div>
 <div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;                              <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(U.m_[k * col + j], U.m_[i * col + k])),</div>
 <div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;                          old);</div>
 <div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;            U.m_[i * col + k] = zero; <span class="comment">// Integer zero</span></div>
@@ -1655,7 +1655,7 @@ $(function() {
 <div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160; </div>
 <div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;    <span class="keywordtype">unsigned</span> i, j, k;</div>
 <div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;    RCP&lt;const Basic&gt; t;</div>
-<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Basic&gt;</a>&gt; tmp(row);</div>
+<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;    std::vector&lt;RCP&lt;const Basic&gt;&gt; tmp(row);</div>
 <div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160; </div>
 <div class="line"><a name="l01560"></a><span class="lineno"> 1560</span>&#160;    <span class="comment">// Initialize Q</span></div>
 <div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;    <span class="keywordflow">for</span> (i = 0; i &lt; row * col; i++)</div>
@@ -1681,13 +1681,13 @@ $(function() {
 <div class="line"><a name="l01581"></a><span class="lineno"> 1581</span>&#160;        <span class="comment">// calculate norm</span></div>
 <div class="line"><a name="l01582"></a><span class="lineno"> 1582</span>&#160;        t = zero;</div>
 <div class="line"><a name="l01583"></a><span class="lineno"> 1583</span>&#160;        <span class="keywordflow">for</span> (k = 0; k &lt; row; k++)</div>
-<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;            t = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(t, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(tmp[k], <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2)));</div>
+<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;            t = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(t, pow(tmp[k], <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2)));</div>
 <div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160; </div>
-<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;        t = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(t, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2)));</div>
+<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;        t = pow(t, <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2)));</div>
 <div class="line"><a name="l01587"></a><span class="lineno"> 1587</span>&#160; </div>
 <div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;        R.m_[j * col + j] = t;</div>
 <div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160;        <span class="keywordflow">for</span> (k = 0; k &lt; row; k++)</div>
-<div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;            Q.m_[k * col + j] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(tmp[k], t);</div>
+<div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;            Q.m_[k * col + j] = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(tmp[k], t);</div>
 <div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160; </div>
 <div class="line"><a name="l01592"></a><span class="lineno"> 1592</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; j; i++) {</div>
 <div class="line"><a name="l01593"></a><span class="lineno"> 1593</span>&#160;            t = zero;</div>
@@ -1728,11 +1728,11 @@ $(function() {
 <div class="line"><a name="l01628"></a><span class="lineno"> 1628</span>&#160;                sum = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(L.m_[i * col + k], L.m_[j * col + k]),</div>
 <div class="line"><a name="l01629"></a><span class="lineno"> 1629</span>&#160;                                   D.m_[k * col + k]));</div>
 <div class="line"><a name="l01630"></a><span class="lineno"> 1630</span>&#160;            L.m_[i * col + j]</div>
-<div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;                = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, D.m_[j * col + j]), <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + j], sum));</div>
+<div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;                = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, D.m_[j * col + j]), <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + j], sum));</div>
 <div class="line"><a name="l01632"></a><span class="lineno"> 1632</span>&#160;        }</div>
 <div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160;        sum = zero;</div>
 <div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;        <span class="keywordflow">for</span> (k = 0; k &lt; i; k++)</div>
-<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;            sum = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(L.m_[i * col + k], i2), D.m_[k * col + k]));</div>
+<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;            sum = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(pow(L.m_[i * col + k], i2), D.m_[k * col + k]));</div>
 <div class="line"><a name="l01636"></a><span class="lineno"> 1636</span>&#160;        D.m_[i * col + i] = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + i], sum);</div>
 <div class="line"><a name="l01637"></a><span class="lineno"> 1637</span>&#160;    }</div>
 <div class="line"><a name="l01638"></a><span class="lineno"> 1638</span>&#160;}</div>
@@ -1747,7 +1747,7 @@ $(function() {
 <div class="line"><a name="l01647"></a><span class="lineno"> 1647</span>&#160;    <span class="keywordtype">unsigned</span> i, j, k;</div>
 <div class="line"><a name="l01648"></a><span class="lineno"> 1648</span>&#160;    RCP&lt;const Basic&gt; sum;</div>
 <div class="line"><a name="l01649"></a><span class="lineno"> 1649</span>&#160;    RCP&lt;const Basic&gt; i2 = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2);</div>
-<div class="line"><a name="l01650"></a><span class="lineno"> 1650</span>&#160;    RCP&lt;const Basic&gt; half = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, i2);</div>
+<div class="line"><a name="l01650"></a><span class="lineno"> 1650</span>&#160;    RCP&lt;const Basic&gt; half = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, i2);</div>
 <div class="line"><a name="l01651"></a><span class="lineno"> 1651</span>&#160; </div>
 <div class="line"><a name="l01652"></a><span class="lineno"> 1652</span>&#160;    <span class="comment">// Initialize L</span></div>
 <div class="line"><a name="l01653"></a><span class="lineno"> 1653</span>&#160;    <span class="keywordflow">for</span> (i = 0; i &lt; col; i++)</div>
@@ -1761,12 +1761,12 @@ $(function() {
 <div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;                sum = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(L.m_[i * col + k], L.m_[j * col + k]));</div>
 <div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160; </div>
 <div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;            L.m_[i * col + j]</div>
-<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;                = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(one, L.m_[j * col + j]), <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + j], sum));</div>
+<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;                = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, L.m_[j * col + j]), <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + j], sum));</div>
 <div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;        }</div>
 <div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;        sum = zero;</div>
 <div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;        <span class="keywordflow">for</span> (k = 0; k &lt; i; k++)</div>
-<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;            sum = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(L.m_[i * col + k], i2));</div>
-<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;        L.m_[i * col + i] = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + i], sum), half);</div>
+<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;            sum = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, pow(L.m_[i * col + k], i2));</div>
+<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;        L.m_[i * col + i] = pow(<a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(A.m_[i * col + i], sum), half);</div>
 <div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;    }</div>
 <div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;}</div>
 <div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160; </div>
@@ -1841,7 +1841,7 @@ $(function() {
 <div class="line"><a name="l01741"></a><span class="lineno"> 1741</span>&#160;                    d = <a class="code" href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[k * n + k], B.m_[i * n + j]),</div>
 <div class="line"><a name="l01742"></a><span class="lineno"> 1742</span>&#160;                            <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(B.m_[i * n + k], B.m_[k * n + j]));</div>
 <div class="line"><a name="l01743"></a><span class="lineno"> 1743</span>&#160;                    <span class="keywordflow">if</span> (k &gt; 0)</div>
-<div class="line"><a name="l01744"></a><span class="lineno"> 1744</span>&#160;                        d = <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/div.html">div</a>(d, B.m_[(k - 1) * n + k - 1]);</div>
+<div class="line"><a name="l01744"></a><span class="lineno"> 1744</span>&#160;                        d = <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(d, B.m_[(k - 1) * n + k - 1]);</div>
 <div class="line"><a name="l01745"></a><span class="lineno"> 1745</span>&#160;                    B.m_[i * n + j] = d;</div>
 <div class="line"><a name="l01746"></a><span class="lineno"> 1746</span>&#160;                }</div>
 <div class="line"><a name="l01747"></a><span class="lineno"> 1747</span>&#160;            }</div>
@@ -1855,19 +1855,19 @@ $(function() {
 <div class="line"><a name="l01755"></a><span class="lineno"> 1755</span>&#160;<span class="comment">// minors of Matrix A as elements in `polys`. Principal leading minor of kth</span></div>
 <div class="line"><a name="l01756"></a><span class="lineno"> 1756</span>&#160;<span class="comment">// order is the submatrix of A obtained by deleting last n-k rows and columns</span></div>
 <div class="line"><a name="l01757"></a><span class="lineno"> 1757</span>&#160;<span class="comment">// from A. Here `n` is the dimension of the square matrix A.</span></div>
-<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;<span class="keywordtype">void</span> berkowitz(<span class="keyword">const</span> DenseMatrix &amp;A, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> &amp;polys)</div>
+<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;<span class="keywordtype">void</span> berkowitz(<span class="keyword">const</span> DenseMatrix &amp;A, std::vector&lt;DenseMatrix&gt; &amp;polys)</div>
 <div class="line"><a name="l01759"></a><span class="lineno"> 1759</span>&#160;{</div>
 <div class="line"><a name="l01760"></a><span class="lineno"> 1760</span>&#160;    SYMENGINE_ASSERT(A.row_ == A.col_);</div>
 <div class="line"><a name="l01761"></a><span class="lineno"> 1761</span>&#160; </div>
 <div class="line"><a name="l01762"></a><span class="lineno"> 1762</span>&#160;    <span class="keywordtype">unsigned</span> col = A.col_;</div>
 <div class="line"><a name="l01763"></a><span class="lineno"> 1763</span>&#160;    <span class="keywordtype">unsigned</span> i, k, l, m;</div>
 <div class="line"><a name="l01764"></a><span class="lineno"> 1764</span>&#160; </div>
-<div class="line"><a name="l01765"></a><span class="lineno"> 1765</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> items;</div>
-<div class="line"><a name="l01766"></a><span class="lineno"> 1766</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> transforms;</div>
-<div class="line"><a name="l01767"></a><span class="lineno"> 1767</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Basic&gt;</a>&gt; items_;</div>
+<div class="line"><a name="l01765"></a><span class="lineno"> 1765</span>&#160;    std::vector&lt;DenseMatrix&gt; items;</div>
+<div class="line"><a name="l01766"></a><span class="lineno"> 1766</span>&#160;    std::vector&lt;DenseMatrix&gt; transforms;</div>
+<div class="line"><a name="l01767"></a><span class="lineno"> 1767</span>&#160;    std::vector&lt;RCP&lt;const Basic&gt;&gt; items_;</div>
 <div class="line"><a name="l01768"></a><span class="lineno"> 1768</span>&#160; </div>
 <div class="line"><a name="l01769"></a><span class="lineno"> 1769</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = col; n &gt; 1; n--) {</div>
-<div class="line"><a name="l01770"></a><span class="lineno"> 1770</span>&#160;        items.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/clear.html">clear</a>();</div>
+<div class="line"><a name="l01770"></a><span class="lineno"> 1770</span>&#160;        items.clear();</div>
 <div class="line"><a name="l01771"></a><span class="lineno"> 1771</span>&#160;        k = n - 1;</div>
 <div class="line"><a name="l01772"></a><span class="lineno"> 1772</span>&#160;        DenseMatrix T = DenseMatrix(n + 1, n);</div>
 <div class="line"><a name="l01773"></a><span class="lineno"> 1773</span>&#160;        DenseMatrix C = DenseMatrix(k, 1);</div>
@@ -1877,7 +1877,7 @@ $(function() {
 <div class="line"><a name="l01777"></a><span class="lineno"> 1777</span>&#160;            T.m_[i] = zero;</div>
 <div class="line"><a name="l01778"></a><span class="lineno"> 1778</span>&#160;        for (i = 0; i &lt; k; i++)</div>
 <div class="line"><a name="l01779"></a><span class="lineno"> 1779</span>&#160;            C.m_[i] = A.m_[i * col + k];</div>
-<div class="line"><a name="l01780"></a><span class="lineno"> 1780</span>&#160;        items.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(C);</div>
+<div class="line"><a name="l01780"></a><span class="lineno"> 1780</span>&#160;        items.push_back(C);</div>
 <div class="line"><a name="l01781"></a><span class="lineno"> 1781</span>&#160; </div>
 <div class="line"><a name="l01782"></a><span class="lineno"> 1782</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; n - 2; i++) {</div>
 <div class="line"><a name="l01783"></a><span class="lineno"> 1783</span>&#160;            DenseMatrix B = DenseMatrix(k, 1);</div>
@@ -1887,28 +1887,28 @@ $(function() {
 <div class="line"><a name="l01787"></a><span class="lineno"> 1787</span>&#160;                    B.m_[l]</div>
 <div class="line"><a name="l01788"></a><span class="lineno"> 1788</span>&#160;                        = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(B.m_[l], <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.m_[l * col + m], items[i].m_[m]));</div>
 <div class="line"><a name="l01789"></a><span class="lineno"> 1789</span>&#160;            }</div>
-<div class="line"><a name="l01790"></a><span class="lineno"> 1790</span>&#160;            items.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(B);</div>
+<div class="line"><a name="l01790"></a><span class="lineno"> 1790</span>&#160;            items.push_back(B);</div>
 <div class="line"><a name="l01791"></a><span class="lineno"> 1791</span>&#160;        }</div>
 <div class="line"><a name="l01792"></a><span class="lineno"> 1792</span>&#160; </div>
-<div class="line"><a name="l01793"></a><span class="lineno"> 1793</span>&#160;        items_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/clear.html">clear</a>();</div>
+<div class="line"><a name="l01793"></a><span class="lineno"> 1793</span>&#160;        items_.clear();</div>
 <div class="line"><a name="l01794"></a><span class="lineno"> 1794</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; n - 1; i++) {</div>
 <div class="line"><a name="l01795"></a><span class="lineno"> 1795</span>&#160;            RCP&lt;const Basic&gt; element = zero;</div>
 <div class="line"><a name="l01796"></a><span class="lineno"> 1796</span>&#160;            <span class="keywordflow">for</span> (l = 0; l &lt; k; l++)</div>
 <div class="line"><a name="l01797"></a><span class="lineno"> 1797</span>&#160;                element = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(element, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.m_[k * col + l], items[i].m_[l]));</div>
-<div class="line"><a name="l01798"></a><span class="lineno"> 1798</span>&#160;            items_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, element));</div>
+<div class="line"><a name="l01798"></a><span class="lineno"> 1798</span>&#160;            items_.push_back(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, element));</div>
 <div class="line"><a name="l01799"></a><span class="lineno"> 1799</span>&#160;        }</div>
-<div class="line"><a name="l01800"></a><span class="lineno"> 1800</span>&#160;        items_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/insert.html">insert</a>(items_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, A.m_[k * col + k]));</div>
-<div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;        items_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/insert.html">insert</a>(items_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), one);</div>
+<div class="line"><a name="l01800"></a><span class="lineno"> 1800</span>&#160;        items_.insert(items_.begin(), <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, A.m_[k * col + k]));</div>
+<div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;        items_.insert(items_.begin(), one);</div>
 <div class="line"><a name="l01802"></a><span class="lineno"> 1802</span>&#160; </div>
 <div class="line"><a name="l01803"></a><span class="lineno"> 1803</span>&#160;        <span class="keywordflow">for</span> (i = 0; i &lt; n; i++) {</div>
 <div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160;            <span class="keywordflow">for</span> (l = 0; l &lt; n - i + 1; l++)</div>
 <div class="line"><a name="l01805"></a><span class="lineno"> 1805</span>&#160;                T.m_[(i + l) * n + i] = items_[l];</div>
 <div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160;        }</div>
 <div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160; </div>
-<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;        transforms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(T);</div>
+<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;        transforms.push_back(T);</div>
 <div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160;    }</div>
 <div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160; </div>
-<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;    polys.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(DenseMatrix(2, 1, {one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.m_[0], minus_one)}));</div>
+<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;    polys.push_back(DenseMatrix(2, 1, {one, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.m_[0], minus_one)}));</div>
 <div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160; </div>
 <div class="line"><a name="l01813"></a><span class="lineno"> 1813</span>&#160;    <span class="keywordflow">for</span> (i = 0; i &lt; col - 1; i++) {</div>
 <div class="line"><a name="l01814"></a><span class="lineno"> 1814</span>&#160;        <span class="keywordtype">unsigned</span> t_row = transforms[col - 2 - i].nrows();</div>
@@ -1924,18 +1924,18 @@ $(function() {
 <div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;                B.m_[l] = <a class="code" href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">expand</a>(B.m_[l]);</div>
 <div class="line"><a name="l01825"></a><span class="lineno"> 1825</span>&#160;            }</div>
 <div class="line"><a name="l01826"></a><span class="lineno"> 1826</span>&#160;        }</div>
-<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;        polys.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(B);</div>
+<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;        polys.push_back(B);</div>
 <div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;    }</div>
 <div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;}</div>
 <div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160; </div>
 <div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;RCP&lt;const Basic&gt; det_berkowitz(<span class="keyword">const</span> DenseMatrix &amp;A)</div>
 <div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;{</div>
-<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> polys;</div>
+<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;    std::vector&lt;DenseMatrix&gt; polys;</div>
 <div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160; </div>
 <div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;    berkowitz(A, polys);</div>
-<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;    DenseMatrix poly = polys[polys.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() - 1];</div>
+<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;    DenseMatrix poly = polys[polys.size() - 1];</div>
 <div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160; </div>
-<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;    <span class="keywordflow">if</span> (polys.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() % 2 == 1)</div>
+<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;    <span class="keywordflow">if</span> (polys.size() % 2 == 1)</div>
 <div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(minus_one, poly.get(poly.nrows() - 1, 0));</div>
 <div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160; </div>
 <div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;    <span class="keywordflow">return</span> poly.get(poly.nrows() - 1, 0);</div>
@@ -1946,10 +1946,10 @@ $(function() {
 <div class="line"><a name="l01846"></a><span class="lineno"> 1846</span>&#160;    SYMENGINE_ASSERT(B.ncols() == 1 and B.nrows() == A.nrows() + 1);</div>
 <div class="line"><a name="l01847"></a><span class="lineno"> 1847</span>&#160;    SYMENGINE_ASSERT(A.nrows() == A.ncols());</div>
 <div class="line"><a name="l01848"></a><span class="lineno"> 1848</span>&#160; </div>
-<div class="line"><a name="l01849"></a><span class="lineno"> 1849</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> polys;</div>
+<div class="line"><a name="l01849"></a><span class="lineno"> 1849</span>&#160;    std::vector&lt;DenseMatrix&gt; polys;</div>
 <div class="line"><a name="l01850"></a><span class="lineno"> 1850</span>&#160; </div>
 <div class="line"><a name="l01851"></a><span class="lineno"> 1851</span>&#160;    berkowitz(A, polys);</div>
-<div class="line"><a name="l01852"></a><span class="lineno"> 1852</span>&#160;    B = polys[polys.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() - 1];</div>
+<div class="line"><a name="l01852"></a><span class="lineno"> 1852</span>&#160;    B = polys[polys.size() - 1];</div>
 <div class="line"><a name="l01853"></a><span class="lineno"> 1853</span>&#160;}</div>
 <div class="line"><a name="l01854"></a><span class="lineno"> 1854</span>&#160; </div>
 <div class="line"><a name="l01855"></a><span class="lineno"> 1855</span>&#160;<span class="keywordtype">void</span> inverse_fraction_free_LU(<span class="keyword">const</span> DenseMatrix &amp;A, DenseMatrix &amp;B)</div>
@@ -2079,7 +2079,7 @@ $(function() {
 <div class="line"><a name="l01979"></a><span class="lineno"> 1979</span>&#160;        RCP&lt;const Set&gt; eigenvals = <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
 <div class="line"><a name="l01980"></a><span class="lineno"> 1980</span>&#160;        set_basic x;</div>
 <div class="line"><a name="l01981"></a><span class="lineno"> 1981</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; n; ++i) {</div>
-<div class="line"><a name="l01982"></a><span class="lineno"> 1982</span>&#160;            x.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(A.get(i, i));</div>
+<div class="line"><a name="l01982"></a><span class="lineno"> 1982</span>&#160;            x.insert(A.get(i, i));</div>
 <div class="line"><a name="l01983"></a><span class="lineno"> 1983</span>&#160;        }</div>
 <div class="line"><a name="l01984"></a><span class="lineno"> 1984</span>&#160;        eigenvals = <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(x);</div>
 <div class="line"><a name="l01985"></a><span class="lineno"> 1985</span>&#160;        <span class="keywordflow">return</span> eigenvals;</div>
@@ -2159,27 +2159,27 @@ $(function() {
 <div class="line"><a name="l02059"></a><span class="lineno"> 2059</span>&#160;    }</div>
 <div class="line"><a name="l02060"></a><span class="lineno"> 2060</span>&#160;}</div>
 <div class="line"><a name="l02061"></a><span class="lineno"> 2061</span>&#160; </div>
-<div class="line"><a name="l02062"></a><span class="lineno"><a class="line" href="classSymEngine_1_1DenseMatrix.html#adb2d3ba5dd8f5e79dff551efe8fd1be1"> 2062</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> DenseMatrix::dumps()<span class="keyword"> const</span></div>
+<div class="line"><a name="l02062"></a><span class="lineno"><a class="line" href="classSymEngine_1_1DenseMatrix.html#adb2d3ba5dd8f5e79dff551efe8fd1be1"> 2062</a></span>&#160;std::string DenseMatrix::dumps()<span class="keyword"> const</span></div>
 <div class="line"><a name="l02063"></a><span class="lineno"> 2063</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l02064"></a><span class="lineno"> 2064</span>&#160;<span class="preprocessor">#if HAVE_SYMENGINE_RTTI</span></div>
-<div class="line"><a name="l02065"></a><span class="lineno"> 2065</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> oss;</div>
+<div class="line"><a name="l02065"></a><span class="lineno"> 2065</span>&#160;    std::ostringstream oss;</div>
 <div class="line"><a name="l02066"></a><span class="lineno"> 2066</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major = SYMENGINE_MAJOR_VERSION;</div>
 <div class="line"><a name="l02067"></a><span class="lineno"> 2067</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> minor = SYMENGINE_MINOR_VERSION;</div>
 <div class="line"><a name="l02068"></a><span class="lineno"> 2068</span>&#160;    <a class="code" href="classSymEngine_1_1RCPBasicAwareOutputArchive.html">RCPBasicAwareOutputArchive&lt;cereal::PortableBinaryOutputArchive&gt;</a>{oss}(</div>
 <div class="line"><a name="l02069"></a><span class="lineno"> 2069</span>&#160;        major, minor, row_, col_, m_);</div>
-<div class="line"><a name="l02070"></a><span class="lineno"> 2070</span>&#160;    <span class="keywordflow">return</span> oss.<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>();</div>
+<div class="line"><a name="l02070"></a><span class="lineno"> 2070</span>&#160;    <span class="keywordflow">return</span> oss.str();</div>
 <div class="line"><a name="l02071"></a><span class="lineno"> 2071</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l02072"></a><span class="lineno"> 2072</span>&#160;    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Serialization not implemented in no-rtti mode&quot;</span>);</div>
 <div class="line"><a name="l02073"></a><span class="lineno"> 2073</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l02074"></a><span class="lineno"> 2074</span>&#160;}</div>
 <div class="line"><a name="l02075"></a><span class="lineno"> 2075</span>&#160; </div>
-<div class="line"><a name="l02076"></a><span class="lineno"><a class="line" href="classSymEngine_1_1DenseMatrix.html#aa2a78b6ae52c80319f67464d2d696b1e"> 2076</a></span>&#160;<a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> DenseMatrix::loads(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;serialized)</div>
+<div class="line"><a name="l02076"></a><span class="lineno"><a class="line" href="classSymEngine_1_1DenseMatrix.html#aa2a78b6ae52c80319f67464d2d696b1e"> 2076</a></span>&#160;<a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> DenseMatrix::loads(<span class="keyword">const</span> std::string &amp;serialized)</div>
 <div class="line"><a name="l02077"></a><span class="lineno"> 2077</span>&#160;{</div>
 <div class="line"><a name="l02078"></a><span class="lineno"> 2078</span>&#160;<span class="preprocessor">#if HAVE_SYMENGINE_RTTI</span></div>
 <div class="line"><a name="l02079"></a><span class="lineno"> 2079</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">short</span> major, minor;</div>
 <div class="line"><a name="l02080"></a><span class="lineno"> 2080</span>&#160;    <span class="keywordtype">unsigned</span> row, col;</div>
-<div class="line"><a name="l02081"></a><span class="lineno"> 2081</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> obj;</div>
-<div class="line"><a name="l02082"></a><span class="lineno"> 2082</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a> iss(serialized);</div>
+<div class="line"><a name="l02081"></a><span class="lineno"> 2081</span>&#160;    vec_basic obj;</div>
+<div class="line"><a name="l02082"></a><span class="lineno"> 2082</span>&#160;    std::istringstream iss(serialized);</div>
 <div class="line"><a name="l02083"></a><span class="lineno"> 2083</span>&#160;    <a class="code" href="classSymEngine_1_1RCPBasicAwareInputArchive.html">RCPBasicAwareInputArchive&lt;cereal::PortableBinaryInputArchive&gt;</a> iarchive{iss};</div>
 <div class="line"><a name="l02084"></a><span class="lineno"> 2084</span>&#160;    iarchive(major, minor);</div>
 <div class="line"><a name="l02085"></a><span class="lineno"> 2085</span>&#160;    <span class="keywordflow">if</span> (major != SYMENGINE_MAJOR_VERSION or minor != SYMENGINE_MINOR_VERSION) {</div>
@@ -2191,7 +2191,7 @@ $(function() {
 <div class="line"><a name="l02091"></a><span class="lineno"> 2091</span>&#160;                                 &lt;&lt; minor &lt;&lt; <span class="stringliteral">&quot;.&quot;</span>);</div>
 <div class="line"><a name="l02092"></a><span class="lineno"> 2092</span>&#160;    }</div>
 <div class="line"><a name="l02093"></a><span class="lineno"> 2093</span>&#160;    iarchive(row, col, obj);</div>
-<div class="line"><a name="l02094"></a><span class="lineno"> 2094</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a>(row, col, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(obj));</div>
+<div class="line"><a name="l02094"></a><span class="lineno"> 2094</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a>(row, col, std::move(obj));</div>
 <div class="line"><a name="l02095"></a><span class="lineno"> 2095</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l02096"></a><span class="lineno"> 2096</span>&#160;    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Serialization not implemented in no-rtti mode&quot;</span>);</div>
 <div class="line"><a name="l02097"></a><span class="lineno"> 2097</span>&#160;<span class="preprocessor">#endif</span></div>
@@ -2199,22 +2199,14 @@ $(function() {
 <div class="line"><a name="l02099"></a><span class="lineno"> 2099</span>&#160; </div>
 <div class="line"><a name="l02100"></a><span class="lineno"> 2100</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
-<div class="ttc" id="abasic_istringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_istringstream.html">std::istringstream</a></div></div>
-<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="classSymEngine_1_1Add.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::Add::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1DenseMatrix_html"><div class="ttname"><a href="classSymEngine_1_1DenseMatrix.html">SymEngine::DenseMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="matrix_8h_source.html#l00111">matrix.h:112</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareInputArchive_html"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareInputArchive.html">SymEngine::RCPBasicAwareInputArchive</a></div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00068">serialize-cereal.h:69</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareOutputArchive_html"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareOutputArchive.html">SymEngine::RCPBasicAwareOutputArchive</a></div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00029">serialize-cereal.h:30</a></div></div>
-<div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/clear.html">std::vector::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
-<div class="ttc" id="adiv_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/div.html">std::div</a></div><div class="ttdeci">T div(T... args)</div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
-<div class="ttc" id="aget_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/memory/unique_ptr/get.html">std::unique_ptr::get</a></div><div class="ttdeci">T get(T... args)</div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/insert.html">std::vector::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a16a102cafaa2be38a4fd095789b1a806"><div class="ttname"><a href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">SymEngine::div</a></div><div class="ttdeci">RCP&lt; const Basic &gt; div(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Division.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00431">mul.cpp:431</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1998df939d1b28e0356a43f33433d9d3"><div class="ttname"><a href="namespaceSymEngine.html#a1998df939d1b28e0356a43f33433d9d3">SymEngine::is_number_and_zero</a></div><div class="ttdeci">bool is_number_and_zero(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00139">number.h:139</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1f382b48b9cb214e1017d0e11fd3e6d6"><div class="ttname"><a href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">SymEngine::symbol</a></div><div class="ttdeci">RCP&lt; const Symbol &gt; symbol(const std::string &amp;name)</div><div class="ttdoc">inline version to return Symbol</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00082">symbol.h:82</a></div></div>
@@ -2231,14 +2223,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_af02f97d82354b66c939ae206f0057edd"><div class="ttname"><a href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00149">functions.cpp:149</a></div></div>
 <div class="ttc" id="anumber_8h_html"><div class="ttname"><a href="number_8h.html">number.h</a></div></div>
 <div class="ttc" id="apow_8h_html"><div class="ttname"><a href="pow_8h.html">pow.h</a></div></div>
-<div class="ttc" id="apow_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a></div><div class="ttdeci">T pow(T... args)</div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
 <div class="ttc" id="asolve_8h_html"><div class="ttname"><a href="solve_8h.html">solve.h</a></div></div>
-<div class="ttc" id="astr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">std::ostringstream::str</a></div><div class="ttdeci">T str(T... args)</div></div>
-<div class="ttc" id="aswap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a></div><div class="ttdeci">T swap(T... args)</div></div>
-<div class="ttc" id="aunique_ptr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

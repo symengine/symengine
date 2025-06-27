@@ -104,30 +104,30 @@ $(function() {
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ComplexDouble.html#ab266eab91999f0b146fc5604374c23dc">   11</a></span>&#160;<a class="code" href="classSymEngine_1_1ComplexDouble.html#ab266eab91999f0b146fc5604374c23dc">ComplexDouble::ComplexDouble</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> i)</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ComplexDouble.html#ab266eab91999f0b146fc5604374c23dc">   11</a></span>&#160;<a class="code" href="classSymEngine_1_1ComplexDouble.html#ab266eab91999f0b146fc5604374c23dc">ComplexDouble::ComplexDouble</a>(std::complex&lt;double&gt; i)</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    this-&gt;i = i;</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;}</div>
 <div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ComplexDouble.html#a98a3391cab43a1a03cb936137a4a9165">   17</a></span>&#160;RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1ComplexDouble.html#a98a3391cab43a1a03cb936137a4a9165">ComplexDouble::real_part</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> real_double(i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>());</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordflow">return</span> real_double(i.real());</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ComplexDouble.html#ade4b7eafbf355eae037a385c829c9df9">   22</a></span>&#160;RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1ComplexDouble.html#ade4b7eafbf355eae037a385c829c9df9">ComplexDouble::imaginary_part</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> real_double(i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/imag.html">imag</a>());</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordflow">return</span> real_double(i.imag());</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;}</div>
 <div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ComplexDouble.html#a5c045715bca3244939b40af40a2dc087">   27</a></span>&#160;RCP&lt;const Basic&gt; <a class="code" href="classSymEngine_1_1ComplexDouble.html#a5c045715bca3244939b40af40a2dc087">ComplexDouble::conjugate</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">double</span> re = i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>();</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">double</span> im = -i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/imag.html">imag</a>();</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> complex_double(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(re, im));</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">double</span> re = i.real();</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordtype">double</span> im = -i.imag();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> complex_double(std::complex&lt;double&gt;(re, im));</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 <div class="line"><a name="l00033"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ComplexDouble.html#a943ae4e590977a596382d9695e5f6f4e">   33</a></span>&#160;hash_t <a class="code" href="classSymEngine_1_1ComplexDouble.html#a943ae4e590977a596382d9695e5f6f4e">ComplexDouble::__hash__</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    hash_t seed = SYMENGINE_COMPLEX_DOUBLE;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    hash_combine&lt;double&gt;(seed, i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>());</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    hash_combine&lt;double&gt;(seed, i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/imag.html">imag</a>());</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    hash_combine&lt;double&gt;(seed, i.real());</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    hash_combine&lt;double&gt;(seed, i.imag());</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">return</span> seed;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;}</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
@@ -146,20 +146,20 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ComplexDouble.html">ComplexDouble</a> &amp;s = down_cast&lt;const ComplexDouble &amp;&gt;(o);</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">if</span> (i == s.i)</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">if</span> (i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>() == s.i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>()) {</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">return</span> i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/imag.html">imag</a>() &lt; s.i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/imag.html">imag</a>() ? -1 : 1;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">if</span> (i.real() == s.i.real()) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        <span class="keywordflow">return</span> i.imag() &lt; s.i.imag() ? -1 : 1;</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    }</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>() &lt; s.i.<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">real</a>() ? -1 : 1;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keywordflow">return</span> i.real() &lt; s.i.real() ? -1 : 1;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;}</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;RCP&lt;const ComplexDouble&gt; complex_double(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> x)</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;RCP&lt;const ComplexDouble&gt; complex_double(std::complex&lt;double&gt; x)</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;{</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ComplexDouble&gt;(x);</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;RCP&lt;const ComplexDouble&gt; complex_double(<span class="keywordtype">double</span> real, <span class="keywordtype">double</span> imag)</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;{</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ComplexDouble&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(real, imag));</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ComplexDouble&gt;(std::complex&lt;double&gt;(real, imag));</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;}</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
@@ -172,10 +172,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1ComplexDouble_html_a98a3391cab43a1a03cb936137a4a9165"><div class="ttname"><a href="classSymEngine_1_1ComplexDouble.html#a98a3391cab43a1a03cb936137a4a9165">SymEngine::ComplexDouble::real_part</a></div><div class="ttdeci">RCP&lt; const Number &gt; real_part() const override</div><div class="ttdoc">Get the real part of the complex number.</div><div class="ttdef"><b>Definition:</b> <a href="complex__double_8cpp_source.html#l00017">complex_double.cpp:17</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ComplexDouble_html_ab266eab91999f0b146fc5604374c23dc"><div class="ttname"><a href="classSymEngine_1_1ComplexDouble.html#ab266eab91999f0b146fc5604374c23dc">SymEngine::ComplexDouble::ComplexDouble</a></div><div class="ttdeci">ComplexDouble(std::complex&lt; double &gt; i)</div><div class="ttdoc">Constructor of ComplexDouble class.</div><div class="ttdef"><b>Definition:</b> <a href="complex__double_8cpp_source.html#l00011">complex_double.cpp:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ComplexDouble_html_ade4b7eafbf355eae037a385c829c9df9"><div class="ttname"><a href="classSymEngine_1_1ComplexDouble.html#ade4b7eafbf355eae037a385c829c9df9">SymEngine::ComplexDouble::imaginary_part</a></div><div class="ttdeci">RCP&lt; const Number &gt; imaginary_part() const override</div><div class="ttdoc">Get the imaginary part of the complex number.</div><div class="ttdef"><b>Definition:</b> <a href="complex__double_8cpp_source.html#l00022">complex_double.cpp:22</a></div></div>
-<div class="ttc" id="acomplex_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt; double &gt;</a></div></div>
-<div class="ttc" id="aimag_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/complex/imag.html">std::complex::imag</a></div><div class="ttdeci">T imag(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="areal_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/complex/real.html">std::complex::real</a></div><div class="ttdeci">T real(T... args)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

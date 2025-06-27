@@ -122,7 +122,7 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ExpandVisitor.html">   22</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1ExpandVisitor.html">ExpandVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;ExpandVisitor&gt;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> d_;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    umap_basic_num d_;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    RCP&lt;const Number&gt; coeff = zero;</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    RCP&lt;const Number&gt; multiply = one;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    <span class="keywordtype">bool</span> deep;</div>
@@ -132,7 +132,7 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    RCP&lt;const Basic&gt; apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;b)</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    {</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        b.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">Add::from_dict</a>(coeff, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d_));</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">Add::from_dict</a>(coeff, std::move(d_));</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    }</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</div>
@@ -186,7 +186,7 @@ $(function() {
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;                                    down_cast&lt;const Add &amp;&gt;(*b).get_coef())));</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="comment">// Improves (x+1)**3*(x+2)**3*...(x+350)**3 expansion from 0.97s to 0.93s:</span></div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#if defined(HAVE_SYMENGINE_RESERVE)</span></div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/reserve.html">reserve</a>(d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>()</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;            d_.reserve(d_.size()</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;                       + (down_cast&lt;const Add &amp;&gt;(*a)).get_dict().size()</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;                             * (down_cast&lt;const Add &amp;&gt;(*b)).get_dict().size());</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#endif</span></div>
@@ -210,9 +210,9 @@ $(function() {
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;                            RCP&lt;const Number&gt; coef2</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;                                = down_cast&lt;const Mul &amp;&gt;(*term).get_coef();</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;                            <span class="comment">// We make a copy of the dict_:</span></div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d2</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                            map_basic_basic d2</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;                                = down_cast&lt;const Mul &amp;&gt;(*term).get_dict();</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                            term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d2));</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                            term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, std::move(d2));</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                            <a class="code" href="classSymEngine_1_1Add.html#ab78c545d33cd594482669eb3b3a64949">Add::dict_add_term</a>(</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                                d_, _mulnum(_mulnum(temp, q.second), coef2),</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                                term);</div>
@@ -243,7 +243,7 @@ $(function() {
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            _imulnum(outArg(a_coef), multiply);</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="preprocessor">#if defined(HAVE_SYMENGINE_RESERVE)</span></div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/reserve.html">reserve</a>(d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>()</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            d_.reserve(d_.size()</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                       + (down_cast&lt;const Add &amp;&gt;(*b)).get_dict().size());</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;q : (down_cast&lt;const Add &amp;&gt;(*b)).get_dict()) {</div>
@@ -261,9 +261,9 @@ $(function() {
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                        RCP&lt;const Number&gt; coef2</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;                            = down_cast&lt;const Mul &amp;&gt;(*term).get_coef();</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                        <span class="comment">// We make a copy of the dict_:</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d2</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                        map_basic_basic d2</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                            = down_cast&lt;const Mul &amp;&gt;(*term).get_dict();</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                        term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d2));</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;                        term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, std::move(d2));</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                        <a class="code" href="classSymEngine_1_1Add.html#ab78c545d33cd594482669eb3b3a64949">Add::dict_add_term</a>(</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;                            d_, _mulnum(_mulnum(q.second, a_coef), coef2),</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;                            term);</div>
@@ -286,16 +286,16 @@ $(function() {
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        _coef_dict_add_term(multiply, <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(a, b));</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    }</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
-<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">void</span> square_expand(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> &amp;base_dict)</div>
+<div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    <span class="keywordtype">void</span> square_expand(umap_basic_num &amp;base_dict)</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    {</div>
-<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keyword">auto</span> m = base_dict.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>();</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;        <span class="keyword">auto</span> m = base_dict.size();</div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="preprocessor">#if defined(HAVE_SYMENGINE_RESERVE)</span></div>
-<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/reserve.html">reserve</a>(d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>() + m * (m + 1) / 2);</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        d_.reserve(d_.size() + m * (m + 1) / 2);</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        RCP&lt;const Basic&gt; t;</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        RCP&lt;const Number&gt; coef, two = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(2);</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = base_dict.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/begin.html">begin</a>(); p != base_dict.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>(); ++p) {</div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> q = p; q != base_dict.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">end</a>(); ++q) {</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> p = base_dict.begin(); p != base_dict.end(); ++p) {</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> q = p; q != base_dict.end(); ++q) {</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;                <span class="keywordflow">if</span> (q == p) {</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;                    _coef_dict_add_term(</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;                        _mulnum(<a class="code" href="namespaceSymEngine.html#a1f7b70ff3cc168dd61eeb32c7c48bf6d">mulnum</a>((*p).second, (*p).second), multiply),</div>
@@ -310,24 +310,24 @@ $(function() {
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        }</div>
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;    }</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordtype">void</span> pow_expand(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> &amp;base_dict, <span class="keywordtype">unsigned</span> n)</div>
+<div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordtype">void</span> pow_expand(umap_basic_num &amp;base_dict, <span class="keywordtype">unsigned</span> n)</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    {</div>
-<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_vec_mpz</a> r;</div>
-<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordtype">unsigned</span> m = numeric_cast&lt;unsigned&gt;(base_dict.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>());</div>
+<div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;        map_vec_mpz r;</div>
+<div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;        <span class="keywordtype">unsigned</span> m = numeric_cast&lt;unsigned&gt;(base_dict.size());</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        multinomial_coefficients_mpz(m, n, r);</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;<span class="comment">// This speeds up overall expansion. For example for the benchmark</span></div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;<span class="comment">// (y + x + z + w)**60 it improves the timing from 135ms to 124ms.</span></div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;<span class="preprocessor">#if defined(HAVE_SYMENGINE_RESERVE)</span></div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/reserve.html">reserve</a>(d_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>() + 2 * r.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>());</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        d_.reserve(d_.size() + 2 * r.size());</div>
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;p : r) {</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;            <span class="keyword">auto</span> power = p.first.begin();</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            <span class="keyword">auto</span> i2 = base_dict.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/begin.html">begin</a>();</div>
-<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d;</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;            <span class="keyword">auto</span> i2 = base_dict.begin();</div>
+<div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;            map_basic_basic d;</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;            RCP&lt;const Number&gt; overall_coeff = one;</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="keywordflow">for</span> (; power != p.first.end(); ++power, ++i2) {</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;                <span class="keywordflow">if</span> (*power &gt; 0) {</div>
-<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;                    RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(*power));</div>
+<div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;                    RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(*power));</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;                    RCP&lt;const Basic&gt; base = i2-&gt;first;</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*base)) {</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                        _imulnum(outArg(overall_coeff),</div>
@@ -363,7 +363,7 @@ $(function() {
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;                    }</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                }</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            }</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            RCP&lt;const Basic&gt; term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(overall_coeff, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d));</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            RCP&lt;const Basic&gt; term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(overall_coeff, std::move(d));</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;            RCP&lt;const Number&gt; coef2 = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(p.second);</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*term)) {</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                iaddnum(outArg(coeff),</div>
@@ -377,9 +377,9 @@ $(function() {
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;                    _imulnum(outArg(coef2),</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;                             down_cast&lt;const Mul &amp;&gt;(*term).get_coef());</div>
 <div class="line"><a name="l00279"></a><span class="lineno">  279</span>&#160;                    <span class="comment">// We make a copy of the dict_:</span></div>
-<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d2</div>
+<div class="line"><a name="l00280"></a><span class="lineno">  280</span>&#160;                    map_basic_basic d2</div>
 <div class="line"><a name="l00281"></a><span class="lineno">  281</span>&#160;                        = down_cast&lt;const Mul &amp;&gt;(*term).get_dict();</div>
-<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                    term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d2));</div>
+<div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;                    term = <a class="code" href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">Mul::from_dict</a>(one, std::move(d2));</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;                }</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160;                <a class="code" href="classSymEngine_1_1Add.html#ab78c545d33cd594482669eb3b3a64949">Add::dict_add_term</a>(d_, _mulnum(multiply, coef2), term);</div>
 <div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;            }</div>
@@ -422,7 +422,7 @@ $(function() {
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160;            <span class="keywordflow">return</span> _coef_dict_add_term(</div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;                multiply, <a class="code" href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">div</a>(one, expand_if_deep(pow(_base, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(-n)))));</div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        RCP&lt;const Add&gt; base = rcp_static_cast&lt;const Add&gt;(_base);</div>
-<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> base_dict = base-&gt;get_dict();</div>
+<div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;        umap_basic_num base_dict = base-&gt;get_dict();</div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">if</span> (!(base-&gt;get_coef()-&gt;is_zero())) {</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;            <span class="comment">// Add the numerical coefficient into the dictionary. This</span></div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;            <span class="comment">// allows a little bit easier treatment below.</span></div>
@@ -472,7 +472,6 @@ $(function() {
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;}</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160; </div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/begin.html">std::unordered_map::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html"><div class="ttname"><a href="classSymEngine_1_1Add.html">SymEngine::Add</a></div><div class="ttdoc">The base class for representing addition in symbolic expressions.</div><div class="ttdef"><b>Definition:</b> <a href="add_8h_source.html#l00026">add.h:27</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a307db20756a09c9f2bc7a5983e3ea3fb"><div class="ttname"><a href="classSymEngine_1_1Add.html#a307db20756a09c9f2bc7a5983e3ea3fb">SymEngine::Add::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, umap_basic_num &amp;&amp;d)</div><div class="ttdoc">Create an appropriate instance from dictionary quickly.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00140">add.cpp:140</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_ab78c545d33cd594482669eb3b3a64949"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab78c545d33cd594482669eb3b3a64949">SymEngine::Add::dict_add_term</a></div><div class="ttdeci">static void dict_add_term(umap_basic_num &amp;d, const RCP&lt; const Number &gt; &amp;coef, const RCP&lt; const Basic &gt; &amp;t)</div><div class="ttdoc">Adds a new term to the expression.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00237">add.cpp:237</a></div></div>
@@ -488,9 +487,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Mul_html_ab8e2f2039c048fe0a09b346df85ba65d"><div class="ttname"><a href="classSymEngine_1_1Mul.html#ab8e2f2039c048fe0a09b346df85ba65d">SymEngine::Mul::from_dict</a></div><div class="ttdeci">static RCP&lt; const Basic &gt; from_dict(const RCP&lt; const Number &gt; &amp;coef, map_basic_basic &amp;&amp;d)</div><div class="ttdoc">Create a Mul from a dict.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00115">mul.cpp:115</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Number_html"><div class="ttname"><a href="classSymEngine_1_1Number.html">SymEngine::Number</a></div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00018">number.h:19</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html"><div class="ttname"><a href="classSymEngine_1_1Pow.html">SymEngine::Pow</a></div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00017">pow.h:18</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/end.html">std::unordered_map::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a16a102cafaa2be38a4fd095789b1a806"><div class="ttname"><a href="namespaceSymEngine.html#a16a102cafaa2be38a4fd095789b1a806">SymEngine::div</a></div><div class="ttdeci">RCP&lt; const Basic &gt; div(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Division.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00431">mul.cpp:431</a></div></div>
@@ -503,9 +499,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_a8a0fa36d4fbff063bb37b9893c4e6354"><div class="ttname"><a href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">SymEngine::insert</a></div><div class="ttdeci">void insert(T1 &amp;m, const T2 &amp;first, const T3 &amp;second)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00083">dict.h:83</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac104d13f145416cd18c61b0121017eb6"><div class="ttname"><a href="namespaceSymEngine.html#ac104d13f145416cd18c61b0121017eb6">SymEngine::expand</a></div><div class="ttdeci">RCP&lt; const Basic &gt; expand(const RCP&lt; const Basic &gt; &amp;self, bool deep=true)</div><div class="ttdoc">Expands self</div><div class="ttdef"><b>Definition:</b> <a href="expand_8cpp_source.html#l00369">expand.cpp:369</a></div></div>
-<div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/reserve.html">std::unordered_map::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">std::unordered_map::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="aunordered_map_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Number &gt;, RCPBasicHash, RCPBasicKeyEq &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

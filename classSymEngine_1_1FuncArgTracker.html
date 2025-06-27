@@ -109,11 +109,11 @@ $(function() {
 <div class="center"><img src="classSymEngine_1_1FuncArgTracker__coll__graph.png" border="0" usemap="#aSymEngine_1_1FuncArgTracker_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1FuncArgTracker_coll__map" id="aSymEngine_1_1FuncArgTracker_coll__map">
 <area shape="rect" title=" " alt="" coords="728,84,928,114"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/vector.html" title=" " alt="" coords="330,5,483,51"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/set.html" title=" " alt="" coords="13,14,172,43"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/vector.html" title=" " alt="" coords="316,76,497,122"/>
+<area shape="rect" title=" " alt="" coords="330,5,483,51"/>
+<area shape="rect" title=" " alt="" coords="13,14,172,43"/>
+<area shape="rect" title=" " alt="" coords="316,76,497,122"/>
 <area shape="rect" title=" " alt="" coords="17,84,168,114"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/unordered_map.html" title=" " alt="" coords="293,146,520,244"/>
+<area shape="rect" title=" " alt="" coords="293,146,520,244"/>
 <area shape="rect" title=" " alt="" coords="5,172,180,218"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -121,11 +121,11 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ab1c6880678bc1a90a52517527d4d4e6f"><td class="memItemLeft" align="right" valign="top"><a id="ab1c6880678bc1a90a52517527d4d4e6f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FuncArgTracker</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &gt;&gt; &amp;funcs)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>FuncArgTracker</b> (const std::vector&lt; std::pair&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;, vec_basic &gt;&gt; &amp;funcs)</td></tr>
 <tr class="separator:ab1c6880678bc1a90a52517527d4d4e6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a35ef043504cb3738ad726d632d05cd14"><td class="memTemplParams" colspan="2"><a id="a35ef043504cb3738ad726d632d05cd14"></a>
 template&lt;typename Container &gt; </td></tr>
-<tr class="memitem:a35ef043504cb3738ad726d632d05cd14"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_args_in_value_order</b> (Container &amp;argset)</td></tr>
+<tr class="memitem:a35ef043504cb3738ad726d632d05cd14"><td class="memTemplItemLeft" align="right" valign="top">vec_basic&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_args_in_value_order</b> (Container &amp;argset)</td></tr>
 <tr class="separator:a35ef043504cb3738ad726d632d05cd14"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66b69064a970062efdfe121dbd119005"><td class="memItemLeft" align="right" valign="top"><a id="a66b69064a970062efdfe121dbd119005"></a>
 unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>get_or_add_value_number</b> (RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; value)</td></tr>
@@ -134,29 +134,29 @@ unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>get_or_add_value_
 void&#160;</td><td class="memItemRight" valign="bottom"><b>stop_arg_tracking</b> (unsigned func_i)</td></tr>
 <tr class="separator:a62c7ab2692d74040c53939fa1a17ce7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afcf5bde1cf3ba977e8cdf15340f9ea85"><td class="memItemLeft" align="right" valign="top"><a id="afcf5bde1cf3ba977e8cdf15340f9ea85"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a>&lt; unsigned, unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_common_arg_candidates</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; unsigned &gt; &amp;argset, unsigned min_func_i)</td></tr>
+std::map&lt; unsigned, unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>get_common_arg_candidates</b> (std::set&lt; unsigned &gt; &amp;argset, unsigned min_func_i)</td></tr>
 <tr class="separator:afcf5bde1cf3ba977e8cdf15340f9ea85"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b23a6083c2781bf3cb00e847335d3ba"><td class="memTemplParams" colspan="2"><a id="a1b23a6083c2781bf3cb00e847335d3ba"></a>
 template&lt;typename Container1 , typename Container2 &gt; </td></tr>
-<tr class="memitem:a1b23a6083c2781bf3cb00e847335d3ba"><td class="memTemplItemLeft" align="right" valign="top"><a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_subset_candidates</b> (const Container1 &amp;argset, const Container2 &amp;restrict_to_funcset)</td></tr>
+<tr class="memitem:a1b23a6083c2781bf3cb00e847335d3ba"><td class="memTemplItemLeft" align="right" valign="top">std::vector&lt; unsigned &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_subset_candidates</b> (const Container1 &amp;argset, const Container2 &amp;restrict_to_funcset)</td></tr>
 <tr class="separator:a1b23a6083c2781bf3cb00e847335d3ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0a33261eb4da7a4348691d02bd9233b"><td class="memItemLeft" align="right" valign="top"><a id="ac0a33261eb4da7a4348691d02bd9233b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>update_func_argset</b> (unsigned func_i, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;new_args)</td></tr>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>update_func_argset</b> (unsigned func_i, const std::vector&lt; unsigned &gt; &amp;new_args)</td></tr>
 <tr class="separator:ac0a33261eb4da7a4348691d02bd9233b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:af99d4e793c336ce0c215918126ad7fdc"><td class="memItemLeft" align="right" valign="top"><a id="af99d4e793c336ce0c215918126ad7fdc"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a>&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;, unsigned, <a class="el" href="structSymEngine_1_1RCPBasicHash.html">RCPBasicHash</a>, <a class="el" href="structSymEngine_1_1RCPBasicKeyEq.html">RCPBasicKeyEq</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>value_numbers</b></td></tr>
+std::unordered_map&lt; RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;, unsigned, <a class="el" href="structSymEngine_1_1RCPBasicHash.html">RCPBasicHash</a>, <a class="el" href="structSymEngine_1_1RCPBasicKeyEq.html">RCPBasicKeyEq</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>value_numbers</b></td></tr>
 <tr class="separator:af99d4e793c336ce0c215918126ad7fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9772a3a1ecf3947dcf4939201e878f27"><td class="memItemLeft" align="right" valign="top"><a id="a9772a3a1ecf3947dcf4939201e878f27"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a>&#160;</td><td class="memItemRight" valign="bottom"><b>value_number_to_value</b></td></tr>
+vec_basic&#160;</td><td class="memItemRight" valign="bottom"><b>value_number_to_value</b></td></tr>
 <tr class="separator:a9772a3a1ecf3947dcf4939201e878f27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a520a28e52b6c7db7b6ca7ad1fecdddbc"><td class="memItemLeft" align="right" valign="top"><a id="a520a28e52b6c7db7b6ca7ad1fecdddbc"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>arg_to_funcset</b></td></tr>
+std::vector&lt; std::set&lt; unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>arg_to_funcset</b></td></tr>
 <tr class="separator:a520a28e52b6c7db7b6ca7ad1fecdddbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a129cfd22ada269ee64c7f5d5471842b3"><td class="memItemLeft" align="right" valign="top"><a id="a129cfd22ada269ee64c7f5d5471842b3"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>func_to_argset</b></td></tr>
+std::vector&lt; std::set&lt; unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>func_to_argset</b></td></tr>
 <tr class="separator:a129cfd22ada269ee64c7f5d5471842b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>

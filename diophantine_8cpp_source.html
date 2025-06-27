@@ -106,7 +106,7 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;{</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">bool</span> order(<span class="keyword">const</span> DenseMatrix &amp;t, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> &amp;basis,</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keywordtype">bool</span> order(<span class="keyword">const</span> DenseMatrix &amp;t, <span class="keyword">const</span> std::vector&lt;DenseMatrix&gt; &amp;basis,</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;           <span class="keywordtype">unsigned</span> k)</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a> = <span class="keyword">true</span>;</div>
@@ -131,7 +131,7 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">return</span> not <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>;</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">bool</span> is_minimum(<span class="keyword">const</span> DenseMatrix &amp;t, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> &amp;basis,</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="keywordtype">bool</span> is_minimum(<span class="keyword">const</span> DenseMatrix &amp;t, <span class="keyword">const</span> std::vector&lt;DenseMatrix&gt; &amp;basis,</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                <span class="keywordtype">unsigned</span> n)</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;{</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">if</span> (n == 0) {</div>
@@ -148,7 +148,7 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// Systems of Linear Diophantine Equations. Information and computation,</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// 113(1):143-172,</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// August 1994.</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> homogeneous_lde(<a class="code" href="namespacestd.html">std</a>::vector&lt;DenseMatrix&gt; &amp;basis, const DenseMatrix &amp;A)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> homogeneous_lde(std::vector&lt;DenseMatrix&gt; &amp;basis, const DenseMatrix &amp;A)</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="keywordtype">unsigned</span> p = A.nrows();</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordtype">unsigned</span> q = A.ncols();</div>
@@ -161,15 +161,15 @@ $(function() {
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    DenseMatrix col_zero(p, 1);</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    zeros(col_zero);</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;DenseMatrix&gt;</a> P;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    P.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(row_zero);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::vector&lt;DenseMatrix&gt; P;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    P.push_back(row_zero);</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::vector&lt;bool&gt;</a>&gt; Frozen(q, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;bool&gt;</a>(q, <span class="keyword">true</span>));</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::vector&lt;std::vector&lt;bool&gt;&gt; Frozen(q, std::vector&lt;bool&gt;(q, <span class="keyword">true</span>));</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> j = 0; j &lt; q; j++) {</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        Frozen[0][j] = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;bool&gt;</a> F(q, <span class="keyword">false</span>);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::vector&lt;bool&gt; F(q, <span class="keyword">false</span>);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    DenseMatrix t, transpose, product, T;</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    RCP&lt;const Integer&gt; dot;</div>
@@ -177,10 +177,10 @@ $(function() {
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    product = DenseMatrix(p, 1);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    transpose = DenseMatrix(q, 1);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">while</span> (P.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() &gt; 0) {</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">auto</span> n = P.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() - 1;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keywordflow">while</span> (P.size() &gt; 0) {</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        <span class="keyword">auto</span> n = P.size() - 1;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        t = P[n];</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        P.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/pop_back.html">pop_back</a>();</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        P.pop_back();</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        t.transpose(transpose);</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        A.mul_matrix(transpose, product);</div>
@@ -223,7 +223,7 @@ $(function() {
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                          and is_minimum(T, basis,</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                                         numeric_cast&lt;unsigned&gt;(basis.size())))</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;                         or t.eq(row_zero))) {</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                    P.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(T);</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;                    P.push_back(T);</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;                    n = n + 1;</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160; </div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;                    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> j = 0; j &lt; q; j++) {</div>
@@ -243,11 +243,6 @@ $(function() {
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
-<div class="ttc" id="apop_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/pop_back.html">std::vector::pop_back</a></div><div class="ttdeci">T pop_back(T... args)</div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

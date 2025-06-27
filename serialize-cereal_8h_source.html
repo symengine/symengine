@@ -136,8 +136,8 @@ $(function() {
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        uintptr_t addr = (uintptr_t)(<span class="keywordtype">void</span> *)ptr.get();</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        (*this)(addr);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">auto</span> <span class="keywordtype">id</span> = _addresses.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/find.html">find</a>(addr);</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        uint8_t first_seen = (<span class="keywordtype">id</span> == _addresses.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keyword">auto</span> <span class="keywordtype">id</span> = _addresses.find(addr);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        uint8_t first_seen = (<span class="keywordtype">id</span> == _addresses.end());</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        (*this)(first_seen);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        <span class="keywordflow">if</span> (not first_seen) {</div>
@@ -155,11 +155,11 @@ $(function() {
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;            <span class="keywordflow">default</span>:</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                save_basic(*<span class="keyword">this</span>, *ptr);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        _addresses.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(addr);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        _addresses.insert(addr);</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    }</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt;uintptr_t&gt;</a> _addresses;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    std::set&lt;uintptr_t&gt; _addresses;</div>
 <div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RCPBasicAwareOutputArchive.html#a82d8915ef2185d240d266a031b6b0b43">   64</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1RCPBasicAwareOutputArchive.html#a82d8915ef2185d240d266a031b6b0b43">rtti</a>(){};</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;};</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
@@ -230,7 +230,7 @@ $(function() {
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    }</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map&lt;uintptr_t, RCP&lt;const Basic&gt;</a>&gt; _rcp_map;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    std::unordered_map&lt;uintptr_t, RCP&lt;const Basic&gt;&gt; _rcp_map;</div>
 <div class="line"><a name="l00136"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RCPBasicAwareInputArchive.html#a3a2472b28b90f14fc2a0416c9b73cde0">  136</a></span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classSymEngine_1_1RCPBasicAwareInputArchive.html#a3a2472b28b90f14fc2a0416c9b73cde0">rtti</a>(){};</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;};</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
@@ -276,9 +276,9 @@ $(function() {
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Archive&gt;</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;<span class="keywordtype">void</span> save_helper(Archive &amp;ar, <span class="keyword">const</span> integer_class &amp;intgr)</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;{</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> s;</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    std::ostringstream s;</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    s &lt;&lt; intgr; <span class="comment">// stream to string</span></div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    ar(s.<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">str</a>());</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    ar(s.str());</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;}</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Archive&gt;</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;<span class="keywordtype">void</span> save_helper(Archive &amp;ar, <span class="keyword">const</span> rational_class &amp;rat)</div>
@@ -521,7 +521,7 @@ $(function() {
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Symbol&gt; &amp;)</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;{</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name;</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    std::string name;</div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    ar(name);</div>
 <div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>(name);</div>
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;}</div>
@@ -532,7 +532,7 @@ $(function() {
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    map_basic_basic dict;</div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    ar(coeff);</div>
 <div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;    ar(dict);</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Mul&gt;(coeff, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Mul&gt;(coeff, std::move(dict));</div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;}</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Add&gt; &amp;)</div>
@@ -541,7 +541,7 @@ $(function() {
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    umap_basic_num dict;</div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;    ar(coeff);</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    ar(dict);</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Add&gt;(coeff, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Add&gt;(coeff, std::move(dict));</div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;}</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Pow&gt; &amp;)</div>
@@ -554,20 +554,20 @@ $(function() {
 <div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Archive&gt;</div>
 <div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;<span class="keywordtype">void</span> load_helper(Archive &amp;ar, integer_class &amp;intgr)</div>
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;{</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> int_str;</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;    std::string int_str;</div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    ar(int_str);</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    <span class="keywordflow">if</span> (int_str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">size</a>() == 0) {</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;    <span class="keywordflow">if</span> (int_str.size() == 0) {</div>
 <div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        <span class="keywordflow">throw</span> SerializationError(<span class="stringliteral">&quot;invalid integer&quot;</span>);</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    }</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <span class="keywordflow">if</span> (not(int_str[0] == <span class="charliteral">&#39;-&#39;</span> or <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/isdigit.html">std::isdigit</a>(int_str[0]))) {</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    <span class="keywordflow">if</span> (not(int_str[0] == <span class="charliteral">&#39;-&#39;</span> or std::isdigit(int_str[0]))) {</div>
 <div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        <span class="keywordflow">throw</span> SerializationError(<span class="stringliteral">&quot;invalid integer&quot;</span>);</div>
 <div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;    }</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++int_str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/begin.html">begin</a>(); it &lt; int_str.<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string/end.html">end</a>(); it++) {</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keywordflow">if</span> (not <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/byte/isdigit.html">std::isdigit</a>(*it)) {</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = ++int_str.begin(); it &lt; int_str.end(); it++) {</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        <span class="keywordflow">if</span> (not std::isdigit(*it)) {</div>
 <div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;            <span class="keywordflow">throw</span> SerializationError(<span class="stringliteral">&quot;invalid integer&quot;</span>);</div>
 <div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;        }</div>
 <div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;    }</div>
-<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    intgr = integer_class(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(int_str));</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    intgr = integer_class(std::move(int_str));</div>
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;}</div>
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Archive&gt;</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;<span class="keywordtype">void</span> load_helper(Archive &amp;ar, <span class="keyword">const</span> rational_class &amp;rat)</div>
@@ -585,32 +585,32 @@ $(function() {
 <div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    <span class="keywordtype">size_t</span> l;</div>
 <div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;    ar(var);</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;    ar(l);</div>
-<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;unsigned, rational_class&gt;</a> d;</div>
-<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keyword">auto</span> hint = d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/begin.html">begin</a>();</div>
+<div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    std::map&lt;unsigned, rational_class&gt; d;</div>
+<div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keyword">auto</span> hint = d.begin();</div>
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; l; i++) {</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> first;</div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;        rational_class second;</div>
 <div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;        ar(first);</div>
 <div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;        load_helper(ar, second);</div>
 <div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;<span class="preprocessor">#if !defined(__clang__) &amp;&amp; (__GNUC__ == 4 &amp;&amp; __GNUC_MINOR__ &lt;= 7)</span></div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/insert.html">insert</a>(hint, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(first), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(second)));</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;        d.insert(hint, std::make_pair(std::move(first), std::move(second)));</div>
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        d.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/emplace_hint.html">emplace_hint</a>(hint, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(first), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(second));</div>
+<div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;        d.emplace_hint(hint, std::move(first), std::move(second));</div>
 <div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;    }</div>
-<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const URatPoly&gt;(var, URatDict(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(d)));</div>
+<div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const URatPoly&gt;(var, URatDict(std::move(d)));</div>
 <div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;}</div>
 <div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Integer&gt; &amp;)</div>
 <div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;{</div>
 <div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;    integer_class c;</div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    load_helper(ar, c);</div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(c));</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(c));</div>
 <div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;}</div>
 <div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Constant&gt; &amp;)</div>
 <div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160;{</div>
-<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name;</div>
+<div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;    std::string name;</div>
 <div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;    ar(name);</div>
 <div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ab69f9746bea991c3a4e96cd6148c2bc1">constant</a>(name);</div>
 <div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;}</div>
@@ -631,7 +631,7 @@ $(function() {
 <div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive, <span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;RCP&lt;const Basic&gt;</div>
 <div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;load_basic(Archive &amp;ar, RCP&lt;const T&gt; &amp;,</div>
-<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;           <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;ComplexBase, T&gt;::value</a>,</div>
+<div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;           <span class="keyword">typename</span> std::enable_if&lt;std::is_base_of&lt;ComplexBase, T&gt;::value,</div>
 <div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;                                   <span class="keywordtype">int</span>&gt;::type * = <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;{</div>
 <div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;    RCP&lt;const Number&gt; num, den;</div>
@@ -641,7 +641,7 @@ $(function() {
 <div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Interval&gt; &amp;)</div>
 <div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;{</div>
-<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    RCP&lt;const Number&gt; start, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>;</div>
+<div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;    RCP&lt;const Number&gt; start, end;</div>
 <div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;    <span class="keywordtype">bool</span> left_open, right_open;</div>
 <div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;    ar(left_open, start, right_open, end);</div>
 <div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Interval&gt;(start, end, left_open, right_open);</div>
@@ -658,21 +658,21 @@ $(function() {
 <div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;{</div>
 <div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    set_boolean container;</div>
 <div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    ar(container);</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const And&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(container));</div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const And&gt;(std::move(container));</div>
 <div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;}</div>
 <div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Or&gt; &amp;)</div>
 <div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;{</div>
 <div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;    set_boolean container;</div>
 <div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    ar(container);</div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Or&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(container));</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Or&gt;(std::move(container));</div>
 <div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;}</div>
 <div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Xor&gt; &amp;)</div>
 <div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;{</div>
 <div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    vec_boolean container;</div>
 <div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;    ar(container);</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Xor&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(container));</div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Xor&gt;(std::move(container));</div>
 <div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;}</div>
 <div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Not&gt; &amp;)</div>
@@ -686,7 +686,7 @@ $(function() {
 <div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;{</div>
 <div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    PiecewiseVec vec;</div>
 <div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;    ar(vec);</div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Piecewise&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(vec));</div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Piecewise&gt;(std::move(vec));</div>
 <div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;}</div>
 <div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Contains&gt; &amp;)</div>
@@ -726,7 +726,7 @@ $(function() {
 <div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;{</div>
 <div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    set_set union_set;</div>
 <div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;    ar(union_set);</div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Union&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(union_set));</div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Union&gt;(std::move(union_set));</div>
 <div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;}</div>
 <div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Complement&gt; &amp;)</div>
@@ -762,7 +762,7 @@ $(function() {
 <div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const RealMPFR&gt; &amp;)</div>
 <div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;{</div>
-<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> num;</div>
+<div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    std::string num;</div>
 <div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;    mpfr_prec_t prec;</div>
 <div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;    ar(num, prec);</div>
 <div class="line"><a name="l00671"></a><span class="lineno">  671</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const RealMPFR&gt;(mpfr_class(num, prec, 10));</div>
@@ -774,7 +774,7 @@ $(function() {
 <div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    RCP&lt;const Basic&gt; arg;</div>
 <div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;    multiset_basic set;</div>
 <div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;    ar(arg, set);</div>
-<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Derivative&gt;(arg, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(set));</div>
+<div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Derivative&gt;(arg, std::move(set));</div>
 <div class="line"><a name="l00681"></a><span class="lineno">  681</span>&#160;}</div>
 <div class="line"><a name="l00682"></a><span class="lineno">  682</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const Subs&gt; &amp;)</div>
@@ -782,13 +782,13 @@ $(function() {
 <div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    RCP&lt;const Basic&gt; arg;</div>
 <div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;    map_basic_basic dict;</div>
 <div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;    ar(arg, dict);</div>
-<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Subs&gt;(arg, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict));</div>
+<div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Subs&gt;(arg, std::move(dict));</div>
 <div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;}</div>
 <div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160; </div>
 <div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive, <span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;RCP&lt;const Basic&gt;</div>
 <div class="line"><a name="l00693"></a><span class="lineno">  693</span>&#160;load_basic(Archive &amp;ar, RCP&lt;const T&gt; &amp;,</div>
-<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;           <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;OneArgFunction, T&gt;::value</a>,</div>
+<div class="line"><a name="l00694"></a><span class="lineno">  694</span>&#160;           <span class="keyword">typename</span> std::enable_if&lt;std::is_base_of&lt;OneArgFunction, T&gt;::value,</div>
 <div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;                                   <span class="keywordtype">int</span>&gt;::type * = <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;{</div>
 <div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;    RCP&lt;const Basic&gt; arg;</div>
@@ -798,7 +798,7 @@ $(function() {
 <div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive, <span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;RCP&lt;const Basic&gt;</div>
 <div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;load_basic(Archive &amp;ar, RCP&lt;const T&gt; &amp;,</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;           <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;TwoArgFunction, T&gt;::value</a>,</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;           <span class="keyword">typename</span> std::enable_if&lt;std::is_base_of&lt;TwoArgFunction, T&gt;::value,</div>
 <div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;                                   <span class="keywordtype">int</span>&gt;::type * = <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;{</div>
 <div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160;    RCP&lt;const Basic&gt; arg1, arg2;</div>
@@ -808,10 +808,10 @@ $(function() {
 <div class="line"><a name="l00711"></a><span class="lineno">  711</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const FunctionSymbol&gt; &amp;)</div>
 <div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;{</div>
-<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name;</div>
+<div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;    std::string name;</div>
 <div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;    vec_basic vec;</div>
 <div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;    ar(name, vec);</div>
-<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const FunctionSymbol&gt;(name, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(vec));</div>
+<div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const FunctionSymbol&gt;(name, std::move(vec));</div>
 <div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;}</div>
 <div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive&gt;</div>
 <div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160;RCP&lt;const Basic&gt; load_basic(Archive &amp;ar, RCP&lt;const FunctionWrapper&gt; &amp;)</div>
@@ -826,17 +826,17 @@ $(function() {
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive, <span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;RCP&lt;const Basic&gt;</div>
 <div class="line"><a name="l00731"></a><span class="lineno">  731</span>&#160;load_basic(Archive &amp;ar, RCP&lt;const T&gt; &amp;,</div>
-<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;           <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;MultiArgFunction, T&gt;::value</a>,</div>
+<div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;           <span class="keyword">typename</span> std::enable_if&lt;std::is_base_of&lt;MultiArgFunction, T&gt;::value,</div>
 <div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;                                   <span class="keywordtype">int</span>&gt;::type * = <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;{</div>
 <div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;    vec_basic args;</div>
 <div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;    ar(args);</div>
-<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const T&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(args));</div>
+<div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const T&gt;(std::move(args));</div>
 <div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;}</div>
 <div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive, <span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;RCP&lt;const Basic&gt;</div>
 <div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;load_basic(Archive &amp;ar, RCP&lt;const T&gt; &amp;,</div>
-<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;           <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;Relational, T&gt;::value</a>,</div>
+<div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;           <span class="keyword">typename</span> std::enable_if&lt;std::is_base_of&lt;Relational, T&gt;::value,</div>
 <div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;                                   <span class="keywordtype">int</span>&gt;::type * = <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160;{</div>
 <div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;    RCP&lt;const Basic&gt; arg1, arg2;</div>
@@ -846,11 +846,11 @@ $(function() {
 <div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Archive, <span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;RCP&lt;const Basic&gt; load_basic(</div>
 <div class="line"><a name="l00751"></a><span class="lineno">  751</span>&#160;    Archive &amp;ar, RCP&lt;const T&gt; &amp;,</div>
-<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;    <span class="keyword">typename</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a>&lt;not(<a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;Relational, T&gt;::value</a></div>
-<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;                                or <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;ComplexBase, T&gt;::value</a></div>
-<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;                                or <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;OneArgFunction, T&gt;::value</a></div>
-<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;                                or <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;MultiArgFunction, T&gt;::value</a></div>
-<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;                                or <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of&lt;TwoArgFunction, T&gt;::value</a>),</div>
+<div class="line"><a name="l00752"></a><span class="lineno">  752</span>&#160;    <span class="keyword">typename</span> std::enable_if&lt;not(std::is_base_of&lt;Relational, T&gt;::value</div>
+<div class="line"><a name="l00753"></a><span class="lineno">  753</span>&#160;                                or std::is_base_of&lt;ComplexBase, T&gt;::value</div>
+<div class="line"><a name="l00754"></a><span class="lineno">  754</span>&#160;                                or std::is_base_of&lt;OneArgFunction, T&gt;::value</div>
+<div class="line"><a name="l00755"></a><span class="lineno">  755</span>&#160;                                or std::is_base_of&lt;MultiArgFunction, T&gt;::value</div>
+<div class="line"><a name="l00756"></a><span class="lineno">  756</span>&#160;                                or std::is_base_of&lt;TwoArgFunction, T&gt;::value),</div>
 <div class="line"><a name="l00757"></a><span class="lineno">  757</span>&#160;                            <span class="keywordtype">int</span>&gt;::type * = <span class="keyword">nullptr</span>)</div>
 <div class="line"><a name="l00758"></a><span class="lineno">  758</span>&#160;{</div>
 <div class="line"><a name="l00759"></a><span class="lineno">  759</span>&#160;    <span class="keywordflow">throw</span> SerializationError(StreamFmt()</div>
@@ -894,26 +894,13 @@ $(function() {
 <div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_SERIALIZE_CEREAL_H</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
-<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/begin.html">std::string::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Complex_html_adacb67b50059961da56764fe0a9170fa"><div class="ttname"><a href="classSymEngine_1_1Complex.html#adacb67b50059961da56764fe0a9170fa">SymEngine::Complex::from_two_nums</a></div><div class="ttdeci">static RCP&lt; const Number &gt; from_two_nums(const Number &amp;re, const Number &amp;im)</div><div class="ttdef"><b>Definition:</b> <a href="complex_8cpp_source.html#l00109">complex.cpp:109</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareInputArchive_html"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareInputArchive.html">SymEngine::RCPBasicAwareInputArchive</a></div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00068">serialize-cereal.h:69</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareInputArchive_html_a3a2472b28b90f14fc2a0416c9b73cde0"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareInputArchive.html#a3a2472b28b90f14fc2a0416c9b73cde0">SymEngine::RCPBasicAwareInputArchive::rtti</a></div><div class="ttdeci">void rtti()</div><div class="ttdoc">Overload the rtti function to enable dynamic_cast.</div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00136">serialize-cereal.h:136</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareOutputArchive_html"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareOutputArchive.html">SymEngine::RCPBasicAwareOutputArchive</a></div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00029">serialize-cereal.h:30</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RCPBasicAwareOutputArchive_html_a82d8915ef2185d240d266a031b6b0b43"><div class="ttname"><a href="classSymEngine_1_1RCPBasicAwareOutputArchive.html#a82d8915ef2185d240d266a031b6b0b43">SymEngine::RCPBasicAwareOutputArchive::rtti</a></div><div class="ttdeci">void rtti()</div><div class="ttdoc">Overload the rtti function to enable dynamic_cast.</div><div class="ttdef"><b>Definition:</b> <a href="serialize-cereal_8h_source.html#l00064">serialize-cereal.h:64</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Rational_html_aa5f340d84d7cefa1a90c66b1c24eec2e"><div class="ttname"><a href="classSymEngine_1_1Rational.html#aa5f340d84d7cefa1a90c66b1c24eec2e">SymEngine::Rational::from_two_ints</a></div><div class="ttdeci">static RCP&lt; const Number &gt; from_two_ints(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdef"><b>Definition:</b> <a href="rational_8cpp_source.html#l00044">rational.cpp:44</a></div></div>
-<div class="ttc" id="aemplace_hint_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/emplace_hint.html">std::map::emplace_hint</a></div><div class="ttdeci">T emplace_hint(T... args)</div></div>
-<div class="ttc" id="aenable_if_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/enable_if.html">std::enable_if</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/end.html">std::set::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="afind_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/find.html">std::set::find</a></div><div class="ttdeci">T find(T... args)</div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="ainteger_8h_html"><div class="ttname"><a href="integer_8h.html">integer.h</a></div></div>
-<div class="ttc" id="ais_base_of_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/is_base_of.html">std::is_base_of</a></div></div>
-<div class="ttc" id="aisdigit_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/byte/isdigit.html">std::isdigit</a></div><div class="ttdeci">T isdigit(T... args)</div></div>
-<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1f382b48b9cb214e1017d0e11fd3e6d6"><div class="ttname"><a href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">SymEngine::symbol</a></div><div class="ttdeci">RCP&lt; const Symbol &gt; symbol(const std::string &amp;name)</div><div class="ttdoc">inline version to return Symbol</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00082">symbol.h:82</a></div></div>
@@ -931,11 +918,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_ac7ed31f65bb252b7b4b3f1f45fdeec34"><div class="ttname"><a href="namespaceSymEngine.html#ac7ed31f65bb252b7b4b3f1f45fdeec34">SymEngine::rationals</a></div><div class="ttdeci">RCP&lt; const Rationals &gt; rationals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00566">sets.h:566</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ae9e9d3644739d976aa17eef3e19bf2c2"><div class="ttname"><a href="namespaceSymEngine.html#ae9e9d3644739d976aa17eef3e19bf2c2">SymEngine::addnum</a></div><div class="ttdeci">RCP&lt; const Number &gt; addnum(const RCP&lt; const Number &gt; &amp;self, const RCP&lt; const Number &gt; &amp;other)</div><div class="ttdoc">Add self and other</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00081">number.h:81</a></div></div>
 <div class="ttc" id="anumber_8h_html"><div class="ttname"><a href="number_8h.html">number.h</a></div></div>
-<div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt; uintptr_t &gt;</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string/size.html">std::string::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="astr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream/str.html">std::ostringstream::str</a></div><div class="ttdeci">T str(T... args)</div></div>
 <div class="ttc" id="asymbol_8h_html"><div class="ttname"><a href="symbol_8h.html">symbol.h</a></div></div>
-<div class="ttc" id="aunordered_map_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

@@ -109,7 +109,7 @@ $(function() {
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;Interval::Interval(<span class="keyword">const</span> RCP&lt;const Number&gt; &amp;start, <span class="keyword">const</span> RCP&lt;const Number&gt; &amp;end,</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;                   <span class="keyword">const</span> <span class="keywordtype">bool</span> left_open, <span class="keyword">const</span> <span class="keywordtype">bool</span> right_open)</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    : start_(start), end_(<a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>), left_open_(left_open), right_open_(right_open)</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    : start_(start), end_(end), left_open_(left_open), right_open_(right_open)</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    SYMENGINE_ASSERT(</div>
@@ -124,7 +124,7 @@ $(function() {
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Complex set not implemented&quot;</span>);</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*e, *s)) {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({s, e}), *e)) {</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({s, e}), *e)) {</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
@@ -207,7 +207,7 @@ $(function() {
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">return</span> boolean(not left_open_);</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_, *a))</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <span class="keywordflow">return</span> boolean(not right_open_);</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({end_, a}), *end_) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">max</a>({start_, a}), *start_))</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({end_, a}), *end_) or <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({start_, a}), *start_))</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> boolean(<span class="keyword">false</span>);</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    <span class="keywordflow">return</span> boolean(<span class="keyword">true</span>);</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;}</div>
@@ -232,16 +232,16 @@ $(function() {
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        RCP&lt;const Number&gt; start, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        RCP&lt;const Number&gt; start, end;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        <span class="keywordtype">bool</span> left_open, right_open;</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        RCP&lt;const Basic&gt; start_end, end_start;</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        start_end = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({this-&gt;start_, other.end_});</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        end_start = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({this-&gt;end_, other.start_});</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        start_end = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;start_, other.end_});</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        end_start = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;end_, other.start_});</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160; </div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*this-&gt;start_, *start_end) and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*other.start_, *end_start)) {</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;            RCP&lt;const Basic&gt; start_start, end_end;</div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            start_start = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({this-&gt;start_, other.start_});</div>
-<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            end_end = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({this-&gt;end_, other.end_});</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;            start_start = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;start_, other.start_});</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;            end_end = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;end_, other.end_});</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;start_, *other.start_)) {</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*this-&gt;start_, *start_start)) {</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;                    start = other.start_;</div>
@@ -257,14 +257,14 @@ $(function() {
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;end_, *other.end_)) {</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*this-&gt;end_, *end_end)) {</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = this-&gt;end_;</div>
+<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                    end = this-&gt;end_;</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                    right_open = this-&gt;right_open_;</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;                } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = other.end_;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;                    end = other.end_;</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;                    right_open = other.right_open_;</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;                }</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = this-&gt;end_;</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;                end = this-&gt;end_;</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;                right_open = this-&gt;right_open_ or other.right_open_;</div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;            }</div>
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a0662566ef725c03a0bfcbff19655d799">interval</a>(start, end, left_open, right_open);</div>
@@ -294,7 +294,7 @@ $(function() {
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;            }</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;            set_basic container;</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            <span class="keywordflow">while</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a0a7185d0fb25140df9797a462bde11c6">Ge</a>(last, first), *boolTrue)) {</div>
-<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(first);</div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;                container.insert(first);</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;                first = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(first, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(1));</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;            }</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container);</div>
@@ -316,11 +316,11 @@ $(function() {
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160;        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
 <div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;        RCP&lt;const Basic&gt; start_start, end_end, m;</div>
-<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        RCP&lt;const Number&gt; start, <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>;</div>
+<div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;        RCP&lt;const Number&gt; start, end;</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;        <span class="keywordtype">bool</span> left_open, right_open;</div>
-<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        start_start = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">max</a>({this-&gt;start_, other.start_});</div>
-<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        end_end = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({this-&gt;end_, other.end_});</div>
-<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        m = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({start_start, end_end});</div>
+<div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;        start_start = <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({this-&gt;start_, other.start_});</div>
+<div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;        end_end = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;end_, other.end_});</div>
+<div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160;        m = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({start_start, end_end});</div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;        <span class="keywordflow">if</span> ((<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *start_start) and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *m)</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;             and ((<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *this-&gt;end_) and this-&gt;right_open_)</div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;                  or (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*end_end, *other.end_) and other.right_open_)))</div>
@@ -328,15 +328,15 @@ $(function() {
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;            <span class="keywordflow">return</span> SymEngine::make_set_union(</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;                {rcp_from_this_cast&lt;const Set&gt;(), o});</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({this-&gt;start_, other.start_}), *this-&gt;start_)) {</div>
+<div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({this-&gt;start_, other.start_}), *this-&gt;start_)) {</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;                start = this-&gt;start_;</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;                start = other.start_;</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;            }</div>
-<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">max</a>({this-&gt;end_, other.end_}), *this-&gt;end_)) {</div>
-<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = this-&gt;end_;</div>
+<div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({this-&gt;end_, other.end_}), *this-&gt;end_)) {</div>
+<div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;                end = this-&gt;end_;</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = other.end_;</div>
+<div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;                end = other.end_;</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;            }</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;            left_open = ((<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;start_, *start) or this-&gt;left_open_)</div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;                         and (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*other.start_, *start) or other.left_open_));</div>
@@ -359,11 +359,11 @@ $(function() {
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        set_set cont;</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
-<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/max.html">max</a>({start_, other.start_}), *start_)) {</div>
+<div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>({start_, other.start_}), *start_)) {</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;            cont.insert(<a class="code" href="namespaceSymEngine.html#a0662566ef725c03a0bfcbff19655d799">interval</a>(other.get_start(), start_,</div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;                                 other.get_left_open(), not left_open_));</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;        }</div>
-<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">min</a>({end_, other.end_}), *end_)) {</div>
+<div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*<a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>({end_, other.end_}), *end_)) {</div>
 <div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;            cont.insert(<a class="code" href="namespaceSymEngine.html#a0662566ef725c03a0bfcbff19655d799">interval</a>(end_, other.get_end(), not right_open_,</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;                                 other.get_right_open()));</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;        }</div>
@@ -372,7 +372,7 @@ $(function() {
 <div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_complement_helper(rcp_from_this_cast&lt;const Set&gt;(), o);</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
-<div class="line"><a name="l00275"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Interval.html#a2fda8a76ba67f7d288dc77ce95d084b0">  275</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> Interval::get_args()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00275"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Interval.html#a2fda8a76ba67f7d288dc77ce95d084b0">  275</a></span>&#160;vec_basic Interval::get_args()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00276"></a><span class="lineno">  276</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00277"></a><span class="lineno">  277</span>&#160;    <span class="keywordflow">return</span> {start_, end_, boolean(left_open_), boolean(right_open_)};</div>
 <div class="line"><a name="l00278"></a><span class="lineno">  278</span>&#160;}</div>
@@ -985,15 +985,15 @@ $(function() {
 <div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160; </div>
 <div class="line"><a name="l00886"></a><span class="lineno">  886</span>&#160;RCP&lt;const Boolean&gt; FiniteSet::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00887"></a><span class="lineno">  887</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> rest;</div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;    set_basic rest;</div>
 <div class="line"><a name="l00889"></a><span class="lineno">  889</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : container_) {</div>
 <div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;        <span class="keyword">auto</span> cont = <a class="code" href="namespaceSymEngine.html#abb176b90171ba213e14a1dca70b890ab">Eq</a>(elem, a);</div>
 <div class="line"><a name="l00891"></a><span class="lineno">  891</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*cont, *boolTrue))</div>
 <div class="line"><a name="l00892"></a><span class="lineno">  892</span>&#160;            <span class="keywordflow">return</span> boolTrue;</div>
 <div class="line"><a name="l00893"></a><span class="lineno">  893</span>&#160;        <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*cont, *boolFalse))</div>
-<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;            rest.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l00894"></a><span class="lineno">  894</span>&#160;            rest.insert(elem);</div>
 <div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;    }</div>
-<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;    <span class="keywordflow">if</span> (rest.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) {</div>
+<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;    <span class="keywordflow">if</span> (rest.empty()) {</div>
 <div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;        <span class="keywordflow">return</span> boolFalse;</div>
 <div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;Contains&gt;(a, <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(rest));</div>
@@ -1005,27 +1005,27 @@ $(function() {
 <div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*o)) {</div>
 <div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(*o);</div>
 <div class="line"><a name="l00907"></a><span class="lineno">  907</span>&#160;        set_basic container;</div>
-<div class="line"><a name="l00908"></a><span class="lineno">  908</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">std::set_union</a>(container_.begin(), container_.end(),</div>
+<div class="line"><a name="l00908"></a><span class="lineno">  908</span>&#160;        std::set_union(container_.begin(), container_.end(),</div>
 <div class="line"><a name="l00909"></a><span class="lineno">  909</span>&#160;                       other.container_.begin(), other.container_.end(),</div>
-<div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;                       <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/inserter.html">std::inserter</a>(container, container.begin()),</div>
+<div class="line"><a name="l00910"></a><span class="lineno">  910</span>&#160;                       std::inserter(container, container.begin()),</div>
 <div class="line"><a name="l00911"></a><span class="lineno">  911</span>&#160;                       RCPBasicKeyLess{});</div>
 <div class="line"><a name="l00912"></a><span class="lineno">  912</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container);</div>
 <div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160;    }</div>
 <div class="line"><a name="l00914"></a><span class="lineno">  914</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Interval&gt;(*o)) {</div>
 <div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;        set_basic container;</div>
 <div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160;        <span class="keyword">const</span> Interval &amp;other = down_cast&lt;const Interval &amp;&gt;(*o);</div>
-<div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;        <span class="keywordtype">bool</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/manip/left.html">left</a> = other.get_left_open(), <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/manip/left.html">right</a> = other.get_right_open();</div>
+<div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;        <span class="keywordtype">bool</span> left = other.get_left_open(), right = other.get_right_open();</div>
 <div class="line"><a name="l00918"></a><span class="lineno">  918</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_) {</div>
 <div class="line"><a name="l00919"></a><span class="lineno">  919</span>&#160;            <span class="keyword">auto</span> contain = o-&gt;contains(a);</div>
 <div class="line"><a name="l00920"></a><span class="lineno">  920</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse)) {</div>
 <div class="line"><a name="l00921"></a><span class="lineno">  921</span>&#160;                <span class="keywordflow">if</span> (left)</div>
 <div class="line"><a name="l00922"></a><span class="lineno">  922</span>&#160;                    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*other.get_start(), *a)) {</div>
-<div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;                        <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/manip/left.html">left</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;                        left = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00924"></a><span class="lineno">  924</span>&#160;                        <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00925"></a><span class="lineno">  925</span>&#160;                    }</div>
 <div class="line"><a name="l00926"></a><span class="lineno">  926</span>&#160;                <span class="keywordflow">if</span> (right)</div>
 <div class="line"><a name="l00927"></a><span class="lineno">  927</span>&#160;                    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*other.get_end(), *a)) {</div>
-<div class="line"><a name="l00928"></a><span class="lineno">  928</span>&#160;                        <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/manip/left.html">right</a> = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00928"></a><span class="lineno">  928</span>&#160;                        right = <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00929"></a><span class="lineno">  929</span>&#160;                        <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00930"></a><span class="lineno">  930</span>&#160;                    }</div>
 <div class="line"><a name="l00931"></a><span class="lineno">  931</span>&#160;                container.insert(a);</div>
@@ -1057,7 +1057,7 @@ $(function() {
 <div class="line"><a name="l00957"></a><span class="lineno">  957</span>&#160;        set_basic container;</div>
 <div class="line"><a name="l00958"></a><span class="lineno">  958</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : container_) {</div>
 <div class="line"><a name="l00959"></a><span class="lineno">  959</span>&#160;            <span class="keywordflow">if</span> (!<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem)) {</div>
-<div class="line"><a name="l00960"></a><span class="lineno">  960</span>&#160;                container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l00960"></a><span class="lineno">  960</span>&#160;                container.insert(elem);</div>
 <div class="line"><a name="l00961"></a><span class="lineno">  961</span>&#160;            }</div>
 <div class="line"><a name="l00962"></a><span class="lineno">  962</span>&#160;        }</div>
 <div class="line"><a name="l00963"></a><span class="lineno">  963</span>&#160;        <span class="keywordflow">if</span> (container.empty()) {</div>
@@ -1072,7 +1072,7 @@ $(function() {
 <div class="line"><a name="l00972"></a><span class="lineno">  972</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : container_) {</div>
 <div class="line"><a name="l00973"></a><span class="lineno">  973</span>&#160;            <span class="keywordflow">if</span> (!<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem)</div>
 <div class="line"><a name="l00974"></a><span class="lineno">  974</span>&#160;                || down_cast&lt;const Number &amp;&gt;(*elem).is_complex()) {</div>
-<div class="line"><a name="l00975"></a><span class="lineno">  975</span>&#160;                container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l00975"></a><span class="lineno">  975</span>&#160;                container.insert(elem);</div>
 <div class="line"><a name="l00976"></a><span class="lineno">  976</span>&#160;            }</div>
 <div class="line"><a name="l00977"></a><span class="lineno">  977</span>&#160;        }</div>
 <div class="line"><a name="l00978"></a><span class="lineno">  978</span>&#160;        <span class="keywordflow">if</span> (container.empty()) {</div>
@@ -1086,7 +1086,7 @@ $(function() {
 <div class="line"><a name="l00986"></a><span class="lineno">  986</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : container_) {</div>
 <div class="line"><a name="l00987"></a><span class="lineno">  987</span>&#160;            <span class="keywordflow">if</span> (!<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem)</div>
 <div class="line"><a name="l00988"></a><span class="lineno">  988</span>&#160;                || down_cast&lt;const Number &amp;&gt;(*elem).is_complex()) {</div>
-<div class="line"><a name="l00989"></a><span class="lineno">  989</span>&#160;                container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l00989"></a><span class="lineno">  989</span>&#160;                container.insert(elem);</div>
 <div class="line"><a name="l00990"></a><span class="lineno">  990</span>&#160;            }</div>
 <div class="line"><a name="l00991"></a><span class="lineno">  991</span>&#160;        }</div>
 <div class="line"><a name="l00992"></a><span class="lineno">  992</span>&#160;        <span class="keywordflow">if</span> (container.empty()) {</div>
@@ -1101,7 +1101,7 @@ $(function() {
 <div class="line"><a name="l01001"></a><span class="lineno"> 1001</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : container_) {</div>
 <div class="line"><a name="l01002"></a><span class="lineno"> 1002</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Integers&gt;(*o)) {</div>
 <div class="line"><a name="l01003"></a><span class="lineno"> 1003</span>&#160;                <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*elem)) {</div>
-<div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160;                    container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01004"></a><span class="lineno"> 1004</span>&#160;                    container.insert(elem);</div>
 <div class="line"><a name="l01005"></a><span class="lineno"> 1005</span>&#160;                }</div>
 <div class="line"><a name="l01006"></a><span class="lineno"> 1006</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Naturals&gt;(*o)) {</div>
 <div class="line"><a name="l01007"></a><span class="lineno"> 1007</span>&#160;                <span class="keywordflow">if</span> (not(is_a&lt;Integer&gt;(*elem)</div>
@@ -1139,7 +1139,7 @@ $(function() {
 <div class="line"><a name="l01039"></a><span class="lineno"> 1039</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_) {</div>
 <div class="line"><a name="l01040"></a><span class="lineno"> 1040</span>&#160;            <span class="keyword">auto</span> contain = o-&gt;contains(a);</div>
 <div class="line"><a name="l01041"></a><span class="lineno"> 1041</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolTrue))</div>
-<div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;                container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a);</div>
+<div class="line"><a name="l01042"></a><span class="lineno"> 1042</span>&#160;                container.insert(a);</div>
 <div class="line"><a name="l01043"></a><span class="lineno"> 1043</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain))</div>
 <div class="line"><a name="l01044"></a><span class="lineno"> 1044</span>&#160;                <span class="keywordflow">return</span> make_set_intersection(</div>
 <div class="line"><a name="l01045"></a><span class="lineno"> 1045</span>&#160;                    {rcp_from_this_cast&lt;const Set&gt;(), o});</div>
@@ -1154,7 +1154,7 @@ $(function() {
 <div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160;                <span class="keywordflow">if</span> (!down_cast&lt;const Number &amp;&gt;(*elem).is_complex()) {</div>
 <div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;                    <span class="keywordflow">if</span> (!is_a&lt;Rationals&gt;(*o)</div>
 <div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;                        or down_cast&lt;const Number &amp;&gt;(*elem).is_exact()) {</div>
-<div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;                        kept.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;                        kept.insert(elem);</div>
 <div class="line"><a name="l01058"></a><span class="lineno"> 1058</span>&#160;                    }</div>
 <div class="line"><a name="l01059"></a><span class="lineno"> 1059</span>&#160;                } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l01060"></a><span class="lineno"> 1060</span>&#160;                    <span class="keywordflow">if</span> (is_a&lt;Complexes&gt;(*o)) {</div>
@@ -1186,7 +1186,7 @@ $(function() {
 <div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : container_) {</div>
 <div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem)) {</div>
 <div class="line"><a name="l01088"></a><span class="lineno"> 1088</span>&#160;                <span class="keywordflow">if</span> (is_a&lt;Integers&gt;(*o) and is_a&lt;Integer&gt;(*elem)) {</div>
-<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;                    kept_integers.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;                    kept_integers.insert(elem);</div>
 <div class="line"><a name="l01090"></a><span class="lineno"> 1090</span>&#160;                } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Naturals&gt;(*o) and is_a&lt;Integer&gt;(*elem)</div>
 <div class="line"><a name="l01091"></a><span class="lineno"> 1091</span>&#160;                           and down_cast&lt;const Integer &amp;&gt;(*elem)</div>
 <div class="line"><a name="l01092"></a><span class="lineno"> 1092</span>&#160;                                   .is_positive()) {</div>
@@ -1228,9 +1228,9 @@ $(function() {
 <div class="line"><a name="l01128"></a><span class="lineno"> 1128</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*o)) {</div>
 <div class="line"><a name="l01129"></a><span class="lineno"> 1129</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(*o);</div>
 <div class="line"><a name="l01130"></a><span class="lineno"> 1130</span>&#160;        set_basic container;</div>
-<div class="line"><a name="l01131"></a><span class="lineno"> 1131</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/set_difference.html">std::set_difference</a>(other.container_.begin(), other.container_.end(),</div>
+<div class="line"><a name="l01131"></a><span class="lineno"> 1131</span>&#160;        std::set_difference(other.container_.begin(), other.container_.end(),</div>
 <div class="line"><a name="l01132"></a><span class="lineno"> 1132</span>&#160;                            container_.begin(), container_.end(),</div>
-<div class="line"><a name="l01133"></a><span class="lineno"> 1133</span>&#160;                            <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/inserter.html">std::inserter</a>(container, container.begin()),</div>
+<div class="line"><a name="l01133"></a><span class="lineno"> 1133</span>&#160;                            std::inserter(container, container.begin()),</div>
 <div class="line"><a name="l01134"></a><span class="lineno"> 1134</span>&#160;                            RCPBasicKeyLess{});</div>
 <div class="line"><a name="l01135"></a><span class="lineno"> 1135</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container);</div>
 <div class="line"><a name="l01136"></a><span class="lineno"> 1136</span>&#160;    }</div>
@@ -1305,9 +1305,9 @@ $(function() {
 <div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;}</div>
 <div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160; </div>
-<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;<span class="keywordtype">bool</span> Union::is_canonical(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;<span class="keywordtype">bool</span> Union::is_canonical(<span class="keyword">const</span> set_set &amp;in)</div>
 <div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;{</div>
-<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;    <span class="keywordflow">if</span> (in.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &lt;= 1)</div>
+<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;    <span class="keywordflow">if</span> (in.size() &lt;= 1)</div>
 <div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;    <span class="keywordtype">int</span> count = 0;</div>
 <div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;s : in) {</div>
@@ -1329,7 +1329,7 @@ $(function() {
 <div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160; </div>
 <div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;RCP&lt;const Set&gt; Union::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
 <div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> container(container_);</div>
+<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;    set_set container(container_);</div>
 <div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> iter = container.begin(); iter != container.end(); ++iter) {</div>
 <div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;        <span class="keyword">auto</span> temp = o-&gt;set_union(*iter);</div>
 <div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;        <span class="comment">// If we are able to do union with `*iter`, we replace `*iter` with</span></div>
@@ -1349,7 +1349,7 @@ $(function() {
 <div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;    set_set container;</div>
 <div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;        container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a-&gt;set_intersection(o));</div>
+<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;        container.insert(a-&gt;set_intersection(o));</div>
 <div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;    }</div>
 <div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_union(container);</div>
 <div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;}</div>
@@ -1358,7 +1358,7 @@ $(function() {
 <div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;    set_set container;</div>
 <div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;        container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a-&gt;set_complement(o));</div>
+<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;        container.insert(a-&gt;set_complement(o));</div>
 <div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;    }</div>
 <div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
 <div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;}</div>
@@ -1381,13 +1381,13 @@ $(function() {
 <div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_union(in);</div>
 <div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;}</div>
 <div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160; </div>
-<div class="line"><a name="l01284"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7"> 1284</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">Union::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01284"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7"> 1284</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">Union::get_args</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> v(container_.begin(), container_.end());</div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;    vec_basic v(container_.begin(), container_.end());</div>
 <div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;    <span class="keywordflow">return</span> v;</div>
 <div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;}</div>
 <div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160; </div>
-<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;Intersection::Intersection(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</div>
+<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;Intersection::Intersection(<span class="keyword">const</span> set_set &amp;in)</div>
 <div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    : container_(in){SYMENGINE_ASSIGN_TYPEID()</div>
 <div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;                         SYMENGINE_ASSERT(<a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a>::is_canonical(in))}</div>
 <div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160; </div>
@@ -1408,9 +1408,9 @@ $(function() {
 <div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;}</div>
 <div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160; </div>
-<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;<span class="keywordtype">bool</span> Intersection::is_canonical(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;in)</div>
+<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;<span class="keywordtype">bool</span> Intersection::is_canonical(<span class="keyword">const</span> set_set &amp;in)</div>
 <div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;{</div>
-<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    <span class="keywordflow">if</span> (in.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/size.html">size</a>() &lt;= 1)</div>
+<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    <span class="keywordflow">if</span> (in.size() &lt;= 1)</div>
 <div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01315"></a><span class="lineno"> 1315</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;}</div>
@@ -1424,9 +1424,9 @@ $(function() {
 <div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160; </div>
 <div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;RCP&lt;const Set&gt; Intersection::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
 <div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> container;</div>
+<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;    set_set container;</div>
 <div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160;        container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a-&gt;set_union(o));</div>
+<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160;        container.insert(a-&gt;set_union(o));</div>
 <div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;    }</div>
 <div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
 <div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;}</div>
@@ -1434,18 +1434,18 @@ $(function() {
 <div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;RCP&lt;const Set&gt; Intersection::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
 <div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160;    set_set container(container_);</div>
-<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> iter = container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); iter != container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>(); ++iter) {</div>
+<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> iter = container.begin(); iter != container.end(); ++iter) {</div>
 <div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160;        <span class="keyword">auto</span> temp = o-&gt;set_intersection(*iter);</div>
 <div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160;        <span class="comment">// If we are able to do intersection with `*iter`, we replace `*iter`</span></div>
 <div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;        <span class="comment">// with the result of intersection.</span></div>
 <div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;        <span class="keyword">auto</span> un = SymEngine::make_set_intersection({o, *iter});</div>
 <div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;        <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*temp, *un)) {</div>
-<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;            iter = container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/erase.html">erase</a>(iter);</div>
-<div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160;            container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(temp);</div>
+<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;            iter = container.erase(iter);</div>
+<div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160;            container.insert(temp);</div>
 <div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
 <div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160;        }</div>
 <div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160;    }</div>
-<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;    container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(o);</div>
+<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;    container.insert(o);</div>
 <div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;    <span class="keywordflow">return</span> SymEngine::make_set_intersection(container);</div>
 <div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;}</div>
 <div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160; </div>
@@ -1453,7 +1453,7 @@ $(function() {
 <div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;    set_set container;</div>
 <div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;        container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a-&gt;set_complement(o));</div>
+<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;        container.insert(a-&gt;set_complement(o));</div>
 <div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;    }</div>
 <div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
 <div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;}</div>
@@ -1476,9 +1476,9 @@ $(function() {
 <div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(in);</div>
 <div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160;}</div>
 <div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160; </div>
-<div class="line"><a name="l01379"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e"> 1379</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e">Intersection::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01379"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e"> 1379</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e">Intersection::get_args</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> v(container_.begin(), container_.end());</div>
+<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;    vec_basic v(container_.begin(), container_.end());</div>
 <div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;    <span class="keywordflow">return</span> v;</div>
 <div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;}</div>
 <div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160; </div>
@@ -1754,18 +1754,18 @@ $(function() {
 <div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;        <span class="keywordflow">return</span> *incopy.begin();</div>
 <div class="line"><a name="l01655"></a><span class="lineno"> 1655</span>&#160; </div>
 <div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;    <span class="comment">// Handle finite sets</span></div>
-<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Set&gt;</a>&gt; fsets, othersets;</div>
+<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;    std::vector&lt;RCP&lt;const Set&gt;&gt; fsets, othersets;</div>
 <div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : incopy) {</div>
 <div class="line"><a name="l01659"></a><span class="lineno"> 1659</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*input)) {</div>
-<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;            fsets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(input);</div>
+<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;            fsets.push_back(input);</div>
 <div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;            othersets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(input);</div>
+<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;            othersets.push_back(input);</div>
 <div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;        }</div>
 <div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;    }</div>
-<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;    <span class="keywordflow">if</span> (fsets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() != 0) {</div>
-<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;fs = down_cast&lt;const FiniteSet &amp;&gt;(**fsets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;    <span class="keywordflow">if</span> (fsets.size() != 0) {</div>
+<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;fs = down_cast&lt;const FiniteSet &amp;&gt;(**fsets.begin());</div>
 <div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;        <span class="keyword">auto</span> cont = fs.get_container();</div>
-<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;        fsets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/erase.html">erase</a>(fsets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;        fsets.erase(fsets.begin());</div>
 <div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;        set_basic finalfs;</div>
 <div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fselement : cont) {</div>
 <div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;            <span class="keywordtype">bool</span> present = <span class="keyword">true</span>;</div>
@@ -1799,7 +1799,7 @@ $(function() {
 <div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
 <div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            set_set usets;</div>
 <div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;c : container) {</div>
-<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;                usets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(SymEngine::set_intersection({c, other}));</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;                usets.insert(SymEngine::set_intersection({c, other}));</div>
 <div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;            }</div>
 <div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(usets);</div>
 <div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;        }</div>
@@ -1825,7 +1825,7 @@ $(function() {
 <div class="line"><a name="l01725"></a><span class="lineno"> 1725</span>&#160;    <span class="comment">// pair.</span></div>
 <div class="line"><a name="l01726"></a><span class="lineno"> 1726</span>&#160;    <span class="keywordflow">if</span> (incopy.size() &gt; 1) {</div>
 <div class="line"><a name="l01727"></a><span class="lineno"> 1727</span>&#160;        <span class="keyword">auto</span> temp = *incopy.begin();</div>
-<div class="line"><a name="l01728"></a><span class="lineno"> 1728</span>&#160;        <span class="keyword">auto</span> it = <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a>(incopy.begin());</div>
+<div class="line"><a name="l01728"></a><span class="lineno"> 1728</span>&#160;        <span class="keyword">auto</span> it = std::next(incopy.begin());</div>
 <div class="line"><a name="l01729"></a><span class="lineno"> 1729</span>&#160;        <span class="keywordflow">for</span> (; it != incopy.end(); ++it) {</div>
 <div class="line"><a name="l01730"></a><span class="lineno"> 1730</span>&#160;            temp = temp-&gt;set_intersection(*it);</div>
 <div class="line"><a name="l01731"></a><span class="lineno"> 1731</span>&#160;        }</div>
@@ -1843,7 +1843,7 @@ $(function() {
 <div class="line"><a name="l01743"></a><span class="lineno"> 1743</span>&#160;        <span class="keyword">auto</span> univ = down_cast&lt;const Union &amp;&gt;(*universe).get_container();</div>
 <div class="line"><a name="l01744"></a><span class="lineno"> 1744</span>&#160;        set_set container_;</div>
 <div class="line"><a name="l01745"></a><span class="lineno"> 1745</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : univ) {</div>
-<div class="line"><a name="l01746"></a><span class="lineno"> 1746</span>&#160;            container_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(container-&gt;set_complement(a));</div>
+<div class="line"><a name="l01746"></a><span class="lineno"> 1746</span>&#160;            container_.insert(container-&gt;set_complement(a));</div>
 <div class="line"><a name="l01747"></a><span class="lineno"> 1747</span>&#160;        }</div>
 <div class="line"><a name="l01748"></a><span class="lineno"> 1748</span>&#160;        <span class="keywordflow">return</span> SymEngine::set_union(container_);</div>
 <div class="line"><a name="l01749"></a><span class="lineno"> 1749</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*universe)) {</div>
@@ -1855,7 +1855,7 @@ $(function() {
 <div class="line"><a name="l01755"></a><span class="lineno"> 1755</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : other.get_container()) {</div>
 <div class="line"><a name="l01756"></a><span class="lineno"> 1756</span>&#160;            <span class="keyword">auto</span> contain = container-&gt;contains(a);</div>
 <div class="line"><a name="l01757"></a><span class="lineno"> 1757</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *boolFalse)) {</div>
-<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;                container_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(a);</div>
+<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;                container_.insert(a);</div>
 <div class="line"><a name="l01759"></a><span class="lineno"> 1759</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
 <div class="line"><a name="l01760"></a><span class="lineno"> 1760</span>&#160;                rest.insert(a);</div>
 <div class="line"><a name="l01761"></a><span class="lineno"> 1761</span>&#160;            }</div>
@@ -1888,8 +1888,8 @@ $(function() {
 <div class="line"><a name="l01788"></a><span class="lineno"> 1788</span>&#160;    }</div>
 <div class="line"><a name="l01789"></a><span class="lineno"> 1789</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
 <div class="line"><a name="l01790"></a><span class="lineno"> 1790</span>&#160;        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
-<div class="line"><a name="l01791"></a><span class="lineno"> 1791</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_boolean</a> newcont;</div>
-<div class="line"><a name="l01792"></a><span class="lineno"> 1792</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> present, others;</div>
+<div class="line"><a name="l01791"></a><span class="lineno"> 1791</span>&#160;        set_boolean newcont;</div>
+<div class="line"><a name="l01792"></a><span class="lineno"> 1792</span>&#160;        set_basic present, others;</div>
 <div class="line"><a name="l01793"></a><span class="lineno"> 1793</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
 <div class="line"><a name="l01794"></a><span class="lineno"> 1794</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
 <div class="line"><a name="l01795"></a><span class="lineno"> 1795</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
@@ -1901,7 +1901,7 @@ $(function() {
 <div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
 <div class="line"><a name="l01802"></a><span class="lineno"> 1802</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
 <div class="line"><a name="l01803"></a><span class="lineno"> 1803</span>&#160;                    <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
-<div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160;                        others.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160;                        others.insert(elem);</div>
 <div class="line"><a name="l01805"></a><span class="lineno"> 1805</span>&#160;                    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160;                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
 <div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160;                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
@@ -1912,13 +1912,13 @@ $(function() {
 <div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160;                        <span class="keyword">auto</span> restCont = cont;</div>
 <div class="line"><a name="l01813"></a><span class="lineno"> 1813</span>&#160;                        restCont.erase(*it);</div>
 <div class="line"><a name="l01814"></a><span class="lineno"> 1814</span>&#160;                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
-<div class="line"><a name="l01815"></a><span class="lineno"> 1815</span>&#160;                        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> d;</div>
+<div class="line"><a name="l01815"></a><span class="lineno"> 1815</span>&#160;                        map_basic_basic d;</div>
 <div class="line"><a name="l01816"></a><span class="lineno"> 1816</span>&#160;                        d[sym] = elem;</div>
 <div class="line"><a name="l01817"></a><span class="lineno"> 1817</span>&#160;                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
 <div class="line"><a name="l01818"></a><span class="lineno"> 1818</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;                            present.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;                            present.insert(elem);</div>
 <div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;                            others.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(elem);</div>
+<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;                            others.insert(elem);</div>
 <div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160;                        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l01823"></a><span class="lineno"> 1823</span>&#160;                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
 <div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
@@ -1927,11 +1927,11 @@ $(function() {
 <div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;                    }</div>
 <div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;                }</div>
 <div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;                newcont.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(*it);</div>
+<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;                newcont.insert(*it);</div>
 <div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;            }</div>
 <div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;        }</div>
-<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;        <span class="keywordflow">if</span> (not present.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/empty.html">empty</a>()) {</div>
-<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;            newcont.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(others)-&gt;contains(sym));</div>
+<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;        <span class="keywordflow">if</span> (not present.empty()) {</div>
+<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;            newcont.insert(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(others)-&gt;contains(sym));</div>
 <div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
 <div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(present), <a class="code" href="namespaceSymEngine.html#a8f4604cdd696c1d067294bc78fec6231">conditionset</a>(sym, logical_and(newcont))});</div>
 <div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;        }</div>
@@ -1944,7 +1944,6 @@ $(function() {
 <div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160; </div>
 <div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/begin.html">std::set::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html_a5ad84ef8e2cdf821ad633a260021beec"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a5ad84ef8e2cdf821ad633a260021beec">SymEngine::Basic::Basic</a></div><div class="ttdeci">Basic()</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00120">basic.h:120</a></div></div>
@@ -1973,17 +1972,8 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Union_html_a47d8178f50ceefb0b74d8231b67b541c"><div class="ttname"><a href="classSymEngine_1_1Union.html#a47d8178f50ceefb0b74d8231b67b541c">SymEngine::Union::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01223">sets.cpp:1223</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html_af86feeac91506b45eedd3fd8622cb0e7"><div class="ttname"><a href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">SymEngine::Union::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01284">sets.cpp:1284</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html_afc198f7f84f13cb0afd17f1fdb272b55"><div class="ttname"><a href="classSymEngine_1_1Union.html#afc198f7f84f13cb0afd17f1fdb272b55">SymEngine::Union::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01199">sets.cpp:1199</a></div></div>
-<div class="ttc" id="aempty_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/empty.html">std::set::empty</a></div><div class="ttdeci">T empty(T... args)</div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/erase.html">std::set::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
-<div class="ttc" id="ainserter_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/inserter.html">std::inserter</a></div><div class="ttdeci">T inserter(T... args)</div></div>
-<div class="ttc" id="aleft_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/manip/left.html">std::left</a></div><div class="ttdeci">T left(T... args)</div></div>
 <div class="ttc" id="alogic_8h_html"><div class="ttname"><a href="logic_8h.html">logic.h</a></div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
-<div class="ttc" id="amax_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/max.html">std::max</a></div><div class="ttdeci">T max(T... args)</div></div>
-<div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a0662566ef725c03a0bfcbff19655d799"><div class="ttname"><a href="namespaceSymEngine.html#a0662566ef725c03a0bfcbff19655d799">SymEngine::interval</a></div><div class="ttdeci">RCP&lt; const Set &gt; interval(const RCP&lt; const Number &gt; &amp;start, const RCP&lt; const Number &gt; &amp;end, const bool left_open=false, const bool right_open=false)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00611">sets.h:611</a></div></div>
@@ -2005,15 +1995,9 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_abbdc2f1f3c92c9560d10a5b7998e33e3"><div class="ttname"><a href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00602">sets.h:602</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac173c8dd31830a8392c91aa7143b0428"><div class="ttname"><a href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03659">functions.cpp:3659</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2d57ac420ac353f747eac11c3e3dba3"><div class="ttname"><a href="namespaceSymEngine.html#ac2d57ac420ac353f747eac11c3e3dba3">SymEngine::naturals0</a></div><div class="ttdeci">RCP&lt; const Naturals0 &gt; naturals0()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00584">sets.h:584</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac7ed31f65bb252b7b4b3f1f45fdeec34"><div class="ttname"><a href="namespaceSymEngine.html#ac7ed31f65bb252b7b4b3f1f45fdeec34">SymEngine::rationals</a></div><div class="ttdeci">RCP&lt; const Rationals &gt; rationals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00566">sets.h:566</a></div></div>
-<div class="ttc" id="anext_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a></div><div class="ttdeci">T next(T... args)</div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="aset_difference_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/set_difference.html">std::set_difference</a></div><div class="ttdeci">T set_difference(T... args)</div></div>
-<div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt; RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
-<div class="ttc" id="aset_union_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/set_union.html">std::set_union</a></div><div class="ttdeci">T set_union(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/size.html">std::set::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

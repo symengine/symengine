@@ -104,9 +104,9 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;{</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="comment">// This is the fastest implementation:</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a472e32d743cd0f5c727ee7366646ee32">    7</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a472e32d743cd0f5c727ee7366646ee32">monomial_mul</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_int</a> &amp;A, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_int</a> &amp;B, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_int</a> &amp;C)</div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a472e32d743cd0f5c727ee7366646ee32">    7</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a472e32d743cd0f5c727ee7366646ee32">monomial_mul</a>(<span class="keyword">const</span> vec_int &amp;A, <span class="keyword">const</span> vec_int &amp;B, vec_int &amp;C)</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordtype">size_t</span> n = A.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>();</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    <span class="keywordtype">size_t</span> n = A.size();</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; n; ++i) {</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;        C[i] = A[i] + B[i];</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    }</div>
@@ -134,8 +134,6 @@ $(function() {
 <div class="ttc" id="amonomials_8h_html"><div class="ttname"><a href="monomials_8h.html">monomials.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a472e32d743cd0f5c727ee7366646ee32"><div class="ttname"><a href="namespaceSymEngine.html#a472e32d743cd0f5c727ee7366646ee32">SymEngine::monomial_mul</a></div><div class="ttdeci">void monomial_mul(const vec_int &amp;A, const vec_int &amp;B, vec_int &amp;C)</div><div class="ttdoc">Monomial multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="monomials_8cpp_source.html#l00007">monomials.cpp:7</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; int &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

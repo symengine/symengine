@@ -124,9 +124,9 @@ $(function() {
 <map name="aSymEngine_1_1CSRMatrix_coll__map" id="aSymEngine_1_1CSRMatrix_coll__map">
 <area shape="rect" title=" " alt="" coords="211,227,381,256"/>
 <area shape="rect" href="classSymEngine_1_1MatrixBase.html" title=" " alt="" coords="5,108,182,137"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/vector.html" title=" " alt="" coords="206,99,387,145"/>
+<area shape="rect" title=" " alt="" coords="206,99,387,145"/>
 <area shape="rect" title=" " alt="" coords="220,5,372,34"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/vector.html" title=" " alt="" coords="410,108,590,137"/>
+<area shape="rect" title=" " alt="" coords="410,108,590,137"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -136,10 +136,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b> (unsigned row, unsigned col)</td></tr>
 <tr class="separator:ae1a3baaee49477fea8f0d99dfee1b644"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf1fd5c8302f520c041cc9fd4c16dbea"><td class="memItemLeft" align="right" valign="top"><a id="aaf1fd5c8302f520c041cc9fd4c16dbea"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b> (unsigned row, unsigned col, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;p, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;x)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b> (unsigned row, unsigned col, const std::vector&lt; unsigned &gt; &amp;p, const std::vector&lt; unsigned &gt; &amp;j, const vec_basic &amp;x)</td></tr>
 <tr class="separator:aaf1fd5c8302f520c041cc9fd4c16dbea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc017fbe6de2b8469689e1fef49e7af7"><td class="memItemLeft" align="right" valign="top"><a id="afc017fbe6de2b8469689e1fef49e7af7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b> (unsigned row, unsigned col, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;&amp;p, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;&amp;j, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;&amp;x)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>CSRMatrix</b> (unsigned row, unsigned col, std::vector&lt; unsigned &gt; &amp;&amp;p, std::vector&lt; unsigned &gt; &amp;&amp;j, vec_basic &amp;&amp;x)</td></tr>
 <tr class="separator:afc017fbe6de2b8469689e1fef49e7af7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a399747474db8797d02383a1946df3d88"><td class="memItemLeft" align="right" valign="top"><a id="a399747474db8797d02383a1946df3d88"></a>
 <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a> &amp;&amp;other)</td></tr>
@@ -151,7 +151,7 @@ Public Member Functions</h2></td></tr>
 virtual MatrixTypeID&#160;</td><td class="memItemRight" valign="bottom"><b>get_type_code</b> () const</td></tr>
 <tr class="separator:ac5aa37c541b40473044a88de6244c2a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a996c0a87508bb58750570e59c3fd24cf"><td class="memItemLeft" align="right" valign="top"><a id="a996c0a87508bb58750570e59c3fd24cf"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/utility/tuple.html">std::tuple</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>as_vectors</b> () const</td></tr>
+std::tuple&lt; std::vector&lt; unsigned &gt;, std::vector&lt; unsigned &gt;, vec_basic &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>as_vectors</b> () const</td></tr>
 <tr class="separator:a996c0a87508bb58750570e59c3fd24cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a286525ce711ef3a04340d54d0e6cb896"><td class="memItemLeft" align="right" valign="top"><a id="a286525ce711ef3a04340d54d0e6cb896"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_canonical</b> () const</td></tr>
@@ -239,31 +239,31 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>cholesky</b> (<a clas
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_square</b> () const</td></tr>
 <tr class="separator:a74679db66bee65923b631f0b1b55d037 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad7139e2f8df001cf11c2576153c18de5 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memItemLeft" align="right" valign="top"><a id="ad7139e2f8df001cf11c2576153c18de5"></a>
-virtual <a class="elRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a>&#160;</td><td class="memItemRight" valign="bottom"><b>__str__</b> () const</td></tr>
+virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>__str__</b> () const</td></tr>
 <tr class="separator:ad7139e2f8df001cf11c2576153c18de5 inherit pub_methods_classSymEngine_1_1MatrixBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a323050e4528fd71bddf11aee6de00e31"><td class="memItemLeft" align="right" valign="top"><a id="a323050e4528fd71bddf11aee6de00e31"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>csr_sum_duplicates</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;p_, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j_, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;x_, unsigned row_)</td></tr>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>csr_sum_duplicates</b> (std::vector&lt; unsigned &gt; &amp;p_, std::vector&lt; unsigned &gt; &amp;j_, vec_basic &amp;x_, unsigned row_)</td></tr>
 <tr class="separator:a323050e4528fd71bddf11aee6de00e31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a066b1944855409e2e54e3a4d8512643f"><td class="memItemLeft" align="right" valign="top"><a id="a066b1944855409e2e54e3a4d8512643f"></a>
-static void&#160;</td><td class="memItemRight" valign="bottom"><b>csr_sort_indices</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;p_, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j_, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;x_, unsigned row_)</td></tr>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>csr_sort_indices</b> (std::vector&lt; unsigned &gt; &amp;p_, std::vector&lt; unsigned &gt; &amp;j_, vec_basic &amp;x_, unsigned row_)</td></tr>
 <tr class="separator:a066b1944855409e2e54e3a4d8512643f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acdab0693994f133d9c750c410549c388"><td class="memItemLeft" align="right" valign="top"><a id="acdab0693994f133d9c750c410549c388"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>csr_has_sorted_indices</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;p_, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j_, unsigned row_)</td></tr>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>csr_has_sorted_indices</b> (const std::vector&lt; unsigned &gt; &amp;p_, const std::vector&lt; unsigned &gt; &amp;j_, unsigned row_)</td></tr>
 <tr class="separator:acdab0693994f133d9c750c410549c388"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a6b377638dab739e84008dffb6cae6a"><td class="memItemLeft" align="right" valign="top"><a id="a5a6b377638dab739e84008dffb6cae6a"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>csr_has_duplicates</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;p_, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j_, unsigned row_)</td></tr>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>csr_has_duplicates</b> (const std::vector&lt; unsigned &gt; &amp;p_, const std::vector&lt; unsigned &gt; &amp;j_, unsigned row_)</td></tr>
 <tr class="separator:a5a6b377638dab739e84008dffb6cae6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b4f9226c8d7fa58766f1a9ea4bc4e49"><td class="memItemLeft" align="right" valign="top"><a id="a2b4f9226c8d7fa58766f1a9ea4bc4e49"></a>
-static bool&#160;</td><td class="memItemRight" valign="bottom"><b>csr_has_canonical_format</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;p_, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j_, unsigned row_)</td></tr>
+static bool&#160;</td><td class="memItemRight" valign="bottom"><b>csr_has_canonical_format</b> (const std::vector&lt; unsigned &gt; &amp;p_, const std::vector&lt; unsigned &gt; &amp;j_, unsigned row_)</td></tr>
 <tr class="separator:a2b4f9226c8d7fa58766f1a9ea4bc4e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaea5900963d6a68c49a6dbbe04877796"><td class="memItemLeft" align="right" valign="top"><a id="aaea5900963d6a68c49a6dbbe04877796"></a>
-static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>from_coo</b> (unsigned row, unsigned col, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;i, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt; &amp;j, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;x)</td></tr>
+static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>from_coo</b> (unsigned row, unsigned col, const std::vector&lt; unsigned &gt; &amp;i, const std::vector&lt; unsigned &gt; &amp;j, const vec_basic &amp;x)</td></tr>
 <tr class="separator:aaea5900963d6a68c49a6dbbe04877796"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a667e7013a7ec1fc6b98bcf2f4e4b9da7"><td class="memItemLeft" align="right" valign="top"><a id="a667e7013a7ec1fc6b98bcf2f4e4b9da7"></a>
-static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>jacobian</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;exprs, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_sym</a> &amp;x, bool diff_cache=true)</td></tr>
+static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>jacobian</b> (const vec_basic &amp;exprs, const vec_sym &amp;x, bool diff_cache=true)</td></tr>
 <tr class="separator:a667e7013a7ec1fc6b98bcf2f4e4b9da7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86772d4c12b7f36932c401513ff1d1cc"><td class="memItemLeft" align="right" valign="top"><a id="a86772d4c12b7f36932c401513ff1d1cc"></a>
 static <a class="el" href="classSymEngine_1_1CSRMatrix.html">CSRMatrix</a>&#160;</td><td class="memItemRight" valign="bottom"><b>jacobian</b> (const <a class="el" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> &amp;A, const <a class="el" href="classSymEngine_1_1DenseMatrix.html">DenseMatrix</a> &amp;x, bool diff_cache=true)</td></tr>
@@ -278,13 +278,13 @@ static const MatrixTypeID&#160;</td><td class="memItemRight" valign="bottom"><b>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:ad7d3703bdc0105fd935988d52de1daf2"><td class="memItemLeft" align="right" valign="top"><a id="ad7d3703bdc0105fd935988d52de1daf2"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>p_</b></td></tr>
+std::vector&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>p_</b></td></tr>
 <tr class="separator:ad7d3703bdc0105fd935988d52de1daf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a819c973e882cf595d3b36db47da58254"><td class="memItemLeft" align="right" valign="top"><a id="a819c973e882cf595d3b36db47da58254"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>j_</b></td></tr>
+std::vector&lt; unsigned &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>j_</b></td></tr>
 <tr class="separator:a819c973e882cf595d3b36db47da58254"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06a2361de3e9c6ee08cf85164b67be67"><td class="memItemLeft" align="right" valign="top"><a id="a06a2361de3e9c6ee08cf85164b67be67"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a>&#160;</td><td class="memItemRight" valign="bottom"><b>x_</b></td></tr>
+vec_basic&#160;</td><td class="memItemRight" valign="bottom"><b>x_</b></td></tr>
 <tr class="separator:a06a2361de3e9c6ee08cf85164b67be67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4bdf8c030bd17cc7ee7283181137023b"><td class="memItemLeft" align="right" valign="top"><a id="a4bdf8c030bd17cc7ee7283181137023b"></a>
 unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>row_</b></td></tr>

@@ -107,12 +107,12 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a6017105ba64d2df0e0f96bdb1fe2cd29">   10</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a6017105ba64d2df0e0f96bdb1fe2cd29">expr2poly</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;p, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> &amp;syms, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;P)</div>
+<div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a6017105ba64d2df0e0f96bdb1fe2cd29">   10</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a6017105ba64d2df0e0f96bdb1fe2cd29">expr2poly</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;p, umap_basic_num &amp;syms, umap_vec_mpz &amp;P)</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*p)) {</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">auto</span> n = syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">size</a>();</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_num</a> &amp;d = down_cast&lt;const Add &amp;&gt;(*p).get_dict();</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_int</a> <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;        <span class="keyword">auto</span> n = syms.size();</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;        <span class="keyword">const</span> umap_basic_num &amp;d = down_cast&lt;const Add &amp;&gt;(*p).get_dict();</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;        vec_int <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        integer_class coef;</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : d) {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;            <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*p.second))</div>
@@ -120,14 +120,14 @@ $(function() {
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;            coef = down_cast&lt;const Integer &amp;&gt;(*p.second).as_integer_class();</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;            <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>.assign(n, 0); <span class="comment">// Initialize to [0]*n</span></div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Mul&gt;(*p.first)) {</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_basic_basic</a> &amp;term</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                <span class="keyword">const</span> map_basic_basic &amp;term</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;                    = down_cast&lt;const Mul &amp;&gt;(*p.first).get_dict();</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;q : term) {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;                    RCP&lt;const Basic&gt; sym = q.first;</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                    <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">at</a>(sym)))</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                    <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*syms.at(sym)))</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                    <span class="keywordtype">int</span> i = numeric_cast&lt;int&gt;(</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                        down_cast&lt;const Integer &amp;&gt;(*syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">at</a>(sym)).as_int());</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                        down_cast&lt;const Integer &amp;&gt;(*syms.at(sym)).as_int());</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                    <span class="keywordflow">if</span> (is_a&lt;Integer&gt;(*q.second)) {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                        <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>[i] = numeric_cast&lt;int&gt;(</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;                            down_cast&lt;const Integer &amp;&gt;(*q.second).as_int());</div>
@@ -142,20 +142,20 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;                    = down_cast&lt;const Pow &amp;&gt;(*p.first).get_base();</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                RCP&lt;const Basic&gt; exp_</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                    = down_cast&lt;const Pow &amp;&gt;(*p.first).get_exp();</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">at</a>(sym)))</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*syms.at(sym)))</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;                    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                <span class="keywordtype">int</span> i = numeric_cast&lt;int&gt;(</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                    down_cast&lt;const Integer &amp;&gt;(*syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">at</a>(sym)).as_int());</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;                    down_cast&lt;const Integer &amp;&gt;(*syms.at(sym)).as_int());</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;                <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*exp_))</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;                <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>[i] = numeric_cast&lt;int&gt;(</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                    down_cast&lt;const Integer &amp;&gt;(*exp_).as_int());</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Symbol&gt;(*p.first)) {</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;                RCP&lt;const Basic&gt; sym = p.first;</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">at</a>(sym)))</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                <span class="keywordflow">if</span> (not is_a&lt;Integer&gt;(*syms.at(sym)))</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;                    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;                <span class="keywordtype">int</span> i = numeric_cast&lt;int&gt;(</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                    down_cast&lt;const Integer &amp;&gt;(*syms.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">at</a>(sym)).as_int());</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;                    down_cast&lt;const Integer &amp;&gt;(*syms.at(sym)).as_int());</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>[i] = 1;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;                <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
@@ -168,10 +168,10 @@ $(function() {
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    }</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">   71</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">poly_mul</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;A, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;B, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_vec_mpz</a> &amp;C)</div>
+<div class="line"><a name="l00071"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">   71</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">poly_mul</a>(<span class="keyword">const</span> umap_vec_mpz &amp;A, <span class="keyword">const</span> umap_vec_mpz &amp;B, umap_vec_mpz &amp;C)</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;{</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_int</a> <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">auto</span> n = A.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map/begin.html">begin</a>()-&gt;first.size();</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    vec_int <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">auto</span> n = A.begin()-&gt;first.size();</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>.assign(n, 0); <span class="comment">// Initialize to [0]*n</span></div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">    std::cout &lt;&lt; &quot;A: &quot; &lt;&lt; A.load_factor() &lt;&lt; &quot; &quot; &lt;&lt; A.bucket_count() &lt;&lt; &quot; &quot; &lt;&lt;</span></div>
@@ -206,9 +206,6 @@ $(function() {
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
-<div class="ttc" id="aat_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/at.html">std::unordered_map::at</a></div><div class="ttdeci">T at(T... args)</div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/begin.html">std::unordered_map::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
 <div class="ttc" id="amonomials_8h_html"><div class="ttname"><a href="monomials_8h.html">monomials.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a472e32d743cd0f5c727ee7366646ee32"><div class="ttname"><a href="namespaceSymEngine.html#a472e32d743cd0f5c727ee7366646ee32">SymEngine::monomial_mul</a></div><div class="ttdeci">void monomial_mul(const vec_int &amp;A, const vec_int &amp;B, vec_int &amp;C)</div><div class="ttdoc">Monomial multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="monomials_8cpp_source.html#l00007">monomials.cpp:7</a></div></div>
@@ -217,9 +214,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_aab1d7303c130d7ef8cfa033236bbe4b2"><div class="ttname"><a href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">SymEngine::poly_mul</a></div><div class="ttdeci">void poly_mul(const umap_vec_mpz &amp;A, const umap_vec_mpz &amp;B, umap_vec_mpz &amp;C)</div><div class="ttdoc">Multiply two polynomials: C = A*B</div><div class="ttdef"><b>Definition:</b> <a href="rings_8cpp_source.html#l00071">rings.cpp:71</a></div></div>
 <div class="ttc" id="apow_8h_html"><div class="ttname"><a href="pow_8h.html">pow.h</a></div></div>
 <div class="ttc" id="arings_8h_html"><div class="ttname"><a href="rings_8h.html">rings.h</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map/size.html">std::unordered_map::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="aunordered_map_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map&lt; RCP&lt; const Basic &gt;, RCP&lt; const Number &gt;, RCPBasicHash, RCPBasicKeyEq &gt;</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; int &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

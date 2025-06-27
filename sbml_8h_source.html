@@ -112,8 +112,8 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <span class="keyword">using</span> StrPrinter::apply;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keyword">using</span> StrPrinter::bvisit;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names_;</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> _print_pow(<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;o, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a,</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::vector&lt;std::string&gt; names_;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <span class="keywordtype">void</span> _print_pow(std::ostringstream &amp;o, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a,</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;                    <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1BooleanAtom.html">BooleanAtom</a> &amp;x);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1And.html">And</a> &amp;x);</div>
@@ -129,7 +129,6 @@ $(function() {
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1And_html"><div class="ttname"><a href="classSymEngine_1_1And.html">SymEngine::And</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00104">logic.h:105</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1BaseVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BaseVisitor.html">SymEngine::BaseVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00047">visitor.h:48</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1BooleanAtom_html"><div class="ttname"><a href="classSymEngine_1_1BooleanAtom.html">SymEngine::BooleanAtom</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00025">logic.h:26</a></div></div>
@@ -142,7 +141,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1SbmlPrinter_html"><div class="ttname"><a href="classSymEngine_1_1SbmlPrinter.html">SymEngine::SbmlPrinter</a></div><div class="ttdef"><b>Definition:</b> <a href="sbml_8h_source.html#l00010">sbml.h:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Xor_html"><div class="ttname"><a href="classSymEngine_1_1Xor.html">SymEngine::Xor</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00162">logic.h:163</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; std::string &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

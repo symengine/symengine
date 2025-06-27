@@ -106,7 +106,7 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;{</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;UIntPolyPiranha::UIntPolyPiranha(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var, pintpoly &amp;&amp;dict)</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    : UPiranhaPoly(var, <a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(dict)){SYMENGINE_ASSIGN_TYPEID()}</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;    : UPiranhaPoly(var, std::move(dict)){SYMENGINE_ASSIGN_TYPEID()}</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;      hash_t UIntPolyPiranha::__hash__()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword"></span>{</div>
@@ -117,7 +117,7 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;}</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;URatPolyPiranha::URatPolyPiranha(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var, pratpoly &amp;&amp;dict)</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    : UPiranhaPoly(var, <a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(dict)){SYMENGINE_ASSIGN_TYPEID()}</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    : UPiranhaPoly(var, std::move(dict)){SYMENGINE_ASSIGN_TYPEID()}</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;      hash_t URatPolyPiranha::__hash__()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword"></span>{</div>
@@ -128,9 +128,7 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;}</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aexpression_8h_html"><div class="ttname"><a href="expression_8h.html">expression.h</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 <div class="ttc" id="asymbol_8h_html"><div class="ttname"><a href="symbol_8h.html">symbol.h</a></div></div>
 <div class="ttc" id="auintpoly__piranha_8h_html"><div class="ttname"><a href="uintpoly__piranha_8h.html">uintpoly_piranha.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

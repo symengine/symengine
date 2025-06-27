@@ -115,20 +115,20 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;CSRMatrix::CSRMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col) : row_(row), col_(col)</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    p_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(row + 1, 0);</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    p_ = std::vector&lt;unsigned&gt;(row + 1, 0);</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    SYMENGINE_ASSERT(is_canonical());</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;}</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;CSRMatrix::CSRMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;p,</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                     <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j, <span class="keyword">const</span> vec_basic &amp;x)</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;CSRMatrix::CSRMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col, <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;p,</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;                     <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;j, <span class="keyword">const</span> vec_basic &amp;x)</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    : p_{p}, j_{j}, x_{x}, row_(row), col_(col)</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;{</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    SYMENGINE_ASSERT(is_canonical());</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;}</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;CSRMatrix::CSRMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;&amp;p,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                     <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;&amp;j, vec_basic &amp;&amp;x)</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    : p_{<a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(p)}, j_{<a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(j)}, x_{<a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(x)}, row_(row), col_(col)</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;CSRMatrix::CSRMatrix(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col, std::vector&lt;unsigned&gt; &amp;&amp;p,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                     std::vector&lt;unsigned&gt; &amp;&amp;j, vec_basic &amp;&amp;x)</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    : p_{std::move(p)}, j_{std::move(j)}, x_{std::move(x)}, row_(row), col_(col)</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    SYMENGINE_ASSERT(is_canonical());</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;}</div>
@@ -137,18 +137,18 @@ $(function() {
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;{</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    col_ = other.col_;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    row_ = other.row_;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    p_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.p_);</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    j_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.j_);</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    x_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(other.x_);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    p_ = std::move(other.p_);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    j_ = std::move(other.j_);</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    x_ = std::move(other.x_);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;}</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/tuple.html">std::tuple&lt;std::vector&lt;unsigned&gt;</a>, <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>, vec_basic&gt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;std::tuple&lt;std::vector&lt;unsigned&gt;, std::vector&lt;unsigned&gt;, vec_basic&gt;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;CSRMatrix::as_vectors()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">auto</span> p = p_, j = j_;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keyword">auto</span> x = x_;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/tuple/make_tuple.html">std::make_tuple</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> std::make_tuple(std::move(p), std::move(j), std::move(x));</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::eq(<span class="keyword">const</span> MatrixBase &amp;other)<span class="keyword"> const</span></div>
@@ -220,11 +220,11 @@ $(function() {
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordtype">unsigned</span> k = p_[i];</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordtype">unsigned</span> row_end = p_[i + 1];</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">unsigned</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = p_[i + 1];</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordtype">unsigned</span> end = p_[i + 1];</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <span class="keywordtype">unsigned</span> mid;</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="keywordflow">while</span> (k &lt; end) {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        mid = (k + <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a>) / 2;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        mid = (k + end) / 2;</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <span class="keywordflow">if</span> (mid == k) {</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;            <span class="keywordflow">if</span> (j_[k] &lt; j) {</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;                k++;</div>
@@ -234,7 +234,7 @@ $(function() {
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            k = mid;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (j_[mid - 1] &gt;= j) {</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/end.html">end</a> = mid - 1;</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            end = mid - 1;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;            k = mid + 1;</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        }</div>
@@ -324,12 +324,12 @@ $(function() {
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;CSRMatrix&gt;(result)) {</div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;        <span class="keyword">auto</span> &amp;r = down_cast&lt;CSRMatrix &amp;&gt;(result);</div>
-<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(p_), j(j_);</div>
+<div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        std::vector&lt;unsigned&gt; p(p_), j(j_);</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        vec_basic x(x_.size());</div>
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; x_.size(); ++i) {</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;            x[i] = <a class="code" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        }</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        r = CSRMatrix(col_, row_, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;        r = CSRMatrix(col_, row_, std::move(p), std::move(j), std::move(x));</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    }</div>
@@ -349,12 +349,12 @@ $(function() {
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;CSRMatrix CSRMatrix::transpose(<span class="keywordtype">bool</span> conjugate)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;    <span class="keyword">const</span> <span class="keyword">auto</span> nnz = j_.size();</div>
-<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(col_ + 1, 0), j(nnz), tmp(col_, 0);</div>
+<div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;    std::vector&lt;unsigned&gt; p(col_ + 1, 0), j(nnz), tmp(col_, 0);</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    vec_basic x(nnz);</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; nnz; ++i)</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        p[j_[i] + 1]++;</div>
-<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/partial_sum.html">std::partial_sum</a>(p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(), p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>());</div>
+<div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    std::partial_sum(p.begin(), p.end(), p.begin());</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ri = 0; ri &lt; row_; ++ri) {</div>
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = p_[ri]; i &lt; p_[ri + 1]; ++i) {</div>
@@ -369,7 +369,7 @@ $(function() {
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;            tmp[ci]++;</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;        }</div>
 <div class="line"><a name="l00271"></a><span class="lineno">  271</span>&#160;    }</div>
-<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">return</span> CSRMatrix(col_, row_, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x));</div>
+<div class="line"><a name="l00272"></a><span class="lineno">  272</span>&#160;    <span class="keywordflow">return</span> CSRMatrix(col_, row_, std::move(p), std::move(j), std::move(x));</div>
 <div class="line"><a name="l00273"></a><span class="lineno">  273</span>&#160;}</div>
 <div class="line"><a name="l00274"></a><span class="lineno">  274</span>&#160; </div>
 <div class="line"><a name="l00275"></a><span class="lineno">  275</span>&#160;<span class="comment">// Matrix conjugate transpose</span></div>
@@ -434,8 +434,8 @@ $(function() {
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not Implemented&quot;</span>);</div>
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;}</div>
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keywordtype">void</span> CSRMatrix::csr_sum_duplicates(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;p_,</div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                                   <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j_, vec_basic &amp;x_,</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;<span class="keywordtype">void</span> CSRMatrix::csr_sum_duplicates(std::vector&lt;unsigned&gt; &amp;p_,</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;                                   std::vector&lt;unsigned&gt; &amp;j_, vec_basic &amp;x_,</div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;                                   <span class="keywordtype">unsigned</span> row_)</div>
 <div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;{</div>
 <div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <span class="keywordtype">unsigned</span> nnz = 0;</div>
@@ -465,29 +465,29 @@ $(function() {
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    }</div>
 <div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160; </div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="comment">// Resize to discard unnecessary elements</span></div>
-<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    j_.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/resize.html">resize</a>(nnz);</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    j_.resize(nnz);</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    x_.resize(nnz);</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;}</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="keywordtype">void</span> CSRMatrix::csr_sort_indices(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;p_,</div>
-<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                                 <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j_, vec_basic &amp;x_,</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;<span class="keywordtype">void</span> CSRMatrix::csr_sort_indices(std::vector&lt;unsigned&gt; &amp;p_,</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;                                 std::vector&lt;unsigned&gt; &amp;j_, vec_basic &amp;x_,</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;                                 <span class="keywordtype">unsigned</span> row_)</div>
 <div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;{</div>
-<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::pair&lt;unsigned, RCP&lt;const Basic&gt;</a>&gt;&gt; temp;</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;    std::vector&lt;std::pair&lt;unsigned, RCP&lt;const Basic&gt;&gt;&gt; temp;</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;        <span class="keywordtype">unsigned</span> row_start = p_[i];</div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        <span class="keywordtype">unsigned</span> row_end = p_[i + 1];</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160; </div>
-<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        temp.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/clear.html">clear</a>();</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;        temp.clear();</div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
 <div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = row_start; jj &lt; row_end; jj++) {</div>
-<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;            temp.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(j_[jj], x_[jj]));</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;            temp.push_back(std::make_pair(j_[jj], x_[jj]));</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        }</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160; </div>
-<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a>(temp.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), temp.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>(),</div>
-<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                  [](<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;x,</div>
-<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                     <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;y) {</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;        std::sort(temp.begin(), temp.end(),</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;                  [](<span class="keyword">const</span> std::pair&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;x,</div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;                     <span class="keyword">const</span> std::pair&lt;<span class="keywordtype">unsigned</span>, RCP&lt;const Basic&gt;&gt; &amp;y) {</div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;                      return x.first &lt; y.first;</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;                  });</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160; </div>
@@ -499,8 +499,8 @@ $(function() {
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;}</div>
 <div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160; </div>
 <div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;<span class="comment">// Assumes that the indices are sorted</span></div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::csr_has_duplicates(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;p_,</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;                                   <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j_,</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::csr_has_duplicates(<span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;p_,</div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;                                   <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;j_,</div>
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;                                   <span class="keywordtype">unsigned</span> row_)</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;{</div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
@@ -512,8 +512,8 @@ $(function() {
 <div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;}</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160; </div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::csr_has_sorted_indices(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;p_,</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;                                       <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j_,</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::csr_has_sorted_indices(<span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;p_,</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;                                       <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;j_,</div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;                                       <span class="keywordtype">unsigned</span> row_)</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;{</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
@@ -525,8 +525,8 @@ $(function() {
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;}</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::csr_has_canonical_format(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;p_,</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;                                         <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j_,</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;<span class="keywordtype">bool</span> CSRMatrix::csr_has_canonical_format(<span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;p_,</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;                                         <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;j_,</div>
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;                                         <span class="keywordtype">unsigned</span> row_)</div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;{</div>
 <div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; row_; i++) {</div>
@@ -539,14 +539,14 @@ $(function() {
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;}</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160; </div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;CSRMatrix CSRMatrix::from_coo(<span class="keywordtype">unsigned</span> row, <span class="keywordtype">unsigned</span> col,</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;                              <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;i,</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                              <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> &amp;j,</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;                              <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;i,</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;                              <span class="keyword">const</span> std::vector&lt;unsigned&gt; &amp;j,</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                              <span class="keyword">const</span> vec_basic &amp;x)</div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;{</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="comment">// cast is okay, because CSRMatrix indices are unsigned.</span></div>
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordtype">unsigned</span> nnz = numeric_cast&lt;unsigned&gt;(x.size());</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(row + 1, 0);</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> j_ = <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a>(nnz);</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    std::vector&lt;unsigned&gt; p_ = std::vector&lt;unsigned&gt;(row + 1, 0);</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;    std::vector&lt;unsigned&gt; j_ = std::vector&lt;unsigned&gt;(nnz);</div>
 <div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    vec_basic x_ = vec_basic(nnz);</div>
 <div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160; </div>
 <div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> n = 0; n &lt; nnz; n++) {</div>
@@ -575,7 +575,7 @@ $(function() {
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;    }</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160; </div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0, last = 0; i &lt;= row; i++) {</div>
-<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a>(p_[i], last);</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;        std::swap(p_[i], last);</div>
 <div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;    }</div>
 <div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160; </div>
 <div class="line"><a name="l00481"></a><span class="lineno">  481</span>&#160;    <span class="comment">// sort indices</span></div>
@@ -584,7 +584,7 @@ $(function() {
 <div class="line"><a name="l00484"></a><span class="lineno">  484</span>&#160;    csr_sum_duplicates(p_, j_, x_, row);</div>
 <div class="line"><a name="l00485"></a><span class="lineno">  485</span>&#160; </div>
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;    CSRMatrix B</div>
-<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;        = CSRMatrix(row, col, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p_), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j_), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(x_));</div>
+<div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;        = CSRMatrix(row, col, std::move(p_), std::move(j_), std::move(x_));</div>
 <div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;    <span class="keywordflow">return</span> B;</div>
 <div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;}</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160; </div>
@@ -593,24 +593,24 @@ $(function() {
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;{</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> nrows = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(exprs.size());</div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> ncols = <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(x.size());</div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> p(1, 0), j;</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;    std::vector&lt;unsigned&gt; p(1, 0), j;</div>
 <div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;    vec_basic elems;</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(nrows + 1);</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    j.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">reserve</a>(nrows);</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;    p.reserve(nrows + 1);</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;    j.reserve(nrows);</div>
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160;    elems.reserve(nrows);</div>
 <div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ri = 0; ri &lt; nrows; ++ri) {</div>
-<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>());</div>
+<div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;        p.push_back(p.back());</div>
 <div class="line"><a name="l00503"></a><span class="lineno">  503</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> ci = 0; ci &lt; ncols; ++ci) {</div>
 <div class="line"><a name="l00504"></a><span class="lineno">  504</span>&#160;            <span class="keyword">auto</span> elem = exprs[ri]-&gt;diff(x[ci], diff_cache);</div>
 <div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;            <span class="keywordflow">if</span> (!is_true(<a class="code" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*elem))) {</div>
-<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;                p.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>()++;</div>
-<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;                j.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(ci);</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;                elems.emplace_back(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elem));</div>
+<div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;                p.back()++;</div>
+<div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;                j.push_back(ci);</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;                elems.emplace_back(std::move(elem));</div>
 <div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;            }</div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;        }</div>
 <div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    }</div>
-<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    <span class="keywordflow">return</span> CSRMatrix(nrows, ncols, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p), <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(j),</div>
-<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;                     <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(elems));</div>
+<div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    <span class="keywordflow">return</span> CSRMatrix(nrows, ncols, std::move(p), std::move(j),</div>
+<div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;                     std::move(elems));</div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160;}</div>
 <div class="line"><a name="l00515"></a><span class="lineno">  515</span>&#160; </div>
 <div class="line"><a name="l00516"></a><span class="lineno">  516</span>&#160;CSRMatrix CSRMatrix::jacobian(<span class="keyword">const</span> DenseMatrix &amp;A, <span class="keyword">const</span> DenseMatrix &amp;x,</div>
@@ -632,7 +632,7 @@ $(function() {
 <div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;<span class="keywordtype">void</span> csr_matmat_pass1(<span class="keyword">const</span> CSRMatrix &amp;A, <span class="keyword">const</span> CSRMatrix &amp;B, CSRMatrix &amp;C)</div>
 <div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;{</div>
 <div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;    <span class="comment">// method that uses O(n) temp storage</span></div>
-<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;unsigned&gt;</a> mask(A.col_, -1);</div>
+<div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;    std::vector&lt;unsigned&gt; mask(A.col_, -1);</div>
 <div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160;    C.p_[0] = 0;</div>
 <div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160; </div>
 <div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;    <span class="keywordtype">unsigned</span> nnz = 0;</div>
@@ -655,7 +655,7 @@ $(function() {
 <div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160; </div>
 <div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;        <span class="comment">// Addition overflow: http://www.cplusplus.com/articles/DE18T05o/</span></div>
 <div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;        <span class="keywordflow">if</span> (next_nnz &lt; nnz) {</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;            <span class="keywordflow">throw</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/error/overflow_error.html">std::overflow_error</a>(<span class="stringliteral">&quot;nnz of the result is too large&quot;</span>);</div>
+<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;            <span class="keywordflow">throw</span> std::overflow_error(<span class="stringliteral">&quot;nnz of the result is too large&quot;</span>);</div>
 <div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;        }</div>
 <div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
 <div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;        nnz = next_nnz;</div>
@@ -667,7 +667,7 @@ $(function() {
 <div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;<span class="comment">// row pointer Cp[] computed in Pass 1.</span></div>
 <div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;<span class="keywordtype">void</span> csr_matmat_pass2(<span class="keyword">const</span> CSRMatrix &amp;A, <span class="keyword">const</span> CSRMatrix &amp;B, CSRMatrix &amp;C)</div>
 <div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;{</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;int&gt;</a> <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>(A.col_, -1);</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;    std::vector&lt;int&gt; next(A.col_, -1);</div>
 <div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    vec_basic sums(A.col_, zero);</div>
 <div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160; </div>
 <div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;    <span class="keywordtype">unsigned</span> nnz = 0;</div>
@@ -692,7 +692,7 @@ $(function() {
 <div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;                sums[k] = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sums[k], <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(v, B.x_[kk]));</div>
 <div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160; </div>
 <div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;                <span class="keywordflow">if</span> (next[k] == -1) {</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;                    <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[k] = head;</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;                    next[k] = head;</div>
 <div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;                    head = k;</div>
 <div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;                    length++;</div>
 <div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;                }</div>
@@ -708,9 +708,9 @@ $(function() {
 <div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;            }</div>
 <div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160; </div>
 <div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;            <span class="keywordtype">unsigned</span> temp = head;</div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;            head = <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[head];</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;            head = next[head];</div>
 <div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160; </div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/iterator/next.html">next</a>[temp] = -1; <span class="comment">// clear arrays</span></div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;            next[temp] = -1; <span class="comment">// clear arrays</span></div>
 <div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;            sums[temp] = zero;</div>
 <div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;        }</div>
 <div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160; </div>
@@ -721,7 +721,7 @@ $(function() {
 <div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;<span class="comment">// Extract main diagonal of CSR matrix A</span></div>
 <div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;<span class="keywordtype">void</span> csr_diagonal(<span class="keyword">const</span> CSRMatrix &amp;A, DenseMatrix &amp;D)</div>
 <div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;{</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;    <span class="keywordtype">unsigned</span> N = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(A.row_, A.col_);</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;    <span class="keywordtype">unsigned</span> N = std::min(A.row_, A.col_);</div>
 <div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160; </div>
 <div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;    SYMENGINE_ASSERT(D.nrows() == N and D.ncols() == 1);</div>
 <div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160; </div>
@@ -872,35 +872,15 @@ $(function() {
 <div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160; </div>
 <div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
-<div class="ttc" id="aback_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/back.html">std::vector::back</a></div><div class="ttdeci">T back(T... args)</div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
-<div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/clear.html">std::vector::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
 <div class="ttc" id="aconstants_8h_html"><div class="ttname"><a href="constants_8h.html">constants.h</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/end.html">std::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
-<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
-<div class="ttc" id="amake_tuple_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/tuple/make_tuple.html">std::make_tuple</a></div><div class="ttdeci">T make_tuple(T... args)</div></div>
-<div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_af02f97d82354b66c939ae206f0057edd"><div class="ttname"><a href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00149">functions.cpp:149</a></div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
-<div class="ttc" id="anext_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/iterator/next.html">std::next</a></div><div class="ttdeci">T next(T... args)</div></div>
-<div class="ttc" id="aoverflow_error_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/error/overflow_error.html">std::overflow_error</a></div></div>
-<div class="ttc" id="apair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a></div></div>
-<div class="ttc" id="apartial_sum_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/partial_sum.html">std::partial_sum</a></div><div class="ttdeci">T partial_sum(T... args)</div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="areserve_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/reserve.html">std::vector::reserve</a></div><div class="ttdeci">T reserve(T... args)</div></div>
-<div class="ttc" id="aresize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/resize.html">std::vector::resize</a></div><div class="ttdeci">T resize(T... args)</div></div>
-<div class="ttc" id="asort_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a></div><div class="ttdeci">T sort(T... args)</div></div>
-<div class="ttc" id="aswap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/swap.html">std::swap</a></div><div class="ttdeci">T swap(T... args)</div></div>
-<div class="ttc" id="atuple_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/tuple.html">std::tuple</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; unsigned &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

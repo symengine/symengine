@@ -1,11 +1,10 @@
 <map id="SymEngine::UnicodePrinter" name="SymEngine::UnicodePrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="974,103,1172,132"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="691,5,867,51"/>
+<area shape="rect" id="node1" title=" " alt="" coords="951,98,1149,127"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="668,5,844,51"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="413,14,557,43"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1StringBox.html" title=" " alt="" coords="696,128,862,158"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/types/size_t.html" title=" " alt="" coords="441,99,529,128"/>
-<area shape="rect" id="node9" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="700,75,858,104"/>
-<area shape="rect" id="node6" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="392,171,578,200"/>
-<area shape="rect" id="node7" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="193,171,279,200"/>
-<area shape="rect" id="node8" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/string/basic_string.html" title=" " alt="" coords="5,163,144,209"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1StringBox.html" title=" " alt="" coords="673,140,838,170"/>
+<area shape="rect" id="node5" title=" " alt="" coords="392,102,578,131"/>
+<area shape="rect" id="node6" title=" " alt="" coords="193,102,279,131"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,93,144,139"/>
+<area shape="rect" id="node8" title=" " alt="" coords="677,194,835,223"/>
 </map>

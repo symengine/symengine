@@ -125,7 +125,7 @@ $(function() {
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordflow">return</span> arg_-&gt;compare(*down_cast&lt;const Trace &amp;&gt;(o).arg_);</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Trace.html#af0f0fb45c223833538cf6a3131fabbe7">   28</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1Trace.html#af0f0fb45c223833538cf6a3131fabbe7">Trace::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Trace.html#af0f0fb45c223833538cf6a3131fabbe7">   28</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Trace.html#af0f0fb45c223833538cf6a3131fabbe7">Trace::get_args</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keywordflow">return</span> {arg_};</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;}</div>
@@ -179,7 +179,7 @@ $(function() {
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">if</span> (x.nrows() != x.ncols()) {</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            trace_error();</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> diag;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        vec_basic diag;</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; x.nrows(); i++) {</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            diag.push_back(x.get(i, i));</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
@@ -227,7 +227,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1ZeroMatrix_html"><div class="ttname"><a href="classSymEngine_1_1ZeroMatrix.html">SymEngine::ZeroMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="zero__matrix_8h_source.html#l00010">zero_matrix.h:11</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

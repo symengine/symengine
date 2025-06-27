@@ -112,14 +112,14 @@ $(function() {
 <div class="center"><img src="classSymEngine_1_1UDictWrapper__coll__graph.png" border="0" usemap="#aSymEngine_1_1UDictWrapper_3_01Vec_00_01Value_00_01Wrapper_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1UDictWrapper_3_01Vec_00_01Value_00_01Wrapper_01_4_coll__map" id="aSymEngine_1_1UDictWrapper_3_01Vec_00_01Value_00_01Wrapper_01_4_coll__map">
 <area shape="rect" title=" " alt="" coords="5,133,199,179"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/unordered_map.html" title=" " alt="" coords="16,5,188,68"/>
+<area shape="rect" title=" " alt="" coords="16,5,188,68"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a1e8704202376888937b9d9fc6cfd4989"><td class="memItemLeft" align="right" valign="top"><a id="a1e8704202376888937b9d9fc6cfd4989"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Dict</b> = <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a>&lt; Vec, Value, <a class="el" href="structSymEngine_1_1vec__hash.html">vec_hash</a>&lt; Vec &gt; &gt;</td></tr>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>Dict</b> = std::unordered_map&lt; Vec, Value, <a class="el" href="structSymEngine_1_1vec__hash.html">vec_hash</a>&lt; Vec &gt; &gt;</td></tr>
 <tr class="separator:a1e8704202376888937b9d9fc6cfd4989"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24d6e0ccf2bf23a0d4f6bb60d3023349"><td class="memItemLeft" align="right" valign="top"><a id="a24d6e0ccf2bf23a0d4f6bb60d3023349"></a>
 typedef Vec&#160;</td><td class="memItemRight" valign="bottom"><b>vec_type</b></td></tr>
@@ -128,7 +128,7 @@ typedef Vec&#160;</td><td class="memItemRight" valign="bottom"><b>vec_type</b></
 typedef Value&#160;</td><td class="memItemRight" valign="bottom"><b>coef_type</b></td></tr>
 <tr class="separator:a9187bd61874c86e96c609379dea998c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b57f95e60e988ecb419a26219d7fe7c"><td class="memItemLeft" align="right" valign="top"><a id="a8b57f95e60e988ecb419a26219d7fe7c"></a>
-typedef <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">Dict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dict_type</b></td></tr>
+typedef Dict&#160;</td><td class="memItemRight" valign="bottom"><b>dict_type</b></td></tr>
 <tr class="separator:a8b57f95e60e988ecb419a26219d7fe7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -137,10 +137,10 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>UDictWrapper</b> (unsigned int s) SYMENGINE_NOEXCEPT</td></tr>
 <tr class="separator:a3f9cd1b99ff827448d912d07b37ee5a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4869737f7e577998eb3e59ab58902d0"><td class="memItemLeft" align="right" valign="top"><a id="ac4869737f7e577998eb3e59ab58902d0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UDictWrapper</b> (<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">Dict</a> &amp;&amp;p, unsigned int sz)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UDictWrapper</b> (Dict &amp;&amp;p, unsigned int sz)</td></tr>
 <tr class="separator:ac4869737f7e577998eb3e59ab58902d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9dede186b4181be5e30db22c58fc970e"><td class="memItemLeft" align="right" valign="top"><a id="a9dede186b4181be5e30db22c58fc970e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UDictWrapper</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">Dict</a> &amp;p, unsigned int sz)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UDictWrapper</b> (const Dict &amp;p, unsigned int sz)</td></tr>
 <tr class="separator:a9dede186b4181be5e30db22c58fc970e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afad992d023556a52324a011f3c7ecd58"><td class="memItemLeft" align="right" valign="top"><a id="afad992d023556a52324a011f3c7ecd58"></a>
 Wrapper &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (Wrapper &amp;&amp;other)</td></tr>
@@ -164,7 +164,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const Wrapper &amp;other) const</td></tr>
 <tr class="separator:a5e8ac2d0ddfcf3de492acc3c9a7ec23b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6032cb46fc151087f640d887555752b4"><td class="memItemLeft" align="right" valign="top"><a id="a6032cb46fc151087f640d887555752b4"></a>
-const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">Dict</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
+const Dict &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
 <tr class="separator:a6032cb46fc151087f640d887555752b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a927c3380ffab416fbd588f6a40481bbc"><td class="memItemLeft" align="right" valign="top"><a id="a927c3380ffab416fbd588f6a40481bbc"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const</td></tr>
@@ -173,7 +173,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const</t
 Value&#160;</td><td class="memItemRight" valign="bottom"><b>get_coeff</b> (Vec &amp;x) const</td></tr>
 <tr class="separator:a30e372e3654028b05d71444c5a0a14db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d490204d8e4426ccdae9943e8dfeb45"><td class="memItemLeft" align="right" valign="top"><a id="a4d490204d8e4426ccdae9943e8dfeb45"></a>
-Wrapper&#160;</td><td class="memItemRight" valign="bottom"><b>translate</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_uint</a> &amp;translator, unsigned int size) const</td></tr>
+Wrapper&#160;</td><td class="memItemRight" valign="bottom"><b>translate</b> (const vec_uint &amp;translator, unsigned int size) const</td></tr>
 <tr class="separator:a4d490204d8e4426ccdae9943e8dfeb45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
@@ -188,7 +188,7 @@ static Wrapper&#160;</td><td class="memItemRight" valign="bottom"><b>pow</b> (co
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a93ae5f112167e008d9eadcfad69ae5c8"><td class="memItemLeft" align="right" valign="top"><a id="a93ae5f112167e008d9eadcfad69ae5c8"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">Dict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>dict_</b></td></tr>
+Dict&#160;</td><td class="memItemRight" valign="bottom"><b>dict_</b></td></tr>
 <tr class="separator:a93ae5f112167e008d9eadcfad69ae5c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee226f07ffbc9431ece6f40673a8f773"><td class="memItemLeft" align="right" valign="top"><a id="aee226f07ffbc9431ece6f40673a8f773"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>vec_size</b></td></tr>

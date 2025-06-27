@@ -1,4 +1,25 @@
 var searchData=
 [
-  ['queue_2942',['queue',['http://en.cppreference.com/w/cpp/container/queue.html',1,'std']]]
+  ['rational_1074',['Rational',['../classSymEngine_1_1Rational.html',1,'SymEngine']]],
+  ['rationals_1075',['Rationals',['../classSymEngine_1_1Rationals.html',1,'SymEngine']]],
+  ['rationalvisitor_1076',['RationalVisitor',['../classSymEngine_1_1RationalVisitor.html',1,'SymEngine']]],
+  ['rcpbasicawareinputarchive_1077',['RCPBasicAwareInputArchive',['../classSymEngine_1_1RCPBasicAwareInputArchive.html',1,'SymEngine']]],
+  ['rcpbasicawareoutputarchive_1078',['RCPBasicAwareOutputArchive',['../classSymEngine_1_1RCPBasicAwareOutputArchive.html',1,'SymEngine']]],
+  ['rcpbasichash_1079',['RCPBasicHash',['../structSymEngine_1_1RCPBasicHash.html',1,'SymEngine']]],
+  ['rcpbasickeyeq_1080',['RCPBasicKeyEq',['../structSymEngine_1_1RCPBasicKeyEq.html',1,'SymEngine']]],
+  ['rcpbasickeyless_1081',['RCPBasicKeyLess',['../structSymEngine_1_1RCPBasicKeyLess.html',1,'SymEngine']]],
+  ['rcpintegerkeyless_1082',['RCPIntegerKeyLess',['../structSymEngine_1_1RCPIntegerKeyLess.html',1,'SymEngine']]],
+  ['realdouble_1083',['RealDouble',['../classSymEngine_1_1RealDouble.html',1,'SymEngine']]],
+  ['realimagvisitor_1084',['RealImagVisitor',['../classSymEngine_1_1RealImagVisitor.html',1,'SymEngine']]],
+  ['realmpfr_1085',['RealMPFR',['../classSymEngine_1_1RealMPFR.html',1,'SymEngine']]],
+  ['reals_1086',['Reals',['../classSymEngine_1_1Reals.html',1,'SymEngine']]],
+  ['realvisitor_1087',['RealVisitor',['../classSymEngine_1_1RealVisitor.html',1,'SymEngine']]],
+  ['rebuildvisitor_1088',['RebuildVisitor',['../classSymEngine_1_1RebuildVisitor.html',1,'SymEngine']]],
+  ['refinevisitor_1089',['RefineVisitor',['../classSymEngine_1_1RefineVisitor.html',1,'SymEngine']]],
+  ['relational_1090',['Relational',['../classSymEngine_1_1Relational.html',1,'SymEngine']]],
+  ['remove_5freference_1091',['remove_reference',['../structSymEngine_1_1remove__reference.html',1,'SymEngine']]],
+  ['remove_5freference_3c_20t_20_26_20_3e_1092',['remove_reference&lt; T &amp; &gt;',['../structSymEngine_1_1remove__reference_3_01T_01_6_01_4.html',1,'SymEngine']]],
+  ['rewriteascos_1093',['RewriteAsCos',['../classSymEngine_1_1RewriteAsCos.html',1,'SymEngine']]],
+  ['rewriteasexp_1094',['RewriteAsExp',['../classSymEngine_1_1RewriteAsExp.html',1,'SymEngine']]],
+  ['rewriteassin_1095',['RewriteAsSin',['../classSymEngine_1_1RewriteAsSin.html',1,'SymEngine']]]
 ];

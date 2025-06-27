@@ -139,7 +139,7 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keywordflow">return</span> arg_-&gt;compare(*down_cast&lt;const ConjugateMatrix &amp;&gt;(o).arg_);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;}</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConjugateMatrix.html#a21a5cb11f06c50515c629f79b5d2b27e">   42</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1ConjugateMatrix.html#a21a5cb11f06c50515c629f79b5d2b27e">ConjugateMatrix::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConjugateMatrix.html#a21a5cb11f06c50515c629f79b5d2b27e">   42</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1ConjugateMatrix.html#a21a5cb11f06c50515c629f79b5d2b27e">ConjugateMatrix::get_args</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordflow">return</span> {arg_};</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
@@ -173,7 +173,7 @@ $(function() {
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1DiagonalMatrix.html">DiagonalMatrix</a> &amp;x)</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    {</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keyword">auto</span> diag = x.get_container();</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> conj(diag.size());</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;        vec_basic conj(diag.size());</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; diag.size(); i++) {</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            conj[i] = <a class="code" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">conjugate</a>(diag[i]);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        }</div>
@@ -183,7 +183,7 @@ $(function() {
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImmutableDenseMatrix.html">ImmutableDenseMatrix</a> &amp;x)</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    {</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        <span class="keyword">auto</span> values = x.get_values();</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> conj(values.size());</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        vec_basic conj(values.size());</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; values.size(); i++) {</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;            conj[i] = <a class="code" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">conjugate</a>(values[i]);</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        }</div>
@@ -206,20 +206,20 @@ $(function() {
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixAdd.html">MatrixAdd</a> &amp;x)</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    {</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> conj;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        vec_basic conj;</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : x.get_terms()) {</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;            e-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            conj.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(conjugate_);</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            conj.push_back(conjugate_);</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        }</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        conjugate_ = make_rcp&lt;const MatrixAdd&gt;(conj);</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    }</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1HadamardProduct.html">HadamardProduct</a> &amp;x)</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> conj;</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;        vec_basic conj;</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : x.get_factors()) {</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;            e-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            conj.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(conjugate_);</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;            conj.push_back(conjugate_);</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        }</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;        conjugate_ = make_rcp&lt;const HadamardProduct&gt;(conj);</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
@@ -257,8 +257,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1ZeroMatrix_html"><div class="ttname"><a href="classSymEngine_1_1ZeroMatrix.html">SymEngine::ZeroMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="zero__matrix_8h_source.html#l00010">zero_matrix.h:11</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_af02f97d82354b66c939ae206f0057edd"><div class="ttname"><a href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00149">functions.cpp:149</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

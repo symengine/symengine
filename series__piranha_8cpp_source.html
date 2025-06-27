@@ -103,11 +103,11 @@ $(function() {
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;{</div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> varname,</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;URatPSeriesPiranha::URatPSeriesPiranha(pp_t p, <span class="keyword">const</span> std::string varname,</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;                                       <span class="keyword">const</span> <span class="keywordtype">unsigned</span> degree)</div>
-<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    : SeriesBase(<a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(p), varname, degree){SYMENGINE_ASSIGN_TYPEID()} RCP&lt;</div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    : SeriesBase(std::move(p), varname, degree){SYMENGINE_ASSIGN_TYPEID()} RCP&lt;</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;        <span class="keyword">const</span> URatPSeriesPiranha&gt; URatPSeriesPiranha::</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;          series(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;t, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;x,</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;          series(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;t, <span class="keyword">const</span> std::string &amp;x,</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;                 <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec)</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    SeriesVisitor&lt;pp_t, piranha::rational, URatPSeriesPiranha&gt; visitor(pp_t(x),</div>
@@ -151,7 +151,7 @@ $(function() {
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keywordflow">return</span> r;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;}</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;pp_t URatPSeriesPiranha::var(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;pp_t URatPSeriesPiranha::var(<span class="keyword">const</span> std::string &amp;s)</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;{</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> pp_t(s);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
@@ -175,7 +175,7 @@ $(function() {
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        <span class="keywordflow">if</span> (it.first != 0) {</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            rational_class cl_rat(it.first.get_mpq_view());</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            canonicalize(cl_rat);</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            RCP&lt;const Number&gt; co_basic = Rational::from_mpq(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(cl_rat));</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            RCP&lt;const Number&gt; co_basic = Rational::from_mpq(std::move(cl_rat));</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keyword">auto</span> term = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a>(</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                SymEngine::pow(x, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a>(it.second.degree())),</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                co_basic);</div>
@@ -184,7 +184,7 @@ $(function() {
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            Add::coef_dict_add_term(outArg(co_basic), dict_, one, term);</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    }</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(zcoef, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict_));</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(zcoef, std::move(dict_));</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;umap_int_basic URatPSeriesPiranha::as_dict()<span class="keyword"> const</span></div>
@@ -193,7 +193,7 @@ $(function() {
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : p_) {</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span> (it.first != 0) {</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            rational_class cl_rat(it.first.get_mpq_view());</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            RCP&lt;const Basic&gt; basic = Rational::from_mpq(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(cl_rat));</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            RCP&lt;const Basic&gt; basic = Rational::from_mpq(std::move(cl_rat));</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            map[it.second.degree()] = basic;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        }</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    }</div>
@@ -203,7 +203,7 @@ $(function() {
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;RCP&lt;const Basic&gt; URatPSeriesPiranha::get_coeff(<span class="keywordtype">int</span> i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword"></span>{</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    rational_class cl_rat(p_.find_cf({i}).get_mpq_view());</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> Rational::from_mpq(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(cl_rat));</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> Rational::from_mpq(std::move(cl_rat));</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;pp_t URatPSeriesPiranha::mul(<span class="keyword">const</span> pp_t &amp;s, <span class="keyword">const</span> pp_t &amp;r, <span class="keywordtype">unsigned</span> prec)</div>
@@ -246,7 +246,7 @@ $(function() {
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;constant term is not an nth power&quot;</span>);</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        <span class="keywordflow">return</span> convert(cl_root);</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        RCP&lt;const Rational&gt; cterm = make_rcp&lt;const Rational&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(cl_rat));</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        RCP&lt;const Rational&gt; cterm = make_rcp&lt;const Rational&gt;(std::move(cl_rat));</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        RCP&lt;const Number&gt; cout;</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        res = cterm-&gt;nth_root(outArg(cout), n);</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <span class="keywordflow">if</span> (not res)</div>
@@ -274,12 +274,12 @@ $(function() {
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    <span class="keywordflow">return</span> ret;</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;UPSeriesPiranha::UPSeriesPiranha(p_expr p, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> varname,</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;UPSeriesPiranha::UPSeriesPiranha(p_expr p, <span class="keyword">const</span> std::string varname,</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;                                 <span class="keyword">const</span> <span class="keywordtype">unsigned</span> degree)</div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    : SeriesBase(<a class="code" href="namespacestd.html">std</a>::<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">move</a>(p), varname, degree){SYMENGINE_ASSIGN_TYPEID()}</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    : SeriesBase(std::move(p), varname, degree){SYMENGINE_ASSIGN_TYPEID()}</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160; </div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;      RCP&lt;const UPSeriesPiranha&gt; UPSeriesPiranha::series(</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;          <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;t, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;x, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec)</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;          <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;t, <span class="keyword">const</span> std::string &amp;x, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec)</div>
 <div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;{</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;    SeriesVisitor&lt;p_expr, Expression, UPSeriesPiranha&gt; visitor(p_expr(x), x,</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;                                                               prec);</div>
@@ -308,7 +308,7 @@ $(function() {
 <div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;    <span class="keywordflow">return</span> (p_.hash() &lt; s.p_.hash()) ? -1 : 1;</div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;}</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;p_expr UPSeriesPiranha::var(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s)</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;p_expr UPSeriesPiranha::var(<span class="keyword">const</span> std::string &amp;s)</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;{</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    <span class="keywordflow">return</span> p_expr(s);</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;}</div>
@@ -332,7 +332,7 @@ $(function() {
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            Add::coef_dict_add_term(outArg(coef), dict_, one, term);</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        }</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    }</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(one, <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(dict_));</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    <span class="keywordflow">return</span> Add::from_dict(one, std::move(dict_));</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;}</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160; </div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;umap_int_basic UPSeriesPiranha::as_dict()<span class="keyword"> const</span></div>
@@ -468,8 +468,6 @@ $(function() {
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aa9a8ead88fadfd214371b73a3a0f34fb">SymEngine::log</a>(c.get_basic());</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;}</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a0a98ed704f86e941a5086a46465b2a5b"><div class="ttname"><a href="namespaceSymEngine.html#a0a98ed704f86e941a5086a46465b2a5b">SymEngine::acos</a></div><div class="ttdeci">RCP&lt; const Basic &gt; acos(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize ACos:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01402">functions.cpp:1402</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
@@ -489,7 +487,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_ade8c4c369dcdd2f96fa0c5f98662ef33"><div class="ttname"><a href="namespaceSymEngine.html#ade8c4c369dcdd2f96fa0c5f98662ef33">SymEngine::rational</a></div><div class="ttdeci">RCP&lt; const Number &gt; rational(long n, long d)</div><div class="ttdoc">convenience creator from two longs</div><div class="ttdef"><b>Definition:</b> <a href="rational_8h_source.html#l00328">rational.h:328</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ae24e5db43005e29f95bf5ecc8789f812"><div class="ttname"><a href="namespaceSymEngine.html#ae24e5db43005e29f95bf5ecc8789f812">SymEngine::sinh</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sinh(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sinh:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02127">functions.cpp:2127</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_af953f16601b3943d30af2fa898adb593"><div class="ttname"><a href="namespaceSymEngine.html#af953f16601b3943d30af2fa898adb593">SymEngine::sin</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sin(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sin:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00874">functions.cpp:874</a></div></div>
-<div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdoc">STL namespace.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

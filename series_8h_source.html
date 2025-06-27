@@ -114,10 +114,10 @@ $(function() {
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; as_basic() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">virtual</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_int_basic</a> as_dict() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">virtual</span> umap_int_basic as_dict() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keyword">virtual</span> RCP&lt;const Basic&gt; get_coeff(<span class="keywordtype">int</span>) <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">unsigned</span> get_degree() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;get_var() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">virtual</span> <span class="keyword">const</span> std::string &amp;get_var() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;};</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Poly, <span class="keyword">typename</span> Coeff, <span class="keyword">typename</span> Series&gt;</div>
@@ -125,12 +125,12 @@ $(function() {
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;{</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">const</span> Poly p_;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> var_;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">const</span> std::string var_;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">unsigned</span> degree_;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">inline</span> <a class="code" href="classSymEngine_1_1SeriesBase.html">SeriesBase</a>(Poly p, <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> var, <span class="keywordtype">unsigned</span> degree)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        : p_(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(p)), var_(var), degree_(degree)</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keyword">inline</span> <a class="code" href="classSymEngine_1_1SeriesBase.html">SeriesBase</a>(Poly p, std::string var, <span class="keywordtype">unsigned</span> degree)</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        : p_(std::move(p)), var_(var), degree_(degree)</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">unsigned</span> get_degree()<span class="keyword"> const override</span></div>
@@ -138,7 +138,7 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordflow">return</span> degree_;</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;get_var()<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> std::string &amp;get_var()<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">return</span> var_;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
@@ -189,7 +189,7 @@ $(function() {
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Series&gt;(other)) {</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            <span class="keyword">const</span> Series &amp;o = down_cast&lt;const Series &amp;&gt;(other);</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keyword">auto</span> deg = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(degree_, o.degree_);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;            <span class="keyword">auto</span> deg = std::min(degree_, o.degree_);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            <span class="keywordflow">if</span> (var_ != o.var_) {</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;                <span class="keywordflow">throw</span> NotImplementedError(</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;                    <span class="stringliteral">&quot;Multivariate Series not implemented&quot;</span>);</div>
@@ -207,7 +207,7 @@ $(function() {
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Series&gt;(other)) {</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;            <span class="keyword">const</span> Series &amp;o = down_cast&lt;const Series &amp;&gt;(other);</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">auto</span> deg = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(degree_, o.degree_);</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            <span class="keyword">auto</span> deg = std::min(degree_, o.degree_);</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;            <span class="keywordflow">if</span> (var_ != o.var_) {</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                <span class="keywordflow">throw</span> NotImplementedError(</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                    <span class="stringliteral">&quot;Multivariate Series not implemented&quot;</span>);</div>
@@ -227,7 +227,7 @@ $(function() {
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;        Poly p;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Series&gt;(other)) {</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            <span class="keyword">const</span> Series &amp;o = down_cast&lt;const Series &amp;&gt;(other);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            deg = <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a>(deg, o.degree_);</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            deg = std::min(deg, o.degree_);</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            <span class="keywordflow">if</span> (var_ != o.var_) {</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                <span class="keywordflow">throw</span> NotImplementedError(</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                    <span class="stringliteral">&quot;Multivariate Series not implemented&quot;</span>);</div>
@@ -272,23 +272,23 @@ $(function() {
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;        }</div>
 <div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    }</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list.html">std::list&lt;unsigned int&gt;</a> &amp;step_list(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec)</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">const</span> std::list&lt;unsigned int&gt; &amp;step_list(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec)</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    {</div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="keyword">static</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list.html">std::list&lt;unsigned int&gt;</a> steps;</div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keywordflow">if</span> (not steps.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list/empty.html">empty</a>()) {</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <span class="keywordflow">if</span> (*(steps.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list/rbegin.html">rbegin</a>()) == prec)</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="keyword">static</span> std::list&lt;unsigned int&gt; steps;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keywordflow">if</span> (not steps.empty()) {</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            <span class="keywordflow">if</span> (*(steps.rbegin()) == prec)</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;                <span class="keywordflow">return</span> steps;</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                steps.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list/clear.html">clear</a>();</div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;                steps.clear();</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;        }</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> tprec = prec;</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;        <span class="keywordflow">while</span> (tprec &gt; 4) {</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;            tprec = 2 + tprec / 2;</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            steps.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list/push_front.html">push_front</a>(tprec);</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;            steps.push_front(tprec);</div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        }</div>
-<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        steps.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list/push_front.html">push_front</a>(2);</div>
-<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        steps.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/list/push_back.html">push_back</a>(prec);</div>
+<div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        steps.push_front(2);</div>
+<div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        steps.push_back(prec);</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;        <span class="keywordflow">return</span> steps;</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    }</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160; </div>
@@ -816,7 +816,6 @@ $(function() {
 <div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160; </div>
 <div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1EnableRCPFromThis_html_aed6b2bd25fd3fd124a5e97427f8372f2"><div class="ttname"><a href="classSymEngine_1_1EnableRCPFromThis.html#aed6b2bd25fd3fd124a5e97427f8372f2">SymEngine::EnableRCPFromThis::rcp_from_this</a></div><div class="ttdeci">RCP&lt; T &gt; rcp_from_this()</div><div class="ttdoc">Get RCP&lt;T&gt; pointer to self (it will cast the pointer to T)</div><div class="ttdef"><b>Definition:</b> <a href="symengine__rcp_8h_source.html#l00282">symengine_rcp.h:282</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Number_html"><div class="ttname"><a href="classSymEngine_1_1Number.html">SymEngine::Number</a></div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00018">number.h:19</a></div></div>
@@ -838,19 +837,10 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1SeriesBase_html_ac9582e5f1ab949aefcfa987154aae8d7"><div class="ttname"><a href="classSymEngine_1_1SeriesBase.html#ac9582e5f1ab949aefcfa987154aae8d7">SymEngine::SeriesBase::is_zero</a></div><div class="ttdeci">bool is_zero() const override</div><div class="ttdef"><b>Definition:</b> <a href="series_8h_source.html#l00055">series.h:55</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1SeriesBase_html_aee3e7b722bcc8139f408c55b0ca3bfe8"><div class="ttname"><a href="classSymEngine_1_1SeriesBase.html#aee3e7b722bcc8139f408c55b0ca3bfe8">SymEngine::SeriesBase::is_complex</a></div><div class="ttdeci">bool is_complex() const override</div><div class="ttdef"><b>Definition:</b> <a href="series_8h_source.html#l00080">series.h:80</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1SeriesCoeffInterface_html"><div class="ttname"><a href="classSymEngine_1_1SeriesCoeffInterface.html">SymEngine::SeriesCoeffInterface</a></div><div class="ttdef"><b>Definition:</b> <a href="series_8h_source.html#l00017">series.h:18</a></div></div>
-<div class="ttc" id="aclear_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/list/clear.html">std::list::clear</a></div><div class="ttdeci">T clear(T... args)</div></div>
-<div class="ttc" id="aempty_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/list/empty.html">std::list::empty</a></div><div class="ttdeci">T empty(T... args)</div></div>
 <div class="ttc" id="ainteger_8h_html"><div class="ttname"><a href="integer_8h.html">integer.h</a></div></div>
-<div class="ttc" id="alist_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/list.html">std::list</a></div></div>
-<div class="ttc" id="amin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/min.html">std::min</a></div><div class="ttdeci">T min(T... args)</div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a354804803424321111913a4071ca837e"><div class="ttname"><a href="namespaceSymEngine.html#a354804803424321111913a4071ca837e">SymEngine::sign</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sign(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Sign.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00527">functions.cpp:527</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aeb3fb08495ed47a074a19b8bbacb3db2"><div class="ttname"><a href="namespaceSymEngine.html#aeb3fb08495ed47a074a19b8bbacb3db2">SymEngine::neg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; neg(const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Negation.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00443">mul.cpp:443</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/list/push_back.html">std::list::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="apush_front_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/list/push_front.html">std::list::push_front</a></div><div class="ttdeci">T push_front(T... args)</div></div>
-<div class="ttc" id="arbegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/list/rbegin.html">std::list::rbegin</a></div><div class="ttdeci">T rbegin(T... args)</div></div>
-<div class="ttc" id="aunordered_map_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

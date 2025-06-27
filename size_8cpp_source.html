@@ -111,7 +111,7 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    RCP&lt;const Basic&gt; nrows_;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    RCP&lt;const Basic&gt; ncols_;</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> all_same_size(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;vec)</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    <span class="keywordtype">void</span> all_same_size(<span class="keyword">const</span> vec_basic &amp;vec)</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    {</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;        vec[0]-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;        <span class="keyword">auto</span> rows = nrows_;</div>
@@ -126,7 +126,7 @@ $(function() {
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;        <span class="comment">// 3. nullptr (meaning unknown)</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;        <span class="comment">// Note that all elements must have known same size or indeterminate</span></div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="comment">// size diff because of canonicalization</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 1; i &lt; vec.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>(); i++) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 1; i &lt; vec.size(); i++) {</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;            vec[i]-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;            <span class="keywordflow">if</span> ((!nrows_.is_null() &amp;&amp; is_a&lt;Integer&gt;(*nrows_))</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                || (rows.is_null() &amp;&amp; !nrows_.is_null())) {</div>
@@ -174,7 +174,7 @@ $(function() {
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1DiagonalMatrix.html">DiagonalMatrix</a> &amp;x)</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        nrows_ = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(x.get_container().<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>());</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        nrows_ = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(x.get_container().size());</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        ncols_ = nrows_;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
@@ -201,25 +201,24 @@ $(function() {
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keyword">auto</span> vec = x.get_factors();</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        vec[0]-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        <span class="keyword">auto</span> row = nrows_;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        vec.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>()-&gt;accept(*<span class="keyword">this</span>);</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        vec.back()-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        nrows_ = row;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    }</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;RCP&lt;const Basic&gt;</a>, RCP&lt;const Basic&gt;&gt; apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixExpr.html">MatrixExpr</a> &amp;s)</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    std::pair&lt;RCP&lt;const Basic&gt;, RCP&lt;const Basic&gt;&gt; apply(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixExpr.html">MatrixExpr</a> &amp;s)</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    {</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;        s.accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(nrows_, ncols_);</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        <span class="keywordflow">return</span> std::make_pair(nrows_, ncols_);</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    }</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;};</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;RCP&lt;const Basic&gt;</a>, RCP&lt;const Basic&gt;&gt; size(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixExpr.html">MatrixExpr</a> &amp;m)</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;std::pair&lt;RCP&lt;const Basic&gt;, RCP&lt;const Basic&gt;&gt; size(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixExpr.html">MatrixExpr</a> &amp;m)</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;{</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <a class="code" href="classSymEngine_1_1MatrixSizeVisitor.html">MatrixSizeVisitor</a> visitor;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> visitor.apply(m);</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="aback_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/back.html">std::vector::back</a></div><div class="ttdeci">T back(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1BaseVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BaseVisitor.html">SymEngine::BaseVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00047">visitor.h:48</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1DiagonalMatrix_html"><div class="ttname"><a href="classSymEngine_1_1DiagonalMatrix.html">SymEngine::DiagonalMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="diagonal__matrix_8h_source.html#l00010">diagonal_matrix.h:11</a></div></div>
@@ -232,12 +231,8 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1MatrixSizeVisitor_html"><div class="ttname"><a href="classSymEngine_1_1MatrixSizeVisitor.html">SymEngine::MatrixSizeVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="size_8cpp_source.html#l00008">size.cpp:9</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixSymbol_html"><div class="ttname"><a href="classSymEngine_1_1MatrixSymbol.html">SymEngine::MatrixSymbol</a></div><div class="ttdef"><b>Definition:</b> <a href="matrix__symbol_8h_source.html#l00010">matrix_symbol.h:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ZeroMatrix_html"><div class="ttname"><a href="classSymEngine_1_1ZeroMatrix.html">SymEngine::ZeroMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="zero__matrix_8h_source.html#l00010">zero_matrix.h:11</a></div></div>
-<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
-<div class="ttc" id="apair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

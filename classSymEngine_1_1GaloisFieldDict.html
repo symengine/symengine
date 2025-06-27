@@ -112,7 +112,7 @@ $(function() {
 <div class="center"><img src="classSymEngine_1_1GaloisFieldDict__coll__graph.png" border="0" usemap="#aSymEngine_1_1GaloisFieldDict_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1GaloisFieldDict_coll__map" id="aSymEngine_1_1GaloisFieldDict_coll__map">
 <area shape="rect" title=" " alt="" coords="5,210,206,239"/>
-<area shape="rect" target="_parent" href="http://en.cppreference.com/w/cpp/container/vector.html" title=" " alt="" coords="30,99,181,145"/>
+<area shape="rect" title=" " alt="" coords="30,99,181,145"/>
 <area shape="rect" title=" " alt="" coords="52,5,159,34"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
@@ -131,7 +131,7 @@ Public Member Functions</h2></td></tr>
 &#160;</td><td class="memItemRight" valign="bottom"><b>GaloisFieldDict</b> (const int &amp;i, const integer_class &amp;<a class="el" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</td></tr>
 <tr class="separator:aa62658513fd159505c3391c19e911ae7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c27f33d91553f12ee2beea36a44e9a8"><td class="memItemLeft" align="right" valign="top"><a id="a6c27f33d91553f12ee2beea36a44e9a8"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>GaloisFieldDict</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_uint_mpz</a> &amp;p, const integer_class &amp;<a class="el" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>GaloisFieldDict</b> (const map_uint_mpz &amp;p, const integer_class &amp;<a class="el" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</td></tr>
 <tr class="separator:a6c27f33d91553f12ee2beea36a44e9a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ac6010396ed1e5017691631c306876c"><td class="memItemLeft" align="right" valign="top"><a id="a0ac6010396ed1e5017691631c306876c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>GaloisFieldDict</b> (const integer_class &amp;i, const integer_class &amp;<a class="el" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</td></tr>
@@ -173,13 +173,13 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>gf_monic</b> (integer
 integer_class&#160;</td><td class="memItemRight" valign="bottom"><b>gf_eval</b> (const integer_class &amp;a) const</td></tr>
 <tr class="separator:a42a53d598b8e4430c3bebf394b117153"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3011a6e5873f69a106bbb564cfeb2d2b"><td class="memItemLeft" align="right" valign="top"><a id="a3011a6e5873f69a106bbb564cfeb2d2b"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_integer_class</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_multi_eval</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_integer_class</a> &amp;v) const</td></tr>
+vec_integer_class&#160;</td><td class="memItemRight" valign="bottom"><b>gf_multi_eval</b> (const vec_integer_class &amp;v) const</td></tr>
 <tr class="separator:a3011a6e5873f69a106bbb564cfeb2d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf795d309ec8c166b4de1069d296ef54"><td class="memItemLeft" align="right" valign="top"><a id="abf795d309ec8c166b4de1069d296ef54"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>gf_is_sqf</b> () const</td></tr>
 <tr class="separator:abf795d309ec8c166b4de1069d296ef54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f95720425ff1b5b43f579c80390c350"><td class="memItemLeft" align="right" valign="top"><a id="a6f95720425ff1b5b43f579c80390c350"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_sqf_list</b> () const</td></tr>
+std::vector&lt; std::pair&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_sqf_list</b> () const</td></tr>
 <tr class="separator:a6f95720425ff1b5b43f579c80390c350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b0a065133ec8c6db888f014a32ace08"><td class="memItemLeft" align="right" valign="top"><a id="a7b0a065133ec8c6db888f014a32ace08"></a>
 <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_sqf_part</b> () const</td></tr>
@@ -188,46 +188,46 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>gf_is_sqf</b> () cons
 <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_compose_mod</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;g, const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;h) const</td></tr>
 <tr class="separator:ab99aece9e24291c56eac2abfb46fedc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11e269afc37e09818333dd979783633f"><td class="memItemLeft" align="right" valign="top"><a id="a11e269afc37e09818333dd979783633f"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_frobenius_monomial_base</b> () const</td></tr>
+std::vector&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_frobenius_monomial_base</b> () const</td></tr>
 <tr class="separator:a11e269afc37e09818333dd979783633f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b80078070c1837170a028f0c9230a81"><td class="memItemLeft" align="right" valign="top"><a id="a3b80078070c1837170a028f0c9230a81"></a>
 <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_pow_mod</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;f, const unsigned long &amp;n) const</td></tr>
 <tr class="separator:a3b80078070c1837170a028f0c9230a81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a74b1ea9de202a50f3b7282bbf5c7fa99"><td class="memItemLeft" align="right" valign="top"><a id="a74b1ea9de202a50f3b7282bbf5c7fa99"></a>
-<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_frobenius_map</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;g, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt; &amp;b) const</td></tr>
+<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_frobenius_map</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;g, const std::vector&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt; &amp;b) const</td></tr>
 <tr class="separator:a74b1ea9de202a50f3b7282bbf5c7fa99"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:addf3d4c4829e8e1a48806e0260bf3505"><td class="memItemLeft" align="right" valign="top"><a id="addf3d4c4829e8e1a48806e0260bf3505"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_trace_map</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;a, const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;b, const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;c, const unsigned long &amp;n) const</td></tr>
+std::pair&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_trace_map</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;a, const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;b, const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;c, const unsigned long &amp;n) const</td></tr>
 <tr class="separator:addf3d4c4829e8e1a48806e0260bf3505"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af25da917d161cd19f33cbb60fa9ceb74"><td class="memItemLeft" align="right" valign="top"><a id="af25da917d161cd19f33cbb60fa9ceb74"></a>
-<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_gf_trace_map</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;f, const unsigned long &amp;n, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt; &amp;b) const</td></tr>
+<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_gf_trace_map</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;f, const unsigned long &amp;n, const std::vector&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt; &amp;b) const</td></tr>
 <tr class="separator:af25da917d161cd19f33cbb60fa9ceb74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a70302ec9a8df5eb362993dbe378eb2f7"><td class="memItemLeft" align="right" valign="top"><a id="a70302ec9a8df5eb362993dbe378eb2f7"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_ddf_zassenhaus</b> () const</td></tr>
+std::vector&lt; std::pair&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_ddf_zassenhaus</b> () const</td></tr>
 <tr class="separator:a70302ec9a8df5eb362993dbe378eb2f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1dbfb4df7b0514f78df04df1dc585a4f"><td class="memItemLeft" align="right" valign="top"><a id="a1dbfb4df7b0514f78df04df1dc585a4f"></a>
-<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_gf_pow_pnm1d2</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;f, const unsigned &amp;n, const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt; &amp;b) const</td></tr>
+<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>_gf_pow_pnm1d2</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;f, const unsigned &amp;n, const std::vector&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &gt; &amp;b) const</td></tr>
 <tr class="separator:a1dbfb4df7b0514f78df04df1dc585a4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a1d49daa22cdb1f6967f92ab3185c26"><td class="memItemLeft" align="right" valign="top"><a id="a9a1d49daa22cdb1f6967f92ab3185c26"></a>
 <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>gf_random</b> (const unsigned int &amp;n_val, <a class="el" href="classSymEngine_1_1mp__randstate.html">mp_randstate</a> &amp;state) const</td></tr>
 <tr class="separator:a9a1d49daa22cdb1f6967f92ab3185c26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8a4715e1f090baa9445da48a2398fde"><td class="memItemLeft" align="right" valign="top"><a id="aa8a4715e1f090baa9445da48a2398fde"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_edf_zassenhaus</b> (const unsigned &amp;n) const</td></tr>
+std::set&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_edf_zassenhaus</b> (const unsigned &amp;n) const</td></tr>
 <tr class="separator:aa8a4715e1f090baa9445da48a2398fde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a11d320a9be0def386d8eb75867df4ae1"><td class="memItemLeft" align="right" valign="top"><a id="a11d320a9be0def386d8eb75867df4ae1"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_ddf_shoup</b> () const</td></tr>
+std::vector&lt; std::pair&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_ddf_shoup</b> () const</td></tr>
 <tr class="separator:a11d320a9be0def386d8eb75867df4ae1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9d150a2d5c11817285b54d55387b0027"><td class="memItemLeft" align="right" valign="top"><a id="a9d150a2d5c11817285b54d55387b0027"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_edf_shoup</b> (const unsigned &amp;n) const</td></tr>
+std::set&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_edf_shoup</b> (const unsigned &amp;n) const</td></tr>
 <tr class="separator:a9d150a2d5c11817285b54d55387b0027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e02ee3daf04dc07bd4cc393f0d92f66"><td class="memItemLeft" align="right" valign="top"><a id="a6e02ee3daf04dc07bd4cc393f0d92f66"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_zassenhaus</b> () const</td></tr>
+std::set&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_zassenhaus</b> () const</td></tr>
 <tr class="separator:a6e02ee3daf04dc07bd4cc393f0d92f66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a084dbaed723546e2dfcab142e9a9dccf"><td class="memItemLeft" align="right" valign="top"><a id="a084dbaed723546e2dfcab142e9a9dccf"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_shoup</b> () const</td></tr>
+std::set&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_shoup</b> () const</td></tr>
 <tr class="separator:a084dbaed723546e2dfcab142e9a9dccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0fd5879df34d83c4ace43b3d476397ba"><td class="memItemLeft" align="right" valign="top"><a id="a0fd5879df34d83c4ace43b3d476397ba"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; integer_class, <a class="elRef" href="http://en.cppreference.com/w/cpp/container/set.html">std::set</a>&lt; <a class="elRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a>&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt;, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_factor</b> () const</td></tr>
+std::pair&lt; integer_class, std::set&lt; std::pair&lt; <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>, unsigned &gt;, <a class="el" href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">DictLess</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>gf_factor</b> () const</td></tr>
 <tr class="separator:a0fd5879df34d83c4ace43b3d476397ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a874ccae72b53c9c6ad10ff74eeb646fa"><td class="memItemLeft" align="right" valign="top"><a id="a874ccae72b53c9c6ad10ff74eeb646fa"></a>
 <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;other) SYMENGINE_NOEXCEPT</td></tr>
@@ -284,7 +284,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const</t
 unsigned&#160;</td><td class="memItemRight" valign="bottom"><b>degree</b> () const</td></tr>
 <tr class="separator:ad17005c7a545fb4f0a6d2c41f1cfd4e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a139b215015b67f096dd5f0131a7a41dc"><td class="memItemLeft" align="right" valign="top"><a id="a139b215015b67f096dd5f0131a7a41dc"></a>
-const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; integer_class &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
+const std::vector&lt; integer_class &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get_dict</b> () const</td></tr>
 <tr class="separator:a139b215015b67f096dd5f0131a7a41dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb7d7ace7c619b0a39ebda7a70d17001"><td class="memItemLeft" align="right" valign="top"><a id="adb7d7ace7c619b0a39ebda7a70d17001"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>gf_istrip</b> ()</td></tr>
@@ -299,7 +299,7 @@ integer_class&#160;</td><td class="memItemRight" valign="bottom"><b>get_coeff</b
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac83033bb800e533ba18c6b60e6abf9c8"><td class="memItemLeft" align="right" valign="top"><a id="ac83033bb800e533ba18c6b60e6abf9c8"></a>
-static <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>from_vec</b> (const <a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; integer_class &gt; &amp;v, const integer_class &amp;modulo)</td></tr>
+static <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>from_vec</b> (const std::vector&lt; integer_class &gt; &amp;v, const integer_class &amp;modulo)</td></tr>
 <tr class="separator:ac83033bb800e533ba18c6b60e6abf9c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae33273b2b944d08d24196b345b274f21"><td class="memItemLeft" align="right" valign="top"><a id="ae33273b2b944d08d24196b345b274f21"></a>
 static <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mul</b> (const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;a, const <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;b)</td></tr>
@@ -311,7 +311,7 @@ static <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDi
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
 <tr class="memitem:a3202180e3cc1736d8f04b44061ad7ab4"><td class="memItemLeft" align="right" valign="top"><a id="a3202180e3cc1736d8f04b44061ad7ab4"></a>
-<a class="elRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt; integer_class &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dict_</b></td></tr>
+std::vector&lt; integer_class &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>dict_</b></td></tr>
 <tr class="separator:a3202180e3cc1736d8f04b44061ad7ab4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca81d7e4ecf43cd097636434f7f8e135"><td class="memItemLeft" align="right" valign="top"><a id="aca81d7e4ecf43cd097636434f7f8e135"></a>
 integer_class&#160;</td><td class="memItemRight" valign="bottom"><b>modulo_</b></td></tr>

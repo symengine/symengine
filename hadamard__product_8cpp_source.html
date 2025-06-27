@@ -135,9 +135,9 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(factors_, other.factors_);</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;}</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">bool</span> HadamardProduct::is_canonical(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> &amp;factors)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keywordtype">bool</span> HadamardProduct::is_canonical(<span class="keyword">const</span> vec_basic &amp;factors)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span> (factors.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/size.html">size</a>() &lt; 2) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">if</span> (factors.size() &lt; 2) {</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">size_t</span> num_diag = 0;</div>
@@ -177,7 +177,7 @@ $(function() {
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;const HadamardProduct&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">auto</span> container</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                = down_cast&lt;const HadamardProduct &amp;&gt;(*factor).get_factors();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            expanded.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/insert.html">insert</a>(expanded.end(), container.begin(), container.end());</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            expanded.insert(expanded.end(), container.begin(), container.end());</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            expanded.push_back(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        }</div>
@@ -201,7 +201,7 @@ $(function() {
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                vec_basic container;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; diag-&gt;get_container().size(); i++) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    container.push_back(</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                        <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(diag-&gt;get_container()[i],</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                            down_cast&lt;const DiagonalMatrix &amp;&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                .get_container()[i]));</div>
@@ -232,7 +232,7 @@ $(function() {
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="comment">// Multiply diagonal with dense matrix</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            vec_basic product;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; dense-&gt;nrows(); i++) {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                product.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(dense-&gt;get(i, i), diag-&gt;get(i)));</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                product.push_back(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(dense-&gt;get(i, i), diag-&gt;get(i)));</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            }</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            diag = make_rcp&lt;const DiagonalMatrix&gt;(product);</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        } <span class="keywordflow">else</span> {</div>
@@ -254,15 +254,11 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1HadamardProduct_html_a44b5880915fc9fed5bbd5eb5fddfda9a"><div class="ttname"><a href="classSymEngine_1_1HadamardProduct.html#a44b5880915fc9fed5bbd5eb5fddfda9a">SymEngine::HadamardProduct::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="hadamard__product_8cpp_source.html#l00013">hadamard_product.cpp:13</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1HadamardProduct_html_ac2c831ac56fe03c00cefc37395302fd8"><div class="ttname"><a href="classSymEngine_1_1HadamardProduct.html#ac2c831ac56fe03c00cefc37395302fd8">SymEngine::HadamardProduct::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="hadamard__product_8cpp_source.html#l00031">hadamard_product.cpp:31</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1HadamardProduct_html_adaf35de3052e2e14c6ebcbef3d7ff519"><div class="ttname"><a href="classSymEngine_1_1HadamardProduct.html#adaf35de3052e2e14c6ebcbef3d7ff519">SymEngine::HadamardProduct::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="hadamard__product_8cpp_source.html#l00022">hadamard_product.cpp:22</a></div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/insert.html">std::vector::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aaf56a84de825e1940da213fd1ae6ff65"><div class="ttname"><a href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">SymEngine::factor</a></div><div class="ttdeci">int factor(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n, double B1)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00371">ntheory.cpp:371</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/size.html">std::vector::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

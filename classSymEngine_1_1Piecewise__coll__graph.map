@@ -1,7 +1,6 @@
 <map id="SymEngine::Piecewise" name="SymEngine::Piecewise">
-<area shape="rect" id="node1" title=" " alt="" coords="609,55,776,84"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="357,15,494,44"/>
+<area shape="rect" id="node1" title=" " alt="" coords="545,66,713,95"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="293,14,430,43"/>
 <area shape="rect" id="node3" href="$classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
-<area shape="rect" id="node4" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/container/vector.html" title=" " alt="" coords="324,73,527,136"/>
-<area shape="rect" id="node5" href="/home/runner/work/symengine/symengine/docs/Doxygen/tags/cppreference-doxygen-web.tag.xml$cpp/utility/pair.html" title=" " alt="" coords="25,76,191,138"/>
+<area shape="rect" id="node4" title=" " alt="" coords="260,68,463,130"/>
 </map>

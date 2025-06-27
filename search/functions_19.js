@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['yield_4729',['yield',['http://en.cppreference.com/w/cpp/thread/yield.html',1,'std::this_thread']]]
+  ['_7eexpression_1581',['~Expression',['../classSymEngine_1_1Expression.html#aa392048f432062e1042ca72965e24463',1,'SymEngine::Expression']]]
 ];

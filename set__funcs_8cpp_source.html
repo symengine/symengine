@@ -155,17 +155,17 @@ $(function() {
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;x)</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;container = x.get_container();</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> v(container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(), container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> set_basic &amp;container = x.get_container();</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        vec_basic v(container.begin(), container.end());</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        sup_ = <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>(v);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    };</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    {</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> suprema;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        vec_basic suprema;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : x.get_container()) {</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            a-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            suprema.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(sup_);</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            suprema.push_back(sup_);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        }</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        sup_ = <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>(suprema);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    };</div>
@@ -235,17 +235,17 @@ $(function() {
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1FiniteSet.html">FiniteSet</a> &amp;x)</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    {</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;container = x.get_container();</div>
-<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> v(container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(), container.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>());</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keyword">const</span> set_basic &amp;container = x.get_container();</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        vec_basic v(container.begin(), container.end());</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        inf_ = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>(v);</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    };</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;    {</div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> infima;</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;        vec_basic infima;</div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : x.get_container()) {</div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            a-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            infima.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(inf_);</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            infima.push_back(inf_);</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        }</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        inf_ = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>(infima);</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    };</div>
@@ -341,17 +341,17 @@ $(function() {
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160; </div>
 <div class="line"><a name="l00242"></a><span class="lineno">  242</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
 <div class="line"><a name="l00243"></a><span class="lineno">  243</span>&#160;    {</div>
-<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> boundary_sets;</div>
-<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> &amp;sets = x.get_container();</div>
-<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = sets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); it != sets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>(); ++it) {</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_set</a> interior_sets;</div>
-<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> interit = sets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/begin.html">begin</a>(); interit != sets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/end.html">end</a>();</div>
+<div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160;        set_set boundary_sets;</div>
+<div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;        <span class="keyword">const</span> set_set &amp;sets = x.get_container();</div>
+<div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = sets.begin(); it != sets.end(); ++it) {</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;            set_set interior_sets;</div>
+<div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> interit = sets.begin(); interit != sets.end();</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                 ++interit) {</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;                <span class="keywordflow">if</span> (it != interit) {</div>
-<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                    interior_sets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(interior(**interit));</div>
+<div class="line"><a name="l00251"></a><span class="lineno">  251</span>&#160;                    interior_sets.insert(interior(**interit));</div>
 <div class="line"><a name="l00252"></a><span class="lineno">  252</span>&#160;                }</div>
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;            }</div>
-<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            boundary_sets.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set/insert.html">insert</a>(</div>
+<div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;            boundary_sets.insert(</div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;                set_complement(apply(**it), set_union(interior_sets)));</div>
 <div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;        }</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;        boundary_ = set_union(boundary_sets);</div>
@@ -394,7 +394,6 @@ $(function() {
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_SET_FUNCS_H</span></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/begin.html">std::set::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1BaseVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BaseVisitor.html">SymEngine::BaseVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00047">visitor.h:48</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1BoundaryVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BoundaryVisitor.html">SymEngine::BoundaryVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="set__funcs_8cpp_source.html#l00182">set_funcs.cpp:183</a></div></div>
@@ -415,9 +414,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1SupVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SupVisitor.html">SymEngine::SupVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="set__funcs_8cpp_source.html#l00010">set_funcs.cpp:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html"><div class="ttname"><a href="classSymEngine_1_1Union.html">SymEngine::Union</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00368">sets.h:369</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UniversalSet_html"><div class="ttname"><a href="classSymEngine_1_1UniversalSet.html">SymEngine::UniversalSet</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00082">sets.h:83</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/end.html">std::set::end</a></div><div class="ttdeci">T end(T... args)</div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
-<div class="ttc" id="ainsert_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set/insert.html">std::set::insert</a></div><div class="ttdeci">T insert(T... args)</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a20fa00efb8df384d548f63a448a6aeac"><div class="ttname"><a href="namespaceSymEngine.html#a20fa00efb8df384d548f63a448a6aeac">SymEngine::reals</a></div><div class="ttdeci">RCP&lt; const Reals &gt; reals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00560">sets.h:560</a></div></div>
@@ -428,9 +425,6 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_abbdc2f1f3c92c9560d10a5b7998e33e3"><div class="ttname"><a href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00602">sets.h:602</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac173c8dd31830a8392c91aa7143b0428"><div class="ttname"><a href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03659">functions.cpp:3659</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2d57ac420ac353f747eac11c3e3dba3"><div class="ttname"><a href="namespaceSymEngine.html#ac2d57ac420ac353f747eac11c3e3dba3">SymEngine::naturals0</a></div><div class="ttdeci">RCP&lt; const Naturals0 &gt; naturals0()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00584">sets.h:584</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
-<div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt; RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

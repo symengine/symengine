@@ -110,10 +110,10 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classSymEngine_1_1MatrixSymbol.html">   10</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1MatrixSymbol.html">MatrixSymbol</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1MatrixExpr.html">MatrixExpr</a></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;{</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> name_;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    std::string name_;</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classSymEngine_1_1MatrixSymbol.html">MatrixSymbol</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name) : name_(name)</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="code" href="classSymEngine_1_1MatrixSymbol.html">MatrixSymbol</a>(<span class="keyword">const</span> std::string &amp;name) : name_(name)</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;        SYMENGINE_ASSIGN_TYPEID();</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    }</div>
@@ -123,25 +123,24 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1MatrixSymbol.html#ac81ec3b5ea169c1b2d3a2a60c87deba9">__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1MatrixSymbol.html#ace4fefc0fc8b9ca42133eec9b1981c0b">compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;get_name()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">const</span> std::string &amp;get_name()<span class="keyword"> const</span></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordflow">return</span> name_;</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classSymEngine_1_1MatrixSymbol.html#ab41f07b9d3d1931825184c00d0e11671">   31</a></span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_basic</a> <a class="code" href="classSymEngine_1_1MatrixSymbol.html#ab41f07b9d3d1931825184c00d0e11671">get_args</a>()<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="classSymEngine_1_1MatrixSymbol.html#ab41f07b9d3d1931825184c00d0e11671">   31</a></span>&#160;    vec_basic <a class="code" href="classSymEngine_1_1MatrixSymbol.html#ab41f07b9d3d1931825184c00d0e11671">get_args</a>()<span class="keyword"> const override</span></div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keywordflow">return</span> {};</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    }</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;RCP&lt;const MatrixExpr&gt; matrix_symbol(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name);</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;RCP&lt;const MatrixExpr&gt; matrix_symbol(<span class="keyword">const</span> std::string &amp;name);</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="abasic_8h_html_a945f4a70c3ac1d14cb0637ef01a81b69"><div class="ttname"><a href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a></div><div class="ttdeci">#define IMPLEMENT_TYPEID(SYMENGINE_ID)</div><div class="ttdoc">Inline members and functions.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00340">basic.h:340</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixExpr_html"><div class="ttname"><a href="classSymEngine_1_1MatrixExpr.html">SymEngine::MatrixExpr</a></div><div class="ttdef"><b>Definition:</b> <a href="matrix__expr_8h_source.html#l00007">matrix_expr.h:8</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixSymbol_html"><div class="ttname"><a href="classSymEngine_1_1MatrixSymbol.html">SymEngine::MatrixSymbol</a></div><div class="ttdef"><b>Definition:</b> <a href="matrix__symbol_8h_source.html#l00010">matrix_symbol.h:11</a></div></div>
@@ -150,7 +149,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1MatrixSymbol_html_ac81ec3b5ea169c1b2d3a2a60c87deba9"><div class="ttname"><a href="classSymEngine_1_1MatrixSymbol.html#ac81ec3b5ea169c1b2d3a2a60c87deba9">SymEngine::MatrixSymbol::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="matrix__symbol_8cpp_source.html#l00013">matrix_symbol.cpp:13</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixSymbol_html_ace4fefc0fc8b9ca42133eec9b1981c0b"><div class="ttname"><a href="classSymEngine_1_1MatrixSymbol.html#ace4fefc0fc8b9ca42133eec9b1981c0b">SymEngine::MatrixSymbol::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="matrix__symbol_8cpp_source.html#l00019">matrix_symbol.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; RCP&lt; const Basic &gt; &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

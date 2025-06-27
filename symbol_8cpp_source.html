@@ -104,7 +104,7 @@ $(function() {
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;{</div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
-<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Symbol.html#a4f529e5ef736ff90187f024d05e5d12d">    7</a></span>&#160;<a class="code" href="classSymEngine_1_1Symbol.html#a4f529e5ef736ff90187f024d05e5d12d">Symbol::Symbol</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name)</div>
+<div class="line"><a name="l00007"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Symbol.html#a4f529e5ef736ff90187f024d05e5d12d">    7</a></span>&#160;<a class="code" href="classSymEngine_1_1Symbol.html#a4f529e5ef736ff90187f024d05e5d12d">Symbol::Symbol</a>(<span class="keyword">const</span> std::string &amp;name)</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;    : name_{name} {SYMENGINE_ASSIGN_TYPEID()}</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
 <div class="line"><a name="l00010"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Symbol.html#a90c1397e481c4033a4532c7cef15a856">   10</a></span>&#160;      hash_t <a class="code" href="classSymEngine_1_1Symbol.html#a90c1397e481c4033a4532c7cef15a856">Symbol::__hash__</a>()<span class="keyword"> const</span></div>
@@ -144,7 +144,7 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classSymEngine_1_1Dummy.html#a5ef29edd29e741d1080474432630ea62">dummy_index</a> = <a class="code" href="classSymEngine_1_1Dummy.html#a6c57728a704f781aed8e37e7bcdb4ed1">count_</a>;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">Dummy::Dummy</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name) : <a class="code" href="classSymEngine_1_1Symbol.html">Symbol</a>(<span class="stringliteral">&quot;_&quot;</span> + name)</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<a class="code" href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">Dummy::Dummy</a>(<span class="keyword">const</span> std::string &amp;name) : <a class="code" href="classSymEngine_1_1Symbol.html">Symbol</a>(<span class="stringliteral">&quot;_&quot;</span> + name)</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;{</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <a class="code" href="classSymEngine_1_1Dummy.html#a6c57728a704f781aed8e37e7bcdb4ed1">count_</a> += 1;</div>
@@ -180,7 +180,6 @@ $(function() {
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Dummy_html"><div class="ttname"><a href="classSymEngine_1_1Dummy.html">SymEngine::Dummy</a></div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00050">symbol.h:51</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Dummy_html_a07f7a924273e4e419e009c711f091b01"><div class="ttname"><a href="classSymEngine_1_1Dummy.html#a07f7a924273e4e419e009c711f091b01">SymEngine::Dummy::Dummy</a></div><div class="ttdeci">Dummy()</div><div class="ttdoc">Dummy Constructors.</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8cpp_source.html#l00040">symbol.cpp:40</a></div></div>

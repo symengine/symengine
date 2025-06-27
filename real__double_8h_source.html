@@ -108,7 +108,7 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;RCP&lt;const Number&gt; number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a> x);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;RCP&lt;const Number&gt; number(std::complex&lt;double&gt; x);</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;RCP&lt;const Number&gt; number(<span class="keywordtype">double</span> x);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
 <div class="line"><a name="l00019"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html">   19</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1RealDouble.html">RealDouble</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1Number.html">Number</a></div>
@@ -175,7 +175,7 @@ $(function() {
 <div class="line"><a name="l00104"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a7dcca2e1e01901bea83d66af36ad0fa1">  104</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a7dcca2e1e01901bea83d66af36ad0fa1">addreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;        <span class="keywordflow">return</span> number(i</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                      + <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                      + std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                                             mp_get_d(other.imaginary_)));</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    }</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
@@ -214,7 +214,7 @@ $(function() {
 <div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a73835673fae3d83ebebc0078168fcbe9">  156</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a73835673fae3d83ebebc0078168fcbe9">subreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="keywordflow">return</span> number(i</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                      - <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;                      - std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                                             mp_get_d(other.imaginary_)));</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    }</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
@@ -253,7 +253,7 @@ $(function() {
 <div class="line"><a name="l00208"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#ab4e77cb97a4896de2649bd894dbfa9a3">  208</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#ab4e77cb97a4896de2649bd894dbfa9a3">rsubreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;        <span class="keywordflow">return</span> number(-i</div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                      + <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;                      + std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;                                             mp_get_d(other.imaginary_)));</div>
 <div class="line"><a name="l00213"></a><span class="lineno">  213</span>&#160;    }</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160; </div>
@@ -288,7 +288,7 @@ $(function() {
 <div class="line"><a name="l00253"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a18fe87fa8101fe53869511e8a74ec9bc">  253</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a18fe87fa8101fe53869511e8a74ec9bc">mulreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;        <span class="keywordflow">return</span> number(i</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                      * <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;                      * std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;                                             mp_get_d(other.imaginary_)));</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    }</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160; </div>
@@ -327,7 +327,7 @@ $(function() {
 <div class="line"><a name="l00305"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a12446157a312f33b537b1d705bf028f2">  305</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a12446157a312f33b537b1d705bf028f2">divreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00306"></a><span class="lineno">  306</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00307"></a><span class="lineno">  307</span>&#160;        <span class="keywordflow">return</span> number(i</div>
-<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                      / <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00308"></a><span class="lineno">  308</span>&#160;                      / std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;                                             mp_get_d(other.imaginary_)));</div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    }</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
@@ -365,7 +365,7 @@ $(function() {
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
 <div class="line"><a name="l00357"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#abbed67bca2b1615bdc70d77d8073a235">  357</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#abbed67bca2b1615bdc70d77d8073a235">rdivreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        <span class="keywordflow">return</span> number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;        <span class="keywordflow">return</span> number(std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;                                           mp_get_d(other.imaginary_))</div>
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;                      / i);</div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    }</div>
@@ -386,32 +386,32 @@ $(function() {
 <div class="line"><a name="l00381"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#ac0f674a930663228625e1ccbc007478d">  381</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#ac0f674a930663228625e1ccbc007478d">powreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const RealDouble&gt;(</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(i, mp_get_d(other.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>())));</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;            std::pow(i, mp_get_d(other.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>())));</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;    }</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160; </div>
 <div class="line"><a name="l00390"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a11a67780b9c20232ea342d9ef086e7be">  390</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a11a67780b9c20232ea342d9ef086e7be">powreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Rational.html">Rational</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;        <span class="keywordflow">if</span> (i &lt; 0) {</div>
-<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;            <span class="keywordflow">return</span> number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(i),</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;            <span class="keywordflow">return</span> number(std::pow(std::complex&lt;double&gt;(i),</div>
 <div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;                                   mp_get_d(other.<a class="code" href="classSymEngine_1_1Rational.html#a15bf869a37ed050af67cd083906684a7">as_rational_class</a>())));</div>
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;        }</div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const RealDouble&gt;(</div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(i, mp_get_d(other.<a class="code" href="classSymEngine_1_1Rational.html#a15bf869a37ed050af67cd083906684a7">as_rational_class</a>())));</div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;            std::pow(i, mp_get_d(other.<a class="code" href="classSymEngine_1_1Rational.html#a15bf869a37ed050af67cd083906684a7">as_rational_class</a>())));</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;    }</div>
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160; </div>
 <div class="line"><a name="l00403"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a2729e80d9128793b8e3dfe17f98a57dd">  403</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a2729e80d9128793b8e3dfe17f98a57dd">powreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;        <span class="keywordflow">return</span> number(</div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(i, <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;            std::pow(i, std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;                                             mp_get_d(other.imaginary_))));</div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;    }</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160; </div>
 <div class="line"><a name="l00413"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#adf0abb1efaba664da5842d89aaca753d">  413</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#adf0abb1efaba664da5842d89aaca753d">powreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1RealDouble.html">RealDouble</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <span class="keywordflow">if</span> (i &lt; 0) {</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <span class="keywordflow">return</span> number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(i), other.i));</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <span class="keywordflow">return</span> number(std::pow(std::complex&lt;double&gt;(i), other.i));</div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        }</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const RealDouble&gt;(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(i, other.i));</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const RealDouble&gt;(std::pow(i, other.i));</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    }</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160; </div>
 <div class="line"><a name="l00422"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#ab5681c4bab8360e8edce67cdd4fd0817">  422</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#ab5681c4bab8360e8edce67cdd4fd0817">pow</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Number.html">Number</a> &amp;other)<span class="keyword"> const override</span></div>
@@ -432,26 +432,26 @@ $(function() {
 <div class="line"><a name="l00440"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a81b0caa050bc1078d76e4734702d3919">  440</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a81b0caa050bc1078d76e4734702d3919">rpowreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        <span class="keywordflow">if</span> (other.<a class="code" href="classSymEngine_1_1Integer.html#a43b1303af17a3ddb21939aff7a9af13f">is_negative</a>()) {</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;            <span class="keywordflow">return</span> number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>()),</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                                   <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(i)));</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;            <span class="keywordflow">return</span> number(std::pow(mp_get_d(other.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>()),</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;                                   std::complex&lt;double&gt;(i)));</div>
 <div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        }</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const RealDouble&gt;(</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>()), i));</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;            std::pow(mp_get_d(other.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>()), i));</div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    }</div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160; </div>
 <div class="line"><a name="l00453"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a3d0cdedaba863e6e5d3b1f6603c6c292">  453</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a3d0cdedaba863e6e5d3b1f6603c6c292">rpowreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Rational.html">Rational</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;<span class="keyword">    </span>{</div>
 <div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;        <span class="keywordflow">if</span> (other.<a class="code" href="classSymEngine_1_1Rational.html#afc10acd611096f991747267057493f45">is_negative</a>()) {</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;            <span class="keywordflow">return</span> number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(i),</div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;            <span class="keywordflow">return</span> number(std::pow(std::complex&lt;double&gt;(i),</div>
 <div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;                                   mp_get_d(other.<a class="code" href="classSymEngine_1_1Rational.html#a15bf869a37ed050af67cd083906684a7">as_rational_class</a>())));</div>
 <div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;        }</div>
 <div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;const RealDouble&gt;(</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;            <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Rational.html#a15bf869a37ed050af67cd083906684a7">as_rational_class</a>()), i));</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;            std::pow(mp_get_d(other.<a class="code" href="classSymEngine_1_1Rational.html#a15bf869a37ed050af67cd083906684a7">as_rational_class</a>()), i));</div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;    }</div>
 <div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160; </div>
 <div class="line"><a name="l00466"></a><span class="lineno"><a class="line" href="classSymEngine_1_1RealDouble.html#a67b559afd0896f0c60258a17714059e9">  466</a></span>&#160;    RCP&lt;const Number&gt; <a class="code" href="classSymEngine_1_1RealDouble.html#a67b559afd0896f0c60258a17714059e9">rpowreal</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complex.html">Complex</a> &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keywordflow">return</span> number(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt;double&gt;</a>(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keywordflow">return</span> number(std::pow(std::complex&lt;double&gt;(mp_get_d(other.<a class="code" href="classSymEngine_1_1Complex.html#a41dc778c2cb9bfa284537d58677b7e7a">real_</a>),</div>
 <div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;                                                    mp_get_d(other.imaginary_)),</div>
 <div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;                               i));</div>
 <div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;    }</div>
@@ -542,9 +542,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1RealDouble_html_aecb8d59da57bedd29809cea4fa2e30fb"><div class="ttname"><a href="classSymEngine_1_1RealDouble.html#aecb8d59da57bedd29809cea4fa2e30fb">SymEngine::RealDouble::RealDouble</a></div><div class="ttdeci">RealDouble(double i)</div><div class="ttdoc">Constructor of RealDouble class.</div><div class="ttdef"><b>Definition:</b> <a href="real__double_8cpp_source.html#l00012">real_double.cpp:12</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1RealDouble_html_af04fbbffb15400a2183fee7b5867b8cc"><div class="ttname"><a href="classSymEngine_1_1RealDouble.html#af04fbbffb15400a2183fee7b5867b8cc">SymEngine::RealDouble::divreal</a></div><div class="ttdeci">RCP&lt; const Number &gt; divreal(const Rational &amp;other) const</div><div class="ttdef"><b>Definition:</b> <a href="real__double_8h_source.html#l00296">real_double.h:296</a></div></div>
 <div class="ttc" id="acomplex_8h_html"><div class="ttname"><a href="complex_8h.html">complex.h</a></div></div>
-<div class="ttc" id="acomplex_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/complex.html">std::complex&lt; double &gt;</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="apow_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a></div><div class="ttdeci">T pow(T... args)</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

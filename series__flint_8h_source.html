@@ -117,7 +117,7 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    : <span class="keyword">public</span> SeriesBase&lt;fqp_t, fmpq_wrapper, URatPSeriesFlint&gt;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    URatPSeriesFlint(<span class="keyword">const</span> fqp_t p, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> varname,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    URatPSeriesFlint(<span class="keyword">const</span> fqp_t p, <span class="keyword">const</span> std::string varname,</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;                     <span class="keyword">const</span> <span class="keywordtype">unsigned</span> degree);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a>(SYMENGINE_URATPSERIESFLINT)</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">int</span> compare(<span class="keyword">const</span> Basic &amp;o) <span class="keyword">const override</span>;</div>
@@ -127,8 +127,8 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    RCP&lt;const Basic&gt; get_coeff(<span class="keywordtype">int</span>) <span class="keyword">const override</span>;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160; </div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keyword">static</span> RCP&lt;const URatPSeriesFlint&gt;</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    series(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;t, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;x, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">static</span> fqp_t var(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    series(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;t, <span class="keyword">const</span> std::string &amp;x, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> prec);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">static</span> fqp_t var(<span class="keyword">const</span> std::string &amp;s);</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">static</span> fqp_t convert(<span class="keyword">const</span> integer_class &amp;x);</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">static</span> fqp_t convert(<span class="keyword">const</span> rational_class &amp;x);</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">static</span> fqp_t convert(<span class="keyword">const</span> Rational &amp;x);</div>
@@ -138,7 +138,7 @@ $(function() {
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordflow">return</span> s.mullow(r, prec);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">static</span> fqp_t <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(<span class="keyword">const</span> fqp_t &amp;s, <span class="keywordtype">int</span> n, <span class="keywordtype">unsigned</span> prec);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">static</span> fqp_t pow(<span class="keyword">const</span> fqp_t &amp;s, <span class="keywordtype">int</span> n, <span class="keywordtype">unsigned</span> prec);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">unsigned</span> ldegree(<span class="keyword">const</span> fqp_t &amp;s);</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> fmpq_wrapper find_cf(<span class="keyword">const</span> fqp_t &amp;s, <span class="keyword">const</span> fqp_t &amp;var,</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;                                       <span class="keywordtype">unsigned</span> deg)</div>
@@ -280,7 +280,7 @@ $(function() {
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;        }</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        fqp_t ss = s;</div>
 <div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;        <span class="keywordflow">if</span> (ldeg != 0) {</div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            ss = s * <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(var, -ldeg, prec);</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;            ss = s * pow(var, -ldeg, prec);</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;        }</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;        fmpq_wrapper ct = find_cf(ss, var, 0);</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;        <span class="keywordtype">bool</span> do_inv = <span class="keyword">false</span>;</div>
@@ -293,11 +293,11 @@ $(function() {
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        fqp_t res_p = one, sn = fqp_t(ss / ct);</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <span class="keyword">auto</span> steps = step_list(prec);</div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> step : steps) {</div>
-<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            fqp_t t = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(res_p, n + 1, step), sn, step);</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;            fqp_t t = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(pow(res_p, n + 1, step), sn, step);</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;            res_p += (res_p - t) / n;</div>
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;        }</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;        <span class="keywordflow">if</span> (ldeg != 0) {</div>
-<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            res_p *= <a class="codeRef" href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">pow</a>(var, ldeg / n, prec);</div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;            res_p *= pow(var, ldeg / n, prec);</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;        }</div>
 <div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;        <span class="keywordflow">if</span> (do_inv)</div>
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;            <span class="keywordflow">return</span> fqp_t(res_p * ctroot);</div>
@@ -311,11 +311,9 @@ $(function() {
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160; </div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_SERIES_FLINT_H</span></div>
 <div class="ttc" id="abasic_8h_html_a945f4a70c3ac1d14cb0637ef01a81b69"><div class="ttname"><a href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a></div><div class="ttdeci">#define IMPLEMENT_TYPEID(SYMENGINE_ID)</div><div class="ttdoc">Inline members and functions.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00340">basic.h:340</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aexpression_8h_html"><div class="ttname"><a href="expression_8h.html">expression.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
-<div class="ttc" id="apow_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/numeric/math/pow.html">std::pow</a></div><div class="ttdeci">T pow(T... args)</div></div>
 <div class="ttc" id="aseries_8h_html"><div class="ttname"><a href="series_8h.html">series.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

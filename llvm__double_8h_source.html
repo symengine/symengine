@@ -128,19 +128,19 @@ $(function() {
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;{</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    vec_basic symbols;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;llvm::Value *&gt;</a> symbol_ptrs;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">std::map&lt;RCP&lt;const Basic&gt;</a>, llvm::Value *, RCPBasicKeyLess&gt;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::vector&lt;llvm::Value *&gt; symbol_ptrs;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    std::map&lt;RCP&lt;const Basic&gt;, llvm::Value *, RCPBasicKeyLess&gt;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        replacement_symbol_ptrs;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    llvm::Value *result_;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::LLVMContext&gt;</a> context;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr&lt;llvm::ExecutionEngine&gt;</a> executionengine;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    std::unique_ptr&lt;llvm::LLVMContext&gt; context;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    std::unique_ptr&lt;llvm::ExecutionEngine&gt; executionengine;</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    intptr_t func;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="comment">// Following are invalid after the init call.</span></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    IRBuilder *builder;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    llvm::Module *<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> membuffer;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::string membuffer;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    llvm::Function *get_function_type(llvm::LLVMContext *);</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">virtual</span> llvm::Type *get_float_type(llvm::LLVMContext *) = 0;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
@@ -155,7 +155,7 @@ $(function() {
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="comment">// Helper functions</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keywordtype">void</span> set_double(<span class="keywordtype">double</span> d);</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    llvm::Function *get_external_function(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;name,</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    llvm::Function *get_external_function(<span class="keyword">const</span> std::string &amp;name,</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;                                          <span class="keywordtype">size_t</span> nargs = 1);</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    llvm::Function *get_powi();</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
@@ -196,9 +196,9 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> Sign &amp;x);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">// Return the compiled function as a binary string which can be loaded using</span></div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// `load`</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;dumps() <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">const</span> std::string &amp;dumps() <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="comment">// Load a previously compiled function from a string</span></div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">void</span> loads(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s);</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordtype">void</span> loads(<span class="keyword">const</span> std::string &amp;s);</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> UnevaluatedExpr &amp;x);</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;};</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
@@ -207,7 +207,7 @@ $(function() {
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    LLVMDoubleVisitor();</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    ~LLVMDoubleVisitor() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">double</span> call(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;double&gt;</a> &amp;vec) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordtype">double</span> call(<span class="keyword">const</span> std::vector&lt;double&gt; &amp;vec) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordtype">void</span> call(<span class="keywordtype">double</span> *outs, <span class="keyword">const</span> <span class="keywordtype">double</span> *inps) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;    llvm::Type *get_float_type(llvm::LLVMContext *) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keywordtype">void</span> visit(<span class="keyword">const</span> Tan &amp;x) <span class="keyword">override</span>;</div>
@@ -232,7 +232,7 @@ $(function() {
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    LLVMFloatVisitor();</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    ~LLVMFloatVisitor() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">float</span> call(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;float&gt;</a> &amp;vec) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordtype">float</span> call(<span class="keyword">const</span> std::vector&lt;float&gt; &amp;vec) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <span class="keywordtype">void</span> call(<span class="keywordtype">float</span> *outs, <span class="keyword">const</span> <span class="keywordtype">float</span> *inps) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    llvm::Type *get_float_type(llvm::LLVMContext *) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keywordtype">void</span> visit(<span class="keyword">const</span> Tan &amp;x) <span class="keyword">override</span>;</div>
@@ -259,7 +259,7 @@ $(function() {
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    LLVMLongDoubleVisitor();</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;    ~LLVMLongDoubleVisitor() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span> call(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;long double&gt;</a> &amp;vec) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;    <span class="keywordtype">long</span> <span class="keywordtype">double</span> call(<span class="keyword">const</span> std::vector&lt;long double&gt; &amp;vec) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;    <span class="keywordtype">void</span> call(<span class="keywordtype">long</span> <span class="keywordtype">double</span> *outs, <span class="keyword">const</span> <span class="keywordtype">long</span> <span class="keywordtype">double</span> *inps) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    llvm::Type *get_float_type(llvm::LLVMContext *) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    <span class="keywordtype">void</span> visit(<span class="keyword">const</span> Tan &amp;x) <span class="keyword">override</span>;</div>
@@ -291,12 +291,8 @@ $(function() {
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_LAMBDA_DOUBLE_H</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2cee70993b6160daf2870c1a5dc0a532"><div class="ttname"><a href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">SymEngine::mod</a></div><div class="ttdeci">RCP&lt; const Integer &gt; mod(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdoc">modulo round toward zero</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00067">ntheory.cpp:67</a></div></div>
-<div class="ttc" id="aunique_ptr_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/memory/unique_ptr.html">std::unique_ptr</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

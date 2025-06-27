@@ -107,30 +107,30 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">typedef</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map&lt;RCP&lt;const Basic&gt;</a>, bool, RCPBasicHash, RCPBasicKeyEq&gt;</div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="keyword">typedef</span> std::unordered_map&lt;RCP&lt;const Basic&gt;, bool, RCPBasicHash, RCPBasicKeyEq&gt;</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    umap_basic_bool;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Assumptions.html">   13</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> complex_symbols_;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> real_symbols_;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> rational_symbols_;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> integer_symbols_;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> positive_;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> nonnegative_;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> negative_;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> nonpositive_;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> nonzero_;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> zero_;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    set_basic complex_symbols_;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    set_basic real_symbols_;</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    set_basic rational_symbols_;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    set_basic integer_symbols_;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    umap_basic_bool positive_;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    umap_basic_bool nonnegative_;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    umap_basic_bool negative_;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    umap_basic_bool nonpositive_;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    umap_basic_bool nonzero_;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    umap_basic_bool zero_;</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> set_map(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> &amp;map, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordtype">void</span> set_map(umap_basic_bool &amp;map, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>,</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                 <span class="keywordtype">bool</span> value);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    tribool from_map(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/unordered_map.html">umap_basic_bool</a> &amp;map,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    tribool from_map(<span class="keyword">const</span> umap_basic_bool &amp;map,</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                     <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/set.html">set_basic</a> &amp;statements);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a>(<span class="keyword">const</span> set_basic &amp;statements);</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    tribool is_complex(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    tribool is_real(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    tribool is_rational(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;<a class="code" href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">symbol</a>) <span class="keyword">const</span>;</div>
@@ -150,8 +150,6 @@ $(function() {
 <div class="ttc" id="adict_8h_html"><div class="ttname"><a href="dict_8h.html">dict.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a1f382b48b9cb214e1017d0e11fd3e6d6"><div class="ttname"><a href="namespaceSymEngine.html#a1f382b48b9cb214e1017d0e11fd3e6d6">SymEngine::symbol</a></div><div class="ttdeci">RCP&lt; const Symbol &gt; symbol(const std::string &amp;name)</div><div class="ttdoc">inline version to return Symbol</div><div class="ttdef"><b>Definition:</b> <a href="symbol_8h_source.html#l00082">symbol.h:82</a></div></div>
-<div class="ttc" id="aset_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/set.html">std::set&lt; RCP&lt; const Basic &gt;, RCPBasicKeyLess &gt;</a></div></div>
-<div class="ttc" id="aunordered_map_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/unordered_map.html">std::unordered_map</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

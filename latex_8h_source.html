@@ -156,24 +156,22 @@ $(function() {
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Tuple.html">Tuple</a> &amp;x);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::string&gt;</a> names_;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">static</span> <span class="keyword">const</span> std::vector&lt;std::string&gt; names_;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160; </div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> print_with_args(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;join,</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                         <a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;s);</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> parenthesize(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;expr) <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> _print_pow(<a class="codeRef" href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a> &amp;o, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a,</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordtype">void</span> print_with_args(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x, <span class="keyword">const</span> std::string &amp;join,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                         std::ostringstream &amp;s);</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    std::string parenthesize(<span class="keyword">const</span> std::string &amp;expr) <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordtype">void</span> _print_pow(std::ostringstream &amp;o, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a,</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;                    <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">bool</span> split_mul_coef() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> print_mul() <span class="keyword">override</span>;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> print_div(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;num, <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;den,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    std::string print_mul() <span class="keyword">override</span>;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    std::string print_div(<span class="keyword">const</span> std::string &amp;num, <span class="keyword">const</span> std::string &amp;den,</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                          <span class="keywordtype">bool</span> paren) <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;};</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// LATEX_H</span></div>
-<div class="ttc" id="abasic_ostringstream_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/io/basic_ostringstream.html">std::ostringstream</a></div></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Abs_html"><div class="ttname"><a href="classSymEngine_1_1Abs.html">SymEngine::Abs</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l01241">functions.h:1242</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1And_html"><div class="ttname"><a href="classSymEngine_1_1And.html">SymEngine::And</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00104">logic.h:105</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1BaseVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BaseVisitor.html">SymEngine::BaseVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00047">visitor.h:48</a></div></div>
@@ -219,7 +217,6 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Union_html"><div class="ttname"><a href="classSymEngine_1_1Union.html">SymEngine::Union</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00368">sets.h:369</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Xor_html"><div class="ttname"><a href="classSymEngine_1_1Xor.html">SymEngine::Xor</a></div><div class="ttdef"><b>Definition:</b> <a href="logic_8h_source.html#l00162">logic.h:163</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt; std::string &gt;</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

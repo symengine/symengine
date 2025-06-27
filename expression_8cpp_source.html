@@ -106,7 +106,7 @@ $(function() {
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160; </div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>detail</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;{</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> poly_print(<span class="keyword">const</span> Expression &amp;x)</div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;std::string poly_print(<span class="keyword">const</span> Expression &amp;x)</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;{</div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    Precedence prec;</div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <span class="keywordflow">if</span> (prec.getPrecedence(x.get_basic()) == PrecedenceEnum::Add) {</div>
@@ -116,13 +116,12 @@ $(function() {
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;}</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;} <span class="comment">// namespace detail</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<a class="code" href="classSymEngine_1_1Expression.html#aea4a1840ff3c11a8ad81d188eac41a0a">Expression::Expression</a>(<span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a> &amp;s)</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<a class="code" href="classSymEngine_1_1Expression.html#aea4a1840ff3c11a8ad81d188eac41a0a">Expression::Expression</a>(<span class="keyword">const</span> std::string &amp;s)</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;{</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    m_basic = parse(s);</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;}</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="ttc" id="abasic_string_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/string/basic_string.html">std::string</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Expression_html_aea4a1840ff3c11a8ad81d188eac41a0a"><div class="ttname"><a href="classSymEngine_1_1Expression.html#aea4a1840ff3c11a8ad81d188eac41a0a">SymEngine::Expression::Expression</a></div><div class="ttdeci">Expression()</div><div class="ttdoc">Plain constructor of Expression.</div><div class="ttdef"><b>Definition:</b> <a href="expression_8h_source.html#l00035">expression.h:35</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

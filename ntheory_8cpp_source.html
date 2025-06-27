@@ -133,7 +133,7 @@ $(function() {
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;{</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    integer_class g;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    mp_gcd(g, a.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), b.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(g));</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(g));</div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;}</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160; </div>
 <div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#abb07748aa4b318e5fb3cfc942dc7dafa">   39</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#abb07748aa4b318e5fb3cfc942dc7dafa">gcd_ext</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;g, <span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;s,</div>
@@ -142,16 +142,16 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;{</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    integer_class g_, s_, t_;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    mp_gcdext(g_, s_, t_, a.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), b.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(g_));</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    *s = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(s_));</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    *t = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t_));</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(g_));</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    *s = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(s_));</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    *t = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(t_));</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
 <div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a6f8ad0107dc645c6ce7249c600385705">   50</a></span>&#160;RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a6f8ad0107dc645c6ce7249c600385705">lcm</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;a, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;b)</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;{</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    integer_class c;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    mp_lcm(c, a.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), b.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(c));</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(c));</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;}</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
 <div class="line"><a name="l00057"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a63b1ae053d374fb5602e1b03c236374c">   57</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="namespaceSymEngine.html#a63b1ae053d374fb5602e1b03c236374c">mod_inverse</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;b, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;a,</div>
@@ -160,7 +160,7 @@ $(function() {
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">int</span> ret_val;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    integer_class inv_t;</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    ret_val = mp_invert(inv_t, a.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), m.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    *b = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(inv_t));</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    *b = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(inv_t));</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keywordflow">return</span> ret_val;</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
@@ -180,22 +180,22 @@ $(function() {
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;{</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    integer_class _q, _r;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    mp_tdiv_qr(_q, _r, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), d.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    *q = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_q));</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    *r = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_r));</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    *q = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_q));</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    *r = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_r));</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a5ac9764d835e82d5fdd4ab4cc36e11e1">   87</a></span>&#160;RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a5ac9764d835e82d5fdd4ab4cc36e11e1">mod_f</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;d)</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;{</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    integer_class q;</div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    mp_fdiv_r(q, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), d.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(q));</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(q));</div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;}</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
 <div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a450c28d700cf56dd4aae461c4ccdf602">   94</a></span>&#160;RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a450c28d700cf56dd4aae461c4ccdf602">quotient_f</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;d)</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    integer_class q;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    mp_fdiv_q(q, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), d.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(q));</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(q));</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a88a7c4cbf086869ae2c0c4bc9d181787">  101</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a88a7c4cbf086869ae2c0c4bc9d181787">quotient_mod_f</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;q,</div>
@@ -204,15 +204,15 @@ $(function() {
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;{</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    integer_class _q, _r;</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    mp_fdiv_qr(_q, _r, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), d.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    *q = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_q));</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    *r = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_r));</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    *q = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_q));</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    *r = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_r));</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
 <div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a4f08f9f6ba6fa0107e98940ca32249ca">  111</a></span>&#160;RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a4f08f9f6ba6fa0107e98940ca32249ca">fibonacci</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n)</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;{</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    integer_class f;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    mp_fib_ui(f, n);</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(f));</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;}</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
 <div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a140e1990268bd87d976940e2bb7ae461">  118</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a140e1990268bd87d976940e2bb7ae461">fibonacci2</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;g,</div>
@@ -221,15 +221,15 @@ $(function() {
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    integer_class g_t;</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    integer_class s_t;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    mp_fib2_ui(g_t, s_t, n);</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(g_t));</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    *s = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(s_t));</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(g_t));</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    *s = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(s_t));</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;}</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160; </div>
 <div class="line"><a name="l00128"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a40dcbecd5d0d50dbd7d997a5c800ae81">  128</a></span>&#160;RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#a40dcbecd5d0d50dbd7d997a5c800ae81">lucas</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n)</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;{</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    integer_class f;</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    mp_lucnum_ui(f, n);</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(f));</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;}</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160; </div>
 <div class="line"><a name="l00135"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aff0d65ef819e6ee1328757e4acf3fb1e">  135</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#aff0d65ef819e6ee1328757e4acf3fb1e">lucas2</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;g, <span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;s,</div>
@@ -238,8 +238,8 @@ $(function() {
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    integer_class g_t;</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;    integer_class s_t;</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;    mp_lucnum2_ui(g_t, s_t, n);</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(g_t));</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    *s = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(s_t));</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(g_t));</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    *s = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(s_t));</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;}</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160; </div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="comment">// Binomial Coefficient</span></div>
@@ -247,7 +247,7 @@ $(function() {
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;{</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    integer_class f;</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;    mp_bin_ui(f, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>(), k);</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(f));</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;}</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="comment">// Factorial</span></div>
@@ -255,7 +255,7 @@ $(function() {
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;{</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    integer_class f;</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    mp_fac_ui(f, n);</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(f));</div>
+<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(f));</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;}</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160; </div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="comment">// Returns true if `b` divides `a` without reminder</span></div>
@@ -274,7 +274,7 @@ $(function() {
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;{</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    integer_class c;</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;    mp_nextprime(c, a.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(c));</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(c));</div>
 <div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;}</div>
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160; </div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;<span class="keyword">namespace</span></div>
@@ -284,7 +284,7 @@ $(function() {
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;{</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    integer_class sqrtN = mp_sqrt(N);</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> limit = mp_get_ui(sqrtN);</div>
-<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordflow">if</span> (limit &gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;unsigned&gt;::max</a>())</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;    <span class="keywordflow">if</span> (limit &gt; std::numeric_limits&lt;unsigned&gt;::max())</div>
 <div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;N too large to factor&quot;</span>);</div>
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;    Sieve::iterator pi(numeric_cast&lt;unsigned&gt;(limit));</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;    <span class="keywordtype">unsigned</span> p;</div>
@@ -357,7 +357,7 @@ $(function() {
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    integer_class rop;</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160; </div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    ret_val = _factor_lehman_method(rop, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
-<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(rop));</div>
+<div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(rop));</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;    <span class="keywordflow">return</span> ret_val;</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160;}</div>
 <div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160; </div>
@@ -410,7 +410,7 @@ $(function() {
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;    }</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;    <span class="keywordflow">if</span> (ret_val != 0)</div>
-<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(rop));</div>
+<div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;        *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(rop));</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    <span class="keywordflow">return</span> ret_val;</div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;}</div>
 <div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160; </div>
@@ -463,7 +463,7 @@ $(function() {
 <div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;    }</div>
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160; </div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160;    <span class="keywordflow">if</span> (ret_val != 0)</div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(rop));</div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;        *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(rop));</div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keywordflow">return</span> ret_val;</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;}</div>
 <div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160; </div>
@@ -514,7 +514,7 @@ $(function() {
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;    <span class="comment">// B1 is discarded if gmp-ecm is not installed</span></div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;    ret_val = _factor_trial_division_sieve(_f, _n);</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// HAVE_SYMENGINE_ECM</span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_f));</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;    *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_f));</div>
 <div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160; </div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;    <span class="keywordflow">return</span> ret_val;</div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;}</div>
@@ -525,11 +525,11 @@ $(function() {
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    integer_class <a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>;</div>
 <div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    ret_val = _factor_trial_division_sieve(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>, n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>());</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;    <span class="keywordflow">if</span> (ret_val == 1)</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>));</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;        *f = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>));</div>
 <div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <span class="keywordflow">return</span> ret_val;</div>
 <div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;}</div>
 <div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160; </div>
-<div class="line"><a name="l00432"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a6079112c36b3646e3a7f3cad0d31bc0b">  432</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a6079112c36b3646e3a7f3cad0d31bc0b">prime_factors</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;prime_list,</div>
+<div class="line"><a name="l00432"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a6079112c36b3646e3a7f3cad0d31bc0b">  432</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a6079112c36b3646e3a7f3cad0d31bc0b">prime_factors</a>(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;prime_list,</div>
 <div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;                   <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n)</div>
 <div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;{</div>
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    integer_class sqrtN;</div>
@@ -542,7 +542,7 @@ $(function() {
 <div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    sqrtN = mp_sqrt(_n);</div>
 <div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;    <span class="keyword">auto</span> limit = mp_get_ui(sqrtN);</div>
 <div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    <span class="keywordflow">if</span> (not mp_fits_ulong_p(sqrtN)</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        or limit &gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;unsigned&gt;::max</a>())</div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;        or limit &gt; std::numeric_limits&lt;unsigned&gt;::max())</div>
 <div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;N too large to factor&quot;</span>);</div>
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">Sieve::iterator</a> pi(numeric_cast&lt;unsigned&gt;(limit));</div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    <span class="keywordtype">unsigned</span> p;</div>
@@ -556,10 +556,10 @@ $(function() {
 <div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;            <span class="keywordflow">break</span>;</div>
 <div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;    }</div>
 <div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;    <span class="keywordflow">if</span> (not(_n == 1))</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        prime_list.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_n)));</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;        prime_list.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_n)));</div>
 <div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;}</div>
 <div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160; </div>
-<div class="line"><a name="l00462"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">  462</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> &amp;primes_mul, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n)</div>
+<div class="line"><a name="l00462"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">  462</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(map_integer_uint &amp;primes_mul, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n)</div>
 <div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;{</div>
 <div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;    integer_class sqrtN;</div>
 <div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;    integer_class _n = n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>();</div>
@@ -572,7 +572,7 @@ $(function() {
 <div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;    sqrtN = mp_sqrt(_n);</div>
 <div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160;    <span class="keyword">auto</span> limit = mp_get_ui(sqrtN);</div>
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;    <span class="keywordflow">if</span> (not mp_fits_ulong_p(sqrtN)</div>
-<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        or limit &gt; <a class="codeRef" href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits&lt;unsigned&gt;::max</a>())</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        or limit &gt; std::numeric_limits&lt;unsigned&gt;::max())</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;N too large to factor&quot;</span>);</div>
 <div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;    <a class="code" href="classSymEngine_1_1Sieve_1_1iterator.html">Sieve::iterator</a> pi(numeric_cast&lt;unsigned&gt;(limit));</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160; </div>
@@ -590,7 +590,7 @@ $(function() {
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;        }</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;    }</div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;    <span class="keywordflow">if</span> (not(_n == 1))</div>
-<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(primes_mul, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_n)), 1);</div>
+<div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;        <a class="code" href="namespaceSymEngine.html#a8a0fa36d4fbff063bb37b9893c4e6354">insert</a>(primes_mul, <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_n)), 1);</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;}</div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160; </div>
 <div class="line"><a name="l00496"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ac68c11cddc00aaff59929b12e4f3cc8a">  496</a></span>&#160;RCP&lt;const Number&gt; <a class="code" href="namespaceSymEngine.html#ac68c11cddc00aaff59929b12e4f3cc8a">bernoulli</a>(<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> n)</div>
@@ -605,10 +605,10 @@ $(function() {
 <div class="line"><a name="l00505"></a><span class="lineno">  505</span>&#160;    rational_class b(a);</div>
 <div class="line"><a name="l00506"></a><span class="lineno">  506</span>&#160;    fmpq_clear(res);</div>
 <div class="line"><a name="l00507"></a><span class="lineno">  507</span>&#160;    mpq_clear(a);</div>
-<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Rational.html#a0bbb6880b55f4db457f8183b5db400ff">Rational::from_mpq</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(b));</div>
+<div class="line"><a name="l00508"></a><span class="lineno">  508</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="classSymEngine_1_1Rational.html#a0bbb6880b55f4db457f8183b5db400ff">Rational::from_mpq</a>(std::move(b));</div>
 <div class="line"><a name="l00509"></a><span class="lineno">  509</span>&#160;<span class="preprocessor">#else</span></div>
 <div class="line"><a name="l00510"></a><span class="lineno">  510</span>&#160;    <span class="comment">// TODO: implement a faster algorithm</span></div>
-<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;rational_class&gt;</a> v(n + 1);</div>
+<div class="line"><a name="l00511"></a><span class="lineno">  511</span>&#160;    std::vector&lt;rational_class&gt; v(n + 1);</div>
 <div class="line"><a name="l00512"></a><span class="lineno">  512</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> m = 0; m &lt;= n; ++m) {</div>
 <div class="line"><a name="l00513"></a><span class="lineno">  513</span>&#160;        v[m] = rational_class(1u, m + 1);</div>
 <div class="line"><a name="l00514"></a><span class="lineno">  514</span>&#160; </div>
@@ -651,8 +651,8 @@ $(function() {
 <div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;<span class="comment">// References : Cohen H., A course in computational algebraic number theory</span></div>
 <div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;<span class="comment">// (1996), page 21.</span></div>
 <div class="line"><a name="l00553"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aad612bc5c47da71cc70cfb11b5ef6344">  553</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#aad612bc5c47da71cc70cfb11b5ef6344">crt</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;R,</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;         <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;rem,</div>
-<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;         <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;         <span class="keyword">const</span> std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;rem,</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;         <span class="keyword">const</span> std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</div>
 <div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;{</div>
 <div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>.size() &gt; rem.size())</div>
 <div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Too few remainders&quot;</span>);</div>
@@ -673,7 +673,7 @@ $(function() {
 <div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;        m *= <a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>[i]-&gt;as_integer_class() / g;</div>
 <div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;        mp_fdiv_r(r, r, m);</div>
 <div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    }</div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    *R = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(r));</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    *R = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(r));</div>
 <div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;}</div>
 <div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160; </div>
@@ -681,9 +681,9 @@ $(function() {
 <div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;{</div>
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;<span class="comment">// Crt over a cartesian product of vectors (Assuming that moduli are pairwise</span></div>
 <div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;<span class="comment">// relatively prime).</span></div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;<span class="keywordtype">void</span> _crt_cartesian(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;R,</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;                    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt;&gt; &amp;rem,</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;                    <span class="keyword">const</span> <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;<span class="keywordtype">void</span> _crt_cartesian(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;R,</div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;                    <span class="keyword">const</span> std::vector&lt;std::vector&lt;RCP&lt;const Integer&gt;&gt;&gt; &amp;rem,</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;                    <span class="keyword">const</span> std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</div>
 <div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;{</div>
 <div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>.size() &gt; rem.size())</div>
 <div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Too few remainders&quot;</span>);</div>
@@ -694,7 +694,7 @@ $(function() {
 <div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;    R = rem[0];</div>
 <div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160; </div>
 <div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 1; i &lt; <a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>.size(); ++i) {</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; rem2;</div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;        std::vector&lt;RCP&lt;const Integer&gt;&gt; rem2;</div>
 <div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;        mp_invert(s, m, <a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>[i]-&gt;as_integer_class());</div>
 <div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;        _m = m;</div>
 <div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;        m *= <a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>[i]-&gt;as_integer_class();</div>
@@ -703,7 +703,7 @@ $(function() {
 <div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;                r = elem-&gt;as_integer_class();</div>
 <div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;                r += _m * s * (_k-&gt;as_integer_class() - r);</div>
 <div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;                mp_fdiv_r(r, r, m);</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;                rem2.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(r));</div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;                rem2.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(r));</div>
 <div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;            }</div>
 <div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;        }</div>
 <div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;        R = rem2;</div>
@@ -740,7 +740,7 @@ $(function() {
 <div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;<span class="keywordtype">void</span> _primitive_root(integer_class &amp;g, <span class="keyword">const</span> integer_class &amp;p,</div>
 <div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;                     <span class="keyword">const</span> integer_class &amp;e, <span class="keywordtype">bool</span> even = <span class="keyword">false</span>)</div>
 <div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;{</div>
-<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; primes;</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    std::vector&lt;RCP&lt;const Integer&gt;&gt; primes;</div>
 <div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;    <a class="code" href="namespaceSymEngine.html#a6079112c36b3646e3a7f3cad0d31bc0b">prime_factors</a>(primes, *<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(p - 1));</div>
 <div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160; </div>
 <div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160;    integer_class t;</div>
@@ -801,7 +801,7 @@ $(function() {
 <div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;    <span class="keywordflow">if</span> (not _prime_power(p, e, _n))</div>
 <div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;    _primitive_root(_n, p, e, even);</div>
-<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_n));</div>
+<div class="line"><a name="l00704"></a><span class="lineno">  704</span>&#160;    *g = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_n));</div>
 <div class="line"><a name="l00705"></a><span class="lineno">  705</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00706"></a><span class="lineno">  706</span>&#160;}</div>
 <div class="line"><a name="l00707"></a><span class="lineno">  707</span>&#160; </div>
@@ -812,7 +812,7 @@ $(function() {
 <div class="line"><a name="l00712"></a><span class="lineno">  712</span>&#160;<span class="comment">// [1] Cohen H., A course in computational algebraic number theory (1996), pages</span></div>
 <div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;<span class="comment">// 25-27.</span></div>
 <div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;<span class="comment">// [2] Hackman P., Elementary number theory (2009), page 28.</span></div>
-<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;<span class="keywordtype">void</span> _primitive_root_list(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
+<div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;<span class="keywordtype">void</span> _primitive_root_list(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
 <div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;                          <span class="keyword">const</span> integer_class &amp;p, <span class="keyword">const</span> integer_class &amp;e,</div>
 <div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;                          <span class="keywordtype">bool</span> even = <span class="keyword">false</span>)</div>
 <div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;{</div>
@@ -862,7 +862,7 @@ $(function() {
 <div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;} <span class="comment">//_primitive_root_list</span></div>
 <div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160;} <span class="comment">// anonymous namespace</span></div>
 <div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160; </div>
-<div class="line"><a name="l00765"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a969eb0905c46f6486a1b7437aa9d3d63">  765</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a969eb0905c46f6486a1b7437aa9d3d63">primitive_root_list</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
+<div class="line"><a name="l00765"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a969eb0905c46f6486a1b7437aa9d3d63">  765</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a969eb0905c46f6486a1b7437aa9d3d63">primitive_root_list</a>(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
 <div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;                         <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n)</div>
 <div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;{</div>
 <div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;    integer_class _n = n.<a class="code" href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">as_integer_class</a>();</div>
@@ -886,7 +886,7 @@ $(function() {
 <div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;    <span class="keywordflow">if</span> (not _prime_power(p, e, _n))</div>
 <div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;        <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;    _primitive_root_list(roots, p, e, even);</div>
-<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a>(roots.begin(), roots.end(), <a class="code" href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a>());</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;    std::sort(roots.begin(), roots.end(), <a class="code" href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a>());</div>
 <div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;}</div>
 <div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160; </div>
@@ -898,7 +898,7 @@ $(function() {
 <div class="line"><a name="l00798"></a><span class="lineno">  798</span>&#160;    integer_class phi = n-&gt;as_integer_class(), p;</div>
 <div class="line"><a name="l00799"></a><span class="lineno">  799</span>&#160;    <span class="keywordflow">if</span> (phi &lt; 0)</div>
 <div class="line"><a name="l00800"></a><span class="lineno">  800</span>&#160;        phi = -phi;</div>
-<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;    <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, *n);</div>
 <div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160; </div>
 <div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : prime_mul) {</div>
@@ -907,7 +907,7 @@ $(function() {
 <div class="line"><a name="l00807"></a><span class="lineno">  807</span>&#160;        <span class="comment">// phi is exactly divisible by p.</span></div>
 <div class="line"><a name="l00808"></a><span class="lineno">  808</span>&#160;        phi *= p - 1;</div>
 <div class="line"><a name="l00809"></a><span class="lineno">  809</span>&#160;    }</div>
-<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(phi));</div>
+<div class="line"><a name="l00810"></a><span class="lineno">  810</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(phi));</div>
 <div class="line"><a name="l00811"></a><span class="lineno">  811</span>&#160;}</div>
 <div class="line"><a name="l00812"></a><span class="lineno">  812</span>&#160; </div>
 <div class="line"><a name="l00813"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ab6a14bcfb29bbbda65be7ac9bd75083d">  813</a></span>&#160;RCP&lt;const Integer&gt; <a class="code" href="namespaceSymEngine.html#ab6a14bcfb29bbbda65be7ac9bd75083d">carmichael</a>(<span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;n)</div>
@@ -915,7 +915,7 @@ $(function() {
 <div class="line"><a name="l00815"></a><span class="lineno">  815</span>&#160;    <span class="keywordflow">if</span> (n-&gt;is_zero())</div>
 <div class="line"><a name="l00816"></a><span class="lineno">  816</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(1);</div>
 <div class="line"><a name="l00817"></a><span class="lineno">  817</span>&#160; </div>
-<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l00819"></a><span class="lineno">  819</span>&#160;    integer_class lambda, t, p;</div>
 <div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;    <span class="keywordtype">unsigned</span> multiplicity;</div>
 <div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160; </div>
@@ -935,7 +935,7 @@ $(function() {
 <div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;        <span class="comment">// lambda and p are relatively prime.</span></div>
 <div class="line"><a name="l00836"></a><span class="lineno">  836</span>&#160;        lambda = lambda * t;</div>
 <div class="line"><a name="l00837"></a><span class="lineno">  837</span>&#160;    }</div>
-<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(lambda));</div>
+<div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(lambda));</div>
 <div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;}</div>
 <div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160; </div>
 <div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;<span class="comment">// References : Cohen H., A course in computational algebraic number theory</span></div>
@@ -952,7 +952,7 @@ $(function() {
 <div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160; </div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;    RCP&lt;const Integer&gt; lambda = <a class="code" href="namespaceSymEngine.html#ab6a14bcfb29bbbda65be7ac9bd75083d">carmichael</a>(n);</div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;    <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, *lambda);</div>
 <div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;    _a %= _n;</div>
 <div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;    order = lambda-&gt;as_integer_class();</div>
@@ -967,7 +967,7 @@ $(function() {
 <div class="line"><a name="l00867"></a><span class="lineno">  867</span>&#160;            order *= p;</div>
 <div class="line"><a name="l00868"></a><span class="lineno">  868</span>&#160;        }</div>
 <div class="line"><a name="l00869"></a><span class="lineno">  869</span>&#160;    }</div>
-<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;    *o = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(order));</div>
+<div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;    *o = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(order));</div>
 <div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;}</div>
 <div class="line"><a name="l00873"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ad78c8d7a599848f762f200bbe99f087e">  873</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="namespaceSymEngine.html#ad78c8d7a599848f762f200bbe99f087e">legendre</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;a, <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;n)</div>
@@ -1124,7 +1124,7 @@ $(function() {
 <div class="line"><a name="l01024"></a><span class="lineno"> 1024</span>&#160; </div>
 <div class="line"><a name="l01025"></a><span class="lineno"> 1025</span>&#160;<span class="comment">// References : Johnston A., A generalised qth root algorithm.</span></div>
 <div class="line"><a name="l01026"></a><span class="lineno"> 1026</span>&#160;<span class="comment">// Solution for x**n == a mod p**k where a != 0 mod p and p is an odd prime.</span></div>
-<div class="line"><a name="l01027"></a><span class="lineno"> 1027</span>&#160;<span class="keywordtype">bool</span> _nthroot_mod1(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
+<div class="line"><a name="l01027"></a><span class="lineno"> 1027</span>&#160;<span class="keywordtype">bool</span> _nthroot_mod1(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
 <div class="line"><a name="l01028"></a><span class="lineno"> 1028</span>&#160;                   <span class="keyword">const</span> integer_class &amp;a, <span class="keyword">const</span> integer_class &amp;n,</div>
 <div class="line"><a name="l01029"></a><span class="lineno"> 1029</span>&#160;                   <span class="keyword">const</span> integer_class &amp;p, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> k,</div>
 <div class="line"><a name="l01030"></a><span class="lineno"> 1030</span>&#160;                   <span class="keywordtype">bool</span> all_roots = <span class="keyword">false</span>)</div>
@@ -1267,13 +1267,13 @@ $(function() {
 <div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;}</div>
 <div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160; </div>
 <div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;<span class="comment">// Solution for x**n == a mod p**k.</span></div>
-<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;<span class="keywordtype">bool</span> _nthroot_mod_prime_power(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
+<div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;<span class="keywordtype">bool</span> _nthroot_mod_prime_power(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
 <div class="line"><a name="l01171"></a><span class="lineno"> 1171</span>&#160;                              <span class="keyword">const</span> integer_class &amp;a, <span class="keyword">const</span> integer_class &amp;n,</div>
 <div class="line"><a name="l01172"></a><span class="lineno"> 1172</span>&#160;                              <span class="keyword">const</span> integer_class &amp;p, <span class="keyword">const</span> <span class="keywordtype">unsigned</span> k,</div>
 <div class="line"><a name="l01173"></a><span class="lineno"> 1173</span>&#160;                              <span class="keywordtype">bool</span> all_roots = <span class="keyword">false</span>)</div>
 <div class="line"><a name="l01174"></a><span class="lineno"> 1174</span>&#160;{</div>
 <div class="line"><a name="l01175"></a><span class="lineno"> 1175</span>&#160;    integer_class pk, root;</div>
-<div class="line"><a name="l01176"></a><span class="lineno"> 1176</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; _roots;</div>
+<div class="line"><a name="l01176"></a><span class="lineno"> 1176</span>&#160;    std::vector&lt;RCP&lt;const Integer&gt;&gt; _roots;</div>
 <div class="line"><a name="l01177"></a><span class="lineno"> 1177</span>&#160;    <span class="keywordflow">if</span> (a % p != 0) {</div>
 <div class="line"><a name="l01178"></a><span class="lineno"> 1178</span>&#160;        <span class="keywordflow">if</span> (p == 2) {</div>
 <div class="line"><a name="l01179"></a><span class="lineno"> 1179</span>&#160;            integer_class r = n, t, s, pc, pj;</div>
@@ -1359,7 +1359,7 @@ $(function() {
 <div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;                roots.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(0));</div>
 <div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;            }</div>
-<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;            _roots.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(0));</div>
+<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;            _roots.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(0));</div>
 <div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;            <span class="keywordflow">if</span> (n &gt;= k)</div>
 <div class="line"><a name="l01264"></a><span class="lineno"> 1264</span>&#160;                m = k - 1;</div>
 <div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160;            <span class="keywordflow">else</span></div>
@@ -1381,7 +1381,7 @@ $(function() {
 <div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;            mp_pow_ui(pm, p, m);</div>
 <div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;            <span class="keywordflow">if</span> (not all_roots) {</div>
 <div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160;                roots.push_back(</div>
-<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;                    <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(_roots.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/back.html">back</a>()-&gt;as_integer_class() * pm));</div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;                    <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(_roots.back()-&gt;as_integer_class() * pm));</div>
 <div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;            }</div>
 <div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;it : _roots) {</div>
@@ -1479,16 +1479,16 @@ $(function() {
 <div class="line"><a name="l01379"></a><span class="lineno"> 1379</span>&#160;        *root = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(0);</div>
 <div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;    }</div>
-<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;    <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, *<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; moduli;</div>
+<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;    std::vector&lt;RCP&lt;const Integer&gt;&gt; moduli;</div>
 <div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;    <span class="keywordtype">bool</span> ret_val;</div>
 <div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160; </div>
-<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; rem;</div>
+<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160;    std::vector&lt;RCP&lt;const Integer&gt;&gt; rem;</div>
 <div class="line"><a name="l01388"></a><span class="lineno"> 1388</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : prime_mul) {</div>
 <div class="line"><a name="l01389"></a><span class="lineno"> 1389</span>&#160;        integer_class _mod;</div>
 <div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;        mp_pow_ui(_mod, it.first-&gt;as_integer_class(), it.second);</div>
-<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;        moduli.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_mod)));</div>
+<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;        moduli.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_mod)));</div>
 <div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;        ret_val = _nthroot_mod_prime_power(</div>
 <div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160;            rem, a-&gt;as_integer_class(), n-&gt;as_integer_class(),</div>
 <div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;            it.first-&gt;as_integer_class(), it.second, <span class="keyword">false</span>);</div>
@@ -1499,7 +1499,7 @@ $(function() {
 <div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;}</div>
 <div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160; </div>
-<div class="line"><a name="l01402"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a45dbcfb187e36f525090486594bea367"> 1402</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a45dbcfb187e36f525090486594bea367">nthroot_mod_list</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
+<div class="line"><a name="l01402"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a45dbcfb187e36f525090486594bea367"> 1402</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a45dbcfb187e36f525090486594bea367">nthroot_mod_list</a>(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;roots,</div>
 <div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;                      <span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;a, <span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;n,</div>
 <div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;                      <span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;m)</div>
 <div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160;{</div>
@@ -1509,26 +1509,26 @@ $(function() {
 <div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;        roots.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(0));</div>
 <div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;        <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;    }</div>
-<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;    <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, *m);</div>
-<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; moduli;</div>
+<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;    std::vector&lt;RCP&lt;const Integer&gt;&gt; moduli;</div>
 <div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;    <span class="keywordtype">bool</span> ret_val;</div>
 <div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160; </div>
-<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;std::vector&lt;RCP&lt;const Integer&gt;</a>&gt;&gt; rem;</div>
+<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;    std::vector&lt;std::vector&lt;RCP&lt;const Integer&gt;&gt;&gt; rem;</div>
 <div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : prime_mul) {</div>
 <div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;        integer_class _mod;</div>
 <div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;        mp_pow_ui(_mod, it.first-&gt;as_integer_class(), it.second);</div>
-<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;        moduli.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(_mod)));</div>
-<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector&lt;RCP&lt;const Integer&gt;</a>&gt; rem1;</div>
+<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;        moduli.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(_mod)));</div>
+<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;        std::vector&lt;RCP&lt;const Integer&gt;&gt; rem1;</div>
 <div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;        ret_val = _nthroot_mod_prime_power(</div>
 <div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;            rem1, a-&gt;as_integer_class(), n-&gt;as_integer_class(),</div>
 <div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160;            it.first-&gt;as_integer_class(), it.second, <span class="keyword">true</span>);</div>
 <div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;        <span class="keywordflow">if</span> (not ret_val)</div>
 <div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160;            <span class="keywordflow">return</span>;</div>
-<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;        rem.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>(rem1);</div>
+<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;        rem.push_back(rem1);</div>
 <div class="line"><a name="l01429"></a><span class="lineno"> 1429</span>&#160;    }</div>
 <div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;    _crt_cartesian(roots, rem, moduli);</div>
-<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a>(roots.begin(), roots.end(), <a class="code" href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a>());</div>
+<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;    std::sort(roots.begin(), roots.end(), <a class="code" href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a>());</div>
 <div class="line"><a name="l01432"></a><span class="lineno"> 1432</span>&#160;}</div>
 <div class="line"><a name="l01433"></a><span class="lineno"> 1433</span>&#160; </div>
 <div class="line"><a name="l01434"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a0ccb150bd495468ac62cba08268da1ed"> 1434</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespaceSymEngine.html#a0ccb150bd495468ac62cba08268da1ed">powermod</a>(<span class="keyword">const</span> Ptr&lt;RCP&lt;const Integer&gt;&gt; &amp;powm, <span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;a,</div>
@@ -1544,7 +1544,7 @@ $(function() {
 <div class="line"><a name="l01444"></a><span class="lineno"> 1444</span>&#160;            <span class="keywordflow">if</span> (not ret_val)</div>
 <div class="line"><a name="l01445"></a><span class="lineno"> 1445</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01446"></a><span class="lineno"> 1446</span>&#160;        }</div>
-<div class="line"><a name="l01447"></a><span class="lineno"> 1447</span>&#160;        *powm = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
+<div class="line"><a name="l01447"></a><span class="lineno"> 1447</span>&#160;        *powm = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(t));</div>
 <div class="line"><a name="l01448"></a><span class="lineno"> 1448</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01449"></a><span class="lineno"> 1449</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Rational&gt;(*b)) {</div>
 <div class="line"><a name="l01450"></a><span class="lineno"> 1450</span>&#160;        RCP&lt;const Integer&gt; num, den, r;</div>
@@ -1560,13 +1560,13 @@ $(function() {
 <div class="line"><a name="l01460"></a><span class="lineno"> 1460</span>&#160;            <span class="keywordflow">if</span> (not ret_val)</div>
 <div class="line"><a name="l01461"></a><span class="lineno"> 1461</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01462"></a><span class="lineno"> 1462</span>&#160;        }</div>
-<div class="line"><a name="l01463"></a><span class="lineno"> 1463</span>&#160;        r = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t));</div>
+<div class="line"><a name="l01463"></a><span class="lineno"> 1463</span>&#160;        r = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(t));</div>
 <div class="line"><a name="l01464"></a><span class="lineno"> 1464</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2586dc7e8e62544f230928bd693d3f01">nthroot_mod</a>(powm, r, den, m);</div>
 <div class="line"><a name="l01465"></a><span class="lineno"> 1465</span>&#160;    }</div>
 <div class="line"><a name="l01466"></a><span class="lineno"> 1466</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l01467"></a><span class="lineno"> 1467</span>&#160;}</div>
 <div class="line"><a name="l01468"></a><span class="lineno"> 1468</span>&#160; </div>
-<div class="line"><a name="l01469"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ac1ca4e052e1ed84f11dd83c9b32f547e"> 1469</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#ac1ca4e052e1ed84f11dd83c9b32f547e">powermod_list</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a>&lt;RCP&lt;const Integer&gt;&gt; &amp;pows,</div>
+<div class="line"><a name="l01469"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#ac1ca4e052e1ed84f11dd83c9b32f547e"> 1469</a></span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#ac1ca4e052e1ed84f11dd83c9b32f547e">powermod_list</a>(std::vector&lt;RCP&lt;const Integer&gt;&gt; &amp;pows,</div>
 <div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160;                   <span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;a, <span class="keyword">const</span> RCP&lt;const Number&gt; &amp;b,</div>
 <div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;                   <span class="keyword">const</span> RCP&lt;const Integer&gt; &amp;m)</div>
 <div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;{</div>
@@ -1579,7 +1579,7 @@ $(function() {
 <div class="line"><a name="l01479"></a><span class="lineno"> 1479</span>&#160;            <span class="keywordflow">if</span> (not ret_val)</div>
 <div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160;                <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160;        }</div>
-<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160;        pows.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a>(t)));</div>
+<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160;        pows.push_back(<a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(std::move(t)));</div>
 <div class="line"><a name="l01483"></a><span class="lineno"> 1483</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Rational&gt;(*b)) {</div>
 <div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;        RCP&lt;const Integer&gt; num, den, r;</div>
 <div class="line"><a name="l01485"></a><span class="lineno"> 1485</span>&#160;        <a class="code" href="namespaceSymEngine.html#a099fdf0478ebd3ed479f40ddb04f0315">get_num_den</a>(down_cast&lt;const Rational &amp;&gt;(*b), outArg(num), outArg(den));</div>
@@ -1601,7 +1601,7 @@ $(function() {
 <div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;    }</div>
 <div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;}</div>
 <div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160; </div>
-<div class="line"><a name="l01504"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a64d29f29e5080fa28f30bda2ae2464b9"> 1504</a></span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_integer_class</a> <a class="code" href="namespaceSymEngine.html#a64d29f29e5080fa28f30bda2ae2464b9">quadratic_residues</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;a)</div>
+<div class="line"><a name="l01504"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a64d29f29e5080fa28f30bda2ae2464b9"> 1504</a></span>&#160;vec_integer_class <a class="code" href="namespaceSymEngine.html#a64d29f29e5080fa28f30bda2ae2464b9">quadratic_residues</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Integer.html">Integer</a> &amp;a)</div>
 <div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;{</div>
 <div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;    <span class="comment">/*</span></div>
 <div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160;<span class="comment">        Returns the list of quadratic residues.</span></div>
@@ -1615,13 +1615,13 @@ $(function() {
 <div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;quadratic_residues: Input must be &gt; 0&quot;</span>);</div>
 <div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;    }</div>
 <div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160; </div>
-<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector.html">vec_integer_class</a> residue;</div>
+<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;    vec_integer_class residue;</div>
 <div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;    <span class="keywordflow">for</span> (integer_class i = integer_class(0); i &lt;= a.<a class="code" href="classSymEngine_1_1Integer.html#adb7bd5a47f20ae0aac9e7e82b2a4e29c">as_int</a>() / 2; i++) {</div>
-<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;        residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">push_back</a>((i * i) % a.<a class="code" href="classSymEngine_1_1Integer.html#adb7bd5a47f20ae0aac9e7e82b2a4e29c">as_int</a>());</div>
+<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;        residue.push_back((i * i) % a.<a class="code" href="classSymEngine_1_1Integer.html#adb7bd5a47f20ae0aac9e7e82b2a4e29c">as_int</a>());</div>
 <div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;    }</div>
 <div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160; </div>
-<div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;    sort(residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>());</div>
-<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;    residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/erase.html">erase</a>(unique(residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/begin.html">begin</a>(), residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>()), residue.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/vector/end.html">end</a>());</div>
+<div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;    sort(residue.begin(), residue.end());</div>
+<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;    residue.erase(unique(residue.begin(), residue.end()), residue.end());</div>
 <div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160; </div>
 <div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;    <span class="keywordflow">return</span> residue;</div>
 <div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;}</div>
@@ -1653,7 +1653,7 @@ $(function() {
 <div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160;        <span class="keyword">const</span> RCP&lt;const Integer&gt; a1 = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(a_final);</div>
 <div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;        <span class="keyword">const</span> RCP&lt;const Integer&gt; p1 = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(p2);</div>
 <div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160; </div>
-<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;        <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;        map_integer_uint prime_mul;</div>
 <div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;        <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, *p1);</div>
 <div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;        <span class="keywordtype">bool</span> ret_val;</div>
 <div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160; </div>
@@ -1688,7 +1688,7 @@ $(function() {
 <div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;        _mod = -(_mod);</div>
 <div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160; </div>
 <div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;    RCP&lt;const Integer&gt; mod2 = <a class="code" href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">integer</a>(_mod);</div>
-<div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l01592"></a><span class="lineno"> 1592</span>&#160;    <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, *mod2);</div>
 <div class="line"><a name="l01593"></a><span class="lineno"> 1593</span>&#160;    <span class="keywordtype">bool</span> ret_val;</div>
 <div class="line"><a name="l01594"></a><span class="lineno"> 1594</span>&#160; </div>
@@ -1707,10 +1707,10 @@ $(function() {
 <div class="line"><a name="l01607"></a><span class="lineno"> 1607</span>&#160;    <span class="keywordflow">if</span> (a.<a class="code" href="classSymEngine_1_1Integer.html#adb7bd5a47f20ae0aac9e7e82b2a4e29c">as_int</a>() &lt;= 0) {</div>
 <div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;mobius: Integer &lt;= 0&quot;</span>);</div>
 <div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;    }</div>
-<div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map.html">map_integer_uint</a> prime_mul;</div>
+<div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;    map_integer_uint prime_mul;</div>
 <div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;    <span class="keywordtype">bool</span> is_square_free = <span class="keyword">true</span>;</div>
 <div class="line"><a name="l01612"></a><span class="lineno"> 1612</span>&#160;    <a class="code" href="namespaceSymEngine.html#a20b4c6e1fb93393611e75807245f6a9b">prime_factor_multiplicities</a>(prime_mul, a);</div>
-<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160;    <span class="keyword">auto</span> num_prime_factors = prime_mul.<a class="codeRef" href="http://en.cppreference.com/w/cpp/container/map/size.html">size</a>();</div>
+<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160;    <span class="keyword">auto</span> num_prime_factors = prime_mul.size();</div>
 <div class="line"><a name="l01614"></a><span class="lineno"> 1614</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;it : prime_mul) {</div>
 <div class="line"><a name="l01615"></a><span class="lineno"> 1615</span>&#160;        <span class="keywordtype">int</span> p_freq = it.second;</div>
 <div class="line"><a name="l01616"></a><span class="lineno"> 1616</span>&#160;        <span class="keywordflow">if</span> (p_freq &gt; 1) {</div>
@@ -1753,7 +1753,7 @@ $(function() {
 <div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;    <span class="keywordflow">return</span> n;</div>
 <div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;}</div>
 <div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160; </div>
-<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;<a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;integer_class, integer_class&gt;</a></div>
+<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;std::pair&lt;integer_class, integer_class&gt;</div>
 <div class="line"><a name="l01677"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010"> 1677</a></span>&#160;<a class="code" href="namespaceSymEngine.html#a92cbc295ca4ec5d6b0b9ea4da2def010">mp_perfect_power_decomposition</a>(<span class="keyword">const</span> integer_class &amp;n, <span class="keywordtype">bool</span> lowest_exponent)</div>
 <div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;{</div>
 <div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;    <span class="comment">// From</span></div>
@@ -1761,8 +1761,8 @@ $(function() {
 <div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> p = 2;</div>
 <div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;    integer_class intone, i, j, m, res;</div>
 <div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;    intone = 1;</div>
-<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;    <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair&lt;integer_class, integer_class&gt;</a> respair;</div>
-<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;    respair = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(n, intone);</div>
+<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;    std::pair&lt;integer_class, integer_class&gt; respair;</div>
+<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;    respair = std::make_pair(n, intone);</div>
 <div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160; </div>
 <div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;    <span class="keywordflow">while</span> ((intone &lt;&lt; p) &lt;= n) {</div>
 <div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;        i = 2;</div>
@@ -1777,7 +1777,7 @@ $(function() {
 <div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;        }</div>
 <div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;        mp_pow_ui(res, i, p);</div>
 <div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;        <span class="keywordflow">if</span> (res == n) {</div>
-<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            respair = <a class="codeRef" href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a>(i, p);</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            respair = std::make_pair(i, p);</div>
 <div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;            <span class="keywordflow">if</span> (lowest_exponent) {</div>
 <div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;                <span class="keywordflow">return</span> respair;</div>
 <div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;            }</div>
@@ -1789,19 +1789,12 @@ $(function() {
 <div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160; </div>
 <div class="line"><a name="l01710"></a><span class="lineno"> 1710</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
-<div class="ttc" id="aback_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/back.html">std::vector::back</a></div><div class="ttdeci">T back(T... args)</div></div>
-<div class="ttc" id="abegin_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/begin.html">std::vector::begin</a></div><div class="ttdeci">T begin(T... args)</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Integer_html"><div class="ttname"><a href="classSymEngine_1_1Integer.html">SymEngine::Integer</a></div><div class="ttdoc">Integer Class.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00018">integer.h:19</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Integer_html_a562351860ae5f8d8bf1c84905caa00fc"><div class="ttname"><a href="classSymEngine_1_1Integer.html#a562351860ae5f8d8bf1c84905caa00fc">SymEngine::Integer::as_integer_class</a></div><div class="ttdeci">const integer_class &amp; as_integer_class() const</div><div class="ttdoc">Convert to integer_class.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00045">integer.h:45</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Integer_html_adb7bd5a47f20ae0aac9e7e82b2a4e29c"><div class="ttname"><a href="classSymEngine_1_1Integer.html#adb7bd5a47f20ae0aac9e7e82b2a4e29c">SymEngine::Integer::as_int</a></div><div class="ttdeci">signed long int as_int() const</div><div class="ttdoc">Convert to int, raise an exception if it does not fit.</div><div class="ttdef"><b>Definition:</b> <a href="integer_8cpp_source.html#l00034">integer.cpp:34</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Rational_html_a0bbb6880b55f4db457f8183b5db400ff"><div class="ttname"><a href="classSymEngine_1_1Rational.html#a0bbb6880b55f4db457f8183b5db400ff">SymEngine::Rational::from_mpq</a></div><div class="ttdeci">static RCP&lt; const Number &gt; from_mpq(const rational_class &amp;i)</div><div class="ttdef"><b>Definition:</b> <a href="rational_8cpp_source.html#l00023">rational.cpp:23</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Sieve_1_1iterator_html"><div class="ttname"><a href="classSymEngine_1_1Sieve_1_1iterator.html">SymEngine::Sieve::iterator</a></div><div class="ttdef"><b>Definition:</b> <a href="prime__sieve_8h_source.html#l00043">prime_sieve.h:44</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1mp__randstate_html"><div class="ttname"><a href="classSymEngine_1_1mp__randstate.html">SymEngine::mp_randstate</a></div><div class="ttdef"><b>Definition:</b> <a href="mp__class_8h_source.html#l01225">mp_class.h:1226</a></div></div>
-<div class="ttc" id="aend_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/end.html">std::vector::end</a></div><div class="ttdeci">T end(T... args)</div></div>
-<div class="ttc" id="aerase_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/erase.html">std::vector::erase</a></div><div class="ttdeci">T erase(T... args)</div></div>
-<div class="ttc" id="amake_pair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair/make_pair.html">std::make_pair</a></div><div class="ttdeci">T make_pair(T... args)</div></div>
-<div class="ttc" id="amap_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map.html">std::map</a></div></div>
-<div class="ttc" id="amove_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/move.html">std::move</a></div><div class="ttdeci">T move(T... args)</div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a059db1524923226319eb7245f03f1d65"><div class="ttname"><a href="namespaceSymEngine.html#a059db1524923226319eb7245f03f1d65">SymEngine::mp_polygonal_number</a></div><div class="ttdeci">integer_class mp_polygonal_number(const integer_class &amp;s, const integer_class &amp;n)</div><div class="ttdoc">Numeric calculation of the n:th s-gonal number.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l01649">ntheory.cpp:1649</a></div></div>
@@ -1859,15 +1852,9 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_adeea01ccd116f965ae18ccc76e43f7b7"><div class="ttname"><a href="namespaceSymEngine.html#adeea01ccd116f965ae18ccc76e43f7b7">SymEngine::factor_lehman_method</a></div><div class="ttdeci">int factor_lehman_method(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n)</div><div class="ttdoc">Factor using lehman's methods.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00254">ntheory.cpp:254</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_aff0d65ef819e6ee1328757e4acf3fb1e"><div class="ttname"><a href="namespaceSymEngine.html#aff0d65ef819e6ee1328757e4acf3fb1e">SymEngine::lucas2</a></div><div class="ttdeci">void lucas2(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;g, const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;s, unsigned long n)</div><div class="ttdoc">Lucas number n and n-1.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00135">ntheory.cpp:135</a></div></div>
 <div class="ttc" id="antheory_8h_html"><div class="ttname"><a href="ntheory_8h.html">ntheory.h</a></div></div>
-<div class="ttc" id="anumeric_limits_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/types/numeric_limits.html">std::numeric_limits</a></div></div>
-<div class="ttc" id="apair_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/utility/pair.html">std::pair</a></div></div>
 <div class="ttc" id="apow_8h_html"><div class="ttname"><a href="pow_8h.html">pow.h</a></div></div>
-<div class="ttc" id="apush_back_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector/push_back.html">std::vector::push_back</a></div><div class="ttdeci">T push_back(T... args)</div></div>
 <div class="ttc" id="arational_8h_html"><div class="ttname"><a href="rational_8h.html">rational.h</a></div></div>
-<div class="ttc" id="asize_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/map/size.html">std::map::size</a></div><div class="ttdeci">T size(T... args)</div></div>
-<div class="ttc" id="asort_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/algorithm/sort.html">std::sort</a></div><div class="ttdeci">T sort(T... args)</div></div>
 <div class="ttc" id="astructSymEngine_1_1RCPIntegerKeyLess_html"><div class="ttname"><a href="structSymEngine_1_1RCPIntegerKeyLess.html">SymEngine::RCPIntegerKeyLess</a></div><div class="ttdoc">less operator (&lt;) for Integers</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00185">integer.h:185</a></div></div>
-<div class="ttc" id="avector_html"><div class="ttname"><a href="http://en.cppreference.com/w/cpp/container/vector.html">std::vector</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");
