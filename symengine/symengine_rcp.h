@@ -259,7 +259,7 @@ std::string typeName(const T &t)
     return "RCP<>";
 }
 
-void print_stack_on_segfault();
+SYMENGINE_EXPORT void print_stack_on_segfault();
 
 #else
 

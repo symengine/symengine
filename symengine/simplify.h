@@ -8,7 +8,8 @@
 namespace SymEngine
 {
 
-class SimplifyVisitor : public BaseVisitor<SimplifyVisitor, TransformVisitor>
+class SYMENGINE_EXPORT SimplifyVisitor
+    : public BaseVisitor<SimplifyVisitor, TransformVisitor>
 {
 private:
     std::pair<RCP<const Basic>, RCP<const Basic>>
@@ -24,6 +25,7 @@ public:
     void bvisit(const OneArgFunction &x);
 };
 
+SYMENGINE_EXPORT
 RCP<const Basic> simplify(const RCP<const Basic> &x,
                           const Assumptions *assumptions = nullptr);
 
