@@ -101,7 +101,7 @@ else
   fi
 
   if [[ "${WITH_FLINT}" == "yes" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
-      conda_pkgs="$conda_pkgs libflint=2.9.0"
+      conda_pkgs="$conda_pkgs libflint=3.2.2"
   fi
 
   if [[ "${WITH_ARB}" == "yes" ]]; then
