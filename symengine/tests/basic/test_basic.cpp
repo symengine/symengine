@@ -21,6 +21,8 @@ using SymEngine::function_symbol;
 using SymEngine::FunctionSymbol;
 using SymEngine::has_symbol;
 using SymEngine::I;
+using SymEngine::Inf;
+using SymEngine::infty;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
@@ -32,6 +34,7 @@ using SymEngine::map_uint_mpz;
 using SymEngine::Mul;
 using SymEngine::multiset_basic;
 using SymEngine::Nan;
+using SymEngine::NegInf;
 using SymEngine::NotImplementedError;
 using SymEngine::Number;
 using SymEngine::one;
@@ -956,11 +959,22 @@ TEST_CASE("has_symbol: Basic", "[basic]")
     REQUIRE(has_symbol(*r1, *x));
     REQUIRE(has_symbol(*r1, *y));
     REQUIRE(not has_symbol(*r1, *z));
+    REQUIRE(not has_symbol(*r1, *Nan));
 
     r1 = sin(add(x, pow(y, integer(2))));
     REQUIRE(has_symbol(*r1, *x));
     REQUIRE(has_symbol(*r1, *y));
     REQUIRE(not has_symbol(*r1, *z));
+    REQUIRE(not has_symbol(*r1, *Inf));
+
+    r1 = add(x, infty(1));
+    REQUIRE(has_symbol(*r1, *Inf));
+    REQUIRE(not has_symbol(*r1, *NegInf));
+    r1 = add(x, infty(-1));
+    REQUIRE(has_symbol(*r1, *NegInf));
+
+    r1 = add(x, Nan);
+    REQUIRE(has_symbol(*r1, *Nan));
 }
 
 TEST_CASE("coeff: Basic", "[basic]")

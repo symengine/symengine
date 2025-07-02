@@ -115,6 +115,23 @@ public:
         }
     }
 
+    void bvisit(const Infty &x)
+    {
+        if (eq(*x_, x)) {
+            has_ = true;
+            stop_ = true;
+        }
+    }
+
+    void bvisit(const NaN &x)
+    {
+        // equality between NaN is iffy, even though at time of writing this is true: eq(*Nan, *Nan)
+        if (is_a<NaN>(*x_)) {
+            has_ = true;
+            stop_ = true;
+        }
+    }
+
     void bvisit(const Basic &x){};
 
     bool apply(const Basic &b)
