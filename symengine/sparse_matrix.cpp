@@ -130,7 +130,9 @@ void CSRMatrix::set(unsigned i, unsigned j, const RCP<const Basic> &e)
                 k++;
             }
             break;
-        } else if (j_[mid] >= j and j_[mid - 1] < j) {
+        }
+        SYMENGINE_ASSERT(mid > 0);
+        if (j_[mid] >= j and j_[mid - 1] < j) {
             k = mid;
             break;
         } else if (j_[mid - 1] >= j) {
@@ -417,7 +419,7 @@ bool CSRMatrix::csr_has_sorted_indices(const std::vector<unsigned> &p_,
                                        unsigned row_)
 {
     for (unsigned i = 0; i < row_; i++) {
-        for (unsigned jj = p_[i]; jj < p_[i + 1] - 1; jj++) {
+        for (unsigned jj = p_[i]; jj + 1 < p_[i + 1]; jj++) {
             if (j_[jj] > j_[jj + 1])
                 return false;
         }
@@ -502,10 +504,14 @@ CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x,
         p.push_back(p.back());
         for (unsigned ci = 0; ci < ncols; ++ci) {
             auto elem = exprs[ri]->diff(x[ci], diff_cache);
+            std::cout << "ri=" << ri << ", ci=" << ci << ", elem=" << elem->__str__();///DO-NOT-MERGE!!!
             if (!is_true(is_zero(*elem))) {
+                std::cout << "!\n";
                 p.back()++;
                 j.push_back(ci);
                 elems.emplace_back(std::move(elem));
+            } else {
+                std::cout << '\n';
             }
         }
     }
@@ -643,6 +649,7 @@ void csr_diagonal(const CSRMatrix &A, DenseMatrix &D)
             } else if (A.j_[jj] < i) {
                 row_start = jj + 1;
             } else {
+                SYMENGINE_ASSERT(jj > 0);
                 row_end = jj - 1;
             }
         }
