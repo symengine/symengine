@@ -504,14 +504,10 @@ CSRMatrix CSRMatrix::jacobian(const vec_basic &exprs, const vec_sym &x,
         p.push_back(p.back());
         for (unsigned ci = 0; ci < ncols; ++ci) {
             auto elem = exprs[ri]->diff(x[ci], diff_cache);
-            std::cout << "ri=" << ri << ", ci=" << ci << ", elem=" << elem->__str__();///DO-NOT-MERGE!!!
             if (!is_true(is_zero(*elem))) {
-                std::cout << "!\n";
                 p.back()++;
                 j.push_back(ci);
                 elems.emplace_back(std::move(elem));
-            } else {
-                std::cout << '\n';
             }
         }
     }

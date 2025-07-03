@@ -2347,7 +2347,8 @@ TEST_CASE("Test Jacobian", "[matrices]")
         == DenseMatrix(2, 2, {integer(1), integer(-1), y, x}));
 
     {
-        // >>> e = list(map(parse_expr, "2*x*x1 + 2*y*y1, -y1 + y_dt,2*x*x1_dt + 2*y*y1_dt
+        // >>> e = list(map(parse_expr, "2*x*x1 + 2*y*y1, -y1 + y_dt,2*x*x1_dt +
+        // 2*y*y1_dt
         // ... + 2*x1**2 + 2*y1**2,-g + y1_dt - T*y,x1_dt - T*x".split(',')))
         // >>> wrt = list(map(Symbol, "x_dt,y_dt,x1_dt,y1_dt,T_dt".split(',')))
         // >>> Matrix(e).jacobian(Matrix(wrt))
@@ -2360,22 +2361,24 @@ TEST_CASE("Test Jacobian", "[matrices]")
         // ⎢0  0   0    1   0⎥
         // ⎢                 ⎥
         // ⎣0  0   1    0   0⎦
-        RCP<const Basic> one = integer(1), two = integer(2), minus_one = integer(-1);
+        RCP<const Basic> one = integer(1), two = integer(2),
+                         minus_one = integer(-1);
         RCP<const Symbol> x1 = symbol("x1"), y1 = symbol("y1"),
-            x_dt = symbol("x_dt"), y_dt = symbol("y_dt"),
-            x1_dt = symbol("x1_dt"), y1_dt = symbol("y1_dt"),
-            t_dt = symbol("t_dt"), g = symbol("g");
+                          x_dt = symbol("x_dt"), y_dt = symbol("y_dt"),
+                          x1_dt = symbol("x1_dt"), y1_dt = symbol("y1_dt"),
+                          t_dt = symbol("t_dt"), g = symbol("g");
 
-        std::vector<RCP<const Basic>> exprs {{
-                add(mul(two, mul(x, x1)), mul(two, mul(y, y1))),
-                add(mul(minus_one, y1), y_dt),
-                add(add(mul(two, mul(x, x1_dt)), mul(two, pow(x1, two))), add(mul(two, mul(y, y1_dt)), mul(two, pow(y1, two)))),
-                add(mul(minus_one, mul(t, y)), add(mul(minus_one, g), y1_dt)),
-                add(mul(minus_one, mul(t, x)), x1_dt),
-            }};
-        std::vector<RCP<const Basic>> wrt {{x_dt, y_dt, x1_dt, y1_dt, t_dt }};
-        // Regression test, the line below failed SYMENGINE_ASSERT(is_canonical())
-        // in SymEngine::CSRMatrix::CSRMatrix:
+        std::vector<RCP<const Basic>> exprs{{
+            add(mul(two, mul(x, x1)), mul(two, mul(y, y1))),
+            add(mul(minus_one, y1), y_dt),
+            add(add(mul(two, mul(x, x1_dt)), mul(two, pow(x1, two))),
+                add(mul(two, mul(y, y1_dt)), mul(two, pow(y1, two)))),
+            add(mul(minus_one, mul(t, y)), add(mul(minus_one, g), y1_dt)),
+            add(mul(minus_one, mul(t, x)), x1_dt),
+        }};
+        std::vector<RCP<const Basic>> wrt{{x_dt, y_dt, x1_dt, y1_dt, t_dt}};
+        // Regression test, the line below failed
+        // SYMENGINE_ASSERT(is_canonical()) in SymEngine::CSRMatrix::CSRMatrix:
         auto jac = CSRMatrix::jacobian(exprs, wrt);
         auto /*[p,j,e]*/ pje = jac.as_vectors();
         auto p = std::get<0>(pje);
@@ -2383,8 +2386,8 @@ TEST_CASE("Test Jacobian", "[matrices]")
         auto e = std::get<2>(pje);
         REQUIRE(p.size() == 6);
         REQUIRE(j.size() == p.back());
-        REQUIRE(p == std::vector<unsigned>{{0,0,1,3,4,5}});
-        REQUIRE(j == std::vector<unsigned>{{1,2,3,3,2}});
+        REQUIRE(p == std::vector<unsigned>{{0, 0, 1, 3, 4, 5}});
+        REQUIRE(j == std::vector<unsigned>{{1, 2, 3, 3, 2}});
         REQUIRE(eq(*e[0], *one));
         REQUIRE(eq(*e[1], *mul(two, x)));
         REQUIRE(eq(*e[2], *mul(two, y)));
