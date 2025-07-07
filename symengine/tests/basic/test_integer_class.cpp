@@ -818,8 +818,7 @@ TEST_CASE("misc: integer_class", "[integer_class]")
                 == 9223372036854775809u);
         REQUIRE(mp_get_ui(integer_class("-9223372036854775808"))
                 == 9223372036854775808u);
-    }
-    else if (sizeof(long) == 4) {
+    } else if (sizeof(long) == 4) {
         REQUIRE(mp_get_ui(integer_class("-4294967296")) == 0u);
         REQUIRE(mp_get_ui(integer_class("-4294967295")) == 4294967295u);
         REQUIRE(mp_get_ui(integer_class("-2147483649")) == 2147483649u);
@@ -841,8 +840,7 @@ TEST_CASE("misc: integer_class", "[integer_class]")
         REQUIRE(mp_get_ui(integer_class("-18446744073709551615"))
                 == 18446744073709551615u);
         REQUIRE(mp_get_ui(integer_class("18446744073709551616")) == 0u);
-    }
-    else if (sizeof(long) == 4) {
+    } else if (sizeof(long) == 4) {
         REQUIRE(mp_get_ui(integer_class("2147483647")) == 2147483647u);
         REQUIRE(mp_get_ui(integer_class("-2147483647")) == 2147483647u);
         REQUIRE(mp_get_ui(integer_class("4294967295")) == 4294967295u);
@@ -854,7 +852,7 @@ TEST_CASE("misc: integer_class", "[integer_class]")
     if (sizeof(long) == 8) {
         REQUIRE(mp_scan1(LONG_MIN) == 63);
     } else if (sizeof(long) == 4) {
-        REQUIRE(mp_scan1(LONG_MIN) == 31);    
+        REQUIRE(mp_scan1(LONG_MIN) == 31);
     }
     REQUIRE(mp_scan1(-1024) == 10);
     REQUIRE(mp_scan1(-768) == 8);
