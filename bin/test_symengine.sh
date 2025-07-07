@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
+source bin/install_deps.sh
+
 # Exit on error
 set -e
 # Echo each command
 set -x
-
-source bin/install_deps.sh
 
 if [[ "${WITH_SANITIZE}" != "" ]]; then
         export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
