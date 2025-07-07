@@ -75,7 +75,9 @@ else
   conda_pkgs="$conda_pkgs ccache"
   if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
       conda_pkgs="$conda_pkgs boost=1.80.0"
-      export CXXFLAGS="-Wno-error=cpp"  # boost-1.80 pragma-warns about 1.82 req. c++14
+      if [[ "${RUNNER_OS}" != "Windows" ]]; then
+        export CXXFLAGS="-Wno-error=cpp"  # boost-1.80 pragma-warns about 1.82 req. c++14
+      fi
   else
       conda_pkgs="$conda_pkgs gmp=6.3.0"
   fi
