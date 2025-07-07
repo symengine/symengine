@@ -236,6 +236,11 @@ jobs:
 
           - ARCH: x64
             OS: windows-latest
+            BUILD_TYPE: Release
+            INTEGER_CLASS: boostmp
+
+          - ARCH: x64
+            OS: windows-latest
             BUILD_TYPE: Debug
 
     env:
