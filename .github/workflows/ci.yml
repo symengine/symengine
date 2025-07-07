@@ -214,23 +214,23 @@ jobs:
     
           - MSYSTEM: MINGW64
             ARCH: x86_64
-            OS: windows-2019
+            OS: windows-latest
             BUILD_TYPE: Release
 
           - MSYSTEM: MINGW64
             ARCH: x86_64
-            OS: windows-2019
+            OS: windows-latest
             BUILD_TYPE: Debug
 
           - MSYSTEM: MINGW32
             ARCH: i686
-            OS: windows-2019
+            OS: windows-latest
             BUILD_TYPE: Release
             WITH_MPFR: yes
 
           - MSYSTEM: MINGW32
             ARCH: i686
-            OS: windows-2019
+            OS: windows-latest
             BUILD_TYPE: Debug
             WITH_MPFR: yes
             WITH_MPC: yes
