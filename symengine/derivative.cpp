@@ -391,6 +391,10 @@ void DiffVisitor::bvisit(const Derivative &self)
     result_ = ret;
 }
 
+void DiffVisitor::bvisit(const Integral &self) { 
+    result_ = Integral::create(self.rcp_from_this(), {x});
+}
+
 static inline RCP<const Symbol> get_dummy(const Basic &b, std::string name)
 {
     RCP<const Symbol> s;
