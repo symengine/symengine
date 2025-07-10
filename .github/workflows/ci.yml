@@ -134,10 +134,6 @@ jobs:
             OS: ubuntu-22.04
             CC: gcc
 
-          - TEST_CLANG_FORMAT: yes
-            OS: ubuntu-22.04
-            CC: gcc
-
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_PIRANHA: yes
@@ -208,32 +204,45 @@ jobs:
             CC: clang
             OS: ubuntu-22.04
 
-          - CONDA_ENV_FILE: symengine/utilities/matchpycpp/environment.yml
-            CC: gcc
-            OS: ubuntu-22.04
-    
-          - MSYSTEM: MINGW64
+          - MSYS_ENV: UCRT64
             ARCH: x86_64
-            OS: windows-2019
+            OS: windows-latest
             BUILD_TYPE: Release
 
-          - MSYSTEM: MINGW64
+          - MSYS_ENV: UCRT64
             ARCH: x86_64
-            OS: windows-2019
+            OS: windows-latest
             BUILD_TYPE: Debug
 
-          - MSYSTEM: MINGW32
-            ARCH: i686
-            OS: windows-2019
+          - ARCH: x64
+            OS: windows-latest
             BUILD_TYPE: Release
-            WITH_MPFR: yes
-
-          - MSYSTEM: MINGW32
-            ARCH: i686
-            OS: windows-2019
-            BUILD_TYPE: Debug
-            WITH_MPFR: yes
             WITH_MPC: yes
+            WITH_MPFR: yes
+
+          - ARCH: x64
+            OS: windows-latest
+            BUILD_TYPE: Release
+            WITH_MPC: yes
+            WITH_MPFR: yes
+            BUILD_SHARED_LIBS: yes
+
+          - ARCH: x64
+            OS: windows-latest
+            BUILD_TYPE: Release
+            WITH_MPC: yes
+            WITH_MPFR: yes
+            WITH_FLINT: yes
+
+          - ARCH: x64
+            OS: windows-latest
+            BUILD_TYPE: Release
+            INTEGER_CLASS: boostmp
+
+          - ARCH: x64
+            OS: windows-latest
+            BUILD_TYPE: Debug
+
     env:
       USE_GLIBCXX_DEBUG: ${{ matrix.USE_GLIBCXX_DEBUG }}
       WITH_MPFR: ${{ matrix.WITH_MPFR }}
@@ -247,12 +256,10 @@ jobs:
       INTEGER_CLASS: ${{ matrix.INTEGER_CLASS }}
       WITH_ARB: ${{ matrix.WITH_ARB }}
       WITH_PIRANHA: ${{ matrix.WITH_PIRANHA }}
-      CONDA_ENV_FILE: ${{ matrix.CONDA_ENV_FILE }}
       WITH_BFD: ${{ matrix.WITH_BFD }}
       WITH_FLINT: ${{ matrix.WITH_FLINT }}
       EXTRA_APT_REPOSITORY: ${{ matrix.EXTRA_APT_REPOSITORY }}
       EXTRA_APT_PACKAGES: ${{ matrix.EXTRA_APT_PACKAGES }}
-      TEST_CLANG_FORMAT: ${{ matrix.TEST_CLANG_FORMAT }}
       WITH_ECM: ${{ matrix.WITH_ECM }}
       WITH_LATEST_GCC: ${{ matrix.WITH_LATEST_GCC }}
       OS: ${{ matrix.OS }}
@@ -266,21 +273,31 @@ jobs:
       WITH_MPC: ${{ matrix.WITH_MPC }}
       BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
       NO_RTTI: ${{ matrix.NO_RTTI }}
-      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.CONDA_ENV_FILE }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.TEST_CLANG_FORMAT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_COTIRE }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}-${{ matrix.NO_RTTI }}
+      MSYS_ENV: ${{ matrix.MSYS_ENV }}
+      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_COTIRE }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}-${{ matrix.NO_RTTI }}-${{ matrix.MSYS_ENV }}
       CCACHE_DIR: 'D:\a\_temp\msys\msys64\home\runneradmin\.ccache'
 
     steps:
     - name: Setup msys2
       uses: msys2/setup-msys2@v2
-      if: matrix.MSYSTEM != ''
+      if: matrix.MSYS_ENV != ''
       with:
-        msystem: ${{ matrix.MSYSTEM }}
+        msystem: ${{ matrix.MSYS_ENV }}
         update: true
-        install: mingw-w64-${{ matrix.ARCH }}-gcc mingw-w64-${{ matrix.ARCH }}-cmake mingw-w64-${{ matrix.ARCH }}-ccache python make git
+        install: mingw-w64-ucrt-${{ matrix.ARCH }}-gcc mingw-w64-ucrt-${{ matrix.ARCH }}-cmake mingw-w64-ucrt-${{ matrix.ARCH }}-ccache python make git
 
     - name: Set ccache dir
-      if: matrix.MSYSTEM == ''
+      if: matrix.MSYS_ENV == ''
       run: echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
+
+    - uses: conda-incubator/setup-miniconda@v3
+      if: matrix.MSYS_ENV == ''
+      with:
+        activate-environment: symengine
+        channel-priority: strict
+        architecture: ${{ matrix.ARCH }}
+        channels: conda-forge
+        conda-remove-defaults: "true"
 
     - name: Cache ccache
       uses: actions/cache@v4
@@ -296,15 +313,30 @@ jobs:
 
     - name: Build and test symengine
       shell: msys2 {0}
-      if: matrix.MSYSTEM != ''
-      run: |
-        source bin/test_symengine_unix.sh
+      if: matrix.MSYS_ENV != ''
+      run: ./bin/test_symengine.sh
 
     - name: Build and test symengine
-      shell: bash
-      if: matrix.MSYSTEM == ''
-      run: |
-        source bin/test_symengine_unix.sh
+      shell: bash -el {0}
+      if: matrix.MSYS_ENV == ''
+      run: source ./bin/test_symengine.sh
+
+  matchpycpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          channels: conda-forge
+          environment-file: symengine/utilities/matchpycpp/environment.yml
+      - shell: bash -el {0}
+        run: ./bin/test_matchpycpp_gen_tests.sh
+
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install "clang-format==11.1.0.2" && ./bin/run_clang_format.sh
 
   check:
     if: always()

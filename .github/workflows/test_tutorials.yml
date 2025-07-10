@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run tutorials
         run: |
-          source bin/install_travis.sh
+          source bin/install_deps.sh
           export NB_PYTHON_PREFIX=$CONDA_PREFIX
           ./binder/postBuild
           python bin/test_tutorials.py
