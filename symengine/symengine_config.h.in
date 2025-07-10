@@ -97,4 +97,8 @@
 #include "symengine/symengine_config_cling.h"
 #endif
 
+#if defined(__CLANG_REPL__) && defined(__EMSCRIPTEN__)
+#include "symengine/symengine_config_cling.h"
+#endif
+
 #endif
