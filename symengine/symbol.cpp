@@ -35,23 +35,29 @@ RCP<const Symbol> Symbol::as_dummy() const
     return dummy(name_);
 }
 
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+std::atomic<size_t> Dummy::count_{0};
+#else
 size_t Dummy::count_ = 0;
+#endif
 
-Dummy::Dummy() : Symbol("_Dummy_" + to_string(count_))
+Dummy::Dummy() : Dummy("_Dummy") {}
+
+Dummy::Dummy(const std::string &name)
+    : Dummy(name,
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+            Dummy::count_.fetch_add(1, std::memory_order_relaxed)
+#else
+            Dummy::count_++
+#endif
+    )
 {
-    SYMENGINE_ASSIGN_TYPEID()
-    count_ += 1;
-    dummy_index = count_;
 }
 
-Dummy::Dummy(const std::string &name) : Symbol("_" + name)
-{
-    SYMENGINE_ASSIGN_TYPEID()
-    count_ += 1;
-    dummy_index = count_;
-}
+Dummy::Dummy(const std::string &name, size_t dummy_index)
+    : Symbol(name), dummy_index(dummy_index){SYMENGINE_ASSIGN_TYPEID()}
 
-hash_t Dummy::__hash__() const
+      hash_t Dummy::__hash__() const
 {
     hash_t seed = 0;
     hash_combine(seed, get_name());

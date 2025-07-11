@@ -11,6 +11,7 @@ using SymEngine::add;
 using SymEngine::Basic;
 using SymEngine::complex_double;
 using SymEngine::cos;
+using SymEngine::dummy;
 using SymEngine::Integer;
 using SymEngine::is_a;
 using SymEngine::Number;
@@ -65,6 +66,8 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
 
     // Symbol
     check_string_serialization_roundtrip(se::symbol("y"));
+    // Dummy
+    check_string_serialization_roundtrip(se::dummy("foo"));
     // Add
     check_string_serialization_roundtrip(
         se::add(se::symbol("y"), se::integer(3)));
