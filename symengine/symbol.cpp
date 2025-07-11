@@ -47,7 +47,7 @@ Dummy::Dummy()
 #ifdef WITH_SYMENGINE_THREAD_SAFE
                  Dummy::count_.fetch_add(1, std::memory_order_relaxed)
 #else
-                  count_
+                 count_
 #endif
                      ))
 {
