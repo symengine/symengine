@@ -51,7 +51,11 @@ class Dummy : public Symbol
 {
 private:
     //! Dummy count
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+    static std::atomic<size_t> count_;
+#else
     static size_t count_;
+#endif
     //! Dummy index
     size_t dummy_index;
 
@@ -60,6 +64,7 @@ public:
     //! Dummy Constructors
     explicit Dummy();
     explicit Dummy(const std::string &name);
+    Dummy(const std::string &name, size_t index);
     //! \return Size of the hash
     hash_t __hash__() const override;
     /*! Equality comparator
@@ -76,6 +81,10 @@ public:
     {
         return dummy_index;
     }
+    static constexpr const char *default_Dummy_prefix_ = "_Dummy_";
+    static constexpr size_t default_Dummy_prefix_len_
+        = sizeof(default_Dummy_prefix_) - 1;
+    static_assert(default_Dummy_prefix_len_ == 7);
 };
 
 //! inline version to return `Symbol`
@@ -87,12 +96,23 @@ inline RCP<const Symbol> symbol(const std::string &name)
 //! inline version to return `Dummy`
 inline RCP<const Dummy> dummy()
 {
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+    return make_rcp<const Dummy>(
+        Dummy::default_Dummy_prefix_,
+        Dummy::count_.fetch_add(1, std::memory_order_relaxed));
+#else
     return make_rcp<const Dummy>();
+#endif
 }
 
 inline RCP<const Dummy> dummy(const std::string &name)
 {
     return make_rcp<const Dummy>(name);
+}
+
+inline RCP<const Dummy> dummy(const std::string &name, size_t dummy_index)
+{
+    return make_rcp<const Dummy>(name, dummy_index);
 }
 
 inline bool is_a_Symbol(const Basic &b)
