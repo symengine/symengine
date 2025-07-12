@@ -14,6 +14,8 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
         elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
             export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
             export CXXFLAGS="$CXXFLAGS -std=c++20"
+        elif [[ "${WITH_SANITIZE}" == "thread" ]]; then
+            export TSAN_OPTIONS=halt_on_error=1  # https://github.com/google/sanitizers/wiki/ThreadSanitizerFlags
         elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
