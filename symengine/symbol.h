@@ -81,7 +81,7 @@ public:
     {
         return dummy_index;
     }
-    static constexpr const char *default_Dummy_prefix_ = "_Dummy_";
+    static constexpr const char default_Dummy_prefix_[]{"_Dummy_"};
     static constexpr size_t default_Dummy_prefix_len_
         = sizeof(default_Dummy_prefix_) - 1;
     static_assert(default_Dummy_prefix_len_ == 7);
