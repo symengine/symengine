@@ -4173,9 +4173,10 @@ TEST_CASE("min: functions", "[functions]")
     CHECK_THROWS_AS(min({c}), SymEngineException);
 }
 
-void create_a_bunch_of_dummies(vec_basic * out, unsigned n) {
-    std::cout << "out="<< out << ", n="<< n;
-    for (unsigned i=0; i<n; ++i) {
+void create_a_bunch_of_dummies(vec_basic *out, unsigned n)
+{
+    std::cout << "out=" << out << ", n=" << n;
+    for (unsigned i = 0; i < n; ++i) {
         out->push_back(dummy("x"));
     }
 }
@@ -4201,23 +4202,25 @@ TEST_CASE("test_dummy", "[Dummy]")
 
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
     // Dummy has a static counter variable.
-    const unsigned thread_pool_size {16};
+    const unsigned thread_pool_size{16};
     std::vector<std::thread> thread_pool{};
     std::vector<vec_basic> dummies(thread_pool_size);
-    const unsigned n_dummies_per_vector {42};
-    for (unsigned i=0; i<thread_pool_size; ++i){
-        thread_pool.emplace_back(&create_a_bunch_of_dummies, &dummies[i], n_dummies_per_vector);
+    const unsigned n_dummies_per_vector{42};
+    for (unsigned i = 0; i < thread_pool_size; ++i) {
+        thread_pool.emplace_back(&create_a_bunch_of_dummies, &dummies[i],
+                                 n_dummies_per_vector);
     }
-    for (unsigned i=0; i<thread_pool_size; ++i) {
+    for (unsigned i = 0; i < thread_pool_size; ++i) {
         thread_pool[i].join();
     }
     std::set<size_t> indices_seen;
-    for (unsigned i=0; i<dummies.size(); ++i) {
-        for (unsigned j=0; j<dummies[i].size(); ++j) {
-            indices_seen.insert(down_cast<const Dummy&>(*dummies[i][j]).get_index());
+    for (unsigned i = 0; i < dummies.size(); ++i) {
+        for (unsigned j = 0; j < dummies[i].size(); ++j) {
+            indices_seen.insert(
+                down_cast<const Dummy &>(*dummies[i][j]).get_index());
         }
     }
-    REQUIRE(indices_seen.size() == thread_pool_size*n_dummies_per_vector);
+    REQUIRE(indices_seen.size() == thread_pool_size * n_dummies_per_vector);
 #endif
 }
 
