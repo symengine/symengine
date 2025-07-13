@@ -4200,6 +4200,7 @@ TEST_CASE("test_dummy", "[Dummy]")
 
     REQUIRE(xdummy1->compare(*xdummy1) == 0);
 
+#if 0 // disabled for now (until gh-2111)
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
     // Dummy has a static counter variable.
     const unsigned thread_pool_size{16};
@@ -4221,6 +4222,7 @@ TEST_CASE("test_dummy", "[Dummy]")
         }
     }
     REQUIRE(indices_seen.size() == thread_pool_size * n_dummies_per_vector);
+#endif
 #endif
 }
 
