@@ -58,7 +58,8 @@ Dummy::Dummy()
     // this is inefficient: we should not construct Dummy instances using
     // Dummy() (since we need the thread-safely incremented value *at
     // construction of Symbol*).
-    dummy_index = std::stoul(get_name().substr(default_Dummy_prefix_len_));
+    dummy_index = std::stoull(get_name().substr(default_Dummy_prefix_len_));
+    static_assert(sizeof(unsigned long long) >= sizeof(size_t));
 #else
     dummy_index = count_;
     count_ += 1;
