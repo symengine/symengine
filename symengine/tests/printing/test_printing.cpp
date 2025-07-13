@@ -700,6 +700,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Symbol> a = symbol("a");
     RCP<const Symbol> b = symbol("b");
     RCP<const Symbol> c = symbol("c");
+    RCP<const Symbol> d = symbol("chi_theta_y");
     RCP<const Basic> l13 = logical_and({Ge(a, integer(2)), Ge(b, integer(5))});
     RCP<const Basic> l14
         = logical_and({logical_or({Eq(a, b), Ne(a, c)}), {Ge(a, b)}});
@@ -761,6 +762,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     CHECK(latex(*l29)
           == "\\sqrt{1.0 - 1.3856406460551 \\frac{\\left|\\tau_{tEd}\\right| "
              "\\gamma_{M0}}{f_y}} V_{plv_{Rd}}");
+    CHECK(latex(*d) == "\\chi_{\\theta_y}");
 
     RCP<const Basic> l = naturals();
     CHECK(latex(*l) == "\\mathbb{N}");
