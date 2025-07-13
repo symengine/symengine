@@ -41,6 +41,8 @@ std::atomic<size_t> Dummy::count_ {0};
 size_t Dummy::count_ = 0;
 #endif
 
+constexpr char Dummy::default_Dummy_prefix_[];  // <--- C++14 compatibility
+
 Dummy::Dummy()
     : Symbol(default_Dummy_prefix_
              + to_string(

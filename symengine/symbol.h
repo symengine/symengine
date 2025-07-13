@@ -85,6 +85,7 @@ public:
     static constexpr size_t default_Dummy_prefix_len_
         = sizeof(default_Dummy_prefix_) - 1;
     static_assert(default_Dummy_prefix_len_ == 7);
+    friend RCP<const Dummy> dummy();
 };
 
 //! inline version to return `Symbol`
