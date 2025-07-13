@@ -36,7 +36,7 @@ RCP<const Symbol> Symbol::as_dummy() const
 }
 
 #ifdef WITH_SYMENGINE_THREAD_SAFE
-std::atomic<size_t> Dummy::count_ = 0;
+std::atomic<size_t> Dummy::count_ {0};
 #else
 size_t Dummy::count_ = 0;
 #endif
