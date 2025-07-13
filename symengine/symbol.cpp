@@ -36,12 +36,12 @@ RCP<const Symbol> Symbol::as_dummy() const
 }
 
 #ifdef WITH_SYMENGINE_THREAD_SAFE
-std::atomic<size_t> Dummy::count_ {0};
+std::atomic<size_t> Dummy::count_{0};
 #else
 size_t Dummy::count_ = 0;
 #endif
 
-constexpr char Dummy::default_Dummy_prefix_[];  // <--- C++14 compatibility
+constexpr char Dummy::default_Dummy_prefix_[]; // <--- C++14 compatibility
 
 Dummy::Dummy()
     : Symbol(default_Dummy_prefix_
