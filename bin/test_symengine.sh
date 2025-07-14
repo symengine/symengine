@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source bin/install_deps.sh
+
 # Exit on error
 set -e
 # Echo each command
@@ -12,6 +14,8 @@ if [[ "${WITH_SANITIZE}" != "" ]]; then
         elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
             export UBSAN_OPTIONS=print_stacktrace=1,halt_on_error=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
             export CXXFLAGS="$CXXFLAGS -std=c++20"
+        elif [[ "${WITH_SANITIZE}" == "thread" ]]; then
+            export TSAN_OPTIONS=halt_on_error=1  # https://github.com/google/sanitizers/wiki/ThreadSanitizerFlags
         elif [[ "${WITH_SANITIZE}" == "memory" ]]; then
             # for reference: https://github.com/google/sanitizers/wiki/MemorySanitizerLibcxxHowTo#instrumented-libc
             echo "=== Building libc++ instrumented with memory-sanitizer (msan) for detecting use of uninitialized variables"
@@ -85,11 +89,6 @@ if [[ "${NO_RTTI}" == "yes" ]]; then
 fi
 
 echo "=== Generating cmake command from environment variables"
-
-# Shippable currently does not clean the directory after previous builds
-# (https://github.com/Shippable/support/issues/238), so
-# we need to do it ourselves.
-git clean -dfx
 
 if [[ "${TEST_IN_TREE}" != "yes" ]]; then
     mkdir build
@@ -182,11 +181,11 @@ cmake $cmake_line ${SOURCE_DIR}
 
 echo "=== Running build scripts for SymEngine"
 pwd
-echo "Running make:"
-make -j2 VERBOSE=1
+echo "Running build:"
+cmake --build . --config "${BUILD_TYPE}" -j4 -v
 
-echo "Running make install:"
-make install
+echo "Running install:"
+cmake --install . --config "${BUILD_TYPE}" -v
 
 ccache --show-stats
 
@@ -225,14 +224,15 @@ add_executable(expand1 expand1.cpp)
 target_compile_features(expand1 PUBLIC cxx_std_14)
 target_include_directories(expand1 PUBLIC ${SYMENGINE_INCLUDE_DIRS})
 target_link_libraries(expand1 PUBLIC ${SYMENGINE_LIBRARIES})
+add_custom_target(run_expand1 ALL COMMAND $<TARGET_FILE:expand1>)
+add_dependencies(run_expand1 expand1)
 EOL
 
 mkdir build
 cd build
 cmake --version
-cmake .. -DCMAKE_PREFIX_PATH="${our_install_dir}" -DCMAKE_BUILD_TYPE=Release
-make VERBOSE=1
-./expand1
+cmake .. -DCMAKE_PREFIX_PATH="${our_install_dir}" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}"
+cmake --build . --config "${BUILD_TYPE}" -j4 -v
 
 echo "Checking whether all header files are installed:"
 python $SOURCE_DIR/bin/test_make_install.py $our_install_dir/include/symengine/ $SOURCE_DIR/symengine

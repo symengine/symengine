@@ -68,6 +68,7 @@ protected:
     std::string print_mul() override;
     std::string print_div(const std::string &num, const std::string &den,
                           bool paren) override;
+    std::string _print_symbol(const std::string &expr);
 };
 } // namespace SymEngine
 
