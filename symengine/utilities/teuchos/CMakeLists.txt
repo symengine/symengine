@@ -42,6 +42,7 @@ endif()
 
 # Configure Teuchos using our CMake options:
 configure_file(Teuchos_config.h.in Teuchos_config.h)
+configure_file(TeuchosCore_config.h.in TeuchosCore_config.h)
 # Include the config file:
 include_directories(BEFORE ${teuchos_BINARY_DIR})
 
@@ -58,6 +59,6 @@ install(TARGETS teuchos
         )
 
 if (NOT WITH_SYMENGINE_RCP)
-    install(FILES ${HEADERS} "${teuchos_BINARY_DIR}/Teuchos_config.h"
+    install(FILES ${HEADERS} "${teuchos_BINARY_DIR}/Teuchos_config.h" "${teuchos_BINARY_DIR}/TeuchosCore_config.h"
         DESTINATION include/symengine/utilities/teuchos)
 endif()

@@ -8,7 +8,7 @@
 // @HEADER
 
 #include "Teuchos_TestForException.hpp"
-#include "Teuchos_GlobalMPISession.hpp"
+//#include "Teuchos_GlobalMPISession.hpp"
 
 #include <iostream>
 
@@ -83,9 +83,9 @@ bool Teuchos::TestForException_getEnableStacktrace()
 
 void Teuchos::TestForTermination_terminate(const std::string &msg) {
   std::ostringstream omsg;
-  if (GlobalMPISession::getNProc() > 1) {
-    omsg << "p="<<GlobalMPISession::getRank()<<": ";
-  }
+  // if (GlobalMPISession::getNProc() > 1) {
+  //   omsg << "p="<<GlobalMPISession::getRank()<<": ";
+  // }
   omsg << msg << "\n";
   std::cerr << omsg.str();
   std::terminate();

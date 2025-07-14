@@ -731,8 +731,8 @@ void Teuchos::throw_null_ptr_error( const std::string &type_name )
   try { throw excpt; }                                                         \
   TEUCHOS_STANDARD_CATCH_STATEMENTS(true,std::cerr,success);                   \
   if(!success) std::cerr << "PROGRAM ABORTING\n";                              \
-  GlobalMPISession::abort();
-  
+  /*GlobalMPISession::*/abort();
+
 void Teuchos::abort_for_exception_in_destructor(const std::exception &exception) {
   TEUCHOS_IMPLEMENT_ABORT(exception);
 }

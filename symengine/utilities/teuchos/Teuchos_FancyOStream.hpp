@@ -11,7 +11,7 @@
 #define TEUCHOS_FANCY_O_STREAM_HPP
 
 #include "Teuchos_RCP.hpp"
-#include "Teuchos_GlobalMPISession.hpp"
+//#include "Teuchos_GlobalMPISession.hpp"
 #include "Teuchos_oblackholestream.hpp"
 #include "Teuchos_as.hpp"
 #include <deque>
@@ -874,8 +874,8 @@ void basic_FancyOStream_buf<CharT,Traits>::initialize(
   showTabCount_ = showTabCount;
   showProcRank_ = showProcRank;
   rootRank_ = -1;
-  procRank_ = GlobalMPISession::getRank();
-  numProcs_ = GlobalMPISession::getNProc();
+  procRank_ = /*GlobalMPISession::getRank()*/-1;
+  numProcs_ = /*GlobalMPISession::getNProc()*/-1;
   rankPrintWidth_ = int(std::log10(float(numProcs_)))+1;
   tabIndent_ = startingTab;
   tabIndentStack_.clear();

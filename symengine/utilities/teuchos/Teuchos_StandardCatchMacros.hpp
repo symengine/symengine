@@ -10,7 +10,7 @@
 #ifndef TEUCHOS_STANDARD_CATCH_MACROS_HPP
 #define TEUCHOS_STANDARD_CATCH_MACROS_HPP
 
-#include "Teuchos_GlobalMPISession.hpp"
+//#include "Teuchos_GlobalMPISession.hpp"
 #include "Teuchos_FancyOStream.hpp"
 #include "Teuchos_TypeNameTraits.hpp"
 #include "Teuchos_stacktrace.hpp"
@@ -37,7 +37,7 @@
     if((VERBOSE)) { \
       std::ostringstream oss; \
       oss \
-        << "\np="<<::Teuchos::GlobalMPISession::getRank() \
+          << "\np="<</*::Teuchos::GlobalMPISession::getRank()*/"-1" \
         <<": *** Caught standard std::exception of type \'" \
         <<Teuchos::concreteTypeName(excpt)<<"\' :\n\n"; \
       Teuchos::OSTab scsi_tab(oss); \
@@ -54,7 +54,7 @@
     if((VERBOSE)) { \
       std::ostringstream oss; \
       oss \
-        << "\np="<<::Teuchos::GlobalMPISession::getRank() \
+          << "\np="<</*::Teuchos::GlobalMPISession::getRank()*/"-1" \
         << ": *** Caught an integer exception with value = " \
         << excpt_code << std::endl; \
       (ERR_STREAM) << std::flush; \
@@ -65,7 +65,7 @@
   catch ( ... ) { \
     if ((VERBOSE)) { \
       std::ostringstream oss; \
-      oss << "\np="<<::Teuchos::GlobalMPISession::getRank() \
+      oss << "\np="<</*::Teuchos::GlobalMPISession::getRank()*/"-1" \
           <<": *** Caught an unknown exception\n"; \
       (ERR_STREAM) << std::flush; \
       (ERR_STREAM) << oss.str(); \

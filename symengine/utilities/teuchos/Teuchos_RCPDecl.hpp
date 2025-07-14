@@ -515,11 +515,11 @@ public:
   inline RCP(const RCP<T2>& r_ptr);
 
   /** \brief Aliasing constructor: Construct using the ownership of a <tt>RCP<T2></tt> and from a raw pointer.
-   * 
-   * Constructs a <tt>RCP<T></tt> which shares ownership information with the initial 
+   *
+   * Constructs a <tt>RCP<T></tt> which shares ownership information with the initial
    * value of r_ptr, but holds an unrelated and unmanaged pointer ptr.
-   * 
-   * This constructor corresponds to the constructor 
+   *
+   * This constructor corresponds to the constructor
    * template< class Y > shared_ptr( const shared_ptr<Y>& r, element_type* ptr ) noexcept;
    * of the std::shared_ptr.
    */
@@ -632,7 +632,7 @@ public:
 
   /** \brief Check if the RCP stores a non-null pointer */
   inline explicit operator bool() const;
-  
+
   /** \brief Return an RCP<const T> version of *this. */
   inline RCP<const T> getConst() const;
 
@@ -1170,17 +1170,17 @@ template<class T> inline
 RCP<T> rcp(T* p, bool owns_mem = true);
 
 /**
- * Allocates and constructs an object of type \c T 
+ * Allocates and constructs an object of type \c T
  * passing @p args to its constructor, and returns an object of type
  * @ref Teuchos::RCP that owns and stores a pointer to it.
  */
-template <typename T, typename ... Args>
-inline auto make_rcp(Args&& ... args)
-{
-    return Teuchos::rcp(
-        new T(std::forward<Args>(args)...)
-    );
-}
+// template <typename T, typename ... Args>
+// inline auto make_rcp(Args&& ... args)
+// {
+//     return Teuchos::rcp(
+//         new T(std::forward<Args>(args)...)
+//     );
+// }
 
 /** \brief Initialize from a raw pointer with a deallocation policy.
  *
