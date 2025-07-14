@@ -7,20 +7,16 @@
 // *****************************************************************************
 // @HEADER
 
-#ifndef TEUCHOS_ENULL_HPP
-#define TEUCHOS_ENULL_HPP
+#ifndef TEUCHOS_O_BLACK_HOLE_STREAM_H
+#define TEUCHOS_O_BLACK_HOLE_STREAM_H
 
-#include "Teuchos_ConfigDefs.hpp"
+#include "Teuchos_basic_oblackholestream.hpp"
 
 namespace Teuchos {
+  /** \brief .
+   * \ingroup teuchos_outputting_grp
+   */
+	typedef basic_oblackholestream<char,std::char_traits<char> >   oblackholestream;
+}
 
-/** \brief Used to initialize a <tt>RCP</tt> object to NULL using an
- * implicit conversion!
- *
- * \relates RCP
- */
-enum ENull { null };
-
-} // end namespace Teuchos
-
-#endif	// TEUCHOS_ENULL_HPP
+#endif // TEUCHOS_O_BLACK_HOLE_STREAM_H

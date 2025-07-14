@@ -1,42 +1,10 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
 
 #ifndef TEUCHOS_RCP_HPP
@@ -282,10 +250,28 @@ RCP<T>::RCP(const RCP<T>& r_ptr)
 
 
 template<class T>
+inline
+RCP<T>::RCP(RCP<T>&& r_ptr)
+  : ptr_(r_ptr.ptr_), node_(std::move(r_ptr.node_))
+{
+  r_ptr.ptr_ = 0;
+}
+
+
+template<class T>
 template<class T2>
 inline
 RCP<T>::RCP(const RCP<T2>& r_ptr)
   : ptr_(r_ptr.get()), // will not compile if T is not base class of T2
+    node_(r_ptr.access_private_node())
+{}
+
+
+template<class T>
+template<class T2>
+inline
+RCP<T>::RCP(const RCP<T2>& r_ptr, T* ptr)
+  : ptr_(ptr), 
     node_(r_ptr.access_private_node())
 {}
 
@@ -306,6 +292,22 @@ RCP<T>& RCP<T>::operator=(const RCP<T>& r_ptr)
   reset(); // Force delete first in debug mode!
 #endif
   RCP<T>(r_ptr).swap(*this);
+  return *this;
+}
+
+
+template<class T>
+inline
+RCP<T>& RCP<T>::operator=(RCP<T>&& r_ptr)
+{
+#ifdef TEUCHOS_DEBUG
+  if (this == &r_ptr)
+    return *this;
+  reset(); // Force delete first in debug mode!
+#endif
+  ptr_ = r_ptr.ptr_;
+  node_ = std::move(r_ptr.node_);
+  r_ptr.ptr_ = 0;
   return *this;
 }
 
@@ -403,6 +405,14 @@ RCP<const T> RCP<T>::getConst() const
 }
 
 
+template<class T>
+inline
+RCP<T>::operator bool() const
+{
+  return (get() != 0);
+}
+
+
 // Reference counting
 
 
@@ -491,6 +501,22 @@ RCP<T> RCP<T>::create_strong() const
   return RCP<T>(ptr_, node_.create_strong());
 }
 
+#if defined(HAVE_TEUCHOSCORE_CXX11) && defined(HAVE_TEUCHOS_THREAD_SAFE)
+template<class T>
+inline
+RCP<T> RCP<T>::create_strong_thread_safe() const
+{
+  if (strength() == RCP_STRONG) {
+    return create_strong(); // it's already thread safe
+  }
+  // we don't check for debug_assert_valid_ptr()
+  // probably doesn't hurt anything if we do but using it would be confusing
+  // because ptr could become invalid immediately after
+  RCPNodeHandle attemptStrong = node_.create_strong_lock();
+  return RCP<T>( attemptStrong.is_node_null() ? 0 : ptr_, attemptStrong);
+}
+#endif
+
 
 template<class T>
 template <class T2>
@@ -551,14 +577,6 @@ void RCP<T>::reset(T2* p, bool has_ownership_in)
   *this = rcp(p, has_ownership_in);
 }
 
-
-template<class T>
-inline
-int RCP<T>::count() const
-{
-  return node_.count();
-}
-
 }  // end namespace Teuchos
 
 
@@ -615,7 +633,7 @@ Teuchos::rcpWithEmbeddedObjPreDestroy(
   T* p, const Embedded &embedded, bool owns_mem
   )
 {
-  return rcp(
+  return rcpWithDealloc(
     p, embeddedObjDeallocDelete<T>(embedded,PRE_DESTROY), owns_mem
     );
 }
@@ -627,7 +645,7 @@ Teuchos::rcpWithEmbeddedObjPostDestroy(
   T* p, const Embedded &embedded, bool owns_mem
   )
 {
-  return rcp( p, embeddedObjDeallocDelete<T>(embedded,POST_DESTROY), owns_mem );
+  return rcpWithDealloc( p, embeddedObjDeallocDelete<T>(embedded,POST_DESTROY), owns_mem );
 }
 
 
@@ -724,14 +742,11 @@ inline
 Teuchos::RCP<T2>
 Teuchos::rcp_static_cast(const RCP<T1>& p1)
 {
-#if defined(TEUCHOS_DEBUG)
-  return rcp_dynamic_cast<T2>(p1, true);
-#else
   // Make the compiler check if the conversion is legal
   T2 *check = static_cast<T2*>(p1.get());
   return RCP<T2>(check, p1.access_private_node());
-#endif
 }
+
 
 template<class T2, class T1>
 inline
@@ -943,7 +958,8 @@ std::ostream& Teuchos::operator<<( std::ostream& out, const RCP<T>& p )
     << typeName(p) << "{"
     << "ptr="<<(const void*)(p.get()) // I can't find any alternative to this C cast :-(
     <<",node="<<p.access_private_node()
-    <<",count="<<p.count()
+    <<",strong_count="<<p.strong_count()
+    <<",weak_count="<<p.weak_count()
     <<"}";
   return out;
 }

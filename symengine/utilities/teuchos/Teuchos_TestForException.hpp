@@ -1,42 +1,10 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
 
 #ifndef TEUCHOS_TEST_FOR_EXCEPTION_H
@@ -53,30 +21,32 @@
 namespace Teuchos {
 
 
-/*! \defgroup TestForException_grp Utility code for throwing exceptions and setting breakpoints. 
+/*! \defgroup TestForException_grp Utility code for throwing exceptions and setting breakpoints.
 \ingroup teuchos_language_support_grp
 */
 
 /** \brief Increment the throw number.  \ingroup TestForException_grp */
-TEUCHOS_LIB_DLL_EXPORT void TestForException_incrThrowNumber();
+TEUCHOSCORE_LIB_DLL_EXPORT void TestForException_incrThrowNumber();
 
 /** \brief Increment the throw number.  \ingroup TestForException_grp */
-TEUCHOS_LIB_DLL_EXPORT int TestForException_getThrowNumber();
+TEUCHOSCORE_LIB_DLL_EXPORT int TestForException_getThrowNumber();
 
 /** \brief The only purpose for this function is to set a breakpoint.
     \ingroup TestForException_grp */
-TEUCHOS_LIB_DLL_EXPORT void TestForException_break( const std::string &msg );
+TEUCHOSCORE_LIB_DLL_EXPORT void TestForException_break(const std::string &msg,
+  int throwNumber);
 
 /** \brief Set at runtime if stacktracing functionality is enabled when *
     exceptions are thrown.  \ingroup TestForException_grp */
-TEUCHOS_LIB_DLL_EXPORT void TestForException_setEnableStacktrace(bool enableStrackTrace);
+TEUCHOSCORE_LIB_DLL_EXPORT void TestForException_setEnableStacktrace(bool enableStrackTrace);
 
 /** \brief Get at runtime if stacktracing functionality is enabled when
  * exceptions are thrown. */
-TEUCHOS_LIB_DLL_EXPORT bool TestForException_getEnableStacktrace();
+TEUCHOSCORE_LIB_DLL_EXPORT bool TestForException_getEnableStacktrace();
 
 /** \brief Prints the message to std::cerr and calls std::terminate. */
-TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std::string &msg);
+[[noreturn]] TEUCHOSCORE_LIB_DLL_EXPORT void TestForTermination_terminate(const std::string &msg);
+
 
 } // namespace Teuchos
 
@@ -108,7 +78,7 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
  * <tt>throw_exception_test</tt> evaluates to <tt>true</tt> when an exception
  * is throw.
  *
- * The way that this macro is intended to be used is to 
+ * The way that this macro is intended to be used is to
  * call it in the source code like a function.  For example,
  * suppose that in a piece of code in the file <tt>my_source_file.cpp</tt>
  * that the exception <tt>std::out_of_range</tt> is thrown if <tt>n > 100</tt>.
@@ -151,9 +121,16 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
  * in the error message of the exception thrown, he/she will see the
  * underlying condition.
  *
- * As an alternative, you can set a breakpoint for any exception thrown
- * by setting a breakpoint in the function <tt>ThrowException_break()</tt>.
- *
+ * As an alternative, you can set a breakpoint for any exception thrown by
+ * setting a breakpoint in the function <tt>ThrowException_break()</tt>.  If
+ * multiple exceptions are thrown, then set a conditional breakpoint to break
+ * on the exact exception using the <tt>throwNumber</tt>.  For example, if the
+ * throw number printed in the exception message is <tt>10</tt> then set the
+ * break point as (assuming this is the first breakpoint):
+ \verbatim
+ (gdb) b 'Teuchos::TestForException_break( [TAB] [ENTER]
+ (gdb) cond 1 thrownNumber==10
+ \endverbatim
  * NOTE: This macro will only evaluate <tt>throw_exception_test</tt> once
  * reguardless if the test fails and the exception is thrown or
  * not. Therefore, it is safe to call a function with side-effects as the
@@ -171,17 +148,18 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
   const bool throw_exception = (throw_exception_test); \
   if(throw_exception) { \
     Teuchos::TestForException_incrThrowNumber(); \
+    const int throwNumber = Teuchos::TestForException_getThrowNumber(); \
     std::ostringstream omsg; \
     omsg \
       << __FILE__ << ":" << __LINE__ << ":\n\n" \
-      << "Throw number = " << Teuchos::TestForException_getThrowNumber() \
+      << "Throw number = " << throwNumber \
       << "\n\n" \
       << "Throw test that evaluated to true: "#throw_exception_test \
       << "\n\n" \
       << msg; \
     const std::string &omsgstr = omsg.str(); \
     TEUCHOS_STORE_STACKTRACE(); \
-    Teuchos::TestForException_break(omsgstr); \
+    Teuchos::TestForException_break(omsgstr, throwNumber); \
     throw Exception(omsgstr); \
   } \
 }
@@ -205,9 +183,9 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
  * <tt>throw_exception_test</tt> evaluates to <tt>true</tt> when an exception
  * is throw.
  *
- * \param tfecfFuncName [implicit] This is a variable in the current scope that is 
- * required to exist and assumed to contain the name of the current class method. 
- * 
+ * \param tfecfFuncName [implicit] This is a variable in the current scope that is
+ * required to exist and assumed to contain the name of the current class method.
+ *
  * \param this [implicit] This is the variable (*this), used for printing the
  * typename of the enclosing class.
  *
@@ -215,7 +193,7 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
  * of of a class. It is used similarly to TEUCHOS_TEST_FOR_EXCEPTION, except that it
  * assumes that the (above) variables <tt>this</tt> and <tt>fecfFuncName</tt>
  * exist and are properly defined. Example usage is:
- 
+
  \code
 
    std::string tfecfFuncName("someMethod");
@@ -231,7 +209,7 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
 #define TEUCHOS_TEST_FOR_EXCEPTION_CLASS_FUNC(throw_exception_test, Exception, msg) \
 { \
    TEUCHOS_TEST_FOR_EXCEPTION( (throw_exception_test), Exception, \
-   typeName(*this) << "::" << tfecfFuncName << msg ) \
+   Teuchos::typeName(*this) << "::" << tfecfFuncName << msg ) \
 }
 
 
@@ -244,17 +222,18 @@ TEUCHOS_LIB_DLL_EXPORT [[noreturn]] void TestForTermination_terminate(const std:
  */
 #define TEUCHOS_TEST_FOR_EXCEPTION_PURE_MSG(throw_exception_test, Exception, msg) \
 { \
-    const bool throw_exception = (throw_exception_test); \
-    if(throw_exception) { \
-      Teuchos::TestForException_incrThrowNumber(); \
-      std::ostringstream omsg; \
-	    omsg << msg; \
-      omsg << "\n\nThrow number = " << Teuchos::TestForException_getThrowNumber() << "\n\n"; \
-      const std::string &omsgstr = omsg.str(); \
-      Teuchos::TestForException_break(omsgstr); \
-      TEUCHOS_STORE_STACKTRACE(); \
-      throw Exception(omsgstr); \
-    } \
+  const bool throw_exception = (throw_exception_test); \
+  if(throw_exception) { \
+    Teuchos::TestForException_incrThrowNumber(); \
+    const int throwNumber = Teuchos::TestForException_getThrowNumber(); \
+    std::ostringstream omsg; \
+	  omsg << msg; \
+    omsg << "\n\nThrow number = " << throwNumber << "\n\n"; \
+    const std::string &omsgstr = omsg.str(); \
+    Teuchos::TestForException_break(omsgstr, throwNumber); \
+    TEUCHOS_STORE_STACKTRACE(); \
+    throw Exception(omsgstr); \
+  } \
 }
 
 
@@ -360,136 +339,34 @@ catch(const std::exception &except) { \
   throw std::runtime_error(omsg.str()); \
 }
 
+/** \brief This macro is to be used instead of
+ * <tt>TEUCHOS_TEST_FOR_EXCEPTION()</tt> to report an error in situations
+ * where an exception can't be throw (like in an destructor).
+ *
+ * \param terminate_test [in] See <tt>TEUCHOS_TEST_FOR_EXCEPTION()</tt>.
+ *
+ * \param msg [in] See <tt>TEUCHOS_TEST_FOR_EXCEPTION()</tt>.
+ *
+ * If the termination test evaluates to <tt>true</tt>, then
+ * <tt>std::terminate()</tt> is called (which should bring down an entire
+ * multi-process MPI program even if only one process calls
+ * <tt>std::terminate()</tt> with most MPI implementations).
+ *
+ * \ingroup TestForException_grp
+ */
 #define TEUCHOS_TEST_FOR_TERMINATION(terminate_test, msg) \
 { \
-const bool call_terminate = (terminate_test); \
-if (call_terminate) { \
-std::ostringstream omsg; \
-omsg \
-<< __FILE__ << ":" << __LINE__ << ":\n\n" \
-<< "Terminate test that evaluated to true: "#terminate_test \
-<< "\n\n" \
-<< msg << "\n\n"; \
-auto str = omsg.str(); \
-Teuchos::TestForTermination_terminate(str); \
-} \
+  const bool call_terminate = (terminate_test); \
+  if (call_terminate) { \
+    std::ostringstream omsg; \
+    omsg \
+      << __FILE__ << ":" << __LINE__ << ":\n\n" \
+      << "Terminate test that evaluated to true: "#terminate_test \
+      << "\n\n" \
+      << msg << "\n\n"; \
+    auto str = omsg.str(); \
+    Teuchos::TestForTermination_terminate(str); \
+  } \
 }
-
-//
-// Deprecated functions
-//
-
-
-/** \brief Deprecated. */
-TEUCHOS_DEPRECATED inline
-void TestForException_incrThrowNumber()
-{
-  Teuchos::TestForException_incrThrowNumber();
-}
-
-
-/** \brief Deprecated. */
-TEUCHOS_DEPRECATED inline
-int TestForException_getThrowNumber()
-{
-  return Teuchos::TestForException_getThrowNumber();
-}
-
-
-/** \brief Deprecated. */
-TEUCHOS_DEPRECATED inline
-void TestForException_break( const std::string &msg )
-{
-  Teuchos::TestForException_break(msg);
-}
-
-
-/** \brief Deprecated. */
-TEUCHOS_DEPRECATED inline
-void TestForException_setEnableStacktrace(bool enableStrackTrace)
-{
-  Teuchos::TestForException_setEnableStacktrace(enableStrackTrace);
-}
-
-
-/** \brief Deprecated. */
-TEUCHOS_DEPRECATED inline
-bool TestForException_getEnableStacktrace()
-{
-  return Teuchos::TestForException_getEnableStacktrace();
-}
-
-
-//
-// Deprecated macros
-//
-// NOTE: You can't deprecate macros but you can deprecate functions that
-// deprecated macros can call!  This way, as people get a fairly good
-// deprecated warning when they use the non-namespaced macros.
-//
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPTION_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPTION(throw_exception_test, Exception, msg) \
-  { \
-    TEST_FOR_EXCEPTION_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPTION(throw_exception_test, Exception, msg); \
-  }
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPTION_CLASS_FUNC_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPTION_CLASS_FUNC(throw_exception_test, Exception, msg) \
-  { \
-    TEST_FOR_EXCEPTION_CLASS_FUNC_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPTION_CLASS_FUNC(throw_exception_test, Exception, msg); \
-  }
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPTION_PURE_MSG_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPTION_PURE_MSG(throw_exception_test, Exception, msg) \
-  { \
-    TEST_FOR_EXCEPTION_PURE_MSG_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPTION_PURE_MSG(throw_exception_test, Exception, msg); \
-  }
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPTION_PRINT_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPTION_PRINT(throw_exception_test, Exception, msg, out_ptr) \
-  { \
-    TEST_FOR_EXCEPTION_PRINT_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPTION_PRINT(throw_exception_test, Exception, msg, out_ptr); \
-  }
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPT_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPT(throw_exception_test) \
-  { \
-    TEST_FOR_EXCEPT_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPT(throw_exception_test); \
-  }
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPT_MSG_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPT_MSG(throw_exception_test, msg) \
-  { \
-    TEST_FOR_EXCEPT_MSG_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPT_MSG(throw_exception_test, msg); \
-  }
-
-
-TEUCHOS_DEPRECATED inline void TEST_FOR_EXCEPT_PRINT_this_macro_is_deprecated() {}
-/** \brief Deprecated. */
-#define TEST_FOR_EXCEPT_PRINT(throw_exception_test, out_ptr) \
-  { \
-    TEST_FOR_EXCEPT_PRINT_this_macro_is_deprecated(); \
-    TEUCHOS_TEST_FOR_EXCEPT_PRINT(throw_exception_test, out_ptr); \
-  }
-
 
 #endif // TEUCHOS_TEST_FOR_EXCEPTION_H

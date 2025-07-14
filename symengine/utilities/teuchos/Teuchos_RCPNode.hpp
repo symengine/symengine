@@ -1,42 +1,10 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
 
 #ifndef TEUCHOS_RCP_NODE_HPP
@@ -59,13 +27,22 @@
 #include "Teuchos_toString.hpp"
 #include "Teuchos_getBaseObjVoidPtr.hpp"
 
+#if defined(HAVE_TEUCHOSCORE_CXX11) && defined(HAVE_TEUCHOS_THREAD_SAFE) && !defined(DISABLE_ATOMIC_COUNTERS)
+#include <atomic>
+#define USING_ATOMICS
+#endif
 
 namespace Teuchos {
 
+#ifdef USING_ATOMICS
+#  define TEUCHOS_RCP_DECL_ATOMIC(VAR, T) std::atomic<T> VAR
+#else
+#  define TEUCHOS_RCP_DECL_ATOMIC(VAR, T) T VAR
+#endif
 
 /** \brief Used to specify a pre or post destruction of extra data
  *
- * \ingroup teuchos_mem_mng_grp 
+ * \ingroup teuchos_mem_mng_grp
  */
 enum EPrePostDestruction { PRE_DESTROY, POST_DESTROY };
 
@@ -73,7 +50,7 @@ enum EPrePostDestruction { PRE_DESTROY, POST_DESTROY };
  *
  * \ingroup teuchos_mem_mng_grp
  */
-enum ERCPStrength { RCP_STRENGTH_INVALID=-1, RCP_STRONG=0, RCP_WEAK=1 };
+enum ERCPStrength { RCP_STRONG=0, RCP_WEAK=1 };
 
 /** \brief Used to determine if RCPNode lookup is performed or not.
  *
@@ -86,30 +63,32 @@ inline void debugAssertStrength(ERCPStrength strength)
 {
 #ifdef TEUCHOS_DEBUG
   switch (strength) {
-    case RCP_STRONG:
-      // fall through
-    case RCP_WEAK:
-      return; // Fine
-    case RCP_STRENGTH_INVALID:
-    default:
-      TEUCHOS_TEST_FOR_EXCEPT(true);
+  case RCP_STRONG:
+    // fall through
+  case RCP_WEAK:
+    return; // Fine
+  default:
+    TEUCHOS_TEST_FOR_EXCEPTION(
+      true, std::logic_error, "Teuchos::RCPNode: ERCPStrength enum value "
+      << strength << " is invalid (neither RCP_STRONG = " << RCP_STRONG
+      << " nor RCP_WEAK = " << RCP_WEAK << ").");
   }
-#endif
+#else
+  (void) strength; // Silence "unused variable" compiler warning.
+#endif // TEUCHOS_DEBUG
 }
 
 /** \brief Traits class specialization for <tt>toString(...)</tt> function for
  * converting from <tt>ERCPStrength</tt> to <tt>std::string</tt>.
  *
- * \ingroup teuchos_mem_mng_grp 
+ * \ingroup teuchos_mem_mng_grp
  */
 template<>
-class TEUCHOS_LIB_DLL_EXPORT ToStringTraits<ERCPStrength> {
+class TEUCHOSCORE_LIB_DLL_EXPORT ToStringTraits<ERCPStrength> {
 public:
   static std::string toString( const ERCPStrength &t )
     {
       switch (t) {
-        case RCP_STRENGTH_INVALID:
-          return "RCP_STRENGTH_INVALID";
         case RCP_STRONG:
           return "RCP_STRONG";
         case RCP_WEAK:
@@ -121,10 +100,9 @@ public:
       // Should never get here!
 #ifdef TEUCHOS_DEBUG
       TEUCHOS_TEST_FOR_EXCEPT(true);
-#endif
+#else
       return "";
-      // 2009/06/30: rabartl: The above logic avoid a warning from the Intel
-      // 10.1 compiler (remark #111) about the statement being unreachable.
+#endif
     }
 };
 
@@ -138,9 +116,9 @@ public:
  * NOTE: The reference counts all start a 0 so the client (i.e. RCPNodeHandle)
  * must increment them from 0 after creation.
  *
- * \ingroup teuchos_mem_mng_grp 
+ * \ingroup teuchos_mem_mng_grp
  */
-class TEUCHOS_LIB_DLL_EXPORT RCPNode {
+class TEUCHOSCORE_LIB_DLL_EXPORT RCPNode {
 public:
   /** \brief . */
   RCPNode(bool has_ownership_in)
@@ -154,40 +132,70 @@ public:
     }
   /** \brief . */
   virtual ~RCPNode()
-#ifdef TEUCHOS_DEBUG
-    noexcept(false)
-#endif
     {
       if(extra_data_map_)
         delete extra_data_map_;
     }
+  /** \brief attemptIncrementStrongCountFromNonZeroValue() supports weak
+   * to strong conversion but this is forward looking code.
+   */
+  bool attemptIncrementStrongCountFromNonZeroValue()
+    {
+#ifdef USING_ATOMICS
+      // this code follows the boost method
+      int strong_count_non_atomic = count_[RCP_STRONG];
+      for( ;; ) {
+        if (strong_count_non_atomic == 0) {
+          return false;
+        }
+        if (std::atomic_compare_exchange_weak( &count_[RCP_STRONG],
+          &strong_count_non_atomic, strong_count_non_atomic + 1)) {
+          return true;
+        }
+      }
+#else
+      // the non-thread safe version - this fails with threads because
+      // strong_count_ can become 0 after the check if it is 0 and we would
+      // return true with no valid object
+      if (count_[RCP_STRONG] == 0) {
+        return false;
+      }
+      else {
+        ++count_[RCP_STRONG];
+        return true;
+      }
+#endif
+    }
   /** \brief . */
   int strong_count() const
     {
-      return count_[RCP_STRONG]; 
+      return count_[RCP_STRONG];
     }
   /** \brief . */
-  int weak_count() const
+  int weak_count() const // not atomically safe
     {
-      return count_[RCP_WEAK];
+      return count_[RCP_WEAK] - (count_[RCP_STRONG] ? 1 : 0 ); // weak is +1 when strong > 0
     }
   /** \brief . */
-  int count( const ERCPStrength strength )
-    {
-      debugAssertStrength(strength);
-      return count_[strength];
-    }
-  /** \brief . */
-  int incr_count( const ERCPStrength strength )
+  void incr_count( const ERCPStrength strength )
     {
       debugAssertStrength(strength);
-      return ++count_[strength];
+      if (++count_[strength] == 1) {
+        if (strength == RCP_STRONG) {
+          ++count_[RCP_WEAK]; // this is the special condition - the first strong creates a weak
+        }
+      }
     }
   /** \brief . */
   int deincr_count( const ERCPStrength strength )
     {
       debugAssertStrength(strength);
+#ifdef BREAK_THREAD_SAFETY_OF_DEINCR_COUNT
+      --count_[strength];
+      return count_[strength];  // not atomically valid
+#else
       return --count_[strength];
+#endif
     }
   /** \brief . */
   void has_ownership(bool has_ownership_in)
@@ -255,10 +263,12 @@ private:
       {}
     any extra_data;
     EPrePostDestruction destroy_when;
-  }; 
+  };
   typedef Teuchos::map<std::string,extra_data_entry_t> extra_data_map_t;
-  int count_[2];
-  bool has_ownership_;
+
+  TEUCHOS_RCP_DECL_ATOMIC(count_[2], int);
+  TEUCHOS_RCP_DECL_ATOMIC(has_ownership_, bool);
+
   extra_data_map_t *extra_data_map_;
   // Above is made a pointer to reduce overhead for the general case when this
   // is not used.  However, this adds just a little bit to the overhead when
@@ -270,6 +280,7 @@ private:
   RCPNode(const RCPNode&);
   RCPNode& operator=(const RCPNode&);
 #ifdef TEUCHOS_DEBUG
+  // removed atomic because mutex handles it - atomic would be redundant
   int insertion_number_;
 public:
   void set_insertion_number(int insertion_number_in)
@@ -288,8 +299,23 @@ public:
  *
  * \relates RCPNode
  */
-TEUCHOS_LIB_DLL_EXPORT void throw_null_ptr_error( const std::string &type_name );
+TEUCHOSCORE_LIB_DLL_EXPORT void throw_null_ptr_error( const std::string &type_name );
 
+
+#ifdef TEUCHOS_DEBUG
+  // to fully implement abort for TEUCHOS_STANDARD_CATCH_STATEMENTS in the cpp
+  /** \brief handle std::exception when deleting RCP node. */
+  TEUCHOSCORE_LIB_DLL_EXPORT void abort_for_exception_in_destructor(const std::exception &);
+  /** \brief handle const int &excpt_code when deleting RCP node. */
+  TEUCHOSCORE_LIB_DLL_EXPORT void abort_for_exception_in_destructor(const int &);
+  /** \brief handle unknown exception when deleting RCP node. */
+  TEUCHOSCORE_LIB_DLL_EXPORT void abort_for_exception_in_destructor();
+  // called when RCPNode detects any exception in a destructor
+  #define TEUCHOS_CATCH_AND_ABORT                                                   \
+  catch(const std::exception &excpt) { abort_for_exception_in_destructor(excpt); }  \
+  catch(const int &excpt_code) { abort_for_exception_in_destructor(excpt_code); }   \
+  catch(...) { abort_for_exception_in_destructor(); }
+#endif
 
 /** \brief Debug-mode RCPNode tracing class.
  *
@@ -305,9 +331,9 @@ TEUCHOS_LIB_DLL_EXPORT void throw_null_ptr_error( const std::string &type_name )
  * on and off node tracing and to print the active RCPNode objects at any
  * time.
  *
- * \ingroup teuchos_mem_mng_grp 
+ * \ingroup teuchos_mem_mng_grp
  */
-class TEUCHOS_LIB_DLL_EXPORT RCPNodeTracer {
+class TEUCHOSCORE_LIB_DLL_EXPORT RCPNodeTracer {
 public:
 
   /** \name Public types. */
@@ -375,10 +401,20 @@ public:
   static void setPrintRCPNodeStatisticsOnExit(
     bool printRCPNodeStatisticsOnExit);
 
-  /** \brief Reteurn if RCPNode usage statistics will be printed when the
+  /** \brief Return if RCPNode usage statistics will be printed when the
    * program ends or not.
    */
   static bool getPrintRCPNodeStatisticsOnExit();
+
+  /** \brief Set if printActiveRCPNodes() is called on exit from the
+   * program.
+   */
+  static void setPrintActiveRcpNodesOnExit(bool printActiveRcpNodesOnExit);
+
+  /** \brief Return if printActiveRCPNodes() is called on exit from the
+   * program.
+   */
+  static bool getPrintActiveRcpNodesOnExit();
 
   /** \brief Print the list of currently active RCP nodes.
    *
@@ -388,11 +424,12 @@ public:
    * program.
    *
    * When the macro <tt>TEUCHOS_SHOW_ACTIVE_REFCOUNTPTR_NODE_TRACE</tt> is
-   * defined this function will get called automatically after the program ends
-   * and all of the local and global RCP objects have been destroyed.  If any
-   * RCP nodes are printed at that time, then this is an indication that there
-   * may be some circular references that will caused memory leaks.  You memory
-   * checking tool such as valgrind or purify should complain about this!
+   * defined this function will get called automatically after the program
+   * ends by default and all of the local and global RCP objects have been
+   * destroyed.  If any RCP nodes are printed at that time, then this is an
+   * indication that there may be some circular references that will caused
+   * memory leaks.  You memory checking tool such as valgrind or purify should
+   * complain about this!
    */
   static void printActiveRCPNodes(std::ostream &out);
 
@@ -483,7 +520,7 @@ public:
 /** \brief Templated implementation class of <tt>RCPNode</tt> that has the
  * responsibility for deleting the reference-counted object.
  *
- * \ingroup teuchos_mem_mng_grp 
+ * \ingroup teuchos_mem_mng_grp
  */
 template<class T, class Dealloc_T>
 class RCPNodeTmpl : public RCPNode {
@@ -527,14 +564,12 @@ public:
       return ptr_ != 0;
     }
   /** \brief Delete the underlying object.
-   *
-   * Provides the "strong guarantee" when exceptions are thrown in debug mode
-   * and but may not even provide the "basic guarantee" in release mode.  .
+   * Will abort if an exception is detected in the destructor.
    */
   virtual void delete_obj()
     {
       if (ptr_!= 0) {
-        this->pre_delete_extra_data(); // May throw!
+        this->pre_delete_extra_data(); // Should not throw!
         T* tmp_ptr = ptr_;
 #ifdef TEUCHOS_DEBUG
         deleted_ptr_ = tmp_ptr;
@@ -547,23 +582,9 @@ public:
             dealloc_.free(tmp_ptr);
 #ifdef TEUCHOS_DEBUG
           }
-          catch(...) {
-            // Object was not deleted due to an exception!
-            ptr_ = tmp_ptr;
-            throw;
-          }
+          TEUCHOS_CATCH_AND_ABORT
 #endif
         }
-        // 2008/09/22: rabartl: Above, we have to be careful to set the member
-        // this->ptr_=0 before calling delete on the object's address in order
-        // to avoid a double call to delete in cases of circular references
-        // involving weak and strong pointers (see the unit test
-        // circularReference_c_then_a in RCP_UnitTests.cpp).  NOTE: It is
-        // critcial that no member of *this get accesses after
-        // dealloc_.free(...) gets called!  Also, in order to provide the
-        // "strong" guarantee we have to include the above try/catch.  This
-        // overhead is unfortunate but I don't know of any other way to
-        // statisfy the "strong" guarantee and still avoid a double delete.
       }
     }
   /** \brief . */
@@ -647,16 +668,12 @@ private:
  *
  * \ingroup teuchos_mem_mng_grp
  */
-class TEUCHOS_LIB_DLL_EXPORT ActiveRCPNodesSetup {
+class TEUCHOSCORE_LIB_DLL_EXPORT ActiveRCPNodesSetup {
 public:
   /** \brief . */
   ActiveRCPNodesSetup();
   /** \brief . */
-#ifdef TEUCHOS_DEBUG
-  ~ActiveRCPNodesSetup() noexcept(false);
-#else
   ~ActiveRCPNodesSetup();
-#endif
   /** \brief . */
   void foo();
 private:
@@ -668,24 +685,24 @@ private:
 
 
 namespace {
-// This static variable is delcared before all other static variables that
-// depend on RCP or other classes. Therefore, this static varaible will be
+// This static variable is declared before all other static variables that
+// depend on RCP or other classes. Therefore, this static variable will be
 // deleted *after* all of these other static variables that depend on RCP or
 // created classes go away!  This ensures that the node tracing machinery is
 // setup and torn down correctly (this is the same trick used by the standard
 // stream objects in many compiler implementations).
 Teuchos::ActiveRCPNodesSetup local_activeRCPNodesSetup;
-} // namespace
+} // namespace (anonymous)
 
 
 namespace Teuchos {
 
-
-/** \brief Utility handle class for handling the reference counting and
- * management of the RCPNode object.
+/** \class RCPNodeHandle
+ * \brief Handle class that manages the RCPNode's reference counting.
  *
- * Again, this is *not* a user-level class.  Instead, this class is used by
- * all of the user-level reference-counting classes.
+ * \warning This class is <i>not</i> intended for Teuchos users.  It
+ *   is an implementation detail of Teuchos' reference-counting
+ *   "smart" pointer (RCP) and array (ArrayRCP) classes.
  *
  * NOTE: I (Ross Bartlett) am not generally a big fan of handle classes and
  * greatly prefer smart pointers.  However, this is one case where a handle
@@ -694,161 +711,209 @@ namespace Teuchos {
  * smart-pointer classes because this class is used to implement all of those
  * smart-pointer classes!
  *
- * \ingroup teuchos_mem_mng_grp 
+ * \ingroup teuchos_mem_mng_grp
  */
-class TEUCHOS_LIB_DLL_EXPORT RCPNodeHandle {
+class TEUCHOSCORE_LIB_DLL_EXPORT RCPNodeHandle {
 public:
-  /** \brief . */
-  RCPNodeHandle(ENull null_arg = null)
-    : node_(0), strength_(RCP_STRENGTH_INVALID)
-    {(void)null_arg;}
-  /** \brief . */
-  RCPNodeHandle( RCPNode* node, ERCPStrength strength_in = RCP_STRONG,
-    bool newNode = true
-    )
-    : node_(node), strength_(strength_in)
-    {
+  //! Default constructor
+  RCPNodeHandle (ENull null_arg = null)
+    : node_ (0), strength_ (RCP_STRONG)
+  {
+    (void) null_arg; // Silence "unused variable" compiler warning.
+  }
+
+  //! Constructor that takes a pointer to an RCPNode.
+  RCPNodeHandle (RCPNode* node,
+                 ERCPStrength strength_in = RCP_STRONG,
+                 bool newNode = true)
+    : node_ (node), strength_ (strength_in)
+  {
 #ifdef TEUCHOS_DEBUG
-      TEUCHOS_ASSERT(node);
-#endif
-      bind();
+    TEUCHOS_ASSERT(node);
+#endif // TEUCHOS_DEBUG
+
+    bind();
+
 #ifdef TEUCHOS_DEBUG
-      // Add the node if this is the first RCPNodeHandle to get it.  We have
-      // to add it because unbind() will call the remove_RCPNode(...) function
-      // and it needs to match when node tracing is on from the beginning.
-      if (RCPNodeTracer::isTracingActiveRCPNodes() && newNode)
-      {
-        std::ostringstream os;
-        os << "{T=Unknown, ConcreteT=Unknown, p=Unknown,"
-           << " has_ownership="<<node_->has_ownership()<<"}";
-        RCPNodeTracer::addNewRCPNode(node_, os.str());
-      }
-#endif
+    // Add the node if this is the first RCPNodeHandle to get it.  We have
+    // to add it because unbind() will call the remove_RCPNode(...) function
+    // and it needs to match when node tracing is on from the beginning.
+    if (RCPNodeTracer::isTracingActiveRCPNodes() && newNode) {
+      std::ostringstream os;
+      os << "{T=Unknown, ConcreteT=Unknown, p=Unknown,"
+         << " has_ownership="<<node_->has_ownership()<<"}";
+      RCPNodeTracer::addNewRCPNode(node_, os.str());
     }
+#else
+    (void) newNode; // Silence "unused variable" compiler warning.
+#endif // TEUCHOS_DEBUG
+  }
+
 #ifdef TEUCHOS_DEBUG
   /** \brief Only gets called in debug mode. */
   template<typename T>
-  RCPNodeHandle(RCPNode* node, T *p, const std::string &T_name,
-    const std::string &ConcreteT_name, const bool has_ownership_in,
-    ERCPStrength strength_in = RCP_STRONG
-    )
-    : node_(node), strength_(strength_in)
-    {
-      TEUCHOS_ASSERT(strength_in == RCP_STRONG); // Can't handle weak yet!
-      TEUCHOS_ASSERT(node_);
-      bind();
-      if (RCPNodeTracer::isTracingActiveRCPNodes()) {
-        std::ostringstream os;
-        os << "{T="<<T_name<<", ConcreteT="<< ConcreteT_name
-           <<", p="<<static_cast<const void*>(p)
-           <<", has_ownership="<<has_ownership_in<<"}";
-        RCPNodeTracer::addNewRCPNode(node_, os.str());
-      }
+  RCPNodeHandle (RCPNode* node, T *p, const std::string &T_name,
+                 const std::string &ConcreteT_name,
+                 const bool has_ownership_in,
+                 ERCPStrength strength_in = RCP_STRONG)
+    : node_ (node), strength_ (strength_in)
+  {
+    TEUCHOS_ASSERT(strength_in == RCP_STRONG); // Can't handle weak yet!
+    TEUCHOS_ASSERT(node_);
+    bind();
+    if (RCPNodeTracer::isTracingActiveRCPNodes()) {
+      std::ostringstream os;
+      os << "{T="<<T_name<<", ConcreteT="<< ConcreteT_name
+         <<", p="<<static_cast<const void*>(p)
+         <<", has_ownership="<<has_ownership_in<<"}";
+      RCPNodeTracer::addNewRCPNode(node_, os.str());
     }
+  }
 #endif // TEUCHOS_DEBUG
-  /** \brief . */
-  RCPNodeHandle(const RCPNodeHandle& node_ref)
-    : node_(node_ref.node_), strength_(node_ref.strength_)
-    {
-      bind();
+
+  //! Copy constructor
+  RCPNodeHandle (const RCPNodeHandle& node_ref)
+    : node_ (node_ref.node_), strength_ (node_ref.strength_)
+  {
+    bind();
+  }
+
+  //! Move constructor
+  RCPNodeHandle (RCPNodeHandle&& node_ref)
+    : node_ (node_ref.node_), strength_ (node_ref.strength_)
+  {
+    node_ref.node_ = 0;
+    node_ref.strength_ = RCP_STRONG;
+  }
+
+  //! Swap the contents of \c node_ref with \c *this.
+  void swap (RCPNodeHandle& node_ref) {
+    std::swap (node_ref.node_, node_);
+    std::swap (node_ref.strength_, strength_);
+  }
+
+
+
+  /// \brief Null assignment.
+  ///
+  /// This method satisfies the strong exception guarantee: It either
+  /// returns successfully, or throws an exception without modifying
+  /// any user-visible state.
+  RCPNodeHandle& operator= (ENull) {
+    unbind(); // May throw in some cases
+    node_ = 0;
+    strength_ = RCP_STRONG;
+    return *this;
+  }
+
+  /// \brief Copy assignment operator.
+  ///
+  /// This method satisfies the strong exception guarantee: It either
+  /// returns successfully, or throws an exception without modifying
+  /// any user-visible state.
+  RCPNodeHandle& operator= (const RCPNodeHandle& node_ref) {
+    // NOTE: Don't need to check assignment to self since user-facing classes
+    // do that!
+    unbind(); // May throw in some cases
+    node_ = node_ref.node_;
+    strength_ = node_ref.strength_;
+    bind();
+    return *this;
+  }
+
+  /// \brief Move assignment operator.
+  ///
+  /// This method satisfies the strong exception guarantee: It either
+  /// returns successfully, or throws an exception without modifying
+  /// any user-visible state.
+  RCPNodeHandle& operator= (RCPNodeHandle&& node_ref) {
+    // NOTE: Don't need to check assignment to self since user-facing classes
+    // do that!
+    unbind(); // May throw in some cases
+    node_ = node_ref.node_;
+    strength_ = node_ref.strength_;
+    node_ref.node_ = 0;
+    node_ref.strength_ = RCP_STRONG;
+    return *this;
+  }
+
+  //! Destructor
+  ~RCPNodeHandle() {
+    unbind();
+  }
+
+  //! Return a strong handle if possible using thread safe atomics
+  // otherwise return a null handle
+  RCPNodeHandle create_strong_lock() const {
+    // make weak handle
+    RCPNodeHandle possibleStrongNode(node_, RCP_WEAK, false);
+    if (possibleStrongNode.attemptConvertWeakToStrong()) {
+      return possibleStrongNode; // success - we have a good strong handle
     }
-  /** \brief . */
-  void swap( RCPNodeHandle& node_ref )
-    {
-      std::swap(node_ref.node_, node_);
-      std::swap(node_ref.strength_, strength_);
+    return RCPNodeHandle(); // failure - return an empty handle
+  }
+
+  //! Return a weak handle.
+  RCPNodeHandle create_weak() const {
+    if (node_) {
+      return RCPNodeHandle(node_, RCP_WEAK, false);
     }
-  /** \brief (Strong guarantee). */
-  RCPNodeHandle& operator=(const RCPNodeHandle& node_ref)
-    {
-      // Assignment to self check: Note, We don't need to do an assigment to
-      // self check here because such a check is already done in the RCP and
-      // ArrayRCP classes.
-      // Take care of this's existing node and object
-      unbind(); // May throw in some cases
-      // Assign the new node
-      node_ = node_ref.node_;
-      strength_ = node_ref.strength_;
-      bind();
-      // Return
-      return *this;
+    return RCPNodeHandle();
+  }
+  //! Return a strong handle.
+  RCPNodeHandle create_strong() const {
+    if (node_) {
+      return RCPNodeHandle(node_, RCP_STRONG, false);
     }
-  /** \brief . */
-  ~RCPNodeHandle()
-    {
-      unbind();
+    return RCPNodeHandle();
+  }
+  //! Return a pointer to the underlying RCPNode.
+  RCPNode* node_ptr() const {
+    return node_;
+  }
+  //! Whether the underlying RCPNode is NULL.
+  bool is_node_null() const {
+    return node_==0;
+  }
+  /// \brief Whether the underlying pointer is valid.
+  ///
+  /// \note NULL is a valid pointer; this method returns true in that case.
+  bool is_valid_ptr() const {
+    if (node_) {
+      return node_->is_valid_ptr();
     }
-  /** \brief . */
-  RCPNodeHandle create_weak() const
-    {
-      if (node_) {
-        return RCPNodeHandle(node_, RCP_WEAK, false);
-      }
-      return RCPNodeHandle();
+    return true; // Null is a valid ptr!
+  }
+  /// \brief Whether the RCPNode for which \c node2 is a handle is the
+  ///   same RCPNode as this object's RCPNode.
+  bool same_node(const RCPNodeHandle &node2) const {
+    return node_ == node2.node_;
+  }
+  //! The strong count for this RCPNode, or 0 if the node is NULL.
+  int strong_count() const {
+    if (node_) {
+      return node_->strong_count();
     }
-  /** \brief . */
-  RCPNodeHandle create_strong() const
-    {
-      if (node_) {
-        return RCPNodeHandle(node_, RCP_STRONG, false);
-      }
-      return RCPNodeHandle();
+    return 0;
+  }
+  //! The weak count for this RCPNode, or 0 if the node is NULL.
+  int weak_count() const {
+    if (node_) {
+      return node_->weak_count(); // Not atomically safe
     }
-  /** \brief . */
-  RCPNode* node_ptr() const
-    {
-      return node_;
+    return 0;
+  }
+  //! The sum of the weak and string counts.
+  int total_count() const {
+    if (node_) {
+      return node_->strong_count() + node_->weak_count(); // not atomically safe
     }
-  /** \brief . */
-  bool is_node_null() const
-    {
-      return node_==0;
-    }
-  /** \brief . */
-  bool is_valid_ptr() const
-    {
-      if (node_)
-        return node_->is_valid_ptr();
-      return true; // Null is a valid ptr!
-    }
-  /** \brief . */
-  bool same_node(const RCPNodeHandle &node2) const
-    {
-      return node_ == node2.node_;
-    }
-  /** \brief . */
-  int strong_count() const
-    {
-      if (node_)
-        return node_->strong_count(); 
-      return 0;
-    }
-  /** \brief . */
-  int weak_count() const
-    {
-      if (node_)
-        return node_->weak_count(); 
-      return 0;
-    }
-  /** \brief . */
-  int total_count() const
-    {
-      if (node_)
-        return node_->strong_count() + node_->weak_count(); 
-      return 0;
-    }
-  /** \brief Backward compatibility. */
-  int count() const
-    {
-      if (node_)
-        return node_->strong_count(); 
-      return 0;
-    }
-  /** \brief . */
-  ERCPStrength strength() const
-    {
-      return strength_;
-    }
+    return 0;
+  }
+  //! The strength of this handle.
+  ERCPStrength strength() const {
+    return strength_;
+  }
   /** \brief . */
   void has_ownership(bool has_ownership_in)
     {
@@ -878,10 +943,10 @@ public:
     {
       debug_assert_not_null();
       return node_->get_extra_data(type_name, name);
-    } 
+    }
   /** \brief . */
   const any& get_extra_data( const std::string& type_name,
-    const std::string& name 
+    const std::string& name
     ) const
     {
       return const_cast<RCPNodeHandle*>(this)->get_extra_data(type_name, name);
@@ -893,7 +958,7 @@ public:
     {
       debug_assert_not_null();
       return node_->get_optional_extra_data(type_name, name);
-    } 
+    }
   /** \brief . */
   const any* get_optional_extra_data(
     const std::string& type_name, const std::string& name
@@ -939,27 +1004,44 @@ public:
 private:
   RCPNode *node_;
   ERCPStrength strength_;
+  // atomically safe conversion of a weak handle to a strong handle if
+  // possible - if not possible nothing changes
+  bool attemptConvertWeakToStrong() {
+    if (node_->attemptIncrementStrongCountFromNonZeroValue()) {
+      // because we converted strong + 1 we account for this by doing weak - 1
+      node_->deincr_count(RCP_WEAK);
+      // we have successfully incremented the strong count by one
+      strength_ = RCP_STRONG;
+      return true;
+    }
+    return false;
+  }
   inline void bind()
     {
       if (node_)
         node_->incr_count(strength_);
     }
-  inline void unbind() 
+  inline void unbind()
     {
-      // Optimize this implementation for count > 1
-      if (node_ && node_->deincr_count(strength_)==0) {
-        // If we get here, the reference count has gone to 0 and something
-        // interesting is going to happen.  In this case, we need to
-        // reincrement the count back to 1 and call the more complex function
-        // that will either delete the object or delete the node.
-        node_->incr_count(strength_);
-        unbindOne();
+      if (node_) {
+        if(strength_ == RCP_STRONG) {
+          // only strong checks for --strong == 0
+          if (node_->deincr_count(RCP_STRONG) == 0) {
+            unbindOneStrong();
+            // but if strong hits 0 it also decrements weak_count_plus which
+            // is weak + (strong != 0)
+            if( node_->deincr_count(RCP_WEAK) == 0) {
+              unbindOneTotal();
+            }
+          }
+        }
+        else if(node_->deincr_count(RCP_WEAK) == 0) {  // weak checks here
+          unbindOneTotal();
+        }
       }
-      // If we get here, either node_==0 or the count is still greater than 0.
-      // In this case, nothing interesting is going to happen so we are done!
     }
-  void unbindOne(); // Provides the "strong" guarantee!
-
+  void unbindOneStrong();
+  void unbindOneTotal();
 };
 
 
@@ -970,20 +1052,30 @@ private:
 inline
 std::ostream& operator<<(std::ostream& out, const RCPNodeHandle& node)
 {
-  return (out << node.node_ptr());
+  // mfh 15 Sep 2015: Make sure that NULL pointers print consistently.
+  // Clang 3.5 likes to print an empty string in that case, while GCC
+  // prints 0.  Thus, we test if the pointer is NULL and print 0 in
+  // that case.  This is important for MueLu tests, which compare
+  // string print-outs.
+  if (node.node_ptr () == NULL) {
+    out << "0";
+  } else {
+    out << node.node_ptr ();
+  }
+  return out;
 }
 
 
 /** \brief Deletes a (non-owning) RCPNode but not it's underlying object in
  * case of a throw.
  *
- * This class is used in contexts where RCPNodeTracer::addNewRCPNode(...) 
+ * This class is used in contexts where RCPNodeTracer::addNewRCPNode(...)
  * might thrown an exception for a duplicate node being added.  The assumption
  * is that there must already be an owning (or non-owning) RCP object that
  * will delete the underlying object and therefore this class should *not*
  * call delete_obj()!
  */
-class TEUCHOS_LIB_DLL_EXPORT RCPNodeThrowDeleter {
+class TEUCHOSCORE_LIB_DLL_EXPORT RCPNodeThrowDeleter {
 public:
   /** \brief . */
   RCPNodeThrowDeleter(RCPNode *node)
@@ -1028,7 +1120,7 @@ private:
 #if defined(TEUCHOS_DEBUG) && !defined(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING)
 
 class SetTracingActiveNodesStack {
-public: 
+public:
   SetTracingActiveNodesStack()
     {RCPNodeTracer::setTracingActiveRCPNodes(true);}
   ~SetTracingActiveNodesStack()
@@ -1041,7 +1133,7 @@ public:
 
 #  define SET_RCPNODE_TRACING() (void)0
 
-#endif //  defined(TEUCHOS_DEBUG) && !defined(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING)
+#endif // defined(TEUCHOS_DEBUG) && !defined(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING)
 
 
 } // end namespace Teuchos

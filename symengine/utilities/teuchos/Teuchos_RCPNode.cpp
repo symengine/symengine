@@ -1,48 +1,20 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
 
 #include "Teuchos_RCPNode.hpp"
 #include "Teuchos_Assert.hpp"
 #include "Teuchos_Exceptions.hpp"
+#include <vector>
 
+#ifdef TEUCHOS_DEBUG
+#include "Teuchos_StandardCatchMacros.hpp"
+#endif
 
 // Defined this to see tracing of RCPNodes created and destroyed
 //#define RCP_NODE_DEBUG_TRACE_PRINT
@@ -52,6 +24,10 @@
 // Internal implementatation stuff
 //
 
+#if defined(TEUCHOS_DEBUG) && defined(HAVE_TEUCHOSCORE_CXX11) && defined(HAVE_TEUCHOS_THREAD_SAFE)
+#include <mutex>
+#define USE_MUTEX_TO_PROTECT_NODE_TRACING
+#endif
 
 namespace {
 
@@ -62,7 +38,7 @@ namespace {
 
 
 struct RCPNodeInfo {
-  RCPNodeInfo() : nodePtr(0) {}
+  RCPNodeInfo() = delete;
   RCPNodeInfo(const std::string &info_in, Teuchos::RCPNode* nodePtr_in)
     : info(info_in), nodePtr(nodePtr_in)
     {}
@@ -76,22 +52,6 @@ typedef std::pair<const void*, RCPNodeInfo> VoidPtrNodeRCPInfoPair_t;
 
 typedef std::multimap<const void*, RCPNodeInfo> rcp_node_list_t;
 
-
-class RCPNodeInfoListPred {
-public:
-  bool operator()(const rcp_node_list_t::value_type &v1,
-    const rcp_node_list_t::value_type &v2
-    ) const
-    {
-#ifdef TEUCHOS_DEBUG
-      return v1.second.nodePtr->insertion_number() < v2.second.nodePtr->insertion_number();
-#else
-      return v1.first < v2.first;
-#endif
-    }
-};
-
-
 //
 // Local static functions returning references to local static objects to
 // ensure objects are initilaized.
@@ -99,7 +59,7 @@ public:
 // Technically speaking, the static functions on RCPNodeTracer that use this
 // data might be called from other translation units in pre-main code before
 // this translation unit gets initialized.  By using functions returning
-// references to local static varible trick, we ensure that these objects are
+// references to local static variable trick, we ensure that these objects are
 // always initialized before they are used, no matter what.
 //
 // These could have been static functions on RCPNodeTracer but the advantage
@@ -122,6 +82,15 @@ rcp_node_list_t*& rcp_node_list()
   return s_rcp_node_list;
 }
 
+#ifdef USE_MUTEX_TO_PROTECT_NODE_TRACING
+std::mutex *& rcp_node_list_mutex()
+{
+  static std::mutex * s_rcp_node_list_mutex = 0;
+  // This construct exists for the same reason as above (rcp_node_list)
+  // We must keep this mutex in place until all static RCP objects have deleted.
+  return s_rcp_node_list_mutex;
+}
+#endif
 
 bool& loc_isTracingActiveRCPNodes()
 {
@@ -147,6 +116,13 @@ bool& loc_printRCPNodeStatisticsOnExit()
 {
   static bool s_loc_printRCPNodeStatisticsOnExit = false;
   return s_loc_printRCPNodeStatisticsOnExit;
+}
+
+
+bool& loc_printActiveRcpNodesOnExit()
+{
+  static bool s_loc_printActiveRcpNodesOnExit = true;
+  return s_loc_printActiveRcpNodesOnExit;
 }
 
 
@@ -210,6 +186,7 @@ void RCPNode::set_extra_data(
   ,bool force_unique
   )
 {
+  (void)force_unique;
   if(extra_data_map_==NULL) {
     extra_data_map_ = new extra_data_map_t;
   }
@@ -306,8 +283,7 @@ int RCPNodeTracer::numActiveRCPNodes()
 {
   // This list always exists, no matter debug or not so just access it.
   TEUCHOS_TEST_FOR_EXCEPT(0==rcp_node_list());
-  return rcp_node_list()->size();
-  return 0;
+  return static_cast<int>(rcp_node_list()->size());
 }
 
 
@@ -344,6 +320,18 @@ bool RCPNodeTracer::getPrintRCPNodeStatisticsOnExit()
 }
 
 
+void RCPNodeTracer::setPrintActiveRcpNodesOnExit(bool printActiveRcpNodesOnExit)
+{
+  loc_printActiveRcpNodesOnExit() = printActiveRcpNodesOnExit;
+}
+
+
+bool RCPNodeTracer::getPrintActiveRcpNodesOnExit()
+{
+  return loc_printActiveRcpNodesOnExit();
+}
+
+
 void RCPNodeTracer::printActiveRCPNodes(std::ostream &out)
 {
 #ifdef TEUCHOS_SHOW_ACTIVE_REFCOUNTPTR_NODE_TRACE
@@ -361,7 +349,16 @@ void RCPNodeTracer::printActiveRCPNodes(std::ostream &out)
       // debug-mode build.
       typedef std::vector<VoidPtrNodeRCPInfoPair_t> rcp_node_vec_t;
       rcp_node_vec_t rcp_node_vec(rcp_node_list()->begin(), rcp_node_list()->end());
-      std::sort(rcp_node_vec.begin(), rcp_node_vec.end(), RCPNodeInfoListPred());
+      std::sort(rcp_node_vec.begin(), rcp_node_vec.end(),
+          [] (const rcp_node_list_t::value_type &v1, const rcp_node_list_t::value_type &v2)
+          {
+#ifdef TEUCHOS_DEBUG
+            return v1.second.nodePtr->insertion_number() < v2.second.nodePtr->insertion_number();
+#else
+            return v1.first < v2.first;
+#endif
+          }
+      );
       // Print the RCPNode objects sorted by insertion number
       typedef rcp_node_vec_t::const_iterator itr_t;
       int i = 0;
@@ -392,6 +389,10 @@ void RCPNodeTracer::printActiveRCPNodes(std::ostream &out)
 
 void RCPNodeTracer::addNewRCPNode( RCPNode* rcp_node, const std::string &info )
 {
+#ifdef USE_MUTEX_TO_PROTECT_NODE_TRACING
+  // lock_guard will unlock in the event of an exception
+  std::lock_guard<std::mutex> lockGuard(*rcp_node_list_mutex());
+#endif // USE_MUTEX_TO_PROTECT_NODE_TRACING
 
   // Used to allow unique identification of rcp_node to allow setting breakpoints
   static int insertionNumber = 0;
@@ -455,7 +456,7 @@ void RCPNodeTracer::addNewRCPNode( RCPNode* rcp_node, const std::string &info )
     // creates an owning RCP to an object already owned by another RCPNode.
 
     // Add the new RCP node keyed as described above.
-    (*rcp_node_list()).insert(
+    (*rcp_node_list()).emplace_hint(
       itr_itr.second,
       std::make_pair(map_key_void_ptr, RCPNodeInfo(info, rcp_node))
       );
@@ -494,7 +495,13 @@ void RCPNodeTracer::removeRCPNode( RCPNode* rcp_node )
   // therefore this find(...) operation should be pretty cheap (even for a bad
   // implementation of std::map).
 
+#ifdef USE_MUTEX_TO_PROTECT_NODE_TRACING
+  // lock_guard will unlock in the event of an exception
+  std::lock_guard<std::mutex> lockGuard(*rcp_node_list_mutex());
+#endif // USE_MUTEX_TO_PROTECT_NODE_TRACING
+
   TEUCHOS_ASSERT(rcp_node_list());
+
   typedef rcp_node_list_t::iterator itr_t;
   typedef std::pair<itr_t, itr_t> itr_itr_t;
 
@@ -543,6 +550,12 @@ RCPNode* RCPNodeTracer::getExistingRCPNodeGivenLookupKey(const void* p)
   typedef std::pair<itr_t, itr_t> itr_itr_t;
   if (!p)
     return 0;
+
+#ifdef USE_MUTEX_TO_PROTECT_NODE_TRACING
+  // lock_guard will unlock in the event of an exception
+  std::lock_guard<std::mutex> lockGuard(*rcp_node_list_mutex());
+#endif // USE_MUTEX_TO_PROTECT_NODE_TRACING
+
   const itr_itr_t itr_itr = rcp_node_list()->equal_range(p);
   for (itr_t itr = itr_itr.first; itr != itr_itr.second; ++itr) {
     RCPNode* rcpNode = itr->second.nodePtr;
@@ -620,14 +633,17 @@ ActiveRCPNodesSetup::ActiveRCPNodesSetup()
 #endif // TEUCHOS_SHOW_ACTIVE_REFCOUNTPTR_NODE_TRACE
   if (!rcp_node_list())
     rcp_node_list() = new rcp_node_list_t;
+
+#ifdef USE_MUTEX_TO_PROTECT_NODE_TRACING
+  if (!rcp_node_list_mutex()) {
+    rcp_node_list_mutex() = new std::mutex;
+  }
+#endif
   ++count_;
 }
 
 
 ActiveRCPNodesSetup::~ActiveRCPNodesSetup()
-#ifdef TEUCHOS_DEBUG
-    noexcept(false)
-#endif
 {
 #ifdef TEUCHOS_SHOW_ACTIVE_REFCOUNTPTR_NODE_TRACE
   std::cerr << "\nCalled ActiveRCPNodesSetup::~ActiveRCPNodesSetup() : count = " << count_ << "\n";
@@ -645,9 +661,16 @@ ActiveRCPNodesSetup::~ActiveRCPNodesSetup()
     {
       RCPNodeTracer::printRCPNodeStatistics(rcpNodeStatistics, std::cout);
     }
-    RCPNodeTracer::printActiveRCPNodes(std::cerr);
+    if (RCPNodeTracer::getPrintActiveRcpNodesOnExit()) {
+      RCPNodeTracer::printActiveRCPNodes(std::cerr);
+    }
     delete rcp_node_list();
     rcp_node_list() = 0;
+
+#ifdef USE_MUTEX_TO_PROTECT_NODE_TRACING
+  delete rcp_node_list_mutex();
+  rcp_node_list_mutex() = 0;
+#endif
   }
 }
 
@@ -666,46 +689,21 @@ int Teuchos::ActiveRCPNodesSetup::count_ = 0;
 // RCPNodeHandle
 //
 
-
-void RCPNodeHandle::unbindOne()
+void RCPNodeHandle::unbindOneStrong()
 {
-  if (node_) {
-    // NOTE: We only deincrement the reference count after
-    // we have called delete on the underlying object since
-    // that call to delete may actually thrown an exception!
-    if (node_->strong_count()==1 && strength()==RCP_STRONG) {
-      // Delete the object (which might throw)
-      node_->delete_obj();
- #ifdef TEUCHOS_DEBUG
-      // We actaully also need to remove the RCPNode from the active list for
-      // some specialized use cases that need to be able to create a new RCP
-      // node pointing to the same memory.  What this means is that when the
-      // strong count goes to zero and the referenced object is destroyed,
-      // then it will not longer be picked up by any other code and instead it
-      // will only be known by its remaining weak RCPNodeHandle objects in
-      // order to perform debug-mode runtime checking in case a client tries
-      // to access the obejct.
-      local_activeRCPNodesSetup.foo(); // Make sure created!
-      RCPNodeTracer::removeRCPNode(node_);
+#ifdef TEUCHOS_DEBUG
+  RCPNodeTracer::removeRCPNode(node_);
 #endif
-   }
-    // If we get here, no exception was thrown!
-    if ( (node_->strong_count() + node_->weak_count()) == 1 ) {
-      // The last RCP object is going away so time to delete
-      // the entire node!
-      delete node_;
-      node_ = 0;
-      // NOTE: No need to deincrement the reference count since this is
-      // the last RCP object being deleted!
-    }
-    else {
-      // The last RCP has not gone away so just deincrement the reference
-      // count.
-      node_->deincr_count(strength());
-    }
-  }
+  // do this after removeRCPNode - otherwise another thread can jump in and grab
+  // the memory - then node tracing incorrectly thinks it's a double allocation
+  node_->delete_obj();
 }
 
+void RCPNodeHandle::unbindOneTotal()
+{
+  delete node_;
+  node_ = 0;
+}
 
 } // namespace Teuchos
 
@@ -722,3 +720,27 @@ void Teuchos::throw_null_ptr_error( const std::string &type_name )
     type_name << " : You can not call operator->() or operator*()"
     <<" if getRawPtr()==0!" );
 }
+
+// Implement abort and exception handling for RCPNode
+// Note "PROGRAM ABORTING" text will be checked in a unit test and to
+// avoid having a more complex code here to ensure no mixed output, I kept that as 1 MPI.
+// if(!success) added to prevent DEBUG unused variable warning.
+#ifdef TEUCHOS_DEBUG
+#define TEUCHOS_IMPLEMENT_ABORT(excpt)                                         \
+  bool success = false;                                                        \
+  try { throw excpt; }                                                         \
+  TEUCHOS_STANDARD_CATCH_STATEMENTS(true,std::cerr,success);                   \
+  if(!success) std::cerr << "PROGRAM ABORTING\n";                              \
+  GlobalMPISession::abort();
+  
+void Teuchos::abort_for_exception_in_destructor(const std::exception &exception) {
+  TEUCHOS_IMPLEMENT_ABORT(exception);
+}
+void Teuchos::abort_for_exception_in_destructor(const int &code) {
+  TEUCHOS_IMPLEMENT_ABORT(code);
+}
+void Teuchos::abort_for_exception_in_destructor() {
+  TEUCHOS_IMPLEMENT_ABORT(std::logic_error(
+    "Caught unknown exception from destructor of RCPNode. Aborting."););
+}
+#endif // TEUCHOS_DEBUG

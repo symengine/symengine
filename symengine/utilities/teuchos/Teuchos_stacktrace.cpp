@@ -1,3 +1,12 @@
+// @HEADER
+// *****************************************************************************
+//                    Teuchos: Common Tools Package
+//
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
+// @HEADER
+
 /*
   Copyright (c) 2010, Ondrej Certik
   All rights reserved.
@@ -29,6 +38,7 @@
 
 #include "Teuchos_stacktrace.hpp"
 #include "Teuchos_RCP.hpp"
+#include "Teuchos_VerboseObject.hpp"
 
 
 #ifdef HAVE_TEUCHOS_STACKTRACE
@@ -51,19 +61,15 @@
 // The following C headers are needed for some specific C functionality (see
 // the comments), which is not available in C++:
 
-#ifdef HAVE_TEUCHOS_EXECINFO
 // backtrace() function for retrieving the stacktrace
-#  include <execinfo.h>
-#endif
+#include <execinfo.h>
 
-#if defined(HAVE_GCC_ABI_DEMANGLE) && defined(HAVE_TEUCHOS_DEMANGLE)
 // For demangling function names
-#  include <cxxabi.h>
-#endif
+#include <cxxabi.h>
 
 #ifdef HAVE_TEUCHOS_LINK
 // For dl_iterate_phdr() functionality
-#  include <link.h>
+#include <link.h>
 #endif
 
 #ifdef HAVE_TEUCHOS_BFD
@@ -156,11 +162,9 @@ std::string demangle_function_name(std::string name)
   if (name.length() == 0) {
     s = "??";
   } else {
-    char *d = 0;
-#if defined(HAVE_GCC_ABI_DEMANGLE) && defined(HAVE_TEUCHOS_DEMANGLE)
     int status = 0;
+    char *d = 0;
     d = abi::__cxa_demangle(name.c_str(), 0, 0, &status);
-#endif
     if (d) {
       s = d;
       free(d);
@@ -190,29 +194,17 @@ void process_section(bfd *abfd, asection *section, void *_data)
     // If we already found the line, exit
     return;
   }
-#ifdef bfd_get_section_flags
   if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0) {
-#else
-  if ((bfd_section_flags(section) & SEC_ALLOC) == 0) {
-#endif
-  return;
-}
+    return;
+  }
 
-#ifdef bfd_get_section_vma
   bfd_vma section_vma = bfd_get_section_vma(abfd, section);
-#else
-  bfd_vma section_vma = bfd_section_vma(section);
-#endif
   if (data->addr < section_vma) {
     // If the addr lies above the section, exit
     return;
   }
 
-#ifdef bfd_section_size
   bfd_size_type section_size = bfd_section_size(abfd, section);
-#else
-  bfd_size_type section_size = bfd_section_size(section);
-#endif
   if (data->addr >= section_vma + section_size) {
     // If the addr lies below the section, exit
     return;
@@ -450,9 +442,11 @@ std::string stacktrace2str(const StacktraceAddresses &stacktrace_addresses)
 
 void loc_segfault_callback_print_stack(int sig_num)
 {
-  std::cout << "\nSegfault caught. Printing stacktrace:\n\n";
+  const Teuchos::RCP<Teuchos::FancyOStream> out =
+    Teuchos::VerboseObjectBase::getDefaultOStream();
+  *out << "\nSegfault caught. Printing stacktrace:\n\n";
   Teuchos::show_stacktrace();
-  std::cout << "\nDone. Exiting the program.\n";
+  *out << "\nDone. Exiting the program.\n";
   // Deregister our abort callback:
   signal(SIGABRT, SIG_DFL);
   abort();
@@ -461,9 +455,11 @@ void loc_segfault_callback_print_stack(int sig_num)
 
 void loc_abort_callback_print_stack(int sig_num)
 {
-  std::cout << "\nAbort caught. Printing stacktrace:\n\n";
+  const Teuchos::RCP<Teuchos::FancyOStream> out =
+    Teuchos::VerboseObjectBase::getDefaultOStream();
+  *out << "\nAbort caught. Printing stacktrace:\n\n";
   Teuchos::show_stacktrace();
-  std::cout << "\nDone.\n";
+  *out << "\nDone.\n";
 }
 
 
@@ -471,12 +467,8 @@ RCP<StacktraceAddresses> get_stacktrace_addresses(int impl_stacktrace_depth)
 {
   const int STACKTRACE_ARRAY_SIZE = 100; // 2010/05/22: rabartl: Is this large enough?
   void *stacktrace_array[STACKTRACE_ARRAY_SIZE];
-#ifdef HAVE_TEUCHOS_EXECINFO
   const size_t stacktrace_size = backtrace(stacktrace_array,
     STACKTRACE_ARRAY_SIZE);
-#else
-  const size_t stacktrace_size = 0;
-#endif
   return rcp(new StacktraceAddresses(stacktrace_array, stacktrace_size,
       impl_stacktrace_depth+1));
 }
@@ -518,8 +510,10 @@ std::string Teuchos::get_stacktrace(int impl_stacktrace_depth)
 
 void Teuchos::show_stacktrace()
 {
+  const Teuchos::RCP<Teuchos::FancyOStream> out =
+    Teuchos::VerboseObjectBase::getDefaultOStream();
   const int impl_stacktrace_depth=1;
-  std::cout << Teuchos::get_stacktrace(impl_stacktrace_depth);
+  *out << Teuchos::get_stacktrace(impl_stacktrace_depth);
 }
 
 

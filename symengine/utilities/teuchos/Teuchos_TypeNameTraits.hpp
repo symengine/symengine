@@ -1,42 +1,10 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
 
 #ifndef _TEUCHOS_TYPE_NAME_TRAITS_HPP_
@@ -47,11 +15,22 @@
     name of a type in a portable and readable way.
 */
 
-#include "Teuchos_ConstTypeTraits.hpp"
-
-#if defined(__IBMCPP__) && __IBMCPP__ < 900
+// mfh 30 Jan 2013: Thanks to Jim Willenbring for reporting this, and
+// to Mike Glass and Paul Lin for updating the fix for dealing with a
+// bug in IBM's XL C++ compiler.  The update was necessary due to a
+// relapse of the bug in a newer version of the compiler.
+//
+// If you don't have this update, you can fix the problem by defining
+// the macro TEUCHOS_TYPE_NAME_TRAITS_OLD_IBM when compiling anything
+// that includes this header file.  If you have the current version of
+// this file, then you don't need to do anything.
+#if defined(__IBMCPP__) && ( __IBMCPP__ < 900 || __IBMCPP__ == 1210 )
 # define TEUCHOS_TYPE_NAME_TRAITS_OLD_IBM
 #endif
+
+#include <typeinfo>
+
+#include "Teuchos_ConfigDefs.hpp"
 
 namespace  Teuchos {
 
@@ -63,7 +42,7 @@ namespace  Teuchos {
  *
  * \ingroup teuchos_language_support_grp
  */
-TEUCHOS_LIB_DLL_EXPORT std::string demangleName( const std::string &mangledName );
+TEUCHOSCORE_LIB_DLL_EXPORT std::string demangleName( const std::string &mangledName );
 
 
 /** \brief Default traits class that just returns <tt>typeid(T).name()</tt>.
@@ -103,7 +82,7 @@ public:
 template<typename T>
 std::string typeName( const T &t )
 {
-  typedef typename ConstTypeTraits<T>::NonConstType ncT;
+  typedef typename std::remove_const_t<T> ncT;
 #ifndef TEUCHOS_TYPE_NAME_TRAITS_OLD_IBM
   return TypeNameTraits<ncT>::concreteName(t);
 #else
@@ -126,14 +105,14 @@ std::string typeName( const T &t )
 template<typename T>
 std::string concreteTypeName( const T &t )
 {
-  typedef typename ConstTypeTraits<T>::NonConstType ncT;
+  typedef typename std::remove_const_t<T> ncT;
   return TypeNameTraits<ncT>::concreteName(t);
 }
 
 
 #define TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(TYPE) \
 template<> \
-class TEUCHOS_LIB_DLL_EXPORT TypeNameTraits<TYPE> { \
+class TypeNameTraits<TYPE> { \
 public: \
   static std::string name() { return (#TYPE); } \
   static std::string concreteName(const TYPE&) { return name(); } \
@@ -141,15 +120,27 @@ public: \
 
 TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(bool);
 TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(char);
-TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(int);
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(signed char);
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(unsigned char);
 TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(short int);
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(int);
 TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(long int);
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(unsigned short int);
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(unsigned int);
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(unsigned long int);
 TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(float);
 TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(double);
 
+#ifdef HAVE_TEUCHOSCORE_QUADMATH
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(__float128);
+#endif // HAVE_TEUCHOSCORE_QUADMATH
+
+#ifdef HAVE_TEUCHOS_LONG_DOUBLE
+TEUCHOS_TYPE_NAME_TRAITS_BUILTIN_TYPE_SPECIALIZATION(long double);
+#endif // HAVE_TEUCHOS_LONG_DOUBLE
 
 template<typename T>
-class TEUCHOS_LIB_DLL_EXPORT TypeNameTraits<T*> {
+class TEUCHOSCORE_LIB_DLL_EXPORT TypeNameTraits<T*> {
 public:
   typedef T* T_ptr;
   static std::string name() { return TypeNameTraits<T>::name() + "*"; }
@@ -158,7 +149,7 @@ public:
 
 
 template<>
-class TEUCHOS_LIB_DLL_EXPORT TypeNameTraits<std::string> {
+class TEUCHOSCORE_LIB_DLL_EXPORT TypeNameTraits<std::string> {
 public:
   static std::string name() { return "string"; }
   static std::string concreteName(const std::string&)
@@ -167,9 +158,22 @@ public:
 
 
 template<>
-class TEUCHOS_LIB_DLL_EXPORT TypeNameTraits<void*> {
+class TEUCHOSCORE_LIB_DLL_EXPORT TypeNameTraits<void*> {
 public:
   static std::string name() { return "void*"; }
+  static std::string concreteName(const std::string&) { return name(); }
+};
+
+// mfh 31 Jul 2012: Specialization for "void" will hopefully fix
+// compile errors on Windows, such as the following:
+//
+// http://testing.sandia.gov/cdash/viewBuildError.php?buildid=611137
+//
+// I'm imitating the specialization of void* above.
+template<>
+class TEUCHOSCORE_LIB_DLL_EXPORT TypeNameTraits<void> {
+public:
+  static std::string name() { return "void"; }
   static std::string concreteName(const std::string&) { return name(); }
 };
 
@@ -178,7 +182,7 @@ public:
 
 
 template<typename T>
-class TEUCHOS_LIB_DLL_EXPORT TypeNameTraits<std::complex<T> > {
+class TEUCHOSCORE_LIB_DLL_EXPORT TypeNameTraits<std::complex<T> > {
 public:
   static std::string name()
     { return "complex<"+TypeNameTraits<T>::name()+">"; }
@@ -189,7 +193,7 @@ public:
 
 #endif // HAVE_TEUCHOS_COMPLEX
 
- 
+
 
 } // namespace Teuchos
 

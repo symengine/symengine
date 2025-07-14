@@ -1,42 +1,10 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
 
 #ifndef TEUCHOS_RCP_DECL_HPP
@@ -79,14 +47,14 @@ enum ERCPUndefinedWithDealloc { RCP_UNDEFINED_WITH_DEALLOC };
 
 /** \brief Smart reference counting pointer class for automatic garbage
   collection.
-  
+
 For a carefully written discussion about what this class is and basic details
 on how to use it see the <A
 HREF="../../../teuchos/doc/html/RefCountPtrBeginnersGuideSAND.pdf">beginners
 guide</A>.
 
 <b>Quickstart for <tt>RCP</tt></b>
- 
+
 Here we present a short, but fairly comprehensive, quick-start for the
 use of <tt>RCP<></tt>.  The use cases described here
 should cover the overwhelming majority of the use instances of
@@ -439,7 +407,7 @@ public:
    *
    * <b>Postconditons:</b> <ul>
    * <li> <tt>this->get() == 0</tt>
-   * <li> <tt>this->strength() == RCP_STRENGTH_INVALID</tt>
+   * <li> <tt>this->strength() == RCP_STRONG</tt>
    * <li> <tt>this->is_vali_ptr() == true</tt>
    * <li> <tt>this->strong_count() == 0</tt>
    * <li> <tt>this->weak_count() == 0</tt>
@@ -490,16 +458,14 @@ public:
    * <tt>DeallocDelete</tt> for the specfication and behavior of this policy
    * interface.
    *
-   * <b>Postconditons:</b><ul>
-   * <li> <tt>this->get() == p</tt>
-   * <li> <tt>this->strength() == RCP_STRONG</tt>
-   * <li> <tt>this->is_vali_ptr() == true</tt>
-   * <li> <tt>this->strong_count() == 1</tt>
-   * <li> <tt>this->weak_count() == 0</tt>
-   * <li> <tt>this->has_ownership() == has_ownership</tt>
-   * <li> <tt>get_dealloc<Delalloc_T>(*this)</tt> returns a copy of the
-   *   custom deallocator object <tt>dealloc>/tt>.
-   * </ul>
+   * \post <tt>this->get() == p</tt>
+   * \post <tt>this->strength() == RCP_STRONG</tt>
+   * \post <tt>this->is_vali_ptr() == true</tt>
+   * \post <tt>this->strong_count() == 1</tt>
+   * \post <tt>this->weak_count() == 0</tt>
+   * \post <tt>this->has_ownership() == has_ownership</tt>
+   * \post <tt> get_dealloc<Delalloc_T>(*this) </tt> returns a copy
+   *   of the custom deallocator object <tt>dealloc>/tt>.
    */
   template<class Dealloc_T>
   inline RCP(T* p, Dealloc_T dealloc, bool has_ownership);
@@ -523,6 +489,15 @@ public:
    */
   inline RCP(const RCP<T>& r_ptr);
 
+  /** \brief Move constructor.
+   *
+   * <b>Postconditons:</b><ul>
+   * <li> <tt>*this</tt> is an exact copy of <tt>r_ptr</tt> before the call.
+   * <li> <tt>r_ptr</tt> is uninitialized
+   * </ul>
+   */
+  inline RCP(RCP<T>&& r_ptr);
+
   /** \brief Initialize from another <tt>RCP<T2></tt> object (implicit conversion only).
    *
    * This function allows the implicit conversion of smart pointer objects just
@@ -538,6 +513,18 @@ public:
    */
   template<class T2>
   inline RCP(const RCP<T2>& r_ptr);
+
+  /** \brief Aliasing constructor: Construct using the ownership of a <tt>RCP<T2></tt> and from a raw pointer.
+   * 
+   * Constructs a <tt>RCP<T></tt> which shares ownership information with the initial 
+   * value of r_ptr, but holds an unrelated and unmanaged pointer ptr.
+   * 
+   * This constructor corresponds to the constructor 
+   * template< class Y > shared_ptr( const shared_ptr<Y>& r, element_type* ptr ) noexcept;
+   * of the std::shared_ptr.
+   */
+  template<class T2>
+  inline RCP(const RCP<T2>& r_ptr, T* ptr);
 
   /** \brief Removes a reference to a dynamically allocated object and possibly deletes
    * the object if owned.
@@ -572,6 +559,17 @@ public:
    * Provides the "strong guarantee" in a debug build!
    */
   inline RCP<T>& operator=(const RCP<T>& r_ptr);
+
+  /** \brief Move assign.
+   *
+   * <b>Postconditons:</b><ul>
+   * <li> <tt>*this</tt> is an exact copy of <tt>r_ptr</tt> before the call.
+   * <li> <tt>r_ptr</tt> is uninitialized
+   * </ul>
+   *
+   * Provides the "strong guarantee" in a debug build!
+   */
+  inline RCP<T>& operator=(RCP<T>&& r_ptr);
 
   /** \brief Assign to null.
    *
@@ -632,6 +630,9 @@ public:
   /** \brief Shorthand for ptr(). */
   inline Ptr<T> operator()() const;
 
+  /** \brief Check if the RCP stores a non-null pointer */
+  inline explicit operator bool() const;
+  
   /** \brief Return an RCP<const T> version of *this. */
   inline RCP<const T> getConst() const;
 
@@ -644,11 +645,9 @@ public:
    *
    * Return values:<ul>
    * <li><tt>RCP_STRONG</tt>: Underlying reference-counted object will be deleted
-   *     when <tt>*this</tt> is destroyed if <tt>strong_count()==1</tt>. 
+   *     when <tt>*this</tt> is destroyed if <tt>strong_count()==1</tt>.
    * <li><tt>RCP_WEAK</tt>: Underlying reference-counted object will not be deleted
-   *     when <tt>*this</tt> is destroyed if <tt>strong_count() > 0</tt>. 
-   * <li><tt>RCP_STRENGTH_INVALID</tt>: <tt>*this</tt> is not strong or weak but
-   *     is null.
+   *     when <tt>*this</tt> is destroyed if <tt>strong_count() > 0</tt>.
    * </ul>
    */
   inline ERCPStrength strength() const;
@@ -681,7 +680,7 @@ public:
   /** \brief Total count (strong_count() + weak_count()). */
   inline int total_count() const;
 
-  /** \brief Give <tt>this</tt> and other <tt>RCP<></tt> objects ownership 
+  /** \brief Give <tt>this</tt> and other <tt>RCP<></tt> objects ownership
    * of the referenced object <tt>this->get()</tt>.
    *
    * See ~RCP() above.  This function
@@ -782,6 +781,11 @@ public:
    */
   inline RCP<T> create_strong() const;
 
+#if defined(HAVE_TEUCHOSCORE_CXX11) && defined(HAVE_TEUCHOS_THREAD_SAFE)
+  /** \brief This is the new thread safe version. */
+  inline RCP<T> create_strong_thread_safe() const; // this format to be determined
+#endif
+
   /** \brief Returns true if the smart pointers share the same underlying
    * reference-counted object.
    *
@@ -842,7 +846,7 @@ public:
   /** \brief Reset the raw pointer with default ownership to delete.
    *
    * Equivalent to calling:
-   
+
    \code
 
      r_rcp = rcp(p)
@@ -851,9 +855,6 @@ public:
    */
   template<class T2>
   inline void reset(T2* p, bool has_ownership = true);
-
-  /** \brief Returns <tt>strong_count()</tt> [deprecated]. */
-  inline int count() const;
 
   //@}
 
@@ -966,7 +967,9 @@ public:
   /// Gives the type (required)
   typedef T ptr_t;
   /// Deallocates a pointer <tt>ptr</tt> using <tt>delete ptr</tt> (required).
-  void free( T* ptr ) { }
+  void free( T* ptr ) {
+    (void) ptr; // silence "unused parameter" compiler warning
+  }
 };
 
 
@@ -1158,7 +1161,7 @@ embeddedObjDeallocArrayDelete(const Embedded &embedded, EPrePostDestruction preP
  *
  * If the pointer <tt>p</tt> did not come from <tt>new</tt> then
  * either the client should use the version of <tt>rcp()</tt> that
- * that uses a deallocator policy object or should pass in 
+ * that uses a deallocator policy object or should pass in
  * <tt>owns_mem = false</tt>.
  *
  * \relates RCP
@@ -1166,6 +1169,18 @@ embeddedObjDeallocArrayDelete(const Embedded &embedded, EPrePostDestruction preP
 template<class T> inline
 RCP<T> rcp(T* p, bool owns_mem = true);
 
+/**
+ * Allocates and constructs an object of type \c T 
+ * passing @p args to its constructor, and returns an object of type
+ * @ref Teuchos::RCP that owns and stores a pointer to it.
+ */
+template <typename T, typename ... Args>
+inline auto make_rcp(Args&& ... args)
+{
+    return Teuchos::rcp(
+        new T(std::forward<Args>(args)...)
+    );
+}
 
 /** \brief Initialize from a raw pointer with a deallocation policy.
  *
@@ -1216,7 +1231,7 @@ RCP<T> rcpWithDealloc(T* p, Dealloc_T dealloc, bool owns_mem=true);
 
 /** \brief Deprecated. */
 template<class T, class Dealloc_T> inline
-RCP<T> rcp( T* p, Dealloc_T dealloc, bool owns_mem )
+TEUCHOS_DEPRECATED RCP<T> rcp( T* p, Dealloc_T dealloc, bool owns_mem )
 {
   return rcpWithDealloc(p, dealloc, owns_mem);
 }
@@ -1263,7 +1278,7 @@ template<class T> inline
 RCP<T> rcpFromUndefRef(T& r);
 
 
-/* \brief Create an RCP with and also put in an embedded object.
+/** \brief Create an RCP with and also put in an embedded object.
  *
  * In this case the embedded object is destroyed (by setting to Embedded())
  * before the object at <tt>*p</tt> is destroyed.
@@ -1278,7 +1293,7 @@ RCP<T>
 rcpWithEmbeddedObjPreDestroy( T* p, const Embedded &embedded, bool owns_mem = true );
 
 
-/* \brief Create an RCP with and also put in an embedded object.
+/** \brief Create an RCP with and also put in an embedded object.
  *
  * In this case the embedded object is destroyed (by setting to Embedded())
  * after the object at <tt>*p</tt> is destroyed.
@@ -1293,7 +1308,7 @@ RCP<T>
 rcpWithEmbeddedObjPostDestroy( T* p, const Embedded &embedded, bool owns_mem = true );
 
 
-/* \brief Create an RCP with and also put in an embedded object.
+/** \brief Create an RCP with and also put in an embedded object.
  *
  * This function should be called when it is not important when the embedded
  * object is destroyed (by setting to Embedded()) with respect to when

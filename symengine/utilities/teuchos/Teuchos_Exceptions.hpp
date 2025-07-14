@@ -1,44 +1,11 @@
 // @HEADER
-// ***********************************************************************
-//
+// *****************************************************************************
 //                    Teuchos: Common Tools Package
-//                 Copyright (2004) Sandia Corporation
 //
-// Under terms of Contract DE-AC04-94AL85000, there is a non-exclusive
-// license for use of this work by or on behalf of the U.S. Government.
-//
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
-//
-// 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//
-// 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
-//
-// 3. Neither the name of the Corporation nor the names of the
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY SANDIA CORPORATION "AS IS" AND ANY
-// EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-// PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL SANDIA CORPORATION OR THE
-// CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-// LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-//
-// Questions? Contact Michael A. Heroux (maherou@sandia.gov)
-//
-// ***********************************************************************
+// Copyright 2004 NTESS and the Teuchos contributors.
+// SPDX-License-Identifier: BSD-3-Clause
+// *****************************************************************************
 // @HEADER
-
 
 #ifndef TEUCHOS_EXCEPTIONS_HPP
 #define TEUCHOS_EXCEPTIONS_HPP
@@ -109,10 +76,24 @@ class DanglingReferenceError : public ExceptionBase
 class IncompatibleIteratorsError : public ExceptionBase
 {public:IncompatibleIteratorsError(const std::string& what_arg) : ExceptionBase(what_arg) {}};
 
+/** \brief Optionally thrown when a sublist is set twice by either
+ * updateParametersFromXmlFile(), updateParametersFromXmlFileAndUpdate() or
+ * updateParametersFromXmlString()
+ *
+ * \relates \c ParameterList
+ */
+class DuplicateParameterSublist : public ExceptionBase {
+
+public:
+  DuplicateParameterSublist(const std::string& what_arg):
+    ExceptionBase(what_arg){}
+
+};
+
 /** \brief Thrown when a Parameter Entry that is already being tracked
  * is attempted to be inserted again into the masterParameterEntryMap
  * and masterIDMap
- * 
+ *
  * \relates \c ParameterEntry
  */
 class DuplicateParameterEntryException : public ExceptionBase {
@@ -120,12 +101,12 @@ class DuplicateParameterEntryException : public ExceptionBase {
 public:
   DuplicateParameterEntryException(const std::string& what_arg):
     ExceptionBase(what_arg){}
-    
+
 };
 
 /** \brief Thrown when a Parameter Entry ID that is already being used
  * is attempted to be reused again.
- * 
+ *
  * \relates \c ParameterEntry
  */
 class DuplicateParameterEntryIDException : public ExceptionBase {
@@ -133,12 +114,12 @@ class DuplicateParameterEntryIDException : public ExceptionBase {
 public:
   DuplicateParameterEntryIDException(const std::string& what_arg):
     ExceptionBase(what_arg){}
-    
+
 };
 
-/** \brief Thrown when a ParameterEntryValidatorID that 
+/** \brief Thrown when a ParameterEntryValidatorID that
  * is already being used is attempted to be reused again.
- * 
+ *
  * \relates ParameterEntryValidator
  */
 class DuplicateValidatorIDException : public ExceptionBase {
@@ -146,8 +127,26 @@ class DuplicateValidatorIDException : public ExceptionBase {
 public:
   DuplicateValidatorIDException(const std::string& what_arg):
     ExceptionBase(what_arg){}
-    
+
 };
+
+/**
+ * @brief Exception class for non-printable parameter types,
+ * such as enum class/std::vector and many more
+ * which don't define an operator<<.
+ * Thrown during runtime when trying to print a parameter list
+ * with a non-printable parameter entry.
+ *
+ * \relates ParameterEntry
+ */
+class NonprintableTypeException : public ExceptionBase {
+
+public:
+    NonprintableTypeException(const std::string& what_arg) :
+            ExceptionBase(what_arg) {}
+
+};
+
 
 
 } // end namespace Teuchos

@@ -1,0 +1,24 @@
+#ifndef TEUCHOSCORE_CONFIG_H_
+#define TEUCHOSCORE_CONFIG_H_
+
+#cmakedefine HAVE_TEUCHOSCORE_KOKKOS
+
+#cmakedefine HAVE_TEUCHOSCORE_CXX11
+
+#cmakedefine HAVE_TEUCHOSCORE_BOOST
+
+#cmakedefine HAVE_TEUCHOSCORE_BOOST_IS_POLYMORPHIC
+
+#cmakedefine HAVE_TEUCHOSCORE_QT
+
+/* Deprecated */
+#cmakedefine HAVE_TEUCHOSCORE_QD
+
+#cmakedefine HAVE_TEUCHOSCORE_QUADMATH
+
+/* Deprecated */
+#cmakedefine HAVE_TEUCHOSCORE_ARPREC
+
+#cmakedefine HAVE_TEUCHOSCORE_PTHREAD
+
+#endif // TEUCHOSCORE_CONFIG_H_
