@@ -196,6 +196,7 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_SANITIZE: thread
             WITH_SYMENGINE_THREAD_SAFE: yes
+            WITH_SYMENGINE_RCP: yes
             OS: ubuntu-24.04
             CC: clang-18
             CXX: clang++-18
