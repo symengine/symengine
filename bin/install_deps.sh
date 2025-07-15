@@ -72,7 +72,7 @@ else
   # Useful for debugging any issues with conda
   conda info -a
 
-  conda_pkgs="$conda_pkgs ccache"
+  conda_pkgs="$conda_pkgs ccache gdb"
   if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
       conda_pkgs="$conda_pkgs boost>=1.80.0"
       if [[ "$MSYSTEM" == "" ]]; then
