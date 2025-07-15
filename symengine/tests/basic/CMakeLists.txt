@@ -38,7 +38,7 @@ endif()
 
 add_executable(test_functions test_functions.cpp)
 target_link_libraries(test_functions symengine catch)
-add_test(test_functions ${PROJECT_BINARY_DIR}/test_functions)
+add_test(test_functions gdb -ex r -args ${PROJECT_BINARY_DIR}/test_functions)
 
 add_executable(test_subs test_subs.cpp)
 target_link_libraries(test_subs symengine catch)
