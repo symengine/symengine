@@ -196,8 +196,10 @@ fi
 echo "=== Running tests in build directory:"
 # C++
 #ctest --output-on-failure
-gdb -ex r -ex bt -ex q -args $(find . -name test_functions)
-exit 1
+test_file=$(find . -name test_functions)
+ls -l $test_file
+gdb -q -ex "set confirm off" -ex run -ex bt -ex 'quit $_isvoid($_exitcode) ? 99 : $_exitcode' -args $test_file
+exit $?
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"
