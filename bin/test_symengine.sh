@@ -195,7 +195,9 @@ fi
 
 echo "=== Running tests in build directory:"
 # C++
-ctest --output-on-failure
+#ctest --output-on-failure
+gdb -ex r -ex bt -ex q -args $(find . -name test_functions)
+exit 1
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"
