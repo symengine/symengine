@@ -88,6 +88,9 @@ if [[ "${NO_RTTI}" == "yes" ]]; then
     export CXXFLAGS="$CXXFLAGS -fno-rtti"
 fi
 
+export CXXFLAGS="-fsanitize=thread $CXXFLAGS"
+export TSAN_OPTIONS=halt_on_error=1
+
 echo "=== Generating cmake command from environment variables"
 
 if [[ "${TEST_IN_TREE}" != "yes" ]]; then
@@ -198,7 +201,8 @@ echo "=== Running tests in build directory:"
 #ctest --output-on-failure
 test_file=$(find . -name test_functions)
 ls -l $test_file
-gdb -q -ex "set confirm off" -ex run -ex bt -ex 'quit $_isvoid($_exitcode) ? 99 : $_exitcode' -args $test_file
+# gdb -q -ex "set confirm off" -ex run -ex bt -ex 'quit $_isvoid($_exitcode) ? 99 : $_exitcode' -args $test_file
+$test_file
 exit $?
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
