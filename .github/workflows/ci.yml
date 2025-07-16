@@ -175,6 +175,7 @@ jobs:
           - BUILD_TYPE: Debug
             OS: macos-13
             CC: gcc
+            WITH_SYMENGINE_RCP: yes
 
           - BUILD_TYPE: Release
             OS: macos-13
