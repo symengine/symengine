@@ -23,6 +23,7 @@ using SymEngine::ccode;
 using SymEngine::ceiling;
 using SymEngine::cos;
 using SymEngine::cosh;
+using SymEngine::dummy;
 using SymEngine::E;
 using SymEngine::Eq;
 using SymEngine::erf;
@@ -68,6 +69,13 @@ TEST_CASE("C-code printers", "[CodePrinter]")
     REQUIRE(c99.apply(pi) == "acos(-1)");
 }
 
+TEST_CASE("Dummy", "[CodePrinter]")
+{
+    C89CodePrinter c89;
+    auto foo1 = dummy("foo");
+    auto foo2 = dummy("foo");
+    REQUIRE(c89.apply(foo1) != c89.apply(foo2));
+}
 TEST_CASE("Arithmetic", "[ccode]")
 {
     auto x = symbol("x");

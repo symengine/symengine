@@ -158,6 +158,11 @@ inline void save_basic(Archive &ar, const Symbol &b)
     ar(b.__str__());
 }
 template <class Archive>
+inline void save_basic(Archive &ar, const Dummy &b)
+{
+    ar(b.get_name(), b.get_index());
+}
+template <class Archive>
 inline void save_basic(Archive &ar, const Mul &b)
 {
     ar(b.get_coef());
@@ -427,6 +432,14 @@ RCP<const Basic> load_basic(Archive &ar, RCP<const Symbol> &)
     std::string name;
     ar(name);
     return symbol(name);
+}
+template <class Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const Dummy> &)
+{
+    std::string name;
+    size_t index;
+    ar(name, index);
+    return dummy(name, index);
 }
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Mul> &)

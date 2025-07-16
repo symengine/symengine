@@ -16,6 +16,7 @@ public:
     using StrPrinter::str_;
     void bvisit(const Basic &x);
     void bvisit(const Complex &x);
+    void bvisit(const Dummy &x);
     void bvisit(const Interval &x);
     void bvisit(const Contains &x);
     void bvisit(const Piecewise &x);
