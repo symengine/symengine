@@ -4175,7 +4175,6 @@ TEST_CASE("min: functions", "[functions]")
 
 void create_a_bunch_of_dummies(vec_basic *out, unsigned n)
 {
-    std::cout << "out=" << out << ", n=" << n;
     for (unsigned i = 0; i < n; ++i) {
         out->push_back(dummy("x"));
     }
