@@ -341,15 +341,16 @@ struct print_coefficient_impl<U, typename std::enable_if<std::is_same<
 } // namespace piranha
 #endif // HAVE_SYMENGINE_PIRANHA
 
-// Utility functions for xeus-cling
-namespace SymEngine
-{
+// Utility functions for xeus-cling and xeus-cpp-lite
+#if defined(__CLING__) || (defined(__CLANG_REPL__) && defined(__EMSCRIPTEN__))
 
-#ifdef __CLING__
 // clang-format off
 #if defined(__has_include) && __has_include(<nlohmann/json.hpp>)
 // clang-format on
 #include <nlohmann/json.hpp>
+
+namespace SymEngine
+{
 
 inline nlohmann::json mime_bundle_repr(const Expression &i)
 {
@@ -358,9 +359,9 @@ inline nlohmann::json mime_bundle_repr(const Expression &i)
     bundle["text/latex"] = "$" + latex(i) + "$";
     return bundle;
 }
-#endif
-#endif
 
 } // namespace SymEngine
+#endif
+#endif
 
 #endif // SYMENGINE_EXPRESSION_H
