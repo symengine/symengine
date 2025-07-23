@@ -51,7 +51,11 @@ class Dummy : public Symbol
 {
 private:
     //! Dummy count
+#ifdef WITH_SYMENGINE_THREAD_SAFE
+    static std::atomic<size_t> count_;
+#else
     static size_t count_;
+#endif
     //! Dummy index
     size_t dummy_index;
 
@@ -60,6 +64,7 @@ public:
     //! Dummy Constructors
     explicit Dummy();
     explicit Dummy(const std::string &name);
+    Dummy(const std::string &name, size_t index);
     //! \return Size of the hash
     hash_t __hash__() const override;
     /*! Equality comparator
@@ -93,6 +98,11 @@ inline RCP<const Dummy> dummy()
 inline RCP<const Dummy> dummy(const std::string &name)
 {
     return make_rcp<const Dummy>(name);
+}
+
+inline RCP<const Dummy> dummy(const std::string &name, size_t dummy_index)
+{
+    return make_rcp<const Dummy>(name, dummy_index);
 }
 
 inline bool is_a_Symbol(const Basic &b)

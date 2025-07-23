@@ -13,6 +13,12 @@ void CodePrinter::bvisit(const Complex &x)
 {
     throw NotImplementedError("Not implemented");
 }
+void CodePrinter::bvisit(const Dummy &x)
+{
+    std::ostringstream s;
+    s << x.get_name() << '_' << x.get_index();
+    str_ = s.str();
+}
 void CodePrinter::bvisit(const Interval &x)
 {
     std::string var = str_;
