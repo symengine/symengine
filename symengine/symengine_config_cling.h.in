@@ -10,7 +10,7 @@
 
 #include <clang/Interpreter/CppInterOp.h>
 static bool _symengine_loaded = []() {
-    Cpp::LoadLibrary("/lib/@CMAKE_SHARED_LIBRARY_PREFIX@symengine@CMAKE_SHARED_LIBRARY_SUFFIX@", false);
+    Cpp::LoadLibrary("/@CMAKE_INSTALL_LIBDIR@/@CMAKE_SHARED_LIBRARY_PREFIX@symengine@CMAKE_SHARED_LIBRARY_SUFFIX@", false);
     return true;
 }();
 
