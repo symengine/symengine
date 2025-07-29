@@ -19,8 +19,11 @@ using SymEngine::EulerGamma;
 using SymEngine::free_symbols;
 using SymEngine::function_symbol;
 using SymEngine::FunctionSymbol;
+using SymEngine::has_basic;
 using SymEngine::has_symbol;
 using SymEngine::I;
+using SymEngine::Inf;
+using SymEngine::infty;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
@@ -32,6 +35,7 @@ using SymEngine::map_uint_mpz;
 using SymEngine::Mul;
 using SymEngine::multiset_basic;
 using SymEngine::Nan;
+using SymEngine::NegInf;
 using SymEngine::NotImplementedError;
 using SymEngine::Number;
 using SymEngine::one;
@@ -943,6 +947,38 @@ TEST_CASE("Complex: Basic", "[basic]")
     c1 = Complex::from_two_nums(*integer(2), *integer(5));
     c2 = integer(3);
     CHECK_THROWS_AS(c2->pow(*c1), NotImplementedError);
+}
+
+TEST_CASE("has_basic: Basic", "[basic]")
+{
+    RCP<const Basic> r0, r1;
+    RCP<const Symbol> x, y, z;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    r0 = pow(y, integer(2));
+    r1 = add(x, r0);
+    REQUIRE(has_basic(*r1, *x));
+    REQUIRE(has_basic(*r1, *y));
+    REQUIRE(not has_basic(*r1, *z));
+    REQUIRE(not has_basic(*r1, *Nan));
+    REQUIRE(has_basic(*r1, *r0));
+
+    r1 = sin(r1);
+    REQUIRE(has_basic(*r1, *x));
+    REQUIRE(has_basic(*r1, *y));
+    REQUIRE(not has_basic(*r1, *z));
+    REQUIRE(has_basic(*r1, *r0));
+    REQUIRE(not has_basic(*r1, *Inf));
+
+    r1 = add(x, infty(1));
+    REQUIRE(has_basic(*r1, *Inf));
+    REQUIRE(not has_basic(*r1, *NegInf));
+    r1 = add(x, infty(-1));
+    REQUIRE(has_basic(*r1, *NegInf));
+
+    r1 = add(x, Nan);
+    REQUIRE(has_basic(*r1, *Nan));
 }
 
 TEST_CASE("has_symbol: Basic", "[basic]")
