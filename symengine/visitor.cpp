@@ -1,3 +1,4 @@
+#include "symengine/symengine_exception.h"
 #include <symengine/visitor.h>
 #include <symengine/polys/basic_conversions.h>
 #include <symengine/sets.h>
@@ -146,6 +147,21 @@ set_basic free_symbols(const Basic &b)
 set_basic function_symbols(const Basic &b)
 {
     return atoms<FunctionSymbol>(b);
+}
+
+HasBasicVisitor::HasBasicVisitor(Ptr<const Basic> looking_for)
+    : looking_for_(looking_for)
+{
+    if (is_a<Add>(*looking_for) || is_a<Mul>(*looking_for)
+        || is_a<And>(*looking_for) || is_a<Or>(*looking_for)
+        || is_a<Xor>(*looking_for)) {
+        // To avoid confusion with how subtree matching would behave in the
+        // current state of this visitor, associative operators are for now
+        // disallowed. If there is a need for this, a more advanced (and more
+        // expensive) visitor could be created.
+        throw NotImplementedError(
+            "Associative classes not yet handled in HasBasicVisitor");
+    }
 }
 
 RCP<const Basic> TransformVisitor::apply(const RCP<const Basic> &x)

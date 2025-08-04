@@ -97,7 +97,7 @@ protected:
     bool has_;
 
 public:
-    HasBasicVisitor(Ptr<const Basic> x) : looking_for_(x) {}
+    HasBasicVisitor(Ptr<const Basic> looking_for);
     bool apply(const Basic &b)
     {
         has_ = false;

@@ -963,6 +963,8 @@ TEST_CASE("has_basic: Basic", "[basic]")
     REQUIRE(not has_basic(*r1, *z));
     REQUIRE(not has_basic(*r1, *Nan));
     REQUIRE(has_basic(*r1, *r0));
+    // Matching of subtree's containing associative operators not yet supported:
+    CHECK_THROWS_AS(has_basic(*r1, *r1), NotImplementedError);
 
     r1 = sin(r1);
     REQUIRE(has_basic(*r1, *x));
