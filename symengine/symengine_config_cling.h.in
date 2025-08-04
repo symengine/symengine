@@ -1,7 +1,19 @@
 #ifndef SYMENGINE_CONFIG_CLING_HPP
 #define SYMENGINE_CONFIG_CLING_HPP
 
+#ifdef __CLING__
+
 #pragma cling add_library_path(@SYMENGINE_CLING_LIBRARY_DIR@)
 #pragma cling load("@CMAKE_SHARED_LIBRARY_PREFIX@symengine")
 
+#elif defined(__EMSCRIPTEN__) && defined(__CLANG_REPL__)
+
+#include <clang/Interpreter/CppInterOp.h>
+static bool _symengine_loaded = []() {
+    Cpp::LoadLibrary("/@CMAKE_INSTALL_LIBDIR@/@CMAKE_SHARED_LIBRARY_PREFIX@symengine@CMAKE_SHARED_LIBRARY_SUFFIX@", false);
+    return true;
+}();
+
 #endif
+
+#endif // SYMENGINE_CONFIG_CLING_HPP
