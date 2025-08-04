@@ -9,7 +9,6 @@ using SymEngine::Add;
 using SymEngine::as_numer_denom;
 using SymEngine::Basic;
 using SymEngine::Complex;
-using SymEngine::has_symbol;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
