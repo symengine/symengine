@@ -173,12 +173,12 @@ $(function() {
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="comment">// eg: using namespace SymEngine::literals;</span></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">inline</span> <span class="keyword">namespace </span>literals</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;{</div>
-<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a618f35c7b256be9b4e0109a60bf80f4c">   77</a></span>&#160;<span class="keyword">inline</span> integer_class <span class="keyword">operator</span><span class="stringliteral">&quot;&quot;</span> _z(<span class="keyword">const</span> <span class="keywordtype">char</span> *str)</div>
+<div class="line"><a name="l00077"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#a618f35c7b256be9b4e0109a60bf80f4c">   77</a></span>&#160;<span class="keyword">inline</span> integer_class <span class="keyword">operator</span><span class="stringliteral">&quot;&quot;</span>_z(<span class="keyword">const</span> <span class="keywordtype">char</span> *str)</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;{</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordflow">return</span> integer_class(str);</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">inline</span> rational_class <span class="keyword">operator</span><span class="stringliteral">&quot;&quot;</span> _q(<span class="keyword">const</span> <span class="keywordtype">char</span> *str)</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">inline</span> rational_class <span class="keyword">operator</span><span class="stringliteral">&quot;&quot;</span>_q(<span class="keyword">const</span> <span class="keywordtype">char</span> *str)</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;{</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">return</span> rational_class(integer_class(str));</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
