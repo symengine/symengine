@@ -1,5 +1,6 @@
 #include <symengine/visitor.h>
 #include <symengine/symengine_exception.h>
+#include <symengine/calculate.h>
 
 namespace SymEngine
 {
@@ -2952,16 +2953,6 @@ Gamma::Gamma(const RCP<const Basic> &arg) : OneArgFunction{arg}
 
 bool Gamma::is_canonical(const RCP<const Basic> &arg) const
 {
-    if (is_a<Integer>(*arg))
-        return false;
-    if (is_a<Rational>(*arg)
-        and (get_den(down_cast<const Rational &>(*arg).as_rational_class()))
-                == 2) {
-        return false;
-    }
-    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact()) {
-        return false;
-    }
     return true;
 }
 
@@ -2970,67 +2961,8 @@ RCP<const Basic> Gamma::create(const RCP<const Basic> &arg) const
     return gamma(arg);
 }
 
-RCP<const Basic> gamma_positive_int(const RCP<const Basic> &arg)
-{
-    SYMENGINE_ASSERT(is_a<Integer>(*arg))
-    RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
-    SYMENGINE_ASSERT(arg_->is_positive())
-    return factorial((arg_->subint(*one))->as_int());
-}
-
-RCP<const Basic> gamma_multiple_2(const RCP<const Basic> &arg)
-{
-    SYMENGINE_ASSERT(is_a<Rational>(*arg))
-    RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-    SYMENGINE_ASSERT(get_den(arg_->as_rational_class()) == 2)
-    RCP<const Integer> n, k;
-    RCP<const Number> coeff;
-    n = quotient_f(*(integer(mp_abs(get_num(arg_->as_rational_class())))),
-                   *(integer(get_den(arg_->as_rational_class()))));
-    if (arg_->is_positive()) {
-        k = n;
-        coeff = one;
-    } else {
-        n = n->addint(*one);
-        k = n;
-        if ((n->as_int() & 1) == 0) {
-            coeff = one;
-        } else {
-            coeff = minus_one;
-        }
-    }
-    int j = 1;
-    for (int i = 3; i < 2 * k->as_int(); i = i + 2) {
-        j = j * i;
-    }
-    coeff = mulnum(coeff, integer(j));
-    if (arg_->is_positive()) {
-        return div(mul(coeff, sqrt(pi)), pow(i2, n));
-    } else {
-        return div(mul(pow(i2, n), sqrt(pi)), coeff);
-    }
-}
-
 RCP<const Basic> gamma(const RCP<const Basic> &arg)
 {
-    if (is_a<Integer>(*arg)) {
-        RCP<const Integer> arg_ = rcp_static_cast<const Integer>(arg);
-        if (arg_->is_positive()) {
-            return gamma_positive_int(arg);
-        } else {
-            return ComplexInf;
-        }
-    } else if (is_a<Rational>(*arg)) {
-        RCP<const Rational> arg_ = rcp_static_cast<const Rational>(arg);
-        if ((get_den(arg_->as_rational_class())) == 2) {
-            return gamma_multiple_2(arg);
-        } else {
-            return make_rcp<const Gamma>(arg);
-        }
-    } else if (is_a_Number(*arg)
-               and not down_cast<const Number &>(*arg).is_exact()) {
-        return down_cast<const Number &>(*arg).get_eval().gamma(*arg);
-    }
     return make_rcp<const Gamma>(arg);
 }
 
