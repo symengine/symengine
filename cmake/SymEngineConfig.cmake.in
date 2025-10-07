@@ -92,8 +92,6 @@ if (NOT "${SYMENGINE_LLVM_COMPONENTS}" STREQUAL "")
         llvm_expand_dependencies(llvm_libs ${llvm_libs_direct})
     endif()
     set(SYMENGINE_LIBRARIES ${SYMENGINE_LIBRARIES} ${llvm_libs})
-else()
-    set(SYMENGINE_LLVM_INCLUDE_DIRS)
 endif()
 
 if (TARGET gmp)
