@@ -297,6 +297,10 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
             .setErrorStr(&error)
             .create());
 
+    // Customization point for subclasses: (may e.g. register custom symbol
+    // resolver)
+    modify_execution_engine(executionengine.get());
+
     // This is a hack to get the MemoryBuffer of a compiled object.
     class MemoryBufferRefCallback : public llvm::ObjectCache
     {
