@@ -727,12 +727,12 @@ public:
         switch (type_code) {
 #define SYMENGINE_ENUM(type, Class)                                            \
     case type:                                                                 \
-        save_basic(*this, static_cast<const Class &>(*ptr));                   \
+        save_basic<Archive>(*this, static_cast<const Class &>(*ptr));          \
         break;
 #include "symengine/type_codes.inc"
 #undef SYMENGINE_ENUM
             default:
-                save_basic(*this, *ptr);
+                save_basic<Archive>(*this, *ptr);
         }
         _addresses.insert(addr);
     }
@@ -791,7 +791,7 @@ public:
 #define SYMENGINE_ENUM(type_enum, Class)                                       \
     case type_enum: {                                                          \
         RCP<const Class> dummy_ptr;                                            \
-        RCP<const Basic> basic_ptr = load_basic(*this, dummy_ptr);             \
+        RCP<const Basic> basic_ptr = load_basic<Archive>(*this, dummy_ptr);    \
         _rcp_map[addr] = basic_ptr;                                            \
         if (not std::is_base_of<T, Class>::value) {                            \
             throw SerializationError("Cannot convert to given type");          \
