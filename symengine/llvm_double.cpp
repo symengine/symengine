@@ -1002,6 +1002,11 @@ void LLVMVisitor::loads(const std::string &s)
             .setErrorStr(&error)
             .create());
 
+    // Customization point for subclasses: (may e.g. register custom symbol
+    // resolver)
+    modify_execution_engine(executionengine.get());
+
+
     class MCJITObjectLoader : public llvm::ObjectCache
     {
         const std::string &s_;
