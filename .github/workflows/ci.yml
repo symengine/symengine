@@ -39,6 +39,7 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_BFD: yes
             WITH_SYMENGINE_THREAD_SAFE: yes
+            WITH_SYMENGINE_RCP: yes
             OS: ubuntu-22.04
             CC: gcc
 
