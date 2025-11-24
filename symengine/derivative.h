@@ -97,6 +97,7 @@ public:
     void bvisit(const UnevaluatedExpr &self);
     void bvisit(const UIntPoly &self);
     void bvisit(const URatPoly &self);
+    void bvisit(const Integral &self);
 #ifdef HAVE_SYMENGINE_PIRANHA
     void bvisit(const UIntPolyPiranha &self);
     void bvisit(const URatPolyPiranha &self);
