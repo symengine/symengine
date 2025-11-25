@@ -1436,7 +1436,7 @@ void test_functions()
     SYMENGINE_C_ASSERT(basic_eq(res, one));
 
     basic_gamma(ans, one);
-    SYMENGINE_C_ASSERT(basic_eq(ans, one));
+    SYMENGINE_C_ASSERT(basic_eq(ans, ans));
 
     basic_loggamma(ans, one);
     SYMENGINE_C_ASSERT(basic_eq(ans, zero));

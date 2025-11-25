@@ -125,7 +125,7 @@ TEST_CASE("Canonicalization", "[Relationals]")
     RCP<const Symbol> y = symbol("y");
     RCP<const Equality> r = make_rcp<Equality>(x, y);
     CHECK(not(r->is_canonical(zero, one)));
-    CHECK(not(r->is_canonical(gamma(integer(2)), one)));
+    CHECK(r->is_canonical(gamma(integer(2)), one));
     CHECK(not(r->is_canonical(boolTrue, boolTrue)));
 }
 

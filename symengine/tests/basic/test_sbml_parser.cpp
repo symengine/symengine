@@ -18,6 +18,7 @@ using SymEngine::Eq;
 using SymEngine::evalf;
 using SymEngine::EvalfDomain;
 using SymEngine::function_symbol;
+using SymEngine::gamma;
 using SymEngine::Ge;
 using SymEngine::Gt;
 using SymEngine::has_symbol;
@@ -415,12 +416,12 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
 
     s = "factorial(5)";
     res = parse_sbml(s);
-    REQUIRE(eq(*res, *integer(120)));
+    REQUIRE(eq(*res, *gamma(integer(6))));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "factorial(12)";
     res = parse_sbml(s);
-    REQUIRE(eq(*res, *integer(479001600)));
+    REQUIRE(eq(*res, *gamma(integer(13))));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "factorial(x)";

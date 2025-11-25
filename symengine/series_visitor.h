@@ -2,6 +2,7 @@
 #define SYMENGINE_SERIES_VISITOR_H
 
 #include <symengine/visitor.h>
+#include <symengine/calculate.h>
 
 namespace SymEngine
 {
