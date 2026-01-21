@@ -13,7 +13,7 @@ namespace SymEngine
 
 using fqp_t = fmpq_poly_wrapper;
 // Univariate Rational Coefficient Power SeriesBase using Flint
-class URatPSeriesFlint
+class SYMENGINE_EXPORT URatPSeriesFlint
     : public SeriesBase<fqp_t, fmpq_wrapper, URatPSeriesFlint>
 {
 public:

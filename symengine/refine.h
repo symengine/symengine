@@ -34,6 +34,7 @@ public:
     void bvisit(const Interval &x);
 };
 
+SYMENGINE_EXPORT
 RCP<const Basic> refine(const RCP<const Basic> &x,
                         const Assumptions *assumptions);
 

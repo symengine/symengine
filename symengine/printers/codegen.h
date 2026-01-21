@@ -9,7 +9,7 @@
 namespace SymEngine
 {
 
-class CodePrinter : public BaseVisitor<CodePrinter, StrPrinter>
+class SYMENGINE_EXPORT CodePrinter : public BaseVisitor<CodePrinter, StrPrinter>
 {
 public:
     explicit CodePrinter(CodePrinterPrecision precision
@@ -65,7 +65,8 @@ protected:
     std::string print_math_function(const std::string &name) const;
 };
 
-class C89CodePrinter : public BaseVisitor<C89CodePrinter, CodePrinter>
+class SYMENGINE_EXPORT C89CodePrinter
+    : public BaseVisitor<C89CodePrinter, CodePrinter>
 {
 public:
     explicit C89CodePrinter(CodePrinterPrecision precision
@@ -78,7 +79,8 @@ public:
                     const RCP<const Basic> &b) override;
 };
 
-class C99CodePrinter : public BaseVisitor<C99CodePrinter, C89CodePrinter>
+class SYMENGINE_EXPORT C99CodePrinter
+    : public BaseVisitor<C99CodePrinter, C89CodePrinter>
 {
 public:
     explicit C99CodePrinter(CodePrinterPrecision precision
@@ -93,7 +95,7 @@ public:
     void bvisit(const LogGamma &x);
 };
 
-class CudaCodePrinter : public BaseVisitor<CudaCodePrinter, C99CodePrinter>
+class SYMENGINE_EXPORT CudaCodePrinter : public BaseVisitor<CudaCodePrinter, C99CodePrinter>
 {
 public:
     explicit CudaCodePrinter(CodePrinterPrecision precision
@@ -107,7 +109,7 @@ public:
     void bvisit(const Infty &x);
 };
 
-class JSCodePrinter : public BaseVisitor<JSCodePrinter, CodePrinter>
+class SYMENGINE_EXPORT JSCodePrinter : public BaseVisitor<JSCodePrinter, CodePrinter>
 {
 public:
     using CodePrinter::apply;
