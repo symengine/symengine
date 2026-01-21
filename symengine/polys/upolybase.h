@@ -348,6 +348,7 @@ public:
     }
 };
 
+SYMENGINE_EXPORT
 umap_basic_num _find_gens_poly(const RCP<const Basic> &x);
 
 template <typename Container, typename Poly>

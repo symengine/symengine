@@ -12,11 +12,11 @@
 namespace SymEngine
 {
 
-RCP<const Number> number(std::complex<double> x);
-RCP<const Number> number(double x);
+SYMENGINE_EXPORT RCP<const Number> number(std::complex<double> x);
+SYMENGINE_EXPORT RCP<const Number> number(double x);
 
 //! RealDouble Class to hold double values
-class RealDouble : public Number
+class SYMENGINE_EXPORT RealDouble : public Number
 {
 public:
     double i;
@@ -485,7 +485,7 @@ public:
     }
 };
 
-RCP<const RealDouble> real_double(double x);
+SYMENGINE_EXPORT RCP<const RealDouble> real_double(double x);
 
 } // namespace SymEngine
 

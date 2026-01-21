@@ -20,7 +20,7 @@ namespace SymEngine
 // Different precisions for real and imaginary parts of `result` is not
 // supported
 // Use `mpc_init2` to initialize `result`
-void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd);
+SYMENGINE_EXPORT void eval_mpc(mpc_ptr result, const Basic &b, mpfr_rnd_t rnd);
 
 } // namespace SymEngine
 

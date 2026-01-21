@@ -9,7 +9,7 @@
 namespace SymEngine
 {
 
-class MatrixMul : public MatrixExpr
+class SYMENGINE_EXPORT MatrixMul : public MatrixExpr
 {
 private:
     RCP<const Basic> scalar_;
@@ -48,7 +48,7 @@ public:
     }
 };
 
-RCP<const MatrixExpr> matrix_mul(const vec_basic &factors);
+SYMENGINE_EXPORT RCP<const MatrixExpr> matrix_mul(const vec_basic &factors);
 
 } // namespace SymEngine
 

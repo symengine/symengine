@@ -23,11 +23,12 @@ typedef enum {
 
 #include <exception>
 #include <string>
+#include <symengine/symengine_config.h>
 
 namespace SymEngine
 {
 
-class SymEngineException : public std::exception
+class SYMENGINE_EXPORT SymEngineException : public std::exception
 {
     std::string m_msg;
     symengine_exceptions_t ec;
@@ -51,7 +52,7 @@ public:
     }
 };
 
-class DivisionByZeroError : public SymEngineException
+class SYMENGINE_EXPORT DivisionByZeroError : public SymEngineException
 {
 public:
     DivisionByZeroError(const std::string &msg)
@@ -60,7 +61,7 @@ public:
     }
 };
 
-class NotImplementedError : public SymEngineException
+class SYMENGINE_EXPORT NotImplementedError : public SymEngineException
 {
 public:
     NotImplementedError(const std::string &msg)
@@ -69,7 +70,7 @@ public:
     }
 };
 
-class DomainError : public SymEngineException
+class SYMENGINE_EXPORT DomainError : public SymEngineException
 {
 public:
     DomainError(const std::string &msg)
@@ -78,7 +79,7 @@ public:
     }
 };
 
-class ParseError : public SymEngineException
+class SYMENGINE_EXPORT ParseError : public SymEngineException
 {
 public:
     ParseError(const std::string &msg)
@@ -87,7 +88,7 @@ public:
     }
 };
 
-class SerializationError : public SymEngineException
+class SYMENGINE_EXPORT SerializationError : public SymEngineException
 {
 public:
     SerializationError(const std::string &msg)

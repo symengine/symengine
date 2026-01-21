@@ -31,6 +31,7 @@ enum class EvalfDomain {
     Symbolic = 2,
 };
 
+SYMENGINE_EXPORT
 RCP<const Basic> evalf(const Basic &b, unsigned long bits,
                        EvalfDomain domain = EvalfDomain::Symbolic);
 

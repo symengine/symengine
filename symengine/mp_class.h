@@ -890,11 +890,13 @@ inline void mp_gcd(integer_class &res, const integer_class &a,
     res = boost::multiprecision::gcd(a, b);
 }
 
-void mp_fdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
-                const integer_class &b);
+SYMENGINE_EXPORT void mp_fdiv_qr(integer_class &q, integer_class &r,
+                                 const integer_class &a,
+                                 const integer_class &b);
 
-void mp_cdiv_qr(integer_class &q, integer_class &r, const integer_class &a,
-                const integer_class &b);
+SYMENGINE_EXPORT void mp_cdiv_qr(integer_class &q, integer_class &r,
+                                 const integer_class &a,
+                                 const integer_class &b);
 
 inline void mp_fdiv_r(integer_class &res, const integer_class &a,
                       const integer_class &b)
@@ -996,60 +998,70 @@ inline bool mp_divisible_p(const integer_class &a, const integer_class &b)
     return a % b == 0;
 }
 
-void mp_pow_ui(rational_class &res, const rational_class &i, unsigned long n);
+SYMENGINE_EXPORT void mp_pow_ui(rational_class &res, const rational_class &i,
+                                unsigned long n);
 
-void mp_powm(integer_class &res, const integer_class &a, const integer_class &b,
-             const integer_class &m);
+SYMENGINE_EXPORT void mp_powm(integer_class &res, const integer_class &a,
+                              const integer_class &b, const integer_class &m);
 
 /*  Extended Euclidean algorithm in Z
  *  inargs:  integers a, b
  *  outargs:  gcd, the greatest common divisor of a and b
  *            s, t such that sa + tb = gcd
  */
-void mp_gcdext(integer_class &gcd, integer_class &s, integer_class &t,
-               const integer_class &a, const integer_class &b);
+SYMENGINE_EXPORT void mp_gcdext(integer_class &gcd, integer_class &s,
+                                integer_class &t, const integer_class &a,
+                                const integer_class &b);
 
-bool mp_invert(integer_class &res, const integer_class &a,
-               const integer_class &m);
+SYMENGINE_EXPORT bool mp_invert(integer_class &res, const integer_class &a,
+                                const integer_class &m);
 
-bool mp_root(integer_class &res, const integer_class &i, unsigned long n);
+SYMENGINE_EXPORT bool mp_root(integer_class &res, const integer_class &i,
+                              unsigned long n);
 
-integer_class mp_sqrt(const integer_class &i);
+SYMENGINE_EXPORT integer_class mp_sqrt(const integer_class &i);
 
-void mp_rootrem(integer_class &a, integer_class &b, const integer_class &i,
-                unsigned long n);
+SYMENGINE_EXPORT void mp_rootrem(integer_class &a, integer_class &b,
+                                 const integer_class &i, unsigned long n);
 
-void mp_sqrtrem(integer_class &a, integer_class &b, const integer_class &i);
+SYMENGINE_EXPORT void mp_sqrtrem(integer_class &a, integer_class &b,
+                                 const integer_class &i);
 
-int mp_probab_prime_p(const integer_class &i, unsigned retries);
+SYMENGINE_EXPORT int mp_probab_prime_p(const integer_class &i,
+                                       unsigned retries);
 
-void mp_nextprime(integer_class &res, const integer_class &i);
+SYMENGINE_EXPORT void mp_nextprime(integer_class &res, const integer_class &i);
 
-unsigned long mp_scan1(const integer_class &i);
+SYMENGINE_EXPORT unsigned long mp_scan1(const integer_class &i);
 
-void mp_fib_ui(integer_class &res, unsigned long n);
+SYMENGINE_EXPORT void mp_fib_ui(integer_class &res, unsigned long n);
 
-void mp_fib2_ui(integer_class &a, integer_class &b, unsigned long n);
+SYMENGINE_EXPORT void mp_fib2_ui(integer_class &a, integer_class &b,
+                                 unsigned long n);
 
-void mp_lucnum_ui(integer_class &res, unsigned long n);
+SYMENGINE_EXPORT void mp_lucnum_ui(integer_class &res, unsigned long n);
 
-void mp_lucnum2_ui(integer_class &a, integer_class &b, unsigned long n);
+SYMENGINE_EXPORT void mp_lucnum2_ui(integer_class &a, integer_class &b,
+                                    unsigned long n);
 
-void mp_fac_ui(integer_class &res, unsigned long n);
+SYMENGINE_EXPORT void mp_fac_ui(integer_class &res, unsigned long n);
 
-void mp_bin_ui(integer_class &res, const integer_class &n, unsigned long r);
+SYMENGINE_EXPORT void mp_bin_ui(integer_class &res, const integer_class &n,
+                                unsigned long r);
 
-bool mp_perfect_power_p(const integer_class &i);
+SYMENGINE_EXPORT bool mp_perfect_power_p(const integer_class &i);
 
-bool mp_perfect_square_p(const integer_class &i);
+SYMENGINE_EXPORT bool mp_perfect_square_p(const integer_class &i);
 
-int mp_legendre(const integer_class &a, const integer_class &n);
+SYMENGINE_EXPORT int mp_legendre(const integer_class &a,
+                                 const integer_class &n);
 
-int mp_jacobi(const integer_class &a, const integer_class &n);
+SYMENGINE_EXPORT int mp_jacobi(const integer_class &a, const integer_class &n);
 
-int mp_kronecker(const integer_class &a, const integer_class &n);
+SYMENGINE_EXPORT int mp_kronecker(const integer_class &a,
+                                  const integer_class &n);
 
-integer_class mp_primorial(unsigned long n);
+SYMENGINE_EXPORT integer_class mp_primorial(unsigned long n);
 
 class mp_randstate
 {

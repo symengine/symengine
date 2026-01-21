@@ -267,7 +267,7 @@ public:
     }
 };
 
-class UIntPolyPiranha
+class SYMENGINE_EXPORT UIntPolyPiranha
     : public UPiranhaPoly<pintpoly, UIntPolyBase, UIntPolyPiranha>
 {
 public:
@@ -279,7 +279,7 @@ public:
 
 }; // UIntPolyPiranha
 
-class URatPolyPiranha
+class SYMENGINE_EXPORT URatPolyPiranha
     : public UPiranhaPoly<pratpoly, URatPolyBase, URatPolyPiranha>
 {
 public:

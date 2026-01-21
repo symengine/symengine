@@ -12,7 +12,7 @@
 namespace SymEngine
 {
 //! Rational Class
-class Rational : public Number
+class SYMENGINE_EXPORT Rational : public Number
 {
 private:
     //! `i` : object of `rational_class`
@@ -321,6 +321,7 @@ public:
 };
 
 //! returns the `num` and `den` of rational `rat` as `RCP<const Integer>`
+SYMENGINE_EXPORT
 void get_num_den(const Rational &rat, const Ptr<RCP<const Integer>> &num,
                  const Ptr<RCP<const Integer>> &den);
 

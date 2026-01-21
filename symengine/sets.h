@@ -22,7 +22,7 @@ RCP<const BooleanAtom> boolean(bool b);
 namespace SymEngine
 {
 typedef std::set<RCP<const Set>, RCPBasicKeyLess> set_set;
-class Set : public Basic
+class SYMENGINE_EXPORT Set : public Basic
 {
 public:
     vec_basic get_args() const override = 0;
@@ -48,7 +48,7 @@ public:
     }
 };
 
-class EmptySet : public Set
+class SYMENGINE_EXPORT EmptySet : public Set
 {
 public:
     EmptySet(){SYMENGINE_ASSIGN_TYPEID()}
@@ -79,7 +79,7 @@ public:
     };
 };
 
-class UniversalSet : public Set
+class SYMENGINE_EXPORT UniversalSet : public Set
 {
 public:
     UniversalSet()
@@ -112,7 +112,7 @@ public:
     };
 };
 
-class FiniteSet : public Set
+class SYMENGINE_EXPORT FiniteSet : public Set
 {
 private:
     set_basic container_;
@@ -142,7 +142,7 @@ public:
     }
 };
 
-class Interval : public Set
+class SYMENGINE_EXPORT Interval : public Set
 {
 private:
     RCP<const Number> start_;
@@ -191,7 +191,7 @@ public:
     }
 };
 
-class Complexes : public Set
+class SYMENGINE_EXPORT Complexes : public Set
 {
 public:
     Complexes()
@@ -220,7 +220,7 @@ public:
     RCP<const Boolean> contains(const RCP<const Basic> &a) const override;
 };
 
-class Reals : public Set
+class SYMENGINE_EXPORT Reals : public Set
 {
 public:
     Reals()
@@ -249,7 +249,7 @@ public:
     RCP<const Boolean> contains(const RCP<const Basic> &a) const override;
 };
 
-class Rationals : public Set
+class SYMENGINE_EXPORT Rationals : public Set
 {
 public:
     Rationals()
@@ -278,7 +278,7 @@ public:
     RCP<const Boolean> contains(const RCP<const Basic> &a) const override;
 };
 
-class Integers : public Set
+class SYMENGINE_EXPORT Integers : public Set
 {
 public:
     Integers()
@@ -307,7 +307,7 @@ public:
     RCP<const Boolean> contains(const RCP<const Basic> &a) const override;
 };
 
-class Naturals : public Set
+class SYMENGINE_EXPORT Naturals : public Set
 {
 public:
     Naturals()
@@ -336,7 +336,7 @@ public:
     RCP<const Boolean> contains(const RCP<const Basic> &a) const override;
 };
 
-class Naturals0 : public Set
+class SYMENGINE_EXPORT Naturals0 : public Set
 {
 public:
     Naturals0()
@@ -365,7 +365,7 @@ public:
     RCP<const Boolean> contains(const RCP<const Basic> &a) const override;
 };
 
-class Union : public Set
+class SYMENGINE_EXPORT Union : public Set
 {
 private:
     set_set container_;
@@ -392,7 +392,7 @@ public:
     RCP<const Set> create(const set_set &in) const;
 };
 
-class Intersection : public Set
+class SYMENGINE_EXPORT Intersection : public Set
 {
 private:
     set_set container_;
@@ -419,7 +419,7 @@ public:
     RCP<const Set> create(const set_set &in) const;
 };
 
-class Complement : public Set
+class SYMENGINE_EXPORT Complement : public Set
 {
 private:
     // represents universe_ - container_
@@ -452,7 +452,7 @@ public:
     }
 };
 
-class ConditionSet : public Set
+class SYMENGINE_EXPORT ConditionSet : public Set
 {
 private:
     RCP<const Basic> sym;
@@ -485,7 +485,7 @@ public:
     }
 };
 
-class ImageSet : public Set
+class SYMENGINE_EXPORT ImageSet : public Set
 {
 private:
     // represents {expr_ for sym_ in base_}
@@ -667,27 +667,30 @@ inline RCP<const Set> imageset(const RCP<const Basic> &sym,
 }
 
 // ! \return RCP<const Set>
-RCP<const Set> set_union(const set_set &in);
+SYMENGINE_EXPORT RCP<const Set> set_union(const set_set &in);
 
 // ! \return RCP<const Set>
-RCP<const Set> set_intersection(const set_set &in);
+SYMENGINE_EXPORT RCP<const Set> set_intersection(const set_set &in);
 
+SYMENGINE_EXPORT
 RCP<const Set> set_complement_helper(const RCP<const Set> &container,
                                      const RCP<const Set> &universe);
 
 // ! \return RCP<const Set>
+SYMENGINE_EXPORT
 RCP<const Set> set_complement(const RCP<const Set> &universe,
                               const RCP<const Set> &container);
 
 //! \return RCP<const Set>
+SYMENGINE_EXPORT
 RCP<const Set> conditionset(const RCP<const Basic> &sym,
                             const RCP<const Boolean> &condition);
 
-RCP<const Basic> sup(const Set &s);
-RCP<const Basic> inf(const Set &s);
-RCP<const Set> boundary(const Set &s);
-RCP<const Set> interior(const Set &s);
-RCP<const Set> closure(const Set &s);
+SYMENGINE_EXPORT RCP<const Basic> sup(const Set &s);
+SYMENGINE_EXPORT RCP<const Basic> inf(const Set &s);
+SYMENGINE_EXPORT RCP<const Set> boundary(const Set &s);
+SYMENGINE_EXPORT RCP<const Set> interior(const Set &s);
+SYMENGINE_EXPORT RCP<const Set> closure(const Set &s);
 
 } // namespace SymEngine
 #endif
