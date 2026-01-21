@@ -19,13 +19,15 @@ namespace SymEngine
 
 // Forward declare these here to avoid including derivative.h and break the
 // cycle
+SYMENGINE_EXPORT
 RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x,
                       bool cache);
 
+SYMENGINE_EXPORT
 RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
                        bool cache);
 
-class Expression
+class SYMENGINE_EXPORT Expression
 {
 private:
     RCP<const Basic> m_basic;

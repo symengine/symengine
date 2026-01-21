@@ -14,14 +14,16 @@ namespace SymEngine
 {
 
 //! Differentiation w.r.t symbols
+SYMENGINE_EXPORT
 RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x,
                       bool cache = true);
 
 //! SymPy style differentiation w.r.t non-symbols and symbols
+SYMENGINE_EXPORT
 RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
                        bool cache = true);
 
-class DiffVisitor : public BaseVisitor<DiffVisitor>
+class SYMENGINE_EXPORT DiffVisitor : public BaseVisitor<DiffVisitor>
 {
 protected:
     const RCP<const Symbol> x;

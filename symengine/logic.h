@@ -15,14 +15,14 @@ typedef std::set<RCP<const Boolean>, RCPBasicKeyLess> set_boolean;
 typedef std::vector<RCP<const Boolean>> vec_boolean;
 
 // Parent class for expressing boolean statements
-class Boolean : public Basic
+class SYMENGINE_EXPORT Boolean : public Basic
 {
 public:
     virtual RCP<const Boolean> logical_not() const;
 };
 
 // Booleans True and False
-class BooleanAtom : public Boolean
+class SYMENGINE_EXPORT BooleanAtom : public Boolean
 {
 private:
     bool b_;
@@ -50,7 +50,7 @@ inline RCP<const BooleanAtom> boolean(bool b)
 
 // Represents `expr_` is inside set `set_`
 // `set_` can be any `Set` including `Interval`, `FiniteSet`
-class Contains : public Boolean
+class SYMENGINE_EXPORT Contains : public Boolean
 {
 private:
     RCP<const Basic> expr_;
@@ -71,6 +71,7 @@ public:
     int compare(const Basic &o) const override;
 };
 
+SYMENGINE_EXPORT
 RCP<const Boolean> contains(const RCP<const Basic> &expr,
                             const RCP<const Set> &set);
 
@@ -79,7 +80,7 @@ typedef std::vector<std::pair<RCP<const Basic>, RCP<const Boolean>>>
 
 // Represents a piecewise function
 // Keeps a vector of (Expr, Condition) pairs
-class Piecewise : public Basic
+class SYMENGINE_EXPORT Piecewise : public Basic
 {
 private:
     PiecewiseVec vec_;
@@ -99,9 +100,9 @@ public:
 
 // Vec is vector of pairs of RCP<const Basic> and RCP<const Boolean> to
 // represent (Expr, Condition) pairs
-RCP<const Basic> piecewise(const PiecewiseVec &vec);
+SYMENGINE_EXPORT RCP<const Basic> piecewise(const PiecewiseVec &vec);
 
-class And : public Boolean
+class SYMENGINE_EXPORT And : public Boolean
 {
 private:
     set_boolean container_;
@@ -121,7 +122,7 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-class Or : public Boolean
+class SYMENGINE_EXPORT Or : public Boolean
 {
 private:
     set_boolean container_;
@@ -140,7 +141,7 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-class Not : public Boolean
+class SYMENGINE_EXPORT Not : public Boolean
 {
 private:
     RCP<const Boolean> arg_;
@@ -159,7 +160,7 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-class Xor : public Boolean
+class SYMENGINE_EXPORT Xor : public Boolean
 {
 private:
     vec_boolean container_;
@@ -175,7 +176,7 @@ public:
     const vec_boolean &get_container() const;
 };
 
-class Relational : public TwoArgBasic<Boolean>
+class SYMENGINE_EXPORT Relational : public TwoArgBasic<Boolean>
 {
 public:
     //! Constructor
@@ -185,7 +186,7 @@ public:
                               const RCP<const Basic> &rhs) const;
 };
 
-class Equality : public Relational
+class SYMENGINE_EXPORT Equality : public Relational
 {
     //! Class for operator `==`.
 public:
@@ -196,7 +197,7 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-class Unequality : public Relational
+class SYMENGINE_EXPORT Unequality : public Relational
 {
     //! Class for operator `!=`.
 public:
@@ -207,7 +208,7 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-class LessThan : public Relational
+class SYMENGINE_EXPORT LessThan : public Relational
 {
     //! Class for operator `<=`.
 public:
@@ -218,7 +219,7 @@ public:
     RCP<const Boolean> logical_not() const override;
 };
 
-class StrictLessThan : public Relational
+class SYMENGINE_EXPORT StrictLessThan : public Relational
 {
     //! Class for operator `<`.
 public:
@@ -248,27 +249,33 @@ inline bool is_a_Boolean(const Basic &b)
 }
 
 //! Returns the canonicalized Equality object from a single argument
-RCP<const Boolean> Eq(const RCP<const Basic> &lhs);
+SYMENGINE_EXPORT RCP<const Boolean> Eq(const RCP<const Basic> &lhs);
 //! Returns the canonicalized Equality object from the two arguments
-RCP<const Boolean> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+SYMENGINE_EXPORT RCP<const Boolean> Eq(const RCP<const Basic> &lhs,
+                                       const RCP<const Basic> &rhs);
 //! Returns the canonicalized Unequality object from the arguments
-RCP<const Boolean> Ne(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+SYMENGINE_EXPORT RCP<const Boolean> Ne(const RCP<const Basic> &lhs,
+                                       const RCP<const Basic> &rhs);
 //! Convenience function returning LessThan object
-RCP<const Boolean> Ge(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+SYMENGINE_EXPORT RCP<const Boolean> Ge(const RCP<const Basic> &lhs,
+                                       const RCP<const Basic> &rhs);
 //! Convenience function returning StrictLessThan object
-RCP<const Boolean> Gt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+SYMENGINE_EXPORT RCP<const Boolean> Gt(const RCP<const Basic> &lhs,
+                                       const RCP<const Basic> &rhs);
 //! Returns the canonicalized LessThan object from the arguments
-RCP<const Boolean> Le(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+SYMENGINE_EXPORT RCP<const Boolean> Le(const RCP<const Basic> &lhs,
+                                       const RCP<const Basic> &rhs);
 //! Returns the canonicalized StrictLessThan object from the arguments
-RCP<const Boolean> Lt(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs);
+SYMENGINE_EXPORT RCP<const Boolean> Lt(const RCP<const Basic> &lhs,
+                                       const RCP<const Basic> &rhs);
 
-RCP<const Boolean> logical_and(const set_boolean &s);
-RCP<const Boolean> logical_nand(const set_boolean &s);
-RCP<const Boolean> logical_or(const set_boolean &s);
-RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
-RCP<const Boolean> logical_nor(const set_boolean &s);
-RCP<const Boolean> logical_xor(const vec_boolean &s);
-RCP<const Boolean> logical_xnor(const vec_boolean &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_and(const set_boolean &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_nand(const set_boolean &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_or(const set_boolean &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_not(const RCP<const Boolean> &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_nor(const set_boolean &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_xor(const vec_boolean &s);
+SYMENGINE_EXPORT RCP<const Boolean> logical_xnor(const vec_boolean &s);
 } // namespace SymEngine
 
 #endif

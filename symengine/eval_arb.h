@@ -21,7 +21,8 @@ namespace SymEngine
 // `arb.h`.
 // This design will not change in `arb` and hence will not change in `SymEngine`
 // also.
-void eval_arb(arb_t result, const Basic &b, long precision = 53);
+SYMENGINE_EXPORT void eval_arb(arb_t result, const Basic &b,
+                               long precision = 53);
 
 } // namespace SymEngine
 

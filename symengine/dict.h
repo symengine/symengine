@@ -28,7 +28,7 @@ struct RCPBasicKeyEq;
 struct RCPBasicKeyLess;
 struct RCPIntegerKeyLess;
 
-bool eq(const Basic &, const Basic &);
+SYMENGINE_EXPORT bool eq(const Basic &, const Basic &);
 typedef uint64_t hash_t;
 typedef std::unordered_map<RCP<const Basic>, RCP<const Number>, RCPBasicHash,
                            RCPBasicKeyEq>
@@ -308,19 +308,25 @@ inline int unordered_compare(const M &a, const M &b)
 }
 
 //! misc functions
-bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
+SYMENGINE_EXPORT bool vec_basic_eq_perm(const vec_basic &a, const vec_basic &b);
 
 //! print functions
-std::ostream &operator<<(std::ostream &out, const SymEngine::umap_basic_num &d);
-std::ostream &operator<<(std::ostream &out, const SymEngine::map_basic_num &d);
-std::ostream &operator<<(std::ostream &out,
-                         const SymEngine::map_basic_basic &d);
-std::ostream &operator<<(std::ostream &out,
-                         const SymEngine::umap_basic_basic &d);
-std::ostream &operator<<(std::ostream &out, const SymEngine::vec_basic &d);
-std::ostream &operator<<(std::ostream &out, const SymEngine::set_basic &d);
-std::ostream &operator<<(std::ostream &out, const SymEngine::map_int_Expr &d);
-std::ostream &operator<<(std::ostream &out, const SymEngine::vec_pair &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::umap_basic_num &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::map_basic_num &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::map_basic_basic &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::umap_basic_basic &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::vec_basic &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::set_basic &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::map_int_Expr &d);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::vec_pair &d);
 
 } // namespace SymEngine
 
