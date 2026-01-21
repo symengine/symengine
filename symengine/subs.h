@@ -8,17 +8,21 @@ namespace SymEngine
 {
 // xreplace replaces subtrees of a node in the expression tree
 // with a new subtree
+SYMENGINE_EXPORT
 RCP<const Basic> xreplace(const RCP<const Basic> &x,
                           const map_basic_basic &subs_dict, bool cache = true);
 // subs substitutes expressions similar to xreplace, but keeps
 // the mathematical equivalence for derivatives and subs
+SYMENGINE_EXPORT
 RCP<const Basic> subs(const RCP<const Basic> &x,
                       const map_basic_basic &subs_dict, bool cache = true);
 // port of sympy.physics.mechanics.msubs where f'(x) and f(x)
 // are considered independent
+SYMENGINE_EXPORT
 RCP<const Basic> msubs(const RCP<const Basic> &x,
                        const map_basic_basic &subs_dict, bool cache = true);
 // port of sympy's subs where subs inside derivatives are done
+SYMENGINE_EXPORT
 RCP<const Basic> ssubs(const RCP<const Basic> &x,
                        const map_basic_basic &subs_dict, bool cache = true);
 

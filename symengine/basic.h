@@ -52,7 +52,7 @@ enum TypeID {
     TypeID_Count
 };
 
-std::string type_code_name(TypeID id);
+SYMENGINE_EXPORT std::string type_code_name(TypeID id);
 
 #include "basic-methods.inc"
 
@@ -93,7 +93,7 @@ class Symbol;
  *  @warning Subclasses must implement `__hash__()` and `__eq__()`
  *
  */
-class Basic : public EnableRCPFromThis<Basic>
+class SYMENGINE_EXPORT Basic : public EnableRCPFromThis<Basic>
 {
 private:
 //! Private variables
@@ -240,10 +240,10 @@ struct RCPBasicKeyLess {
 
 // Convenience functions
 //! Checks equality for `a` and `b`
-bool eq(const Basic &a, const Basic &b);
+SYMENGINE_EXPORT bool eq(const Basic &a, const Basic &b);
 
 //! Checks inequality for `a` and `b`
-bool neq(const Basic &a, const Basic &b);
+SYMENGINE_EXPORT bool neq(const Basic &a, const Basic &b);
 
 /*! Returns true if `b` is exactly of type `T`. Example:
   `is_a<Symbol>(b)` : true if "b" is of type Symbol
@@ -252,7 +252,7 @@ template <class T>
 bool is_a(const Basic &b);
 
 //! Returns true if `b` is an atom. i.e. b.get_args returns an empty vector
-bool is_a_Atom(const Basic &b);
+SYMENGINE_EXPORT bool is_a_Atom(const Basic &b);
 
 /*! Returns true if `b` is of type T or any of its subclasses.
  * Example:
@@ -264,23 +264,26 @@ template <class T>
 bool is_a_sub(const Basic &b);
 
 //! Returns true if `a` and `b` are exactly the same type `T`.
-bool is_same_type(const Basic &a, const Basic &b);
+SYMENGINE_EXPORT bool is_same_type(const Basic &a, const Basic &b);
 
 //! Expands `self`
-RCP<const Basic> expand(const RCP<const Basic> &self, bool deep = true);
-void as_numer_denom(const RCP<const Basic> &x,
-                    const Ptr<RCP<const Basic>> &numer,
-                    const Ptr<RCP<const Basic>> &denom);
+SYMENGINE_EXPORT RCP<const Basic> expand(const RCP<const Basic> &self,
+                                         bool deep = true);
+SYMENGINE_EXPORT void as_numer_denom(const RCP<const Basic> &x,
+                                     const Ptr<RCP<const Basic>> &numer,
+                                     const Ptr<RCP<const Basic>> &denom);
 
-void as_real_imag(const RCP<const Basic> &x, const Ptr<RCP<const Basic>> &real,
-                  const Ptr<RCP<const Basic>> &imag);
+SYMENGINE_EXPORT void as_real_imag(const RCP<const Basic> &x,
+                                   const Ptr<RCP<const Basic>> &real,
+                                   const Ptr<RCP<const Basic>> &imag);
 
-RCP<const Basic> rewrite_as_exp(const RCP<const Basic> &x);
-RCP<const Basic> rewrite_as_sin(const RCP<const Basic> &x);
-RCP<const Basic> rewrite_as_cos(const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> rewrite_as_exp(const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> rewrite_as_sin(const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> rewrite_as_cos(const RCP<const Basic> &x);
 
 // Common subexpression elimination of symbolic expressions
 // Return a vector of replacement pairs and a vector of reduced exprs
+SYMENGINE_EXPORT
 void cse(vec_pair &replacements, vec_basic &reduced_exprs,
          const vec_basic &exprs);
 
@@ -290,7 +293,8 @@ void cse(vec_pair &replacements, vec_basic &reduced_exprs,
 
     This prints using: `std::cout << *x;`
 */
-std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &out,
+                                          const SymEngine::Basic &p);
 
 /*! Standard `hash_combine()` function. Example of usage:
 
@@ -310,7 +314,7 @@ std::ostream &operator<<(std::ostream &out, const SymEngine::Basic &p);
 template <class T>
 void hash_combine(hash_t &seed, const T &v);
 
-const char *get_version();
+SYMENGINE_EXPORT const char *get_version();
 
 } // namespace SymEngine
 

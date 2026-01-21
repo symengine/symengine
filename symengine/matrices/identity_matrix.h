@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class IdentityMatrix : public MatrixExpr
+class SYMENGINE_EXPORT IdentityMatrix : public MatrixExpr
 {
 private:
     RCP<const Basic> n_; // n >= 0
@@ -32,7 +32,8 @@ public:
     }
 };
 
-RCP<const MatrixExpr> identity_matrix(const RCP<const Basic> &n);
+SYMENGINE_EXPORT RCP<const MatrixExpr>
+identity_matrix(const RCP<const Basic> &n);
 
 } // namespace SymEngine
 

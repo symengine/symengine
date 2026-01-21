@@ -214,7 +214,8 @@ public:
     }
 };
 
-class BasicToUExprPoly : public BasicToUPolyBase<UExprPoly, BasicToUExprPoly>
+class SYMENGINE_EXPORT BasicToUExprPoly
+    : public BasicToUPolyBase<UExprPoly, BasicToUExprPoly>
 {
 public:
     using BasicToUPolyBase<UExprPoly, BasicToUExprPoly>::bvisit;
@@ -478,7 +479,8 @@ public:
     }
 };
 
-class BasicToMIntPoly : public BasicToMPolyBase<MIntPoly, BasicToMIntPoly>
+class SYMENGINE_EXPORT BasicToMIntPoly
+    : public BasicToMPolyBase<MIntPoly, BasicToMIntPoly>
 {
 public:
     using BasicToMPolyBase<MIntPoly, BasicToMIntPoly>::bvisit;
@@ -502,7 +504,8 @@ public:
     }
 };
 
-class BasicToMExprPoly : public BasicToMPolyBase<MExprPoly, BasicToMExprPoly>
+class SYMENGINE_EXPORT BasicToMExprPoly
+    : public BasicToMPolyBase<MExprPoly, BasicToMExprPoly>
 {
 public:
     using BasicToMPolyBase<MExprPoly, BasicToMExprPoly>::bvisit;

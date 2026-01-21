@@ -11,7 +11,7 @@
 namespace SymEngine
 {
 
-class PrimePi : public OneArgFunction
+class SYMENGINE_EXPORT PrimePi : public OneArgFunction
 {
     /*! The prime counting function pi(x)
      * A function that takes a real value x and returns the number of
@@ -26,9 +26,9 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 
-RCP<const Basic> primepi(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> primepi(const RCP<const Basic> &arg);
 
-class Primorial : public OneArgFunction
+class SYMENGINE_EXPORT Primorial : public OneArgFunction
 {
     /*! The primorial of n (n#)
      * The product all primes up to n
@@ -42,7 +42,7 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 
-RCP<const Basic> primorial(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> primorial(const RCP<const Basic> &arg);
 
 /**
  * @brief n:th s-gonal number
@@ -54,6 +54,7 @@ RCP<const Basic> primorial(const RCP<const Basic> &arg);
  * Sources: https://en.wikipedia.org/wiki/Polygonal_number
  * https://reference.wolfram.com/language/ref/PolygonalNumber.html
  */
+SYMENGINE_EXPORT
 RCP<const Basic> polygonal_number(const RCP<const Basic> &s,
                                   const RCP<const Basic> &n);
 
@@ -68,6 +69,7 @@ RCP<const Basic> polygonal_number(const RCP<const Basic> &s,
  * References https://en.wikipedia.org/wiki/Polygonal_number
  * http://oeis.org/wiki/Polygonal_numbers#Polygonal_roots
  */
+SYMENGINE_EXPORT
 RCP<const Basic> principal_polygonal_root(const RCP<const Basic> &s,
                                           const RCP<const Basic> &x);
 

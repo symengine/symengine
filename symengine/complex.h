@@ -12,7 +12,7 @@
 namespace SymEngine
 {
 //! ComplexBase Class for deriving all complex classes
-class ComplexBase : public Number
+class SYMENGINE_EXPORT ComplexBase : public Number
 {
 public:
     virtual RCP<const Number> real_part() const = 0;
@@ -29,7 +29,7 @@ inline bool is_a_Complex(const Basic &b)
 }
 
 //! Complex Class
-class Complex : public ComplexBase
+class SYMENGINE_EXPORT Complex : public ComplexBase
 {
 public:
     //! `real_` : Real part of the complex Number

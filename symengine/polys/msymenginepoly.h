@@ -257,7 +257,8 @@ public:
     }
 };
 
-class MIntDict : public UDictWrapper<vec_uint, integer_class, MIntDict>
+class SYMENGINE_EXPORT MIntDict
+    : public UDictWrapper<vec_uint, integer_class, MIntDict>
 {
 public:
     MIntDict(unsigned int s) SYMENGINE_NOEXCEPT : UDictWrapper(s) {}
@@ -283,7 +284,8 @@ public:
     MIntDict &operator=(const MIntDict &) = default;
 };
 
-class MExprDict : public UDictWrapper<vec_int, Expression, MExprDict>
+class SYMENGINE_EXPORT MExprDict
+    : public UDictWrapper<vec_int, Expression, MExprDict>
 {
 public:
     MExprDict(unsigned int s) SYMENGINE_NOEXCEPT : UDictWrapper(s) {}
@@ -436,7 +438,7 @@ public:
     }
 };
 
-class MIntPoly : public MSymEnginePoly<MIntDict, MIntPoly>
+class SYMENGINE_EXPORT MIntPoly : public MSymEnginePoly<MIntDict, MIntPoly>
 {
 public:
     MIntPoly(const set_basic &vars, MIntDict &&dict)
@@ -451,7 +453,7 @@ public:
         std::map<RCP<const Basic>, integer_class, RCPBasicKeyLess> &vals) const;
 };
 
-class MExprPoly : public MSymEnginePoly<MExprDict, MExprPoly>
+class SYMENGINE_EXPORT MExprPoly : public MSymEnginePoly<MExprDict, MExprPoly>
 {
 public:
     MExprPoly(const set_basic &vars, MExprDict &&dict)
@@ -471,6 +473,7 @@ public:
 // vectors whose indices are the positions in the arguments and whose values
 // are the positions in the output.  set_basic s is the set of symbols of
 // the output, and s1 and s2 are the sets of the symbols of the inputs.
+SYMENGINE_EXPORT
 unsigned int reconcile(vec_uint &v1, vec_uint &v2, set_basic &s,
                        const set_basic &s1, const set_basic &s2);
 

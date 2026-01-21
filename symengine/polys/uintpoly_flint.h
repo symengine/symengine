@@ -131,7 +131,8 @@ public:
     }
 };
 
-class UIntPolyFlint : public UFlintPoly<fzp_t, UIntPolyBase, UIntPolyFlint>
+class SYMENGINE_EXPORT UIntPolyFlint
+    : public UFlintPoly<fzp_t, UIntPolyBase, UIntPolyFlint>
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_UINTPOLYFLINT)
@@ -142,7 +143,8 @@ public:
 
 }; // UIntPolyFlint
 
-class URatPolyFlint : public UFlintPoly<fqp_t, URatPolyBase, URatPolyFlint>
+class SYMENGINE_EXPORT URatPolyFlint
+    : public UFlintPoly<fqp_t, URatPolyBase, URatPolyFlint>
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_URATPOLYFLINT)

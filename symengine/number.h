@@ -15,7 +15,7 @@ namespace SymEngine
 
 class Evaluate;
 
-class Number : public Basic
+class SYMENGINE_EXPORT Number : public Basic
 {
 public:
     //! \return true if `0`
@@ -149,7 +149,8 @@ inline bool is_number_and_zero(const Basic &b)
  *
  * Check if b is zero. If b is not numeric an exception will be thrown.
  */
-tribool is_zero(const Basic &b, const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_zero(const Basic &b,
+                                 const Assumptions *assumptions = nullptr);
 /**
  * @brief Check if a number is non-zero
  * @param b Basic
@@ -158,27 +159,43 @@ tribool is_zero(const Basic &b, const Assumptions *assumptions = nullptr);
  *
  * Check if b is non-zero. If b is not numeric an exception will be thrown.
  */
-tribool is_nonzero(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_positive(const Basic &b, const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_nonzero(const Basic &b,
+                                    const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_positive(const Basic &b,
+                                     const Assumptions *assumptions = nullptr);
+
+SYMENGINE_EXPORT
 tribool is_nonpositive(const Basic &b,
                        const Assumptions *assumptions = nullptr);
-tribool is_negative(const Basic &b, const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_negative(const Basic &b,
+                                     const Assumptions *assumptions = nullptr);
+
+SYMENGINE_EXPORT
 tribool is_nonnegative(const Basic &b,
                        const Assumptions *assumptions = nullptr);
-tribool is_integer(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_real(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_complex(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_rational(const Basic &b);
-tribool is_irrational(const Basic &b);
-tribool is_finite(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_infinite(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_even(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_odd(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_algebraic(const Basic &b, const Assumptions *assumptions = nullptr);
-tribool is_transcendental(const Basic &b,
-                          const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_integer(const Basic &b,
+                                    const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_real(const Basic &b,
+                                 const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_complex(const Basic &b,
+                                    const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_rational(const Basic &b);
+SYMENGINE_EXPORT tribool is_irrational(const Basic &b);
+SYMENGINE_EXPORT tribool is_finite(const Basic &b,
+                                   const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_infinite(const Basic &b,
+                                     const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_even(const Basic &b,
+                                 const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_odd(const Basic &b,
+                                const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_algebraic(const Basic &b,
+                                      const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_transcendental(const Basic &b,
+                                           const Assumptions *assumptions
+                                           = nullptr);
 
-class NumberWrapper : public Number
+class SYMENGINE_EXPORT NumberWrapper : public Number
 {
 public:
     NumberWrapper(){SYMENGINE_ASSIGN_TYPEID()}

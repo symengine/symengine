@@ -22,44 +22,53 @@ namespace SymEngine
  * Set, given
  * they satisfy the `domain` constraint.
  */
+SYMENGINE_EXPORT
 RCP<const Set> solve(const RCP<const Basic> &f, const RCP<const Symbol> &sym,
                      const RCP<const Set> &domain = universalset());
 
 // Solves rational equations.
+SYMENGINE_EXPORT
 RCP<const Set> solve_rational(const RCP<const Basic> &f,
                               const RCP<const Symbol> &sym,
                               const RCP<const Set> &domain = universalset());
 
 // Solves Trigonometric equations.
+SYMENGINE_EXPORT
 RCP<const Set> solve_trig(const RCP<const Basic> &f,
                           const RCP<const Symbol> &sym,
                           const RCP<const Set> &domain = universalset());
 
 // Solves Polynomial equations.
 // Use this method, If you know for sure that `f` is a Polynomial.
+SYMENGINE_EXPORT
 RCP<const Set> solve_poly(const RCP<const Basic> &f,
                           const RCP<const Symbol> &sym,
                           const RCP<const Set> &domain = universalset());
 
 // Helper method for solving lower order polynomials using known formulae.
+SYMENGINE_EXPORT
 RCP<const Set> solve_poly_heuristics(const vec_basic &coeffs,
                                      const RCP<const Set> &domain
                                      = universalset());
 
 // Helper method for solving linear equations.
+SYMENGINE_EXPORT
 RCP<const Set> solve_poly_linear(const vec_basic &coeffs,
                                  const RCP<const Set> &domain = universalset());
 
 // Helper method for solving quadratic equations.
+SYMENGINE_EXPORT
 RCP<const Set> solve_poly_quadratic(const vec_basic &coeffs,
                                     const RCP<const Set> &domain
                                     = universalset());
 
 // Helper method for solving cubic equations.
+SYMENGINE_EXPORT
 RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
                                 const RCP<const Set> &domain = universalset());
 
 // Helper method for solving quartic(degree-4) equations.
+SYMENGINE_EXPORT
 RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
                                   const RCP<const Set> &domain
                                   = universalset());
@@ -70,7 +79,8 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
  * non-linear;
  * true otherwise.
  */
-bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x);
+SYMENGINE_EXPORT bool is_a_LinearArgTrigEquation(const Basic &b,
+                                                 const Symbol &x);
 
 /* returns Inverse of a complex equation `fX = gY` wrt symbol `sym`.
  * It is like a solver developed specifically to solve equations of the
@@ -80,6 +90,7 @@ bool is_a_LinearArgTrigEquation(const Basic &b, const Symbol &x);
  * Dummy `nD` is used as the symbol for `ImageSet` while returning the solution
  * set.
  */
+SYMENGINE_EXPORT
 RCP<const Set> invertComplex(const RCP<const Basic> &fX,
                              const RCP<const Set> &gY,
                              const RCP<const Symbol> &sym,
@@ -89,13 +100,16 @@ RCP<const Set> invertComplex(const RCP<const Basic> &fX,
 // Solver for System of Equations
 // TODO : solve systems that have infinitely many solutions or no solution.
 // Input as an Augmented Matrix. (A|b) to solve `Ax=b`.
-vec_basic linsolve(const DenseMatrix &system, const vec_sym &syms);
+SYMENGINE_EXPORT vec_basic linsolve(const DenseMatrix &system,
+                                    const vec_sym &syms);
 
 // Input as a vector of linear equations.
-vec_basic linsolve(const vec_basic &system, const vec_sym &syms);
+SYMENGINE_EXPORT vec_basic linsolve(const vec_basic &system,
+                                    const vec_sym &syms);
 
 // converts system of linear equations into Matrix form.
 // first Matrix is for `A` and second one is for `b`.
+SYMENGINE_EXPORT
 std::pair<DenseMatrix, DenseMatrix>
 linear_eqns_to_matrix(const vec_basic &equations, const vec_sym &syms);
 } // namespace SymEngine

@@ -76,10 +76,10 @@ public:
     }
 };
 
-RCP<const Number> number(mpfr_ptr x);
+SYMENGINE_EXPORT RCP<const Number> number(mpfr_ptr x);
 
 //! ComplexMPC Class to hold mpc_t values
-class ComplexMPC : public ComplexBase
+class SYMENGINE_EXPORT ComplexMPC : public ComplexBase
 {
 private:
     mpc_class i;
@@ -395,7 +395,7 @@ inline RCP<const ComplexMPC> complex_mpc(mpc_class x)
 
 namespace SymEngine
 {
-class ComplexMPC : public ComplexBase
+class SYMENGINE_EXPORT ComplexMPC : public ComplexBase
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_MPC)
