@@ -123,7 +123,10 @@ jobs:
           - BUILD_TYPE: Release
             OS: ubuntu-24.04
             CC: clang
-            WITH_LLVM: "LATEST"
+            # WITH_LLVM="LATEST" (llvm 22) fails: llvm_double.cpp:58:13: error: variable 'GetDeclaration' with type 'const auto &'
+            # has incompatible initializer of type '<overloaded function type>'
+            # const auto &GetDeclaration = llvm::Intrinsic::getOrInsertDeclaration;
+            WITH_LLVM: 21
             EXTRA_APT_REPOSITORY: 'deb http://apt.llvm.org/noble/ llvm-toolchain-noble main'
             EXTRA_APT_PACKAGES: llvm
 
@@ -165,21 +168,21 @@ jobs:
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 5.0
-            OS: macos-13
+            OS: macos-14
             CC: clang
 
           - BUILD_TYPE: Release
             WITH_LLVM: 5.0
-            OS: macos-13
+            OS: macos-14
             CC: clang
 
           - BUILD_TYPE: Debug
-            OS: macos-13
+            OS: macos-14
             CC: gcc
             WITH_SYMENGINE_RCP: yes
 
           - BUILD_TYPE: Release
-            OS: macos-13
+            OS: macos-14
             CC: gcc
 
           - BUILD_TYPE: Debug
