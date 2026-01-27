@@ -437,7 +437,14 @@ void UnicodePrinter::bvisit(const Add &x)
                 box.add_right(t);
             }
         } else {
-            box.add_right(t);
+            if (minus) {
+                StringBox op("- ");
+                box.add_right(op);
+                box.add_right(t);
+                minus = false;
+            } else
+                box.add_right(t);
+
             first = false;
         }
     }

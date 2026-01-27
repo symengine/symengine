@@ -1080,6 +1080,12 @@ TEST_CASE("test_unicode()", "[unicode]")
     // https://github.com/symengine/symengine/issues/2029
     s = unicode(*mul(mul(x, x), y));
     CHECK(s == U8(" 2  \nx \u22C5y"));
+
+    // https://github.com/symengine/symengine/issues/2131
+    s = unicode(*add(mul(integer(-1), x), sin(x)));
+    CHECK(s == U8("- x + sin(x)"));
+    s = unicode(*add(mul(integer(-1), log(x)), sin(x)));
+    CHECK(s == U8("- log(x) + sin(x)"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")

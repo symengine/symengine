@@ -193,6 +193,7 @@ symengine/symengine_config_cling.h
 **.gdb_history
 compile_commands.json
 .vscode/
+.vs
 
 # Generated Documentation
 gen_docs/
