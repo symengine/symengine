@@ -80,6 +80,7 @@ void StringBox::add_power(StringBox &other)
     for (std::string &line : lines_) {
         line.append(std::string(other.width_, ' '));
     }
+    std::reverse(other.lines_.begin(), other.lines_.end());
     for (std::string &line : other.lines_) {
         lines_.insert(lines_.begin(), std::string(width_, ' ') + line);
     }

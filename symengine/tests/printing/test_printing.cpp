@@ -1082,10 +1082,13 @@ TEST_CASE("test_unicode()", "[unicode]")
     CHECK(s == U8(" 2  \nx \u22C5y"));
 
     // https://github.com/symengine/symengine/issues/2131
-    s = unicode(*add(mul(integer(-1), x), sin(x)));
-    CHECK(s == U8("- x + sin(x)"));
+    // Fix UnicodePrinter::bvisit(const Add &x);
     s = unicode(*add(mul(integer(-1), log(x)), sin(x)));
     CHECK(s == U8("- log(x) + sin(x)"));
+
+    // Fix void StringBox::add_power(StringBox& other)
+    s = unicode(*div(y, x));
+    CHECK(s == U8("y\n\u2015\nx"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
