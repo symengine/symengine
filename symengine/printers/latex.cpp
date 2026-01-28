@@ -193,7 +193,13 @@ void LatexPrinter::bvisit(const Derivative &x)
             s << "\\partial " << apply(*prev) << "^" << count << " ";
         }
     }
-    s << "} " << apply(x.get_arg());
+
+    const RCP<const Basic> arg = x.get_arg();
+    std::string arg_str = apply(arg);
+    if (is_a<Add>(*arg) || is_a<Mul>(*arg)) {
+        arg_str = "\\left(" + arg_str + "\\right)";
+    }
+    s << "} " << arg_str;
     str_ = s.str();
 }
 
