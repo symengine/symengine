@@ -1089,6 +1089,10 @@ TEST_CASE("test_unicode()", "[unicode]")
     // Fix void StringBox::add_power(StringBox& other)
     s = unicode(*div(y, x));
     CHECK(s == U8("y\n\u2015\nx"));
+
+    // Fix void UnicodePrinter::bvisit(const Add &x): double minus error
+    s = unicode(*add(integer(2), neg(mul(integer(3), y))));
+    CHECK(s == U8("2-3\u22C5y"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
