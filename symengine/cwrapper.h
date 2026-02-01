@@ -84,7 +84,7 @@ struct CRCPBasic_C {
 //  that it can be allocated on the stack. When building the library in
 //  cwrapper.cpp, the CRCPBasic is declared in cwrapper.cpp which removes
 //  the need to cast the C struct to C++ struct every time.
-#ifdef symengine_EXPORTS
+#ifdef symengine_COMPILING
 typedef struct CRCPBasic basic_struct;
 #else
 typedef struct CRCPBasic_C basic_struct;
