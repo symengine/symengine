@@ -1082,7 +1082,7 @@ TEST_CASE("test_unicode()", "[unicode]")
     CHECK(s == U8(" 2  \nx \u22C5y"));
 
     // https://github.com/symengine/symengine/issues/2131
-    // Fix UnicodePrinter::bvisit(const Add &x);
+    // Fix UnicodePrinter::bvisit(const Add &x)
     s = unicode(*add(mul(integer(-1), log(x)), sin(x)));
     CHECK(s == U8("- log(x) + sin(x)"));
 
@@ -1093,6 +1093,11 @@ TEST_CASE("test_unicode()", "[unicode]")
     // Fix void UnicodePrinter::bvisit(const Add &x): double minus error
     s = unicode(*add(integer(2), neg(mul(integer(3), y))));
     CHECK(s == U8("2-3\u22C5y"));
+
+    // Fix void UnicodePrinter::bvisit(const Mul &x):
+    // remove the redundant mul sign in the num
+    s = unicode(*mul(div(integer(1), x), div(integer(1), y)));
+    CHECK(s == U8("1\n\u2015\u2015\u2015\u2015\u2015\n(x\u22C5y)"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")

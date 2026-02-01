@@ -517,7 +517,6 @@ void UnicodePrinter::bvisit(const Mul &x)
     if (not num) {
         auto onebox = StringBox("1");
         box1.add_right(onebox);
-        box1.add_right(mulbox);
     }
 
     if (den != 0) {
