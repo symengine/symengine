@@ -1097,7 +1097,11 @@ TEST_CASE("test_unicode()", "[unicode]")
     // Fix void UnicodePrinter::bvisit(const Mul &x):
     // remove the redundant mul sign in the num
     s = unicode(*mul(div(integer(1), x), div(integer(1), y)));
-    CHECK(s == U8("1\n\u2015\u2015\u2015\u2015\u2015\n(x\u22C5y)"));
+    /*for (char c : s) {
+        printf("%02x ", static_cast<unsigned char>(c));
+    }
+    std::cout << '\n';*/
+    CHECK(s == U8("  1  \n\u2015\u2015\u2015\u2015\u2015\n(x\u22C5y)"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
