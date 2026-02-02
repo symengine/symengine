@@ -398,43 +398,54 @@ void UnicodePrinter::bvisit(const Add &x)
 {
     StringBox box;
     bool first = true;
-    const std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmpUnicode>
-        dict(x.get_dict().begin(), x.get_dict().end());
+    std::map<RCP<const Basic>, RCP<const Number>, PrinterBasicCmpUnicode> dict(
+        x.get_dict().begin(), x.get_dict().end());
 
     if (neq(*(x.get_coef()), *zero)) {
         box = apply(x.get_coef());
         first = false;
     }
+    bool minus = false;
     for (const auto &p : dict) {
         StringBox t;
         if (eq(*(p.second), *one)) {
             t = parenthesizeLT(p.first, PrecedenceEnum::Add);
         } else if (eq(*(p.second), *minus_one)) {
+            minus = true;
             t = parenthesizeLT(p.first, PrecedenceEnum::Mul);
-            if (!first) {
-                StringBox op(" ");
-                box.add_right(op);
-            }
-            StringBox op("- ");
-            box.add_right(op);
-            box.add_right(t);
-            first = false;
-            continue;
         } else {
-            t = parenthesizeLT(p.second, PrecedenceEnum::Mul);
+            if (down_cast<const Number &>(*p.second).is_negative()) {
+                minus = true;
+            }
+            t = parenthesizeLT(abs(p.second), PrecedenceEnum::Mul);
             auto op = print_mul();
             t.add_right(op);
             auto rhs = parenthesizeLT(p.first, PrecedenceEnum::Mul);
             t.add_right(rhs);
         }
 
-        if (down_cast<const Number &>(*p.second).is_positive() and !first) {
-            StringBox op(" + ");
-            box.add_right(op);
-        }
+        if (not first) {
+            if (minus) {
+                StringBox op(" - ");
+                box.add_right(op);
+                box.add_right(t);
+                minus = false;
+            } else {
+                StringBox op(" + ");
+                box.add_right(op);
+                box.add_right(t);
+            }
+        } else {
+            if (minus) {
+                StringBox op("- ");
+                box.add_right(op);
+                box.add_right(t);
+                minus = false;
+            } else
+                box.add_right(t);
 
-        box.add_right(t);
-        first = false;
+            first = false;
+        }
     }
     box_ = box;
 }
@@ -469,7 +480,9 @@ void UnicodePrinter::bvisit(const Mul &x)
     } else if (neq(*(x.get_coef()), *one)) {
         RCP<const Basic> numer, denom;
         as_numer_denom(x.get_coef(), outArg(numer), outArg(denom));
-        if (neq(*numer, *one)) {
+        if (eq(*numer, *minus_one)) {
+            box1 = StringBox("-");
+        } else if (neq(*numer, *one)) {
             num = true;
             box1 = parenthesizeLT(numer, PrecedenceEnum::Mul);
             first_box1 = false;
