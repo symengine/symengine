@@ -150,7 +150,7 @@ public:
      *
      *   @return 64-bit integer value for the hash
      */
-    hash_t hash() const;
+    inline hash_t hash() const;
 
     /**
      * @brief Test equality
@@ -240,7 +240,7 @@ struct RCPBasicKeyLess {
 
 // Convenience functions
 //! Checks equality for `a` and `b`
-SYMENGINE_EXPORT bool eq(const Basic &a, const Basic &b);
+inline bool eq(const Basic &a, const Basic &b);
 
 //! Checks inequality for `a` and `b`
 SYMENGINE_EXPORT bool neq(const Basic &a, const Basic &b);
