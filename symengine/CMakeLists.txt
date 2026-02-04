@@ -304,6 +304,7 @@ if (BUILD_SHARED_LIBS)
             symengine
             PROPERTIES
             RUNTIME_OUTPUT_NAME symengine-${SYMENGINE_MAJOR_VERSION}.${SYMENGINE_MINOR_VERSION}
+            WINDOWS_EXPORT_ALL_SYMBOLS TRUE
         )
     endif()
 endif()

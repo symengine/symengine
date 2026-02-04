@@ -93,6 +93,20 @@
 
 #include <symengine/symengine_export.h>
 
+/* With msvc compiler we rely on WINDOWS_EXPORT_ALL_SYMBOLS for symbol visibility instead of dllimport/dllexport
+   except for the constants so define a macro for that and neutralize SYMENGINE_EXPORT for other symbols */
+#ifdef _MSC_VER
+#  undef SYMENGINE_EXPORT
+#  define SYMENGINE_EXPORT
+#  ifdef symengine_COMPILING
+#    define SYMENGINE_EXPORT_CONSTANT __declspec(dllexport)
+#  else
+#    define SYMENGINE_EXPORT_CONSTANT __declspec(dllimport)
+#  endif
+#else
+#  define SYMENGINE_EXPORT_CONSTANT SYMENGINE_EXPORT
+#endif
+
 #ifdef __CLING__
 #include "symengine/symengine_config_cling.h"
 #endif
