@@ -112,13 +112,6 @@ endif()
 try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkstdtostring.cpp"
 	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}")
 
-if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (NOT CMAKE_BUILD_TYPE STREQUAL "Debug"))
-    try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkclang.cpp")
-    if (NOT ${CHECK_CLANG})
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__extern_always_inline=inline" )
-    endif()
-endif()
-
 # Cotire
 set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
 
