@@ -42,10 +42,6 @@ if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common}")
 endif ()
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    CHECK_CXX_COMPILER_FLAG("-Wno-implicit-fallthrough" NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
-endif()
-
 # check if linker supports exclude-libs
 if (NOT(MSVC))
     try_compile(EXCLUDE_LIBS "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
