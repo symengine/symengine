@@ -309,6 +309,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_source_files_properties(parser/parser.tab.cc PROPERTIES COMPILE_FLAGS "-Wno-conversion")
 endif()
 
+target_compile_features (symengine PUBLIC cxx_std_11)
+
 if (WITH_LLVM)
     if (NOT ${LLVM_VERSION} VERSION_LESS "16.0.0")
         set_target_properties(symengine PROPERTIES CXX_STANDARD 17 CXX_EXTENSIONS OFF CXX_STANDARD_REQUIRED yes)

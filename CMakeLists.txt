@@ -33,16 +33,6 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
-# Enable C++11 support in all compilers. SymEngine will not compile unless
-# the C++11 support is enabled.
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel|SunPRO")
-    set(CXX11_OPTIONS "-std=c++11")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
-    # pgcpp
-    set(CXX11_OPTIONS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__")
-endif ()
-set(CMAKE_CXX_FLAGS "${CXX11_OPTIONS} ${CMAKE_CXX_FLAGS}")
-
 # Add proper -fPIC and MINGW handling
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if (NOT MINGW)
@@ -59,14 +49,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
     set(common "-fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common}")
 endif ()
-
-# Check c++11 support
-try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
-	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
-if (NOT ${CXX11})
-	message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
-		"CXX11 Error Log : \n${CXX11_ERROR_LOG}")
-endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     CHECK_CXX_COMPILER_FLAG("-Wno-implicit-fallthrough" NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)

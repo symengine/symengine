@@ -61,3 +61,5 @@ if (NOT WITH_SYMENGINE_RCP)
     install(FILES ${HEADERS} "${teuchos_BINARY_DIR}/Teuchos_config.h"
         DESTINATION include/symengine/utilities/teuchos)
 endif()
+
+target_compile_features (teuchos PRIVATE cxx_std_11)
