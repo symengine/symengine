@@ -39,26 +39,19 @@ if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif ()
 
 # check if linker supports exclude-libs
-if (NOT(MSVC))
-    try_compile(EXCLUDE_LIBS "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
-        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,--exclude-libs,ALL"
-        OUTPUT_VARIABLE EXCLUDE_LIBS_ERROR_LOG)
+include (CheckLinkerFlag)
+if (NOT MSVC)
+    check_linker_flag(CXX "-Wl,--exclude-libs,ALL" EXCLUDE_LIBS)
 endif()
-if (${EXCLUDE_LIBS})
+if (EXCLUDE_LIBS)
     message(STATUS "Linker supports --exclude-libs")
 else()
     message(STATUS "Linker does not support --exclude-libs")
 endif()
 
-if (NOT(MSVC) AND NOT "${EXCLUDE_LIBS}" STREQUAL "TRUE")
-    try_compile(UNEXPORTED_SYMBOL "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
-        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,-unexported_symbol,dummy"
-        OUTPUT_VARIABLE UNEXPORTED_SYMBOL_ERROR_LOG)
-    if (${UNEXPORTED_SYMBOL})
+if (NOT MSVC AND NOT EXCLUDE_LIBS)
+    check_linker_flag(CXX "-Wl,-unexported_symbol,dummy" UNEXPORTED_SYMBOL)
+    if (UNEXPORTED_SYMBOL)
         message(STATUS "Linker supports -unexported_symbol")
     else()
         message(STATUS "Linker does not support -unexported_symbol")
