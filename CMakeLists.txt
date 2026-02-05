@@ -33,20 +33,12 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
-# Add proper -fPIC and MINGW handling
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if (NOT MINGW)
-        set(common "-fPIC")
-    else()
-        set(common "-D_hypot=hypot -Doff64_t=_off64_t")
-        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
-            set(common "${common} -DMS_WIN64")
-        endif()
+# Add proper MINGW handling
+if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(common "-D_hypot=hypot -Doff64_t=_off64_t")
+    if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+        set(common "${common} -DMS_WIN64")
     endif()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common}")
-endif ()
-if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
-    set(common "-fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common}")
 endif ()
 

@@ -46,7 +46,7 @@ configure_file(Teuchos_config.h.in Teuchos_config.h)
 include_directories(BEFORE ${teuchos_BINARY_DIR})
 
 add_library(teuchos STATIC ${SRC})
-
+set_target_properties (teuchos PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(GNUInstallDirs)
 
