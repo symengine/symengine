@@ -101,9 +101,6 @@ endif()
 try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkstdtostring.cpp"
 	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}")
 
-# Cotire
-set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
-
 set(INTEGER_CLASS "gmp"
     CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
 
@@ -665,7 +662,6 @@ if (NOT WITH_SYMENGINE_RCP)
     message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
 endif ()
-message("WITH_COTIRE: ${WITH_COTIRE}")
 message("WITH_GENERATE_PARSER: ${WITH_GENERATE_PARSER}")
 message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
 message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")

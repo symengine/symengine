@@ -366,9 +366,3 @@ if (BUILD_TESTS)
     add_subdirectory(utilities/matchpycpp/tests)
     add_subdirectory(utilities/matchpycpp/autogen_tests)
 endif()
-
-if (WITH_COTIRE)
-    # throws if CMAKE_VERSION < 2.8.12
-    include(cotire)
-    cotire(symengine)
-endif()
