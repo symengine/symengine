@@ -284,6 +284,7 @@ include_directories(BEFORE ${symengine_BINARY_DIR})
 include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
+set_target_properties (symengine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(GenerateExportHeader)
 generate_export_header(symengine)
@@ -308,6 +309,8 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set_target_properties(symengine PROPERTIES COMPILE_FLAGS "-Wconversion -Wno-sign-conversion")
     set_source_files_properties(parser/parser.tab.cc PROPERTIES COMPILE_FLAGS "-Wno-conversion")
 endif()
+
+target_compile_features (symengine PUBLIC cxx_std_11)
 
 if (WITH_LLVM)
     if (NOT ${LLVM_VERSION} VERSION_LESS "16.0.0")
@@ -362,10 +365,4 @@ if (BUILD_TESTS)
     add_subdirectory(tests)
     add_subdirectory(utilities/matchpycpp/tests)
     add_subdirectory(utilities/matchpycpp/autogen_tests)
-endif()
-
-if (WITH_COTIRE)
-    # throws if CMAKE_VERSION < 2.8.12
-    include(cotire)
-    cotire(symengine)
 endif()

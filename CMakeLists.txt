@@ -1,12 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12...4.0.0)
-
-if (POLICY CMP0074)
-  cmake_policy(SET CMP0074 NEW)
-endif()
-
-if (POLICY CMP0057)
-  cmake_policy(SET CMP0057 NEW) # needed for llvm >= 16
-endif ()
+cmake_minimum_required(VERSION 3.18...4.2.0)
 
 set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/UserOverride.cmake)
 
@@ -37,66 +29,29 @@ endif ()
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
-# Enable C++11 support in all compilers. SymEngine will not compile unless
-# the C++11 support is enabled.
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|Intel|SunPRO")
-    set(CXX11_OPTIONS "-std=c++11")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "PGI")
-    # pgcpp
-    set(CXX11_OPTIONS "--gnu --c++11 -D__GXX_EXPERIMENTAL_CXX0X__")
-endif ()
-set(CMAKE_CXX_FLAGS "${CXX11_OPTIONS} ${CMAKE_CXX_FLAGS}")
-
-# Add proper -fPIC and MINGW handling
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    if (NOT MINGW)
-        set(common "-fPIC")
-    else()
-        set(common "-D_hypot=hypot -Doff64_t=_off64_t")
-        if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
-            set(common "${common} -DMS_WIN64")
-        endif()
+# Add proper MINGW handling
+if (MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set(common "-D_hypot=hypot -Doff64_t=_off64_t")
+    if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "8")
+        set(common "${common} -DMS_WIN64")
     endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common}")
 endif ()
-if (CMAKE_CXX_COMPILER_ID MATCHES Clang)
-    set(common "-fPIC")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${common}")
-endif ()
-
-# Check c++11 support
-try_compile(CXX11 "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
-	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}" OUTPUT_VARIABLE CXX11_ERROR_LOG)
-if (NOT ${CXX11})
-	message(FATAL_ERROR "Compiler does not support C++11 constructs. \n"
-		"CXX11 Error Log : \n${CXX11_ERROR_LOG}")
-endif()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    CHECK_CXX_COMPILER_FLAG("-Wno-implicit-fallthrough" NO_WARN_IMPLICIT_FALL_THROUGH_FLAG)
-endif()
 
 # check if linker supports exclude-libs
-if (NOT(MSVC))
-    try_compile(EXCLUDE_LIBS "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
-        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,--exclude-libs,ALL"
-        OUTPUT_VARIABLE EXCLUDE_LIBS_ERROR_LOG)
+include (CheckLinkerFlag)
+if (NOT MSVC)
+    check_linker_flag(CXX "-Wl,--exclude-libs,ALL" EXCLUDE_LIBS)
 endif()
-if (${EXCLUDE_LIBS})
+if (EXCLUDE_LIBS)
     message(STATUS "Linker supports --exclude-libs")
 else()
     message(STATUS "Linker does not support --exclude-libs")
 endif()
 
-if (NOT(MSVC) AND NOT "${EXCLUDE_LIBS}" STREQUAL "TRUE")
-    try_compile(UNEXPORTED_SYMBOL "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkcxx11.cpp"
-        CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}"
-        CMAKE_FLAGS "-DINCLUDE_DIRECTORIES=${GMP_INCLUDE_DIRS}"
-        CMAKE_FLAGS "-DLINK_LIBRARIES=-Wl,-unexported_symbol,dummy"
-        OUTPUT_VARIABLE UNEXPORTED_SYMBOL_ERROR_LOG)
-    if (${UNEXPORTED_SYMBOL})
+if (NOT MSVC AND NOT EXCLUDE_LIBS)
+    check_linker_flag(CXX "-Wl,-unexported_symbol,dummy" UNEXPORTED_SYMBOL)
+    if (UNEXPORTED_SYMBOL)
         message(STATUS "Linker supports -unexported_symbol")
     else()
         message(STATUS "Linker does not support -unexported_symbol")
@@ -145,16 +100,6 @@ endif()
 
 try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkstdtostring.cpp"
 	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}")
-
-if ((CMAKE_CXX_COMPILER_ID MATCHES Clang) AND (NOT CMAKE_BUILD_TYPE STREQUAL "Debug"))
-    try_compile(CHECK_CLANG "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CMAKE_CURRENT_SOURCE_DIR}/cmake/checkclang.cpp")
-    if (NOT ${CHECK_CLANG})
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__extern_always_inline=inline" )
-    endif()
-endif()
-
-# Cotire
-set(WITH_COTIRE no CACHE BOOL "Use cotire to speed up build")
 
 set(INTEGER_CLASS "gmp"
     CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
@@ -717,7 +662,6 @@ if (NOT WITH_SYMENGINE_RCP)
     message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
 endif ()
-message("WITH_COTIRE: ${WITH_COTIRE}")
 message("WITH_GENERATE_PARSER: ${WITH_GENERATE_PARSER}")
 message("HAVE_GCC_ABI_DEMANGLE: ${HAVE_GCC_ABI_DEMANGLE}")
 message("HAVE_C_FUNCTION_NOT_FUNC: ${HAVE_C_FUNCTION_NOT_FUNC}")
