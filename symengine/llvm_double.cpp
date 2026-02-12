@@ -46,16 +46,20 @@ using std::make_unique;
 #else
 using llvm::make_unique;
 #endif
-#if (LLVM_VERSION_MAJOR < 18)
-using CodeGenOptLevel = llvm::CodeGenOpt::Level;
-#else
+
+#if (LLVM_VERSION_MAJOR >= 18)
 using CodeGenOptLevel = llvm::CodeGenOptLevel;
+#else
+using CodeGenOptLevel = llvm::CodeGenOpt::Level;
 #endif
 
-#if (LLVM_VERSION_MAJOR < 20)
-const auto &GetDeclaration = llvm::Intrinsic::getDeclaration;
+#if (LLVM_VERSION_MAJOR >= 20)
+auto GetDeclaration = [](llvm::Module *M, llvm::Intrinsic::ID id,
+                         llvm::ArrayRef<llvm::Type *> Tys) {
+    return llvm::Intrinsic::getOrInsertDeclaration(M, id, Tys);
+};
 #else
-const auto &GetDeclaration = llvm::Intrinsic::getOrInsertDeclaration;
+const auto &GetDeclaration = llvm::Intrinsic::getDeclaration;
 #endif
 
 #if (LLVM_VERSION_MAJOR >= 21)
@@ -87,7 +91,11 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 {
     std::vector<llvm::Type *> inp;
     for (int i = 0; i < 2; i++) {
+#if (LLVM_VERSION_MAJOR >= 22)
+        inp.push_back(llvm::PointerType::get(*context, 0));
+#else
         inp.push_back(llvm::PointerType::get(get_float_type(context), 0));
+#endif
     }
     llvm::FunctionType *function_type = llvm::FunctionType::get(
         llvm::Type::getVoidTy(*context), inp, /*isVarArgs=*/false);
