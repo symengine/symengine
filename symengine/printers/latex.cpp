@@ -196,9 +196,7 @@ void LatexPrinter::bvisit(const Derivative &x)
 
     const RCP<const Basic> arg = x.get_arg();
     std::string arg_str = apply(arg);
-    if (is_a<Add>(*arg) || is_a<Mul>(*arg)) {
-        arg_str = "\\left(" + arg_str + "\\right)";
-    }
+    arg_str = parenthesizeLT(arg_str, PrecedenceEnum::Pow);
     s << "} " << arg_str;
     str_ = s.str();
 }
