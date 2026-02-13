@@ -46,16 +46,20 @@ using std::make_unique;
 #else
 using llvm::make_unique;
 #endif
-#if (LLVM_VERSION_MAJOR < 18)
-using CodeGenOptLevel = llvm::CodeGenOpt::Level;
-#else
+
+#if (LLVM_VERSION_MAJOR >= 18)
 using CodeGenOptLevel = llvm::CodeGenOptLevel;
+#else
+using CodeGenOptLevel = llvm::CodeGenOpt::Level;
 #endif
 
-#if (LLVM_VERSION_MAJOR < 20)
-const auto &GetDeclaration = llvm::Intrinsic::getDeclaration;
+#if (LLVM_VERSION_MAJOR >= 20)
+auto GetDeclaration = [](llvm::Module *M, llvm::Intrinsic::ID id,
+                         llvm::ArrayRef<llvm::Type *> Tys) {
+    return llvm::Intrinsic::getOrInsertDeclaration(M, id, Tys);
+};
 #else
-const auto &GetDeclaration = llvm::Intrinsic::getOrInsertDeclaration;
+const auto &GetDeclaration = llvm::Intrinsic::getDeclaration;
 #endif
 
 #if (LLVM_VERSION_MAJOR >= 21)
@@ -87,44 +91,17 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 {
     std::vector<llvm::Type *> inp;
     for (int i = 0; i < 2; i++) {
+#if (LLVM_VERSION_MAJOR >= 22)
+        inp.push_back(llvm::PointerType::get(*context, 0));
+#else
         inp.push_back(llvm::PointerType::get(get_float_type(context), 0));
+#endif
     }
     llvm::FunctionType *function_type = llvm::FunctionType::get(
         llvm::Type::getVoidTy(*context), inp, /*isVarArgs=*/false);
     auto F = llvm::Function::Create(
         function_type, llvm::Function::InternalLinkage, "symengine_func", mod);
     F->setCallingConv(llvm::CallingConv::C);
-#if (LLVM_VERSION_MAJOR < 5)
-    {
-        llvm::SmallVector<llvm::AttributeSet, 4> attrs;
-        llvm::AttributeSet PAS;
-        {
-            llvm::AttrBuilder B;
-            B.addAttribute(llvm::Attribute::ReadOnly);
-            AddNoCapture(B);
-            PAS = llvm::AttributeSet::get(mod->getContext(), 1U, B);
-        }
-
-        attrs.push_back(PAS);
-        {
-            llvm::AttrBuilder B;
-            AddNoCapture(B);
-            PAS = llvm::AttributeSet::get(mod->getContext(), 2U, B);
-        }
-
-        attrs.push_back(PAS);
-        {
-            llvm::AttrBuilder B;
-            B.addAttribute(llvm::Attribute::NoUnwind);
-            B.addAttribute(llvm::Attribute::UWTable);
-            PAS = llvm::AttributeSet::get(mod->getContext(), ~0U, B);
-        }
-
-        attrs.push_back(PAS);
-
-        F->setAttributes(llvm::AttributeSet::get(mod->getContext(), attrs));
-    }
-#else
     F->addParamAttr(0, llvm::Attribute::ReadOnly);
 #if (LLVM_VERSION_MAJOR >= 21)
     F->addParamAttr(1, llvm::Attribute::getWithCaptureInfo(
@@ -141,7 +118,6 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 #else
     F->addFnAttr(llvm::Attribute::getWithUWTableKind(
         *context, llvm::UWTableKind::Default));
-#endif
 #endif
     return F;
 }
@@ -194,11 +170,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     }
 
     auto it = F->args().begin();
-#if (LLVM_VERSION_MAJOR < 5)
-    auto out = &(*(++it));
-#else
     auto out = &(*(it + 1));
-#endif
     std::vector<llvm::Value *> output_vals;
 
     if (symbolic_cse) {
@@ -237,13 +209,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     llvm::verifyFunction(*F, &llvm::outs());
 
     //     std::cout << "LLVM IR" << std::endl;
-    // #if (LLVM_VERSION_MAJOR < 5)
-    //     module->dump();
-    // #else
     //     module->print(llvm::errs(), nullptr);
-    // #endif
-
-    // module->print(llvm::errs(), nullptr);
 
     // Optimize the function using default passes from PassBuilder
     // FunctionSimplificationPipeline for the opt_level
@@ -926,25 +892,7 @@ llvm::Function *LLVMVisitor::get_external_function(const std::string &name,
             func_type, llvm::GlobalValue::ExternalLinkage, name, mod);
         func->setCallingConv(llvm::CallingConv::C);
     }
-#if (LLVM_VERSION_MAJOR < 5)
-    llvm::AttributeSet func_attr_set;
-    {
-        llvm::SmallVector<llvm::AttributeSet, 4> attrs;
-        llvm::AttributeSet attr_set;
-        {
-            llvm::AttrBuilder attr_builder;
-            attr_builder.addAttribute(llvm::Attribute::NoUnwind);
-            attr_set
-                = llvm::AttributeSet::get(mod->getContext(), ~0U, attr_builder);
-        }
-
-        attrs.push_back(attr_set);
-        func_attr_set = llvm::AttributeSet::get(mod->getContext(), attrs);
-    }
-    func->setAttributes(func_attr_set);
-#else
     func->addFnAttr(llvm::Attribute::NoUnwind);
-#endif
     return func;
 }
 
