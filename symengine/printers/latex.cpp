@@ -193,7 +193,11 @@ void LatexPrinter::bvisit(const Derivative &x)
             s << "\\partial " << apply(*prev) << "^" << count << " ";
         }
     }
-    s << "} " << apply(x.get_arg());
+
+    const RCP<const Basic> arg = x.get_arg();
+    std::string arg_str = apply(arg);
+    arg_str = parenthesizeLT(arg_str, PrecedenceEnum::Pow);
+    s << "} " << arg_str;
     str_ = s.str();
 }
 

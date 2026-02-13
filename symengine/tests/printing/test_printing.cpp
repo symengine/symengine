@@ -1080,6 +1080,36 @@ TEST_CASE("test_unicode()", "[unicode]")
     // https://github.com/symengine/symengine/issues/2029
     s = unicode(*mul(mul(x, x), y));
     CHECK(s == U8(" 2  \nx \u22C5y"));
+
+    // https://github.com/symengine/symengine/issues/2131
+    // Fix UnicodePrinter::bvisit(const Add &x)
+    s = unicode(*add(mul(integer(-1), log(x)), sin(x)));
+    CHECK(s == U8("- log(x) + sin(x)"));
+
+    // Fix void StringBox::add_power(StringBox& other)
+    s = unicode(*div(y, x));
+    CHECK(s == U8("y\n\u2015\nx"));
+
+    // Fix void UnicodePrinter::bvisit(const Add &x):
+    // double minus error
+    s = unicode(*add(integer(2), neg(mul(integer(3), y))));
+    CHECK(s == U8("2 - 3\u22C5y"));
+
+    // Fix void UnicodePrinter::bvisit(const Mul &x):
+    // remove the redundant mul sign in the num
+    s = unicode(*mul(div(integer(1), x), div(integer(1), y)));
+    /*for (char c : s) {
+        printf("%02x ", static_cast<unsigned char>(c));
+    }
+    std::cout << '\n';*/
+    CHECK(s == U8("  1  \n\u2015\u2015\u2015\u2015\u2015\n(x\u22C5y)"));
+
+    // Fix void UnicodePrinter::bvisit(const Mul &x):
+    // simplify the -1 of the num to -
+    s = unicode(*mul(div(integer(-1), integer(6)), add(x, y)));
+    CHECK(s
+          == U8("-(x + y)\n\u2015\u2015\u2015\u2015\u2015\u2015\u2015\u2015\n  "
+                "  6   "));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
