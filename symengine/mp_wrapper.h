@@ -95,7 +95,7 @@
 namespace SymEngine
 {
 
-class mpz_wrapper
+class SYMENGINE_EXPORT mpz_wrapper
 {
 private:
     mpz_t mp;
@@ -307,7 +307,7 @@ public:
     }
 };
 
-class mpq_wrapper
+class SYMENGINE_EXPORT mpq_wrapper
 {
 private:
     mpq_t mp;
