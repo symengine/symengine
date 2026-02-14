@@ -13,7 +13,7 @@
 namespace SymEngine
 {
 //! UnivariateSeries Class
-class UnivariateSeries
+class SYMENGINE_EXPORT UnivariateSeries
     : public SeriesBase<UExprDict, Expression, UnivariateSeries>
 {
     // UnivariateSeries 1 + 2*x + x**2 + O(x**5) has dict_ = {{0, 1}, {1, 2},

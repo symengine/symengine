@@ -8,7 +8,7 @@
 namespace SymEngine
 {
 
-class ImmutableDenseMatrix : public MatrixExpr
+class SYMENGINE_EXPORT ImmutableDenseMatrix : public MatrixExpr
 {
 private:
     size_t m_, n_;
@@ -56,6 +56,7 @@ public:
     }
 };
 
+SYMENGINE_EXPORT
 RCP<const MatrixExpr> immutable_dense_matrix(size_t m, size_t n,
                                              const vec_basic &container);
 

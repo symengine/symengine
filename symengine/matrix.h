@@ -13,7 +13,7 @@ enum MatrixTypeID {
 };
 
 // Base class for matrices
-class MatrixBase
+class SYMENGINE_EXPORT MatrixBase
 {
 public:
     virtual ~MatrixBase(){};
@@ -108,7 +108,7 @@ typedef std::vector<std::pair<int, int>> permutelist;
 class CSRMatrix;
 
 // ----------------------------- Dense Matrix --------------------------------//
-class DenseMatrix : public MatrixBase
+class SYMENGINE_EXPORT DenseMatrix : public MatrixBase
 {
 public:
     // Constructors
@@ -221,38 +221,48 @@ public:
     void cholesky(MatrixBase &L) const override;
 
     // Return the Jacobian of the matrix
-    friend void jacobian(const DenseMatrix &A, const DenseMatrix &x,
-                         DenseMatrix &result, bool diff_cache);
+    SYMENGINE_EXPORT friend void jacobian(const DenseMatrix &A,
+                                          const DenseMatrix &x,
+                                          DenseMatrix &result, bool diff_cache);
     // Return the Jacobian of the matrix using sdiff
-    friend void sjacobian(const DenseMatrix &A, const DenseMatrix &x,
-                          DenseMatrix &result, bool diff_cache);
+    SYMENGINE_EXPORT friend void sjacobian(const DenseMatrix &A,
+                                           const DenseMatrix &x,
+                                           DenseMatrix &result,
+                                           bool diff_cache);
 
     // Differentiate the matrix element-wise
-    friend void diff(const DenseMatrix &A, const RCP<const Symbol> &x,
-                     DenseMatrix &result, bool diff_cache);
+    SYMENGINE_EXPORT friend void diff(const DenseMatrix &A,
+                                      const RCP<const Symbol> &x,
+                                      DenseMatrix &result, bool diff_cache);
     // Differentiate the matrix element-wise using SymPy compatible diff
-    friend void sdiff(const DenseMatrix &A, const RCP<const Basic> &x,
-                      DenseMatrix &result, bool diff_cache);
+    SYMENGINE_EXPORT friend void sdiff(const DenseMatrix &A,
+                                       const RCP<const Basic> &x,
+                                       DenseMatrix &result, bool diff_cache);
 
     // Friend functions related to Matrix Operations
-    friend void add_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
+    SYMENGINE_EXPORT friend void
+    add_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+    SYMENGINE_EXPORT friend void add_dense_scalar(const DenseMatrix &A,
+                                                  const RCP<const Basic> &k,
+                                                  DenseMatrix &B);
+    SYMENGINE_EXPORT friend void
+    mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+    SYMENGINE_EXPORT friend void
+    elementwise_mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
                                 DenseMatrix &C);
-    friend void add_dense_scalar(const DenseMatrix &A,
-                                 const RCP<const Basic> &k, DenseMatrix &B);
-    friend void mul_dense_dense(const DenseMatrix &A, const DenseMatrix &B,
-                                DenseMatrix &C);
-    friend void elementwise_mul_dense_dense(const DenseMatrix &A,
-                                            const DenseMatrix &B,
-                                            DenseMatrix &C);
-    friend void mul_dense_scalar(const DenseMatrix &A,
-                                 const RCP<const Basic> &k, DenseMatrix &C);
-    friend void conjugate_dense(const DenseMatrix &A, DenseMatrix &B);
-    friend void transpose_dense(const DenseMatrix &A, DenseMatrix &B);
-    friend void conjugate_transpose_dense(const DenseMatrix &A, DenseMatrix &B);
-    friend void submatrix_dense(const DenseMatrix &A, DenseMatrix &B,
-                                unsigned row_start, unsigned col_start,
-                                unsigned row_end, unsigned col_end,
-                                unsigned row_step, unsigned col_step);
+    SYMENGINE_EXPORT friend void mul_dense_scalar(const DenseMatrix &A,
+                                                  const RCP<const Basic> &k,
+                                                  DenseMatrix &C);
+    SYMENGINE_EXPORT friend void conjugate_dense(const DenseMatrix &A,
+                                                 DenseMatrix &B);
+    SYMENGINE_EXPORT friend void transpose_dense(const DenseMatrix &A,
+                                                 DenseMatrix &B);
+    SYMENGINE_EXPORT friend void conjugate_transpose_dense(const DenseMatrix &A,
+                                                           DenseMatrix &B);
+    SYMENGINE_EXPORT friend void
+    submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
+                    unsigned col_start, unsigned row_end, unsigned col_end,
+                    unsigned row_step, unsigned col_step);
     void row_join(const DenseMatrix &B);
     void col_join(const DenseMatrix &B);
     void row_insert(const DenseMatrix &B, unsigned pos);
@@ -261,88 +271,106 @@ public:
     void col_del(unsigned k);
 
     // Row operations
-    friend void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
-    friend void row_mul_scalar_dense(DenseMatrix &A, unsigned i,
-                                     RCP<const Basic> &c);
-    friend void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
-                                  RCP<const Basic> &c);
-    friend void permuteFwd(DenseMatrix &A, permutelist &pl);
+    SYMENGINE_EXPORT friend void row_exchange_dense(DenseMatrix &A, unsigned i,
+                                                    unsigned j);
+    SYMENGINE_EXPORT friend void
+    row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+    SYMENGINE_EXPORT friend void row_add_row_dense(DenseMatrix &A, unsigned i,
+                                                   unsigned j,
+                                                   RCP<const Basic> &c);
+    SYMENGINE_EXPORT friend void permuteFwd(DenseMatrix &A, permutelist &pl);
 
     // Column operations
-    friend void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+    SYMENGINE_EXPORT friend void column_exchange_dense(DenseMatrix &A,
+                                                       unsigned i, unsigned j);
 
     // Gaussian elimination
-    friend void pivoted_gaussian_elimination(const DenseMatrix &A,
-                                             DenseMatrix &B,
-                                             permutelist &pivotlist);
-    friend void fraction_free_gaussian_elimination(const DenseMatrix &A,
-                                                   DenseMatrix &B);
-    friend void pivoted_fraction_free_gaussian_elimination(
+    SYMENGINE_EXPORT friend void
+    pivoted_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B,
+                                 permutelist &pivotlist);
+    SYMENGINE_EXPORT friend void
+    fraction_free_gaussian_elimination(const DenseMatrix &A, DenseMatrix &B);
+    SYMENGINE_EXPORT friend void pivoted_fraction_free_gaussian_elimination(
         const DenseMatrix &A, DenseMatrix &B, permutelist &pivotlist);
-    friend void pivoted_gauss_jordan_elimination(const DenseMatrix &A,
-                                                 DenseMatrix &B,
-                                                 permutelist &pivotlist);
-    friend void fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
-                                                       DenseMatrix &B);
-    friend void pivoted_fraction_free_gauss_jordan_elimination(
+    SYMENGINE_EXPORT friend void
+    pivoted_gauss_jordan_elimination(const DenseMatrix &A, DenseMatrix &B,
+                                     permutelist &pivotlist);
+    SYMENGINE_EXPORT friend void
+    fraction_free_gauss_jordan_elimination(const DenseMatrix &A,
+                                           DenseMatrix &B);
+    SYMENGINE_EXPORT friend void pivoted_fraction_free_gauss_jordan_elimination(
         const DenseMatrix &A, DenseMatrix &B, permutelist &pivotlist);
     friend unsigned pivot(DenseMatrix &B, unsigned r, unsigned c);
 
-    friend void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
-                                         vec_uint &pivot_cols,
-                                         bool normalize_last);
+    SYMENGINE_EXPORT friend void reduced_row_echelon_form(const DenseMatrix &A,
+                                                          DenseMatrix &B,
+                                                          vec_uint &pivot_cols,
+                                                          bool normalize_last);
 
     // Ax = b
-    friend void diagonal_solve(const DenseMatrix &A, const DenseMatrix &b,
-                               DenseMatrix &x);
-    friend void back_substitution(const DenseMatrix &U, const DenseMatrix &b,
-                                  DenseMatrix &x);
-    friend void forward_substitution(const DenseMatrix &A, const DenseMatrix &b,
-                                     DenseMatrix &x);
-    friend void fraction_free_gaussian_elimination_solve(const DenseMatrix &A,
-                                                         const DenseMatrix &b,
-                                                         DenseMatrix &x);
-    friend void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
-                                                 const DenseMatrix &b,
-                                                 DenseMatrix &x, bool pivot);
+    SYMENGINE_EXPORT friend void
+    diagonal_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+    SYMENGINE_EXPORT friend void back_substitution(const DenseMatrix &U,
+                                                   const DenseMatrix &b,
+                                                   DenseMatrix &x);
+    SYMENGINE_EXPORT friend void forward_substitution(const DenseMatrix &A,
+                                                      const DenseMatrix &b,
+                                                      DenseMatrix &x);
+    SYMENGINE_EXPORT friend void fraction_free_gaussian_elimination_solve(
+        const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+    SYMENGINE_EXPORT friend void
+    fraction_free_gauss_jordan_solve(const DenseMatrix &A, const DenseMatrix &b,
+                                     DenseMatrix &x, bool pivot);
 
     // Matrix Decomposition
-    friend void fraction_free_LU(const DenseMatrix &A, DenseMatrix &LU);
-    friend void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
-    friend void pivoted_LU(const DenseMatrix &A, DenseMatrix &LU,
-                           permutelist &pl);
-    friend void pivoted_LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U,
-                           permutelist &pl);
-    friend void fraction_free_LDU(const DenseMatrix &A, DenseMatrix &L,
-                                  DenseMatrix &D, DenseMatrix &U);
-    friend void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
-    friend void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
-    friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
+    SYMENGINE_EXPORT friend void fraction_free_LU(const DenseMatrix &A,
+                                                  DenseMatrix &LU);
+    SYMENGINE_EXPORT friend void LU(const DenseMatrix &A, DenseMatrix &L,
+                                    DenseMatrix &U);
+    SYMENGINE_EXPORT friend void pivoted_LU(const DenseMatrix &A,
+                                            DenseMatrix &LU, permutelist &pl);
+    SYMENGINE_EXPORT friend void pivoted_LU(const DenseMatrix &A,
+                                            DenseMatrix &L, DenseMatrix &U,
+                                            permutelist &pl);
+    SYMENGINE_EXPORT friend void fraction_free_LDU(const DenseMatrix &A,
+                                                   DenseMatrix &L,
+                                                   DenseMatrix &D,
+                                                   DenseMatrix &U);
+    SYMENGINE_EXPORT friend void QR(const DenseMatrix &A, DenseMatrix &Q,
+                                    DenseMatrix &R);
+    SYMENGINE_EXPORT friend void LDL(const DenseMatrix &A, DenseMatrix &L,
+                                     DenseMatrix &D);
+    SYMENGINE_EXPORT friend void cholesky(const DenseMatrix &A, DenseMatrix &L);
 
     // Matrix queries
-    friend bool is_symmetric_dense(const DenseMatrix &A);
+    SYMENGINE_EXPORT friend bool is_symmetric_dense(const DenseMatrix &A);
 
     // Determinant
-    friend RCP<const Basic> det_bareis(const DenseMatrix &A);
-    friend void berkowitz(const DenseMatrix &A,
-                          std::vector<DenseMatrix> &polys);
+    SYMENGINE_EXPORT friend RCP<const Basic> det_bareis(const DenseMatrix &A);
+    SYMENGINE_EXPORT friend void berkowitz(const DenseMatrix &A,
+                                           std::vector<DenseMatrix> &polys);
 
     // Inverse
-    friend void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
-    friend void inverse_LU(const DenseMatrix &A, DenseMatrix &B);
-    friend void inverse_pivoted_LU(const DenseMatrix &A, DenseMatrix &B);
-    friend void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+    SYMENGINE_EXPORT friend void inverse_fraction_free_LU(const DenseMatrix &A,
+                                                          DenseMatrix &B);
+    SYMENGINE_EXPORT friend void inverse_LU(const DenseMatrix &A,
+                                            DenseMatrix &B);
+    SYMENGINE_EXPORT friend void inverse_pivoted_LU(const DenseMatrix &A,
+                                                    DenseMatrix &B);
+    SYMENGINE_EXPORT friend void inverse_gauss_jordan(const DenseMatrix &A,
+                                                      DenseMatrix &B);
 
     // Vector-specific methods
-    friend void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
-    friend void cross(const DenseMatrix &A, const DenseMatrix &B,
-                      DenseMatrix &C);
+    SYMENGINE_EXPORT friend void dot(const DenseMatrix &A, const DenseMatrix &B,
+                                     DenseMatrix &C);
+    SYMENGINE_EXPORT friend void cross(const DenseMatrix &A,
+                                       const DenseMatrix &B, DenseMatrix &C);
 
     // NumPy-like functions
-    friend void eye(DenseMatrix &A, int k);
-    friend void diag(DenseMatrix &A, vec_basic &v, int k);
-    friend void ones(DenseMatrix &A);
-    friend void zeros(DenseMatrix &A);
+    SYMENGINE_EXPORT friend void eye(DenseMatrix &A, int k);
+    SYMENGINE_EXPORT friend void diag(DenseMatrix &A, vec_basic &v, int k);
+    SYMENGINE_EXPORT friend void ones(DenseMatrix &A);
+    SYMENGINE_EXPORT friend void zeros(DenseMatrix &A);
 
     friend CSRMatrix;
 
@@ -358,7 +386,7 @@ private:
 };
 
 // ----------------------------- Sparse Matrices -----------------------------//
-class CSRMatrix : public MatrixBase
+class SYMENGINE_EXPORT CSRMatrix : public MatrixBase
 {
 public:
     CSRMatrix();
@@ -482,15 +510,18 @@ public:
     static CSRMatrix jacobian(const DenseMatrix &A, const DenseMatrix &x,
                               bool diff_cache = true);
 
-    friend void csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B,
-                                 CSRMatrix &C);
-    friend void csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B,
-                                 CSRMatrix &C);
-    friend void csr_diagonal(const CSRMatrix &A, DenseMatrix &D);
-    friend void csr_scale_rows(CSRMatrix &A, const DenseMatrix &X);
-    friend void csr_scale_columns(CSRMatrix &A, const DenseMatrix &X);
+    SYMENGINE_EXPORT friend void
+    csr_matmat_pass1(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C);
+    SYMENGINE_EXPORT friend void
+    csr_matmat_pass2(const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C);
+    SYMENGINE_EXPORT friend void csr_diagonal(const CSRMatrix &A,
+                                              DenseMatrix &D);
+    SYMENGINE_EXPORT friend void csr_scale_rows(CSRMatrix &A,
+                                                const DenseMatrix &X);
+    SYMENGINE_EXPORT friend void csr_scale_columns(CSRMatrix &A,
+                                                   const DenseMatrix &X);
 
-    friend void csr_binop_csr_canonical(
+    SYMENGINE_EXPORT friend void csr_binop_csr_canonical(
         const CSRMatrix &A, const CSRMatrix &B, CSRMatrix &C,
         RCP<const Basic> (&bin_op)(const RCP<const Basic> &,
                                    const RCP<const Basic> &));
@@ -505,86 +536,107 @@ private:
 };
 
 // Return the Jacobian of the matrix
+SYMENGINE_EXPORT
 void jacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
               bool diff_cache = true);
 // Return the Jacobian of the matrix using sdiff
+SYMENGINE_EXPORT
 void sjacobian(const DenseMatrix &A, const DenseMatrix &x, DenseMatrix &result,
                bool diff_cache = true);
 
 // Differentiate all the elements
+SYMENGINE_EXPORT
 void diff(const DenseMatrix &A, const RCP<const Symbol> &x, DenseMatrix &result,
           bool diff_cache = true);
 // Differentiate all the elements using SymPy compatible diff
+SYMENGINE_EXPORT
 void sdiff(const DenseMatrix &A, const RCP<const Basic> &x, DenseMatrix &result,
            bool diff_cache = true);
 
 // Get submatrix from a DenseMatrix
+SYMENGINE_EXPORT
 void submatrix_dense(const DenseMatrix &A, DenseMatrix &B, unsigned row_start,
                      unsigned col_start, unsigned row_end, unsigned col_end,
                      unsigned row_step = 1, unsigned col_step = 1);
 
 // Row operations
-void row_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
-void row_mul_scalar_dense(DenseMatrix &A, unsigned i, RCP<const Basic> &c);
+SYMENGINE_EXPORT void row_exchange_dense(DenseMatrix &A, unsigned i,
+                                         unsigned j);
+SYMENGINE_EXPORT void row_mul_scalar_dense(DenseMatrix &A, unsigned i,
+                                           RCP<const Basic> &c);
+
+SYMENGINE_EXPORT
 void row_add_row_dense(DenseMatrix &A, unsigned i, unsigned j,
                        RCP<const Basic> &c);
 
 // Column operations
-void column_exchange_dense(DenseMatrix &A, unsigned i, unsigned j);
+SYMENGINE_EXPORT void column_exchange_dense(DenseMatrix &A, unsigned i,
+                                            unsigned j);
 
 // Vector-specific methods
-void dot(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
-void cross(const DenseMatrix &A, const DenseMatrix &B, DenseMatrix &C);
+SYMENGINE_EXPORT void dot(const DenseMatrix &A, const DenseMatrix &B,
+                          DenseMatrix &C);
+SYMENGINE_EXPORT void cross(const DenseMatrix &A, const DenseMatrix &B,
+                            DenseMatrix &C);
 
 // Matrix Factorization
-void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
-void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
-void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
-void cholesky(const DenseMatrix &A, DenseMatrix &L);
+SYMENGINE_EXPORT void LU(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &U);
+SYMENGINE_EXPORT void LDL(const DenseMatrix &A, DenseMatrix &L, DenseMatrix &D);
+SYMENGINE_EXPORT void QR(const DenseMatrix &A, DenseMatrix &Q, DenseMatrix &R);
+SYMENGINE_EXPORT void cholesky(const DenseMatrix &A, DenseMatrix &L);
 
 // Inverse
-void inverse_fraction_free_LU(const DenseMatrix &A, DenseMatrix &B);
+SYMENGINE_EXPORT void inverse_fraction_free_LU(const DenseMatrix &A,
+                                               DenseMatrix &B);
 
-void inverse_gauss_jordan(const DenseMatrix &A, DenseMatrix &B);
+SYMENGINE_EXPORT void inverse_gauss_jordan(const DenseMatrix &A,
+                                           DenseMatrix &B);
 
 // Solving Ax = b
+SYMENGINE_EXPORT
 void fraction_free_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                             DenseMatrix &x);
 
+SYMENGINE_EXPORT
 void fraction_free_gauss_jordan_solve(const DenseMatrix &A,
                                       const DenseMatrix &b, DenseMatrix &x,
                                       bool pivot = true);
 
-void LU_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+SYMENGINE_EXPORT void LU_solve(const DenseMatrix &A, const DenseMatrix &b,
+                               DenseMatrix &x);
+
+SYMENGINE_EXPORT
 void pivoted_LU_solve(const DenseMatrix &A, const DenseMatrix &b,
                       DenseMatrix &x);
 
-void LDL_solve(const DenseMatrix &A, const DenseMatrix &b, DenseMatrix &x);
+SYMENGINE_EXPORT void LDL_solve(const DenseMatrix &A, const DenseMatrix &b,
+                                DenseMatrix &x);
 
 // Determinant
-RCP<const Basic> det_berkowitz(const DenseMatrix &A);
+SYMENGINE_EXPORT RCP<const Basic> det_berkowitz(const DenseMatrix &A);
 
 // Characteristic polynomial: Only the coefficients of monomials in decreasing
 // order of monomial powers is returned, i.e. if `B = transpose([1, -2, 3])`
 // then the corresponding polynomial is `x**2 - 2x + 3`.
-void char_poly(const DenseMatrix &A, DenseMatrix &B);
+SYMENGINE_EXPORT void char_poly(const DenseMatrix &A, DenseMatrix &B);
 
 // returns a finiteset of eigenvalues of a matrix
-RCP<const Set> eigen_values(const DenseMatrix &A);
+SYMENGINE_EXPORT RCP<const Set> eigen_values(const DenseMatrix &A);
 
 // Mimic `eye` function in NumPy
-void eye(DenseMatrix &A, int k = 0);
+SYMENGINE_EXPORT void eye(DenseMatrix &A, int k = 0);
 
 // Create diagonal matrices directly
-void diag(DenseMatrix &A, vec_basic &v, int k = 0);
+SYMENGINE_EXPORT void diag(DenseMatrix &A, vec_basic &v, int k = 0);
 
 // Create a matrix filled with ones
-void ones(DenseMatrix &A);
+SYMENGINE_EXPORT void ones(DenseMatrix &A);
 
 // Create a matrix filled with zeros
-void zeros(DenseMatrix &A);
+SYMENGINE_EXPORT void zeros(DenseMatrix &A);
 
 // Reduced row echelon form and returns the cols with pivots
+SYMENGINE_EXPORT
 void reduced_row_echelon_form(const DenseMatrix &A, DenseMatrix &B,
                               vec_uint &pivot_cols,
                               bool normalize_last = false);

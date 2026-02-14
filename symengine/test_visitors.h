@@ -357,6 +357,7 @@ public:
  * all free symbols in b are considered to be variables. All symbols that
  * are not variables will be considered to be constants.
  */
+SYMENGINE_EXPORT
 bool is_polynomial(const Basic &b, const set_basic &variables = {});
 
 class RationalVisitor : public BaseVisitor<RationalVisitor>

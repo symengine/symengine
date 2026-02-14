@@ -70,7 +70,7 @@ namespace SymEngine
        Mul(2, {{1, x}, {x, 2}})     -> Mul(2, {{x, 2}})
 
 */
-class Mul : public Basic
+class SYMENGINE_EXPORT Mul : public Basic
 {
 private:
     RCP<const Number> coef_; //! The coefficient (e.g. `2` in `2*x*y`)
@@ -132,12 +132,14 @@ public:
     }
 };
 //! Multiplication
-RCP<const Basic> mul(const RCP<const Basic> &a, const RCP<const Basic> &b);
-RCP<const Basic> mul(const vec_basic &a);
+SYMENGINE_EXPORT RCP<const Basic> mul(const RCP<const Basic> &a,
+                                      const RCP<const Basic> &b);
+SYMENGINE_EXPORT RCP<const Basic> mul(const vec_basic &a);
 //! Division
-RCP<const Basic> div(const RCP<const Basic> &a, const RCP<const Basic> &b);
+SYMENGINE_EXPORT RCP<const Basic> div(const RCP<const Basic> &a,
+                                      const RCP<const Basic> &b);
 //! Negation
-RCP<const Basic> neg(const RCP<const Basic> &a);
+SYMENGINE_EXPORT RCP<const Basic> neg(const RCP<const Basic> &a);
 
 } // namespace SymEngine
 

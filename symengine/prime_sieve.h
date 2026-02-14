@@ -16,7 +16,7 @@
 namespace SymEngine
 {
 
-class Sieve
+class SYMENGINE_EXPORT Sieve
 {
 
 private:
@@ -40,7 +40,7 @@ public:
     // functions
     static void set_clear(bool clear);
 
-    class iterator
+    class SYMENGINE_EXPORT iterator
     {
 
     private:

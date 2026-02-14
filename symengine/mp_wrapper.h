@@ -95,7 +95,7 @@
 namespace SymEngine
 {
 
-class mpz_wrapper
+class SYMENGINE_EXPORT mpz_wrapper
 {
 private:
     mpz_t mp;
@@ -307,7 +307,7 @@ public:
     }
 };
 
-class mpq_wrapper
+class SYMENGINE_EXPORT mpq_wrapper
 {
 private:
     mpq_t mp;
@@ -494,11 +494,15 @@ namespace SymEngine
 {
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_FLINT
-std::ostream &operator<<(std::ostream &os, const SymEngine::fmpq_wrapper &f);
-std::ostream &operator<<(std::ostream &os, const SymEngine::fmpz_wrapper &f);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &os,
+                                          const SymEngine::fmpq_wrapper &f);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &os,
+                                          const SymEngine::fmpz_wrapper &f);
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
-std::ostream &operator<<(std::ostream &os, const SymEngine::mpq_wrapper &f);
-std::ostream &operator<<(std::ostream &os, const SymEngine::mpz_wrapper &f);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &os,
+                                          const SymEngine::mpq_wrapper &f);
+SYMENGINE_EXPORT std::ostream &operator<<(std::ostream &os,
+                                          const SymEngine::mpz_wrapper &f);
 #endif
 
 } // namespace SymEngine

@@ -11,7 +11,7 @@
 namespace SymEngine
 {
 
-class Symbol : public Basic
+class SYMENGINE_EXPORT Symbol : public Basic
 {
 private:
     //! name of Symbol
@@ -47,7 +47,7 @@ public:
     RCP<const Symbol> as_dummy() const;
 };
 
-class Dummy : public Symbol
+class SYMENGINE_EXPORT Dummy : public Symbol
 {
 private:
     //! Dummy count

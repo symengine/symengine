@@ -10,7 +10,7 @@ namespace SymEngine
 typedef std::unordered_map<RCP<const Basic>, bool, RCPBasicHash, RCPBasicKeyEq>
     umap_basic_bool;
 
-class Assumptions
+class SYMENGINE_EXPORT Assumptions
 {
 private:
     set_basic complex_symbols_;

@@ -6,7 +6,8 @@
 namespace SymEngine
 {
 
-class LatexPrinter : public BaseVisitor<LatexPrinter, StrPrinter>
+class SYMENGINE_EXPORT LatexPrinter
+    : public BaseVisitor<LatexPrinter, StrPrinter>
 {
 public:
     using StrPrinter::bvisit;

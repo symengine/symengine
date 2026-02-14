@@ -12,7 +12,7 @@ std::vector<std::string> init_str_printer_names();
 
 enum class PrecedenceEnum { Relational, Add, Mul, Pow, Atom };
 
-class Precedence : public BaseVisitor<Precedence>
+class SYMENGINE_EXPORT Precedence : public BaseVisitor<Precedence>
 {
 private:
     PrecedenceEnum precedence;
@@ -103,7 +103,7 @@ public:
     PrecedenceEnum getPrecedence(const RCP<const Basic> &x);
 };
 
-class StrPrinter : public BaseVisitor<StrPrinter>
+class SYMENGINE_EXPORT StrPrinter : public BaseVisitor<StrPrinter>
 {
 private:
     static const std::vector<std::string> names_;
@@ -200,7 +200,8 @@ public:
     std::string apply(const Basic &b);
 };
 
-class JuliaStrPrinter : public BaseVisitor<JuliaStrPrinter, StrPrinter>
+class SYMENGINE_EXPORT JuliaStrPrinter
+    : public BaseVisitor<JuliaStrPrinter, StrPrinter>
 {
 public:
     using StrPrinter::bvisit;
