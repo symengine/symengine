@@ -615,6 +615,15 @@ public:
             return 0;
         return get_degree() + 1;
     }
+
+    // dummy fonction
+    using Cf = typename UIntPolyBase<GaloisFieldDict, GaloisField>::coef_type;
+    static GaloisFieldDict container_from_dict(const RCP<const Basic> &var,
+                                         std::map<unsigned, Cf> &&d)
+    {
+        GaloisFieldDict p;
+        return p;
+    }
 };
 
 inline RCP<const GaloisField> gf_poly(RCP<const Basic> i,
