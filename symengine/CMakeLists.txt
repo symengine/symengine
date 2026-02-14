@@ -288,7 +288,7 @@ set_target_properties (symengine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(GenerateExportHeader)
 generate_export_header(symengine)
-set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
+
 if (BUILD_SHARED_LIBS)
     set_target_properties(
         symengine
