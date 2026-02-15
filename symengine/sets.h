@@ -68,7 +68,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -101,7 +101,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -212,7 +212,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -241,7 +241,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -270,7 +270,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -299,7 +299,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -328,7 +328,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
@@ -357,7 +357,7 @@ public:
     }
 
     template <typename T_, typename... Args>
-    friend inline RCP<T_> make_rcp(Args &&...args);
+    friend inline RCP<T_> make_rcp(Args &&... args);
 
     RCP<const Set> set_intersection(const RCP<const Set> &o) const override;
     RCP<const Set> set_union(const RCP<const Set> &o) const override;
