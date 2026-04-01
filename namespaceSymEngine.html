@@ -505,6 +505,8 @@ Data Structures</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1C99CodePrinter.html">C99CodePrinter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1CudaCodePrinter.html">CudaCodePrinter</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1JSCodePrinter.html">JSCodePrinter</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSymEngine_1_1LatexPrinter.html">LatexPrinter</a></td></tr>
@@ -827,6 +829,10 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:aa6fa61ab9fb7fc6ab83d8ddf49161c9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fc94ecaeadb83b1b089a94b4d394657"><td class="memItemLeft" align="right" valign="top"><a id="a3fc94ecaeadb83b1b089a94b4d394657"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>CodePrinterPrecision</b> : std::uint32_t { <b>Double</b> = 0
+, <b>Float</b> = 1
+ }</td></tr>
+<tr class="separator:a3fc94ecaeadb83b1b089a94b4d394657"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa859e1ef481111b06c165d334b1b2e5e"><td class="memItemLeft" align="right" valign="top"><a id="aa859e1ef481111b06c165d334b1b2e5e"></a>enum class &#160;</td><td class="memItemRight" valign="bottom"><b>tribool</b> { <b>indeterminate</b> = -1
 , <b>trifalse</b> = 0
 , <b>tritrue</b> = 1
@@ -2478,9 +2484,12 @@ RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#
 <tr class="memitem:a4b907ff7249ac77d774c2d769a00b410"><td class="memItemLeft" align="right" valign="top"><a id="a4b907ff7249ac77d774c2d769a00b410"></a>
 static std::vector&lt; unsigned &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sieve_primes</b> ()</td></tr>
 <tr class="separator:a4b907ff7249ac77d774c2d769a00b410"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c2555b6e55b9c3f7a831cb4cab57b77"><td class="memItemLeft" align="right" valign="top"><a id="a6c2555b6e55b9c3f7a831cb4cab57b77"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ccode</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</td></tr>
-<tr class="separator:a6c2555b6e55b9c3f7a831cb4cab57b77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e29c2e8c32a4b89e652a2b7822794b8"><td class="memItemLeft" align="right" valign="top"><a id="a3e29c2e8c32a4b89e652a2b7822794b8"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>ccode</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x, CodePrinterPrecision precision)</td></tr>
+<tr class="separator:a3e29c2e8c32a4b89e652a2b7822794b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0453128518911595ba941c8b1b6c785"><td class="memItemLeft" align="right" valign="top"><a id="ad0453128518911595ba941c8b1b6c785"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>cudacode</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x, CodePrinterPrecision precision)</td></tr>
+<tr class="separator:ad0453128518911595ba941c8b1b6c785"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb1e1420e8a4fc541391fe3a2a548f9b"><td class="memItemLeft" align="right" valign="top"><a id="abb1e1420e8a4fc541391fe3a2a548f9b"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>jscode</b> (const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &amp;x)</td></tr>
 <tr class="separator:abb1e1420e8a4fc541391fe3a2a548f9b"><td class="memSeparator" colspan="2">&#160;</td></tr>

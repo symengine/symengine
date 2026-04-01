@@ -1,11 +1,13 @@
 <map id="SymEngine::C99CodePrinter" name="SymEngine::C99CodePrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="34,689,238,718"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,595,267,641"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1C89CodePrinter.html" title=" " alt="" coords="34,518,238,547"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="18,424,254,470"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1CodePrinter.html" title=" " alt="" coords="47,347,225,376"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="38,253,234,299"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="54,176,218,205"/>
-<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="48,82,224,128"/>
-<area shape="rect" id="node9" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="64,5,208,34"/>
+<area shape="rect" id="node1" title=" " alt="" coords="38,689,242,718"/>
+<area shape="rect" id="node10" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,766,275,812"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="9,595,271,641"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1C89CodePrinter.html" title=" " alt="" coords="38,518,242,547"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="22,424,258,470"/>
+<area shape="rect" id="node5" href="$classSymEngine_1_1CodePrinter.html" title=" " alt="" coords="51,347,229,376"/>
+<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="42,253,238,299"/>
+<area shape="rect" id="node7" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="58,176,222,205"/>
+<area shape="rect" id="node8" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="52,82,228,128"/>
+<area shape="rect" id="node9" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="68,5,212,34"/>
+<area shape="rect" id="node11" href="$classSymEngine_1_1CudaCodePrinter.html" title=" " alt="" coords="34,860,246,889"/>
 </map>

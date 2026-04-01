@@ -574,7 +574,7 @@ $(function() {
 <div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160; </div>
 <div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;        result_ = [=](<span class="keyword">const</span> <span class="keywordtype">double</span> *x) {</div>
 <div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;            <span class="keywordtype">bool</span> result = bool(applys[0](x));</div>
-<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 0; i &lt; applys.size(); i++) {</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 1; i &lt; applys.size(); i++) {</div>
 <div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;                result = result != bool(applys[i](x));</div>
 <div class="line"><a name="l00479"></a><span class="lineno">  479</span>&#160;            }</div>
 <div class="line"><a name="l00480"></a><span class="lineno">  480</span>&#160;            <span class="keywordflow">return</span> double(result);</div>

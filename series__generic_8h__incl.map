@@ -1,52 +1,52 @@
 <map id="/home/runner/work/symengine/symengine/symengine/series_generic.h" name="/home/runner/work/symengine/symengine/symengine/series_generic.h">
-<area shape="rect" id="node1" title=" " alt="" coords="543,5,763,68"/>
-<area shape="rect" id="node2" href="$uintpoly_8h.html" title=" " alt="" coords="553,116,752,145"/>
-<area shape="rect" id="node47" href="$uexprpoly_8h_source.html" title=" " alt="" coords="776,116,988,145"/>
-<area shape="rect" id="node49" href="$series_8h.html" title=" " alt="" coords="5,578,154,607"/>
-<area shape="rect" id="node3" href="$usymenginepoly_8h_source.html" title=" " alt="" coords="539,193,793,222"/>
-<area shape="rect" id="node4" href="$upolybase_8h_source.html" title=" " alt="" coords="558,270,774,299"/>
-<area shape="rect" id="node5" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="1065,903,1208,932"/>
-<area shape="rect" id="node26" href="$pow_8h.html" title=" " alt="" coords="612,424,747,453"/>
-<area shape="rect" id="node38" href="$add_8h.html" title="Classes and functions relating to the binary operation of addition." alt="" coords="816,424,949,453"/>
-<area shape="rect" id="node39" href="$rational_8h.html" title=" " alt="" coords="200,501,359,530"/>
-<area shape="rect" id="node40" href="$expression_8h.html" title=" " alt="" coords="792,347,972,376"/>
-<area shape="rect" id="node46" title=" " alt="" coords="565,347,642,376"/>
-<area shape="rect" id="node6" title=" " alt="" coords="1841,989,1915,1018"/>
-<area shape="rect" id="node7" title=" " alt="" coords="1939,989,2014,1018"/>
-<area shape="rect" id="node8" title=" " alt="" coords="2044,1074,2094,1103"/>
-<area shape="rect" id="node9" title=" " alt="" coords="1010,1074,1072,1103"/>
-<area shape="rect" id="node10" title=" " alt="" coords="2147,1074,2188,1103"/>
-<area shape="rect" id="node11" title=" " alt="" coords="2236,1074,2360,1103"/>
-<area shape="rect" id="node12" title=" " alt="" coords="1281,1074,1395,1103"/>
-<area shape="rect" id="node13" title=" " alt="" coords="613,989,682,1018"/>
-<area shape="rect" id="node14" title=" " alt="" coords="706,989,768,1018"/>
-<area shape="rect" id="node15" title=" " alt="" coords="792,989,869,1018"/>
-<area shape="rect" id="node16" title=" " alt="" coords="892,989,984,1018"/>
-<area shape="rect" id="node17" title=" " alt="" coords="1008,989,1095,1018"/>
-<area shape="rect" id="node18" title=" " alt="" coords="1512,1074,1596,1103"/>
-<area shape="rect" id="node19" title=" " alt="" coords="318,980,487,1026"/>
-<area shape="rect" id="node20" href="$symengine__exception_8h_source.html" title=" " alt="" coords="124,980,294,1026"/>
-<area shape="rect" id="node21" href="$dict_8h.html" title=" " alt="" coords="2089,989,2222,1018"/>
-<area shape="rect" id="node22" href="$type__codes_8inc_source.html" title=" " alt="" coords="1169,989,1363,1018"/>
-<area shape="rect" id="node23" href="$basic-methods_8inc_source.html" title=" " alt="" coords="1388,989,1528,1018"/>
-<area shape="rect" id="node24" href="$basic-inl_8h_source.html" title=" " alt="" coords="1553,989,1641,1018"/>
-<area shape="rect" id="node25" href="$tribool_8h_source.html" title=" " alt="" coords="1665,989,1816,1018"/>
-<area shape="rect" id="node27" href="$functions_8h.html" title=" " alt="" coords="718,501,887,530"/>
-<area shape="rect" id="node31" href="$constants_8h.html" title=" " alt="" coords="593,578,766,607"/>
-<area shape="rect" id="node36" href="$mul_8h.html" title=" " alt="" coords="384,578,519,607"/>
-<area shape="rect" id="node37" href="$ntheory_8h.html" title=" " alt="" coords="485,501,642,530"/>
-<area shape="rect" id="node28" href="$symengine__casts_8h_source.html" title=" " alt="" coords="607,732,776,778"/>
-<area shape="rect" id="node29" title=" " alt="" coords="726,826,806,855"/>
-<area shape="rect" id="node30" title=" " alt="" coords="644,826,702,855"/>
-<area shape="rect" id="node32" href="$integer_8h.html" title=" " alt="" coords="606,655,761,684"/>
-<area shape="rect" id="node35" href="$symbol_8h.html" title=" " alt="" coords="942,655,1100,684"/>
-<area shape="rect" id="node33" href="$number_8h.html" title=" " alt="" coords="942,741,1100,770"/>
-<area shape="rect" id="node34" href="$assumptions_8h_source.html" title=" " alt="" coords="1225,826,1417,855"/>
-<area shape="rect" id="node41" href="$complex__double_8h_source.html" title=" " alt="" coords="246,826,462,855"/>
-<area shape="rect" id="node43" href="$eval__double_8h.html" title=" " alt="" coords="1053,578,1242,607"/>
-<area shape="rect" id="node44" href="$printers_8h_source.html" title=" " alt="" coords="1374,741,1534,770"/>
-<area shape="rect" id="node42" href="$real__double_8h_source.html" title=" " alt="" coords="298,903,483,932"/>
-<area shape="rect" id="node45" href="$matrix_8h_source.html" title=" " alt="" coords="1491,826,1644,855"/>
-<area shape="rect" id="node48" href="$monomials_8h.html" title=" " alt="" coords="1254,270,1436,299"/>
-<area shape="rect" id="node50" title=" " alt="" coords="118,655,159,684"/>
+<area shape="rect" id="node1" title=" " alt="" coords="1507,5,1728,68"/>
+<area shape="rect" id="node2" href="$uintpoly_8h.html" title=" " alt="" coords="1518,116,1717,145"/>
+<area shape="rect" id="node47" href="$uexprpoly_8h_source.html" title=" " alt="" coords="1282,116,1494,145"/>
+<area shape="rect" id="node49" href="$series_8h.html" title=" " alt="" coords="2243,578,2392,607"/>
+<area shape="rect" id="node3" href="$usymenginepoly_8h_source.html" title=" " alt="" coords="1430,193,1684,222"/>
+<area shape="rect" id="node4" href="$upolybase_8h_source.html" title=" " alt="" coords="1450,270,1665,299"/>
+<area shape="rect" id="node5" href="$basic_8h.html" title="The base class for SymEngine." alt="" coords="1180,903,1324,932"/>
+<area shape="rect" id="node27" href="$pow_8h.html" title=" " alt="" coords="1534,424,1669,453"/>
+<area shape="rect" id="node38" href="$add_8h.html" title="Classes and functions relating to the binary operation of addition." alt="" coords="1321,424,1455,453"/>
+<area shape="rect" id="node39" href="$rational_8h.html" title=" " alt="" coords="2063,501,2222,530"/>
+<area shape="rect" id="node40" href="$expression_8h.html" title=" " alt="" coords="1298,347,1478,376"/>
+<area shape="rect" id="node46" title=" " alt="" coords="2114,347,2190,376"/>
+<area shape="rect" id="node6" title=" " alt="" coords="991,989,1065,1018"/>
+<area shape="rect" id="node7" title=" " alt="" coords="1089,989,1164,1018"/>
+<area shape="rect" id="node8" title=" " alt="" coords="1294,1074,1344,1103"/>
+<area shape="rect" id="node9" title=" " alt="" coords="1372,1074,1434,1103"/>
+<area shape="rect" id="node10" title=" " alt="" coords="1701,1074,1742,1103"/>
+<area shape="rect" id="node11" title=" " alt="" coords="1461,1074,1584,1103"/>
+<area shape="rect" id="node12" title=" " alt="" coords="1811,1074,1925,1103"/>
+<area shape="rect" id="node13" title=" " alt="" coords="1340,989,1409,1018"/>
+<area shape="rect" id="node14" title=" " alt="" coords="1641,989,1703,1018"/>
+<area shape="rect" id="node15" title=" " alt="" coords="1727,989,1804,1018"/>
+<area shape="rect" id="node16" title=" " alt="" coords="93,989,184,1018"/>
+<area shape="rect" id="node17" title=" " alt="" coords="209,989,295,1018"/>
+<area shape="rect" id="node18" title=" " alt="" coords="1171,1074,1256,1103"/>
+<area shape="rect" id="node19" title=" " alt="" coords="1930,980,2099,1026"/>
+<area shape="rect" id="node20" href="$symengine__exception_8h_source.html" title=" " alt="" coords="2123,980,2293,1026"/>
+<area shape="rect" id="node21" href="$dict_8h.html" title=" " alt="" coords="1433,989,1567,1018"/>
+<area shape="rect" id="node23" href="$type__codes_8inc_source.html" title=" " alt="" coords="319,989,513,1018"/>
+<area shape="rect" id="node24" href="$basic-methods_8inc_source.html" title=" " alt="" coords="538,989,678,1018"/>
+<area shape="rect" id="node25" href="$basic-inl_8h_source.html" title=" " alt="" coords="702,989,791,1018"/>
+<area shape="rect" id="node26" href="$tribool_8h_source.html" title=" " alt="" coords="815,989,966,1018"/>
+<area shape="rect" id="node22" title=" " alt="" coords="559,1074,625,1103"/>
+<area shape="rect" id="node28" href="$functions_8h.html" title=" " alt="" coords="1518,501,1687,530"/>
+<area shape="rect" id="node31" href="$constants_8h.html" title=" " alt="" coords="1634,578,1806,607"/>
+<area shape="rect" id="node36" href="$mul_8h.html" title=" " alt="" coords="1360,501,1494,530"/>
+<area shape="rect" id="node37" href="$ntheory_8h.html" title=" " alt="" coords="1831,578,1988,607"/>
+<area shape="rect" id="node29" href="$symengine__casts_8h_source.html" title=" " alt="" coords="1737,732,1906,778"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1728,826,1808,855"/>
+<area shape="rect" id="node32" href="$integer_8h.html" title=" " alt="" coords="1779,655,1933,684"/>
+<area shape="rect" id="node35" href="$symbol_8h.html" title=" " alt="" coords="1128,655,1285,684"/>
+<area shape="rect" id="node33" href="$number_8h.html" title=" " alt="" coords="1529,741,1687,770"/>
+<area shape="rect" id="node34" href="$assumptions_8h_source.html" title=" " alt="" coords="1512,826,1704,855"/>
+<area shape="rect" id="node41" href="$complex__double_8h_source.html" title=" " alt="" coords="1904,826,2120,855"/>
+<area shape="rect" id="node43" href="$eval__double_8h.html" title=" " alt="" coords="1046,578,1234,607"/>
+<area shape="rect" id="node44" href="$printers_8h_source.html" title=" " alt="" coords="788,741,948,770"/>
+<area shape="rect" id="node42" href="$real__double_8h_source.html" title=" " alt="" coords="1934,903,2119,932"/>
+<area shape="rect" id="node45" href="$matrix_8h_source.html" title=" " alt="" coords="850,826,1003,855"/>
+<area shape="rect" id="node48" href="$monomials_8h.html" title=" " alt="" coords="545,270,727,299"/>
+<area shape="rect" id="node50" title=" " alt="" coords="2297,655,2338,684"/>
 </map>
