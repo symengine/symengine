@@ -12,6 +12,7 @@ parse(const std::string &s, bool convert_xor = true,
       const std::map<const std::string, const RCP<const Basic>> &constants
       = {});
 
+SYMENGINE_EXPORT
 RCP<const Basic> parse_old(const std::string &s, bool convert_xor = true);
 
 SYMENGINE_EXPORT
