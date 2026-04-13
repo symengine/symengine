@@ -625,6 +625,13 @@ public:
         return p;
     }
 
+    RCP<const Basic> as_symbolic() const
+    {
+        throw NotImplementedError("Not Implemented");
+        RCP<const Basic> v;
+        return v;
+    }
+
 };
 
 inline RCP<const GaloisField> gf_poly(RCP<const Basic> i,
