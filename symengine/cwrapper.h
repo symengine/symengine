@@ -410,10 +410,11 @@ SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_loads(basic s, const char *c,
                                                   unsigned long size);
 
 //! Return a struct for holding code printer settings
-BasicCodePrinterSettings *basic_code_printer_settings_new();
+SYMENGINE_EXPORT BasicCodePrinterSettings *basic_code_printer_settings_new();
 //! Free a struct for holding code printer settings
-void basic_code_printer_settings_free(BasicCodePrinterSettings *self);
+SYMENGINE_EXPORT void basic_code_printer_settings_free(BasicCodePrinterSettings *self);
 //! Set the precision in the code printer settings
+SYMENGINE_EXPORT
 void basic_code_printer_settings_set_precision(BasicCodePrinterSettings *self,
                                                BasicCodePrinterPrecision prec);
 
