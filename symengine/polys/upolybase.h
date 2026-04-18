@@ -515,11 +515,13 @@ public:
 
         vec_basic args;
         for (; it != end; ++it) {
-            integer_class m = it->second;
+            auto pair = *it;
+            unsigned degree = pair.first;
+            integer_class m = pair.second;
 
-            if (it->first == 0) {
+            if (degree == 0) {
                 args.push_back(integer(m));
-            } else if (it->first == 1) {
+            } else if (degree == 1) {
                 if (m == 1) {
                     args.push_back(this->get_var());
                 } else {
@@ -528,10 +530,10 @@ public:
                 }
             } else {
                 if (m == 1) {
-                    args.push_back(pow(this->get_var(), integer(it->first)));
+                    args.push_back(pow(this->get_var(), integer(degree)));
                 } else {
                     args.push_back(Mul::from_dict(
-                        integer(m), {{this->get_var(), integer(it->first)}}));
+                        integer(m), {{this->get_var(), integer(degree)}}));
                 }
             }
         }
@@ -556,11 +558,13 @@ public:
 
         vec_basic args;
         for (; it != end; ++it) {
-            rational_class m = it->second;
+            auto pair = *it;
+            unsigned degree = pair.first;
+            rational_class m = pair.second;
 
-            if (it->first == 0) {
+            if (degree == 0) {
                 args.push_back(Rational::from_mpq(m));
-            } else if (it->first == 1) {
+            } else if (degree == 1) {
                 if (m == 1) {
                     args.push_back(this->get_var());
                 } else {
@@ -569,11 +573,11 @@ public:
                 }
             } else {
                 if (m == 1) {
-                    args.push_back(pow(this->get_var(), integer(it->first)));
+                    args.push_back(pow(this->get_var(), integer(degree)));
                 } else {
                     args.push_back(Mul::from_dict(
                         Rational::from_mpq(m),
-                        {{this->get_var(), integer(it->first)}}));
+                        {{this->get_var(), integer(degree)}}));
                 }
             }
         }
