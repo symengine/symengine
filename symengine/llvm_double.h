@@ -24,7 +24,7 @@ namespace SymEngine
 
 class IRBuilder;
 
-class LLVMVisitor : public BaseVisitor<LLVMVisitor>
+class SYMENGINE_EXPORT LLVMVisitor : public BaseVisitor<LLVMVisitor>
 {
 protected:
     vec_basic symbols;
@@ -102,7 +102,7 @@ public:
     void bvisit(const UnevaluatedExpr &x);
 };
 
-class LLVMDoubleVisitor : public LLVMVisitor
+class SYMENGINE_EXPORT LLVMDoubleVisitor : public LLVMVisitor
 {
 public:
     LLVMDoubleVisitor();
@@ -127,7 +127,7 @@ public:
     void visit(const Erfc &x) override;
 };
 
-class LLVMFloatVisitor : public LLVMVisitor
+class SYMENGINE_EXPORT LLVMFloatVisitor : public LLVMVisitor
 {
 public:
     LLVMFloatVisitor();
@@ -154,7 +154,7 @@ public:
 
 #if SYMENGINE_SIZEOF_LONG_DOUBLE > 8 && defined(__x86_64__) || defined(__i386__)
 #define SYMENGINE_HAVE_LLVM_LONG_DOUBLE 1
-class LLVMLongDoubleVisitor : public LLVMVisitor
+class SYMENGINE_EXPORT LLVMLongDoubleVisitor : public LLVMVisitor
 {
 public:
     LLVMLongDoubleVisitor();

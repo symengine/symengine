@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class HadamardProduct : public MatrixExpr
+class SYMENGINE_EXPORT HadamardProduct : public MatrixExpr
 {
 private:
     vec_basic factors_;
@@ -34,7 +34,8 @@ public:
     }
 };
 
-RCP<const MatrixExpr> hadamard_product(const vec_basic &factors);
+SYMENGINE_EXPORT RCP<const MatrixExpr>
+hadamard_product(const vec_basic &factors);
 
 } // namespace SymEngine
 

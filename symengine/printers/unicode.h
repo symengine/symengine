@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class UnicodePrinter : public BaseVisitor<UnicodePrinter>
+class SYMENGINE_EXPORT UnicodePrinter : public BaseVisitor<UnicodePrinter>
 {
 private:
     static const std::vector<std::string> names_;

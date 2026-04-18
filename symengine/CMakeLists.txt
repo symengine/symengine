@@ -288,7 +288,10 @@ set_target_properties (symengine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(GenerateExportHeader)
 generate_export_header(symengine)
-set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
+
+# needed for CRCPBasic_C, see cwrapper.h
+set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS symengine_COMPILING)
+
 if (BUILD_SHARED_LIBS)
     set_target_properties(
         symengine

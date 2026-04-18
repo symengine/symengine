@@ -4,7 +4,7 @@
 namespace SymEngine
 {
 
-inline hash_t Basic::hash() const
+hash_t Basic::hash() const
 {
     if (hash_ == 0)
         hash_ = __hash__();
@@ -18,7 +18,7 @@ inline bool Basic::__neq__(const Basic &o) const
 }
 
 //! \return true if  `a` equal `b`
-inline bool eq(const Basic &a, const Basic &b)
+bool eq(const Basic &a, const Basic &b)
 {
     if (&a == &b) {
         return true;
@@ -121,7 +121,7 @@ std::string to_string(const T &value)
 #endif
 }
 
-static struct ConstantInitializer {
+static struct SYMENGINE_EXPORT ConstantInitializer {
     ConstantInitializer();
     ~ConstantInitializer();
 } constantInitializer; // static initializer for every translation unit

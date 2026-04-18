@@ -14,11 +14,11 @@
 namespace SymEngine
 {
 
-class Function : public Basic
+class SYMENGINE_EXPORT Function : public Basic
 {
 };
 
-class OneArgFunction : public Function
+class SYMENGINE_EXPORT OneArgFunction : public Function
 {
 private:
     RCP<const Basic> arg_; //! The `arg` in `OneArgFunction(arg)`
@@ -70,7 +70,7 @@ public:
 };
 
 template <class BaseClass>
-class TwoArgBasic : public BaseClass
+class SYMENGINE_EXPORT TwoArgBasic : public BaseClass
 {
 private:
     RCP<const Basic> a_; //! `a` in `TwoArgBasic(a, b)`
@@ -140,7 +140,7 @@ public:
 
 typedef TwoArgBasic<Function> TwoArgFunction;
 
-class MultiArgFunction : public Function
+class SYMENGINE_EXPORT MultiArgFunction : public Function
 {
 private:
     vec_basic arg_;
@@ -185,7 +185,7 @@ public:
     }
 };
 
-class Sign : public OneArgFunction
+class SYMENGINE_EXPORT Sign : public OneArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_SIGN)
@@ -198,9 +198,9 @@ public:
 };
 
 //! Canonicalize Sign
-RCP<const Basic> sign(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> sign(const RCP<const Basic> &arg);
 
-class Floor : public OneArgFunction
+class SYMENGINE_EXPORT Floor : public OneArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_FLOOR)
@@ -213,9 +213,9 @@ public:
 };
 
 //! Canonicalize Floor:
-RCP<const Basic> floor(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> floor(const RCP<const Basic> &arg);
 
-class Ceiling : public OneArgFunction
+class SYMENGINE_EXPORT Ceiling : public OneArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_CEILING)
@@ -228,9 +228,9 @@ public:
 };
 
 //! Canonicalize Ceiling:
-RCP<const Basic> ceiling(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> ceiling(const RCP<const Basic> &arg);
 
-class Truncate : public OneArgFunction
+class SYMENGINE_EXPORT Truncate : public OneArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_TRUNCATE)
@@ -243,9 +243,9 @@ public:
 };
 
 //! Canonicalize Truncate:
-RCP<const Basic> truncate(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> truncate(const RCP<const Basic> &arg);
 
-class Conjugate : public OneArgFunction
+class SYMENGINE_EXPORT Conjugate : public OneArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_CONJUGATE)
@@ -258,23 +258,23 @@ public:
 };
 
 //! Canonicalize Conjugate
-RCP<const Basic> conjugate(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> conjugate(const RCP<const Basic> &arg);
 
-class TrigBase : public OneArgFunction
+class SYMENGINE_EXPORT TrigBase : public OneArgFunction
 {
 public:
     //! Constructor
     TrigBase(RCP<const Basic> arg) : OneArgFunction(arg){};
 };
 
-class TrigFunction : public TrigBase
+class SYMENGINE_EXPORT TrigFunction : public TrigBase
 {
 public:
     //! Constructor
     TrigFunction(RCP<const Basic> arg) : TrigBase(arg){};
 };
 
-class InverseTrigFunction : public TrigBase
+class SYMENGINE_EXPORT InverseTrigFunction : public TrigBase
 {
 public:
     //! Constructor
@@ -283,34 +283,38 @@ public:
 
 /*! \return `true` if `arg` is of form `m + n*pi` where `n` is a rational
  * */
+SYMENGINE_EXPORT
 bool get_pi_shift(const RCP<const Basic> &arg, const Ptr<RCP<const Number>> &n,
                   const Ptr<RCP<const Basic>> &m);
 
 //! \return `true` if `arg` contains a negative sign.
-bool could_extract_minus(const Basic &arg);
+SYMENGINE_EXPORT bool could_extract_minus(const Basic &arg);
 
+SYMENGINE_EXPORT
 bool handle_minus(const RCP<const Basic> &arg,
                   const Ptr<RCP<const Basic>> &rarg);
 
 /*! returns `true` if the given argument `t` is found in the
  *   lookup table `d`. It also returns the value in `index`
  **/
+SYMENGINE_EXPORT
 bool inverse_lookup(const umap_basic_basic &d, const RCP<const Basic> &t,
                     const Ptr<RCP<const Basic>> &index);
 
 // \return true of conjugate has to be returned finally else false
+SYMENGINE_EXPORT
 bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
                    bool conj_odd, // input
                    const Ptr<RCP<const Basic>> &rarg, int &index,
                    int &sign); // output
 
 //! \return `sqrt` of the `arg`
-RCP<const Basic> sqrt(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 
 //! \return `cbrt` of the `arg`
-RCP<const Basic> cbrt(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> cbrt(const RCP<const Basic> &arg);
 
-class Sin : public TrigFunction
+class SYMENGINE_EXPORT Sin : public TrigFunction
 {
 
 public:
@@ -324,9 +328,9 @@ public:
 };
 
 //! Canonicalize Sin:
-RCP<const Basic> sin(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> sin(const RCP<const Basic> &arg);
 
-class Cos : public TrigFunction
+class SYMENGINE_EXPORT Cos : public TrigFunction
 {
 
 public:
@@ -340,9 +344,9 @@ public:
 };
 
 //! Canonicalize Cos:
-RCP<const Basic> cos(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> cos(const RCP<const Basic> &arg);
 
-class Tan : public TrigFunction
+class SYMENGINE_EXPORT Tan : public TrigFunction
 {
 
 public:
@@ -355,9 +359,9 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 //! Canonicalize Tan:
-RCP<const Basic> tan(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> tan(const RCP<const Basic> &arg);
 
-class Cot : public TrigFunction
+class SYMENGINE_EXPORT Cot : public TrigFunction
 {
 
 public:
@@ -370,9 +374,9 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 //! Canonicalize Cot:
-RCP<const Basic> cot(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> cot(const RCP<const Basic> &arg);
 
-class Csc : public TrigFunction
+class SYMENGINE_EXPORT Csc : public TrigFunction
 {
 
 public:
@@ -385,9 +389,9 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 //! Canonicalize Csc:
-RCP<const Basic> csc(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> csc(const RCP<const Basic> &arg);
 
-class Sec : public TrigFunction
+class SYMENGINE_EXPORT Sec : public TrigFunction
 {
 
 public:
@@ -400,9 +404,9 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 //! Canonicalize Sec:
-RCP<const Basic> sec(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> sec(const RCP<const Basic> &arg);
 
-class ASin : public InverseTrigFunction
+class SYMENGINE_EXPORT ASin : public InverseTrigFunction
 {
 
 public:
@@ -416,9 +420,9 @@ public:
 };
 
 //! Canonicalize ASin:
-RCP<const Basic> asin(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> asin(const RCP<const Basic> &arg);
 
-class ACos : public InverseTrigFunction
+class SYMENGINE_EXPORT ACos : public InverseTrigFunction
 {
 
 public:
@@ -432,9 +436,9 @@ public:
 };
 
 //! Canonicalize ACos:
-RCP<const Basic> acos(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> acos(const RCP<const Basic> &arg);
 
-class ASec : public InverseTrigFunction
+class SYMENGINE_EXPORT ASec : public InverseTrigFunction
 {
 
 public:
@@ -448,9 +452,9 @@ public:
 };
 
 //! Canonicalize ASec:
-RCP<const Basic> asec(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> asec(const RCP<const Basic> &arg);
 
-class ACsc : public InverseTrigFunction
+class SYMENGINE_EXPORT ACsc : public InverseTrigFunction
 {
 
 public:
@@ -464,9 +468,9 @@ public:
 };
 
 //! Canonicalize ACsc:
-RCP<const Basic> acsc(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> acsc(const RCP<const Basic> &arg);
 
-class ATan : public InverseTrigFunction
+class SYMENGINE_EXPORT ATan : public InverseTrigFunction
 {
 
 public:
@@ -480,9 +484,9 @@ public:
 };
 
 //! Canonicalize ATan:
-RCP<const Basic> atan(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> atan(const RCP<const Basic> &arg);
 
-class ACot : public InverseTrigFunction
+class SYMENGINE_EXPORT ACot : public InverseTrigFunction
 {
 
 public:
@@ -496,9 +500,9 @@ public:
 };
 
 //! Canonicalize ACot:
-RCP<const Basic> acot(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> acot(const RCP<const Basic> &arg);
 
-class ATan2 : public TwoArgFunction
+class SYMENGINE_EXPORT ATan2 : public TwoArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_ATAN2)
@@ -523,10 +527,10 @@ public:
 };
 
 //! Canonicalize ATan2:
-RCP<const Basic> atan2(const RCP<const Basic> &num,
-                       const RCP<const Basic> &den);
+SYMENGINE_EXPORT RCP<const Basic> atan2(const RCP<const Basic> &num,
+                                        const RCP<const Basic> &den);
 
-class Log : public OneArgFunction
+class SYMENGINE_EXPORT Log : public OneArgFunction
 {
     // Logarithms are taken with the natural base, `e`. To get
     // a logarithm of a different base `b`, use `log(x, b)`,
@@ -542,11 +546,12 @@ public:
 };
 
 //! Returns the Natural Logarithm from argument `arg`
-RCP<const Basic> log(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> log(const RCP<const Basic> &arg);
 //! \return Log from argument `arg` wrt base `b`
-RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &b);
+SYMENGINE_EXPORT RCP<const Basic> log(const RCP<const Basic> &arg,
+                                      const RCP<const Basic> &b);
 
-class LambertW : public OneArgFunction
+class SYMENGINE_EXPORT LambertW : public OneArgFunction
 {
     // Lambert W function, defined as the inverse function of
     // x*exp(x). This function represents the principal branch
@@ -564,9 +569,9 @@ public:
 };
 
 //! Create a new LambertW instance:
-RCP<const Basic> lambertw(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> lambertw(const RCP<const Basic> &arg);
 
-class Zeta : public TwoArgFunction
+class SYMENGINE_EXPORT Zeta : public TwoArgFunction
 {
     // Hurwitz zeta function (or Riemann zeta function).
     //
@@ -605,10 +610,11 @@ public:
 };
 
 //! Create a new Zeta instance:
-RCP<const Basic> zeta(const RCP<const Basic> &s, const RCP<const Basic> &a);
-RCP<const Basic> zeta(const RCP<const Basic> &s);
+SYMENGINE_EXPORT RCP<const Basic> zeta(const RCP<const Basic> &s,
+                                       const RCP<const Basic> &a);
+SYMENGINE_EXPORT RCP<const Basic> zeta(const RCP<const Basic> &s);
 
-class Dirichlet_eta : public OneArgFunction
+class SYMENGINE_EXPORT Dirichlet_eta : public OneArgFunction
 {
     // See http://en.wikipedia.org/wiki/Dirichlet_eta_function
 public:
@@ -630,9 +636,9 @@ public:
 };
 
 //! Create a new Dirichlet_eta instance:
-RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
+SYMENGINE_EXPORT RCP<const Basic> dirichlet_eta(const RCP<const Basic> &s);
 
-class FunctionSymbol : public MultiArgFunction
+class SYMENGINE_EXPORT FunctionSymbol : public MultiArgFunction
 {
 protected:
     std::string name_; //! The `f` in `f(x+y, z)`
@@ -661,14 +667,16 @@ public:
 };
 
 //! Create a new FunctionSymbol instance:
-RCP<const Basic> function_symbol(std::string name, const RCP<const Basic> &arg);
-RCP<const Basic> function_symbol(std::string name, const vec_basic &arg);
+SYMENGINE_EXPORT RCP<const Basic> function_symbol(std::string name,
+                                                  const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> function_symbol(std::string name,
+                                                  const vec_basic &arg);
 
-/*! Use this class to define custom functions by overriding
+/*! Use this class SYMENGINE_EXPORT to define custom functions by overriding
  *  the defaut behaviour for create, eval, diff, __eq__, compare etc.
  * */
 
-class FunctionWrapper : public FunctionSymbol
+class SYMENGINE_EXPORT FunctionWrapper : public FunctionSymbol
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_FUNCTIONWRAPPER)
@@ -683,7 +691,7 @@ public:
  *  Derivative(f, [x, y, ...]) represents a derivative of `f` with respect to
  *  `x`, `y`, and so on.
  * */
-class Derivative : public Basic
+class SYMENGINE_EXPORT Derivative : public Basic
 {
 private:
     RCP<const Basic> arg_; //! The expression to be differentiated
@@ -735,7 +743,7 @@ public:
  *  Subs(f, {x1 : x2, y1: y2, ...}) represents `f` after substituting
  *  `x1` with `x2`, `y1` with `y2`, and so on.
  * */
-class Subs : public Basic
+class SYMENGINE_EXPORT Subs : public Basic
 {
 private:
     RCP<const Basic> arg_;
@@ -770,28 +778,28 @@ public:
                       const map_basic_basic &x) const;
 };
 
-class HyperbolicBase : public OneArgFunction
+class SYMENGINE_EXPORT HyperbolicBase : public OneArgFunction
 {
 public:
     //! Constructor
     HyperbolicBase(RCP<const Basic> arg) : OneArgFunction{arg} {};
 };
 
-class HyperbolicFunction : public HyperbolicBase
+class SYMENGINE_EXPORT HyperbolicFunction : public HyperbolicBase
 {
 public:
     //! Constructor
     HyperbolicFunction(RCP<const Basic> arg) : HyperbolicBase{arg} {};
 };
 
-class InverseHyperbolicFunction : public HyperbolicBase
+class SYMENGINE_EXPORT InverseHyperbolicFunction : public HyperbolicBase
 {
 public:
     //! Constructor
     InverseHyperbolicFunction(RCP<const Basic> arg) : HyperbolicBase{arg} {};
 };
 
-class Sinh : public HyperbolicFunction
+class SYMENGINE_EXPORT Sinh : public HyperbolicFunction
 {
     //! The hyperbolic sine function, `\frac{e^x - e^{-x}}{2}`.
 public:
@@ -805,9 +813,9 @@ public:
 };
 
 //! Canonicalize Sinh:
-RCP<const Basic> sinh(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> sinh(const RCP<const Basic> &arg);
 
-class Csch : public HyperbolicFunction
+class SYMENGINE_EXPORT Csch : public HyperbolicFunction
 {
     //! The hyperbolic cosecant function, `\frac{2}{e^x - e^{-x}}`.
 public:
@@ -821,9 +829,9 @@ public:
 };
 
 //! Canonicalize Csch:
-RCP<const Basic> csch(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> csch(const RCP<const Basic> &arg);
 
-class Cosh : public HyperbolicFunction
+class SYMENGINE_EXPORT Cosh : public HyperbolicFunction
 {
     //! The hyperbolic cosine function, `\frac{e^x + e^{-x}}{2}`.
 public:
@@ -837,9 +845,9 @@ public:
 };
 
 //! Canonicalize Cosh:
-RCP<const Basic> cosh(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> cosh(const RCP<const Basic> &arg);
 
-class Sech : public HyperbolicFunction
+class SYMENGINE_EXPORT Sech : public HyperbolicFunction
 {
     //! The hyperbolic secant function, `\frac{2}{e^x + e^{-x}}`.
 public:
@@ -853,9 +861,9 @@ public:
 };
 
 //! Canonicalize Sech:
-RCP<const Basic> sech(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> sech(const RCP<const Basic> &arg);
 
-class Tanh : public HyperbolicFunction
+class SYMENGINE_EXPORT Tanh : public HyperbolicFunction
 {
     //! The hyperbolic tangent function, `\frac{\sinh(x)}{\cosh(x)}`.
 public:
@@ -869,9 +877,9 @@ public:
 };
 
 //! Canonicalize Tanh:
-RCP<const Basic> tanh(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> tanh(const RCP<const Basic> &arg);
 
-class Coth : public HyperbolicFunction
+class SYMENGINE_EXPORT Coth : public HyperbolicFunction
 {
     //! The hyperbolic tangent function, `\frac{\cosh(x)}{\sinh(x)}`.
 public:
@@ -885,9 +893,9 @@ public:
 };
 
 //! Canonicalize Coth:
-RCP<const Basic> coth(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> coth(const RCP<const Basic> &arg);
 
-class ASinh : public InverseHyperbolicFunction
+class SYMENGINE_EXPORT ASinh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic sine function.
 public:
@@ -901,9 +909,9 @@ public:
 };
 
 //! Canonicalize ASinh:
-RCP<const Basic> asinh(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> asinh(const RCP<const Basic> &arg);
 
-class ACsch : public InverseHyperbolicFunction
+class SYMENGINE_EXPORT ACsch : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cosecant function.
 public:
@@ -917,9 +925,9 @@ public:
 };
 
 //! Canonicalize ACsch:
-RCP<const Basic> acsch(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> acsch(const RCP<const Basic> &arg);
 
-class ACosh : public InverseHyperbolicFunction
+class SYMENGINE_EXPORT ACosh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cosine function.
 public:
@@ -933,9 +941,9 @@ public:
 };
 
 //! Canonicalize ACosh:
-RCP<const Basic> acosh(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> acosh(const RCP<const Basic> &arg);
 
-class ATanh : public InverseHyperbolicFunction
+class SYMENGINE_EXPORT ATanh : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic tangent function.
 public:
@@ -949,9 +957,9 @@ public:
 };
 
 //! Canonicalize ATanh:
-RCP<const Basic> atanh(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> atanh(const RCP<const Basic> &arg);
 
-class ACoth : public InverseHyperbolicFunction
+class SYMENGINE_EXPORT ACoth : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic cotangent function.
 public:
@@ -965,9 +973,9 @@ public:
 };
 
 //! Canonicalize ACoth:
-RCP<const Basic> acoth(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> acoth(const RCP<const Basic> &arg);
 
-class ASech : public InverseHyperbolicFunction
+class SYMENGINE_EXPORT ASech : public InverseHyperbolicFunction
 {
     //! The inverse hyperbolic secant function.
 public:
@@ -981,9 +989,9 @@ public:
 };
 
 //! Canonicalize ASech:
-RCP<const Basic> asech(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> asech(const RCP<const Basic> &arg);
 
-class KroneckerDelta : public TwoArgFunction
+class SYMENGINE_EXPORT KroneckerDelta : public TwoArgFunction
 {
     /*! The discrete, or Kronecker, delta function.
      * A function that takes in two integers `i` and `j`. It returns `0` if `i`
@@ -1005,10 +1013,10 @@ public:
 };
 
 //! Canonicalize KroneckerDelta:
-RCP<const Basic> kronecker_delta(const RCP<const Basic> &i,
-                                 const RCP<const Basic> &j);
+SYMENGINE_EXPORT RCP<const Basic> kronecker_delta(const RCP<const Basic> &i,
+                                                  const RCP<const Basic> &j);
 
-class LeviCivita : public MultiArgFunction
+class SYMENGINE_EXPORT LeviCivita : public MultiArgFunction
 {
     /*! Represent the Levi-Civita symbol.
      *  For even permutations of indices it returns 1, for odd permutations -1,
@@ -1028,9 +1036,9 @@ public:
 };
 
 //! Canonicalize LeviCivita:
-RCP<const Basic> levi_civita(const vec_basic &arg);
+SYMENGINE_EXPORT RCP<const Basic> levi_civita(const vec_basic &arg);
 
-class Erf : public OneArgFunction
+class SYMENGINE_EXPORT Erf : public OneArgFunction
 {
     /*   The Gauss error function. This function is defined as:
      *
@@ -1053,9 +1061,9 @@ public:
 };
 
 //! Canonicalize Erf:
-RCP<const Basic> erf(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> erf(const RCP<const Basic> &arg);
 
-class Erfc : public OneArgFunction
+class SYMENGINE_EXPORT Erfc : public OneArgFunction
 {
     /*   The complementary error function. This function is defined as:
      *
@@ -1078,9 +1086,9 @@ public:
 };
 
 //! Canonicalize Erfc:
-RCP<const Basic> erfc(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> erfc(const RCP<const Basic> &arg);
 
-class Gamma : public OneArgFunction
+class SYMENGINE_EXPORT Gamma : public OneArgFunction
 {
     /*!    The gamma function
      *
@@ -1103,9 +1111,9 @@ public:
 };
 
 //! Canonicalize Gamma:
-RCP<const Basic> gamma(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> gamma(const RCP<const Basic> &arg);
 
-class LowerGamma : public TwoArgFunction
+class SYMENGINE_EXPORT LowerGamma : public TwoArgFunction
 {
     //! The lower incomplete gamma function.
 public:
@@ -1122,10 +1130,10 @@ public:
 };
 
 //! Canonicalize LowerGamma:
-RCP<const Basic> lowergamma(const RCP<const Basic> &s,
-                            const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> lowergamma(const RCP<const Basic> &s,
+                                             const RCP<const Basic> &x);
 
-class UpperGamma : public TwoArgFunction
+class SYMENGINE_EXPORT UpperGamma : public TwoArgFunction
 {
     //! The upper incomplete gamma function.
 public:
@@ -1142,10 +1150,10 @@ public:
 };
 
 //! Canonicalize UpperGamma:
-RCP<const Basic> uppergamma(const RCP<const Basic> &s,
-                            const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> uppergamma(const RCP<const Basic> &s,
+                                             const RCP<const Basic> &x);
 
-class LogGamma : public OneArgFunction
+class SYMENGINE_EXPORT LogGamma : public OneArgFunction
 {
     /*!    The loggamma function
         The `loggamma` function implements the logarithm of the
@@ -1167,9 +1175,9 @@ public:
 };
 
 //! Canonicalize LogGamma:
-RCP<const Basic> loggamma(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> loggamma(const RCP<const Basic> &arg);
 
-class Beta : public TwoArgFunction
+class SYMENGINE_EXPORT Beta : public TwoArgFunction
 {
     /*!    The beta function, also called the Euler integral
      *     of the first kind, is a special function defined by
@@ -1199,9 +1207,10 @@ public:
 };
 
 //! Canonicalize Beta:
-RCP<const Basic> beta(const RCP<const Basic> &x, const RCP<const Basic> &y);
+SYMENGINE_EXPORT RCP<const Basic> beta(const RCP<const Basic> &x,
+                                       const RCP<const Basic> &y);
 
-class PolyGamma : public TwoArgFunction
+class SYMENGINE_EXPORT PolyGamma : public TwoArgFunction
 {
     /*!    The polygamma function
      *
@@ -1231,14 +1240,14 @@ public:
 };
 
 //! Canonicalize PolyGamma
-RCP<const Basic> polygamma(const RCP<const Basic> &n,
-                           const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> polygamma(const RCP<const Basic> &n,
+                                            const RCP<const Basic> &x);
 
-RCP<const Basic> digamma(const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> digamma(const RCP<const Basic> &x);
 
-RCP<const Basic> trigamma(const RCP<const Basic> &x);
+SYMENGINE_EXPORT RCP<const Basic> trigamma(const RCP<const Basic> &x);
 
-class Abs : public OneArgFunction
+class SYMENGINE_EXPORT Abs : public OneArgFunction
 {
     /*!    The absolute value function
      **/
@@ -1253,9 +1262,9 @@ public:
 };
 
 //! Canonicalize Abs:
-RCP<const Basic> abs(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> abs(const RCP<const Basic> &arg);
 
-class Max : public MultiArgFunction
+class SYMENGINE_EXPORT Max : public MultiArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_MAX)
@@ -1268,9 +1277,9 @@ public:
 };
 
 //! Canonicalize Max:
-RCP<const Basic> max(const vec_basic &arg);
+SYMENGINE_EXPORT RCP<const Basic> max(const vec_basic &arg);
 
-class Min : public MultiArgFunction
+class SYMENGINE_EXPORT Min : public MultiArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_MIN)
@@ -1283,12 +1292,12 @@ public:
 };
 
 //! Canonicalize Min:
-RCP<const Basic> min(const vec_basic &arg);
+SYMENGINE_EXPORT RCP<const Basic> min(const vec_basic &arg);
 
 //! \return simplified form if possible
-RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> trig_to_sqrt(const RCP<const Basic> &arg);
 
-class UnevaluatedExpr : public OneArgFunction
+class SYMENGINE_EXPORT UnevaluatedExpr : public OneArgFunction
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_UNEVALUATED_EXPR)
@@ -1300,7 +1309,7 @@ public:
     RCP<const Basic> create(const RCP<const Basic> &arg) const override;
 };
 
-RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
+SYMENGINE_EXPORT RCP<const Basic> unevaluated_expr(const RCP<const Basic> &arg);
 
 } // namespace SymEngine
 
