@@ -43,6 +43,12 @@ public:
         if (not first_seen) {
             return;
         }
+        // Keep a reference to every serialized object for the lifetime of the
+        // archive, as some are temporary objects (e.g. Rational::get_num).
+        // Without this a temp object can be freed and its address
+        // then re-used by another temp object, which is then incorrectly
+        // serialized as the previous object seen at this address.
+        _keep_alive.push_back(ptr);
         TypeID type_code = ptr->get_type_code();
         save_typeid(*this, type_code);
         switch (type_code) {
@@ -60,6 +66,7 @@ public:
 
 private:
     std::set<uintptr_t> _addresses;
+    std::vector<RCP<const Basic>> _keep_alive;
     //! Overload the rtti function to enable dynamic_cast
     void rtti(){};
 };
