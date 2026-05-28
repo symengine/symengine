@@ -457,7 +457,7 @@ TEST_CASE("Check llvm and lambda are equal for lowered functions",
     };
 
     for (const auto &test_case : cases) {
-        INFO("expr=" << test_case.expr->__str__() << ", x=" << test_case.input);
+        std::cout << "expr=" << test_case.expr->__str__() << ", x=" << test_case.input << std::endl;
 
         LambdaRealDoubleVisitor lambda;
         lambda.init({x}, *test_case.expr);
