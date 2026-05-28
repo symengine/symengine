@@ -364,51 +364,51 @@ template <class Derived, class Base = Visitor>
 class RewriteTrigVisitor : public BaseVisitor<Derived, Base>
 {
 public:
-    void bvisit(const Cot &x)
+    void visit(const Cot &x)
     {
         div(one, tan(x.get_arg()))->accept(*this);
     };
-    void bvisit(const Csc &x)
+    void visit(const Csc &x)
     {
         div(one, sin(x.get_arg()))->accept(*this);
     };
-    void bvisit(const Sec &x)
+    void visit(const Sec &x)
     {
         div(one, cos(x.get_arg()))->accept(*this);
     };
-    void bvisit(const ACot &x)
+    void visit(const ACot &x)
     {
         atan(div(one, x.get_arg()))->accept(*this);
     };
-    void bvisit(const ACsc &x)
+    void visit(const ACsc &x)
     {
         asin(div(one, x.get_arg()))->accept(*this);
     };
-    void bvisit(const ASec &x)
+    void visit(const ASec &x)
     {
         acos(div(one, x.get_arg()))->accept(*this);
     };
-    void bvisit(const Coth &x)
+    void visit(const Coth &x)
     {
         div(one, tanh(x.get_arg()))->accept(*this);
     };
-    void bvisit(const Csch &x)
+    void visit(const Csch &x)
     {
         div(one, sinh(x.get_arg()))->accept(*this);
     };
-    void bvisit(const Sech &x)
+    void visit(const Sech &x)
     {
         div(one, cosh(x.get_arg()))->accept(*this);
     };
-    void bvisit(const ACoth &x)
+    void visit(const ACoth &x)
     {
         atanh(div(one, x.get_arg()))->accept(*this);
     };
-    void bvisit(const ACsch &x)
+    void visit(const ACsch &x)
     {
         asinh(div(one, x.get_arg()))->accept(*this);
     };
-    void bvisit(const ASech &x)
+    void visit(const ASech &x)
     {
         acosh(div(one, x.get_arg()))->accept(*this);
     };
