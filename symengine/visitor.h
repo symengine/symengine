@@ -367,51 +367,51 @@ public:
     using Base::apply;
     void bvisit(const Cot &x)
     {
-        apply(div(one, tan(x.get_arg())));
+        div(one, tan(x.get_arg()))->accept(*this);
     };
     void bvisit(const Csc &x)
     {
-        apply(div(one, sin(x.get_arg())));
+        div(one, sin(x.get_arg()))->accept(*this);
     };
     void bvisit(const Sec &x)
     {
-        apply(div(one, cos(x.get_arg())));
+        div(one, cos(x.get_arg()))->accept(*this);
     };
     void bvisit(const ACot &x)
     {
-        apply(atan(div(one, x.get_arg())));
+        atan(div(one, x.get_arg()))->accept(*this);
     };
     void bvisit(const ACsc &x)
     {
-        apply(asin(div(one, x.get_arg())));
+        asin(div(one, x.get_arg()))->accept(*this);
     };
     void bvisit(const ASec &x)
     {
-        apply(acos(div(one, x.get_arg())));
+        acos(div(one, x.get_arg()))->accept(*this);
     };
     void bvisit(const Coth &x)
     {
-        apply(div(one, tanh(x.get_arg())));
+        div(one, tanh(x.get_arg()))->accept(*this);
     };
     void bvisit(const Csch &x)
     {
-        apply(div(one, sinh(x.get_arg())));
+        div(one, sinh(x.get_arg()))->accept(*this);
     };
     void bvisit(const Sech &x)
     {
-        apply(div(one, cosh(x.get_arg())));
+        div(one, cosh(x.get_arg()))->accept(*this);
     };
     void bvisit(const ACoth &x)
     {
-        apply(atanh(div(one, x.get_arg())));
+        atanh(div(one, x.get_arg()))->accept(*this);
     };
     void bvisit(const ACsch &x)
     {
-        apply(asinh(div(one, x.get_arg())));
+        asinh(div(one, x.get_arg()))->accept(*this);
     };
     void bvisit(const ASech &x)
     {
-        apply(acosh(div(one, x.get_arg())));
+        acosh(div(one, x.get_arg()))->accept(*this);
     };
 };
 
