@@ -3,6 +3,20 @@
 #include <symengine/basic.h>
 #include <symengine/parser.h>
 #include <symengine/serialize-cereal.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/pow.h>
+#include <symengine/functions.h>
+#include <symengine/logic.h>
+#include <symengine/sets.h>
+#include <symengine/constants.h>
+#include <symengine/polys/uratpoly.h>
+#include <symengine/polys/uintpoly.h>
+#include <symengine/polys/uexprpoly.h>
+#include <symengine/polys/msymenginepoly.h>
+#include <symengine/polys/uintpoly_flint.h>
+#include <symengine/polys/uintpoly_piranha.h>
+#include <symengine/expression.h>
 #include <cereal/archives/binary.hpp>
 
 using std::string;
@@ -95,6 +109,166 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     // Rational and Complex
     check_string_serialization_roundtrip(
         se::parse("sin(x)**3/6 + (2 + 3*I)*cos(y)/135 + log(x)/(600*sin(z))"));
+    // Numbers
+    check_string_serialization_roundtrip(se::parse("42"));   // Integer
+    check_string_serialization_roundtrip(se::parse("1.25")); // RealDouble
+    check_string_serialization_roundtrip(se::parse("oo"));   // Infty
+    check_string_serialization_roundtrip(se::parse("nan"));  // NaN
+    check_string_serialization_roundtrip(se::parse("pi"));   // Constant
+#ifdef HAVE_SYMENGINE_MPC
+    // ComplexMPC (real and imaginary parts at MPFR precision)
+    check_string_serialization_roundtrip(
+        se::add(se::real_mpfr(mpfr_class("0.35", 100, 10)),
+                se::mul(se::I, se::real_mpfr(mpfr_class("0.6", 100, 10)))));
+#endif
+
+    // One-argument functions (trigonometric)
+    check_string_serialization_roundtrip(
+        se::parse("sin(x) + cos(x) + tan(x) + cot(x) + sec(x) + csc(x)"));
+    // One-argument functions (inverse trigonometric)
+    check_string_serialization_roundtrip(
+        se::parse("asin(x) + acos(x) + atan(x) + acot(x) + asec(x) + acsc(x)"));
+    // One-argument functions (hyperbolic)
+    check_string_serialization_roundtrip(
+        se::parse("sinh(x) + cosh(x) + tanh(x) + coth(x) + sech(x) + csch(x)"));
+    // One-argument functions (inverse hyperbolic)
+    check_string_serialization_roundtrip(se::parse(
+        "asinh(x) + acosh(x) + atanh(x) + acoth(x) + asech(x) + acsch(x)"));
+    // One-argument functions (other): Log, Gamma, Abs, Sign, Erf, Erfc,
+    // LogGamma, LambertW, Dirichlet_eta, Floor, Ceiling, PrimePi, Primorial
+    check_string_serialization_roundtrip(
+        se::parse("log(x) + gamma(x) + abs(x) + sign(x) + erf(x) + erfc(x)"
+                  " + loggamma(x) + lambertw(x) + dirichlet_eta(x) + floor(x)"
+                  " + ceiling(x) + primepi(x) + primorial(x)"));
+    // One-argument functions not reachable through the parser
+    check_string_serialization_roundtrip(se::conjugate(se::symbol("x")));
+    check_string_serialization_roundtrip(se::truncate(se::symbol("x")));
+    check_string_serialization_roundtrip(se::unevaluated_expr(se::symbol("x")));
+
+    // Two-argument functions: ATan2, Zeta, LowerGamma, UpperGamma, PolyGamma,
+    // Beta, KroneckerDelta
+    check_string_serialization_roundtrip(se::parse(
+        "atan2(x, y) + zeta(x, y) + lowergamma(x, y) + uppergamma(x, y)"
+        " + polygamma(x, y) + beta(x, y) + kronecker_delta(x, y)"));
+    // Multi-argument functions: Max, Min, LeviCivita, FunctionSymbol
+    check_string_serialization_roundtrip(
+        se::parse("max(x, y, z) + min(x, y) + levi_civita(x, y, z) + f(x, y)"));
+
+    // Relational
+    check_string_serialization_roundtrip(se::parse("Eq(x, y)")); // Equality
+    check_string_serialization_roundtrip(se::parse("Ne(x, y)")); // Unequality
+    check_string_serialization_roundtrip(se::parse("Le(x, y)")); // LessThan
+    check_string_serialization_roundtrip(
+        se::parse("Lt(x, y)")); // StrictLessThan
+
+    // Logic
+    check_string_serialization_roundtrip(se::boolean(true)); // BooleanAtom
+    check_string_serialization_roundtrip(se::parse("And(Lt(x, y), Lt(y, z))"));
+    check_string_serialization_roundtrip(se::parse("Or(Lt(x, y), Lt(y, z))"));
+    check_string_serialization_roundtrip(se::parse("Xor(Lt(x, y), Lt(y, z))"));
+    check_string_serialization_roundtrip(
+        se::logical_not(se::contains(se::symbol("x"), se::integers()))); // Not
+    check_string_serialization_roundtrip(
+        se::contains(se::symbol("x"), se::reals())); // Contains
+
+    // Sets
+    check_string_serialization_roundtrip(se::emptyset());
+    check_string_serialization_roundtrip(se::universalset());
+    check_string_serialization_roundtrip(se::integers());
+    check_string_serialization_roundtrip(se::rationals());
+    check_string_serialization_roundtrip(
+        se::interval(se::integer(1), se::integer(5)));
+    check_string_serialization_roundtrip(
+        se::finiteset({se::integer(1), se::integer(2), se::integer(3)}));
+    check_string_serialization_roundtrip(
+        se::set_union({se::interval(se::integer(0), se::integer(1)),
+                       se::interval(se::integer(2), se::integer(3))}));
+    check_string_serialization_roundtrip(
+        se::set_complement(se::reals(), se::finiteset({se::integer(0)})));
+    check_string_serialization_roundtrip(
+        se::imageset(se::symbol("x"), se::mul(se::integer(2), se::symbol("x")),
+                     se::integers()));
+    check_string_serialization_roundtrip(se::conditionset(
+        se::symbol("x"),
+        se::Eq(se::mul(se::symbol("x"), se::symbol("x")), se::integer(2))));
+
+    // Piecewise
+    check_string_serialization_roundtrip(se::piecewise(
+        {{se::symbol("x"), se::contains(se::symbol("x"), se::reals())}}));
+
+    // Derivative and Subs
+    check_string_serialization_roundtrip(se::Derivative::create(
+        se::function_symbol("f", se::vec_basic{se::symbol("x")}),
+        {se::symbol("x")}));
+    check_string_serialization_roundtrip(se::Subs::create(
+        se::Derivative::create(
+            se::function_symbol(
+                "f", se::vec_basic{se::symbol("x"), se::symbol("y")}),
+            {se::symbol("x")}),
+        {{se::symbol("x"), se::add(se::symbol("x"), se::symbol("y"))}}));
+
+    // UIntPoly: univariate polynomial with integer coefficients,
+    // i.e. 2 - 5*x**3 + 11*x**7
+    check_string_serialization_roundtrip(
+        se::UIntPoly::from_dict(se::symbol("x"), {{0, se::integer_class(2)},
+                                                  {3, se::integer_class(-5)},
+                                                  {7, se::integer_class(11)}}));
+    // URatPoly: univariate polynomial with rational coefficients,
+    // i.e. 1/2 + 3/4*x**2 - 7/6*x**5
+    check_string_serialization_roundtrip(se::URatPoly::from_dict(
+        se::symbol("x"),
+        {{0, se::rational_class(se::integer_class(1), se::integer_class(2))},
+         {2, se::rational_class(se::integer_class(3), se::integer_class(4))},
+         {5,
+          se::rational_class(se::integer_class(-7), se::integer_class(6))}}));
+    // UExprPoly: univariate polynomial with symbolic expression coefficients,
+    // i.e. a + 3*x**2 + a*b*x**5
+    check_string_serialization_roundtrip(se::UExprPoly::from_dict(
+        se::symbol("x"),
+        {{0, se::Expression(se::symbol("a"))},
+         {2, se::Expression(se::integer(3))},
+         {5, se::Expression(se::mul(se::symbol("a"), se::symbol("b")))}}));
+    // MIntPoly: multivariate polynomial with integer coefficients,
+    // i.e. 2*y + 3*x - 5*x**2*y**2
+    check_string_serialization_roundtrip(se::MIntPoly::from_dict(
+        {se::symbol("x"), se::symbol("y")}, {{{0, 1}, se::integer_class(2)},
+                                             {{1, 0}, se::integer_class(3)},
+                                             {{2, 2}, se::integer_class(-5)}}));
+    // MExprPoly: multivariate polynomial with symbolic expression coefficients,
+    // i.e. x + z*y + x*z*x**2*y**2
+    check_string_serialization_roundtrip(se::MExprPoly::from_dict(
+        {se::symbol("x"), se::symbol("y")},
+        {{{1, 0}, se::Expression(se::integer(1))},
+         {{0, 1}, se::Expression(se::symbol("z"))},
+         {{2, 2}, se::Expression(se::mul(se::symbol("x"), se::symbol("z")))}}));
+#ifdef HAVE_SYMENGINE_FLINT
+    // UIntPolyFlint: Flint-backed univariate integer polynomial
+    check_string_serialization_roundtrip(se::UIntPolyFlint::from_dict(
+        se::symbol("x"), {{0, se::integer_class(2)},
+                          {3, se::integer_class(-5)},
+                          {7, se::integer_class(11)}}));
+    // URatPolyFlint: Flint-backed univariate rational polynomial
+    check_string_serialization_roundtrip(se::URatPolyFlint::from_dict(
+        se::symbol("x"),
+        {{0, se::rational_class(se::integer_class(1), se::integer_class(2))},
+         {2, se::rational_class(se::integer_class(3), se::integer_class(4))},
+         {5,
+          se::rational_class(se::integer_class(-7), se::integer_class(6))}}));
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+    // UIntPolyPiranha: Piranha-backed univariate integer polynomial
+    check_string_serialization_roundtrip(se::UIntPolyPiranha::from_dict(
+        se::symbol("x"), {{0, se::integer_class(2)},
+                          {3, se::integer_class(-5)},
+                          {7, se::integer_class(11)}}));
+    // URatPolyPiranha: Piranha-backed univariate rational polynomial
+    check_string_serialization_roundtrip(se::URatPolyPiranha::from_dict(
+        se::symbol("x"),
+        {{0, se::rational_class(se::integer_class(1), se::integer_class(2))},
+         {2, se::rational_class(se::integer_class(3), se::integer_class(4))},
+         {5,
+          se::rational_class(se::integer_class(-7), se::integer_class(6))}}));
+#endif
 }
 
 TEST_CASE("Test serialization exception", "[serialize-cereal]")
