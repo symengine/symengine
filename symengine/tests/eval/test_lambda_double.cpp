@@ -469,6 +469,8 @@ TEST_CASE("Check llvm and lambda are equal for lowered functions",
         llvm_float.init({x}, *test_case.expr);
 
         const double expected = lambda.call({test_case.input});
+        std::cout << "expected: " << expected << std::endl;
+        std::cout << "result: " << llvm_double.call({test_case.input}) << std::endl;
         REQUIRE(llvm_double.call({test_case.input}) == Approx(expected));
         REQUIRE(llvm_float.call({static_cast<float>(test_case.input)})
                 == Approx(expected).epsilon(1e-5));
