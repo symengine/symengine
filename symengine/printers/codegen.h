@@ -9,20 +9,15 @@
 namespace SymEngine
 {
 
-RCP<const Basic> lower_codegen_expr(const RCP<const Basic> &x);
-RCP<const Basic> lower_codegen_expr(const Basic &x);
-
-class CodePrinter : public BaseVisitor<CodePrinter, StrPrinter>
+class CodePrinter : public RewriteTrigVisitor<CodePrinter, StrPrinter>
 {
 public:
     explicit CodePrinter(CodePrinterPrecision precision
                          = CodePrinterPrecision::Double);
     using StrPrinter::apply;
+    using RewriteTrigVisitor<CodePrinter, StrPrinter>::bvisit;
     using StrPrinter::bvisit;
     using StrPrinter::str_;
-    std::string apply(const RCP<const Basic> &b);
-    std::string apply(const vec_basic &v);
-    std::string apply(const Basic &b);
     void bvisit(const Basic &x);
     void bvisit(const Complex &x);
     void bvisit(const Dummy &x);

@@ -24,7 +24,7 @@ namespace SymEngine
 
 class IRBuilder;
 
-class LLVMVisitor : public BaseVisitor<LLVMVisitor>
+class LLVMVisitor : public RewriteTrigVisitor<LLVMVisitor>
 {
 protected:
     vec_basic symbols;
