@@ -35,7 +35,6 @@
 #include <fstream>
 
 #include <symengine/llvm_double.h>
-#include <symengine/printers/codegen.h>
 #include <symengine/eval_double.h>
 #include <symengine/eval.h>
 
@@ -173,17 +172,12 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     auto it = F->args().begin();
     auto out = &(*(it + 1));
     std::vector<llvm::Value *> output_vals;
-    vec_basic lowered_outputs;
-    lowered_outputs.reserve(outputs.size());
-    for (const auto &output : outputs) {
-        lowered_outputs.push_back(lower_codegen_expr(output));
-    }
 
     if (symbolic_cse) {
         vec_basic reduced_exprs;
         vec_pair replacements;
         // cse the outputs
-        SymEngine::cse(replacements, reduced_exprs, lowered_outputs);
+        SymEngine::cse(replacements, reduced_exprs, outputs);
         for (auto &rep : replacements) {
             // Store the replacement symbol values in a dictionary
             replacement_symbol_ptrs[rep.first] = apply(*(rep.second));
@@ -195,7 +189,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     } else {
         // Generate IR for all the output exprs and save references
         for (unsigned i = 0; i < outputs.size(); i++) {
-            output_vals.push_back(apply(*lowered_outputs[i]));
+            output_vals.push_back(apply(*outputs[i]));
         }
     }
 
