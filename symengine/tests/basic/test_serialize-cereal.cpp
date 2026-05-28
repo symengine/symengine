@@ -48,9 +48,12 @@ template <typename T>
 void check_string_serialization_roundtrip(RCP<const T> basic1)
 {
     RCP<const Basic> basic2 = loads<T>(dumps<T>(basic1));
+    CAPTURE(*basic1);
+    CAPTURE(*basic2);
     REQUIRE(eq(*basic1, *basic2));
 
     RCP<const Basic> basic3 = loads<Basic>(dumps<Basic>(basic1));
+    CAPTURE(*basic3);
     REQUIRE(eq(*basic1, *basic3));
 }
 
@@ -83,6 +86,15 @@ TEST_CASE("Test serialization using cereal", "[serialize-cereal]")
     check_string_serialization_roundtrip(
         real_mpfr(mpfr_class("0.35", 100, 10)));
 #endif
+    // Rational
+    check_string_serialization_roundtrip(
+        se::parse("x**3/6 + x**9/135 + x**15/600"));
+    // Complex
+    check_string_serialization_roundtrip(
+        se::parse("(1 + 2*I)*x**2 + (3 + 4*I)*x**8 + (5 + 6*I)*x**14"));
+    // Rational and Complex
+    check_string_serialization_roundtrip(
+        se::parse("sin(x)**3/6 + (2 + 3*I)*cos(y)/135 + log(x)/(600*sin(z))"));
 }
 
 TEST_CASE("Test serialization exception", "[serialize-cereal]")
