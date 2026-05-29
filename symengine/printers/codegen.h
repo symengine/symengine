@@ -73,7 +73,7 @@ protected:
                                             const std::string &func_name);
 };
 
-class C89CodePrinter : public BaseVisitor<C89CodePrinter, CodePrinter>
+class C89CodePrinter : public RewriteTrigVisitor<C89CodePrinter, CodePrinter>
 {
 public:
     explicit C89CodePrinter(CodePrinterPrecision precision
@@ -86,7 +86,7 @@ public:
                     const RCP<const Basic> &b) override;
 };
 
-class C99CodePrinter : public BaseVisitor<C99CodePrinter, C89CodePrinter>
+class C99CodePrinter : public RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>
 {
 public:
     explicit C99CodePrinter(CodePrinterPrecision precision
@@ -101,7 +101,8 @@ public:
     void bvisit(const LogGamma &x);
 };
 
-class CudaCodePrinter : public BaseVisitor<CudaCodePrinter, C99CodePrinter>
+class CudaCodePrinter
+    : public RewriteTrigVisitor<CudaCodePrinter, C99CodePrinter>
 {
 public:
     explicit CudaCodePrinter(CodePrinterPrecision precision
@@ -115,7 +116,8 @@ public:
     void bvisit(const Infty &x);
 };
 
-class MetalCodePrinter : public BaseVisitor<MetalCodePrinter, CodePrinter>
+class MetalCodePrinter
+    : public RewriteTrigVisitor<MetalCodePrinter, CodePrinter>
 {
 public:
     explicit MetalCodePrinter(CodePrinterPrecision precision
@@ -139,7 +141,7 @@ protected:
     format_codegen_function_name(const std::string &name) const override;
 };
 
-class JSCodePrinter : public BaseVisitor<JSCodePrinter, CodePrinter>
+class JSCodePrinter : public RewriteTrigVisitor<JSCodePrinter, CodePrinter>
 {
 public:
     using CodePrinter::apply;

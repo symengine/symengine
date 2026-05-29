@@ -364,6 +364,7 @@ template <class Derived, class Base = Visitor>
 class RewriteTrigVisitor : public BaseVisitor<Derived, Base>
 {
 public:
+    using BaseVisitor<Derived, Base>::BaseVisitor;
     using BaseVisitor<Derived, Base>::visit;
 
     void visit(const Cot &x)

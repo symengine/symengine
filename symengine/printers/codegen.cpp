@@ -389,7 +389,7 @@ void CodePrinter::bvisit(const RealMPFR &x)
 #endif
 
 C89CodePrinter::C89CodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<C89CodePrinter, CodePrinter>(precision)
+    : RewriteTrigVisitor<C89CodePrinter, CodePrinter>(precision)
 {
     if (precision_ == CodePrinterPrecision::Half) {
         throw SymEngineException(
@@ -425,7 +425,7 @@ void C89CodePrinter::_print_pow(std::ostringstream &o,
 }
 
 C99CodePrinter::C99CodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<C99CodePrinter, C89CodePrinter>(precision)
+    : RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>(precision)
 {
 }
 
@@ -471,7 +471,7 @@ void C99CodePrinter::bvisit(const LogGamma &x)
 }
 
 CudaCodePrinter::CudaCodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<CudaCodePrinter, C99CodePrinter>(precision)
+    : RewriteTrigVisitor<CudaCodePrinter, C99CodePrinter>(precision)
 {
 }
 
@@ -511,7 +511,7 @@ void CudaCodePrinter::bvisit(const Infty &x)
 }
 
 MetalCodePrinter::MetalCodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<MetalCodePrinter, CodePrinter>(precision)
+    : RewriteTrigVisitor<MetalCodePrinter, CodePrinter>(precision)
 {
     if (precision_ == CodePrinterPrecision::Double) {
         throw SymEngineException(
