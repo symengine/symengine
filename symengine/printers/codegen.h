@@ -15,7 +15,6 @@ public:
     explicit CodePrinter(CodePrinterPrecision precision
                          = CodePrinterPrecision::Double);
     using StrPrinter::apply;
-    using RewriteTrigVisitor<CodePrinter, StrPrinter>::bvisit;
     using StrPrinter::bvisit;
     using StrPrinter::str_;
     void bvisit(const Basic &x);
