@@ -105,6 +105,8 @@ public:
 class LLVMDoubleVisitor : public LLVMVisitor
 {
 public:
+    using LLVMVisitor::visit;
+
     LLVMDoubleVisitor();
     ~LLVMDoubleVisitor() override;
     double call(const std::vector<double> &vec) const;
@@ -130,6 +132,8 @@ public:
 class LLVMFloatVisitor : public LLVMVisitor
 {
 public:
+    using LLVMVisitor::visit;
+
     LLVMFloatVisitor();
     ~LLVMFloatVisitor() override;
     float call(const std::vector<float> &vec) const;
@@ -157,6 +161,8 @@ public:
 class LLVMLongDoubleVisitor : public LLVMVisitor
 {
 public:
+    using LLVMVisitor::visit;
+
     LLVMLongDoubleVisitor();
     ~LLVMLongDoubleVisitor() override;
     long double call(const std::vector<long double> &vec) const;
