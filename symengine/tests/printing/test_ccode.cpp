@@ -50,7 +50,9 @@ using SymEngine::JSCodePrinter;
 using SymEngine::Le;
 using SymEngine::log;
 using SymEngine::loggamma;
+using SymEngine::logical_and;
 using SymEngine::logical_not;
+using SymEngine::logical_or;
 using SymEngine::logical_xor;
 using SymEngine::Lt;
 using SymEngine::max;
@@ -91,6 +93,12 @@ TEST_CASE("C-code printers", "[CodePrinter]")
     REQUIRE(c89_float.apply(pi) == "acosf(-1.0f)");
     REQUIRE(c99.apply(pi) == "acos(-1)");
     REQUIRE(c99_float.apply(pi) == "acosf(-1.0f)");
+
+    auto x = symbol("x");
+    REQUIRE(c89.apply(pow(E, x)) == "exp(x)");
+    REQUIRE(c89.apply(pow(x, integer(-1))) == "1/x");
+    REQUIRE(c89.apply(sqrt(x)) == "sqrt(x)");
+    REQUIRE(c89.apply(pow(integer(2), x)) == "pow(2, x)");
 }
 
 TEST_CASE("CUDA-code printers", "[CudaCodePrinter]")
@@ -189,6 +197,22 @@ TEST_CASE("Codegen boolean support", "[ccode][cudacode]")
     REQUIRE(ccode(*boolTrue, CodePrinterPrecision::Float) == "1.0f");
     REQUIRE(cudacode(*boolTrue) == "1.0");
     REQUIRE(cudacode(*boolTrue, CodePrinterPrecision::Float) == "1.0f");
+
+    auto and_expr = logical_and({Lt(x, integer(2)), Le(y, x)});
+    REQUIRE(ccode(*and_expr) == "((x < 2) && (y <= x))");
+    REQUIRE(ccode(*and_expr, CodePrinterPrecision::Float)
+            == "((x < 2.0f) && (y <= x))");
+    REQUIRE(cudacode(*and_expr) == "((x < 2.0) && (y <= x))");
+    REQUIRE(cudacode(*and_expr, CodePrinterPrecision::Float)
+            == "((x < 2.0f) && (y <= x))");
+
+    auto or_expr = logical_or({Lt(x, integer(2)), Le(y, x)});
+    REQUIRE(ccode(*or_expr) == "((x < 2) || (y <= x))");
+    REQUIRE(ccode(*or_expr, CodePrinterPrecision::Float)
+            == "((x < 2.0f) || (y <= x))");
+    REQUIRE(cudacode(*or_expr) == "((x < 2.0) || (y <= x))");
+    REQUIRE(cudacode(*or_expr, CodePrinterPrecision::Float)
+            == "((x < 2.0f) || (y <= x))");
 
     auto xor_expr = logical_xor({Lt(x, integer(2)), Le(y, x)});
     REQUIRE(ccode(*xor_expr) == "(((x < 2) != 0) != ((y <= x) != 0))");
@@ -430,11 +454,13 @@ TEST_CASE("Functions", "[ccode][cudacode][metalcode]")
     REQUIRE(ccode(*p, CodePrinterPrecision::Float) == "ceilf(x)");
     REQUIRE(cudacode(*p) == "ceil(x)");
     REQUIRE(cudacode(*p, CodePrinterPrecision::Float) == "ceilf(x)");
+    REQUIRE(metalcode(*p) == "ceil(x)");
     p = truncate(x);
     REQUIRE(ccode(*p) == "trunc(x)");
     REQUIRE(ccode(*p, CodePrinterPrecision::Float) == "truncf(x)");
     REQUIRE(cudacode(*p) == "trunc(x)");
     REQUIRE(cudacode(*p, CodePrinterPrecision::Float) == "truncf(x)");
+    REQUIRE(metalcode(*p) == "trunc(x)");
     p = erf(x);
     REQUIRE(ccode(*p) == "erf(x)");
     REQUIRE(ccode(*p, CodePrinterPrecision::Float) == "erff(x)");
