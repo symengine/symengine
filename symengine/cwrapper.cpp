@@ -147,6 +147,19 @@ static_assert(std::alignment_of<CRCPBasic>::value
                   == std::alignment_of<CRCPBasic_C>::value,
               "Alignment of 'basic' is not correct");
 
+extern "C++" {
+static inline SymEngine::RCP<const SymEngine::Basic> &basic_rcp(basic_struct *s)
+{
+    return reinterpret_cast<CRCPBasic *>(s)->m;
+}
+
+static inline const SymEngine::RCP<const SymEngine::Basic> &
+basic_rcp(const basic_struct *s)
+{
+    return reinterpret_cast<const CRCPBasic *>(s)->m;
+}
+}
+
 void basic_new_stack(basic s)
 {
     new (s) CRCPBasic();
@@ -154,17 +167,17 @@ void basic_new_stack(basic s)
 
 void basic_free_stack(basic s)
 {
-    s->m.~RCP();
+    basic_rcp(s).~RCP();
 }
 
 basic_struct *basic_new_heap()
 {
-    return new CRCPBasic();
+    return reinterpret_cast<basic_struct *>(new CRCPBasic());
 }
 
 void basic_free_heap(basic_struct *s)
 {
-    delete s;
+    delete reinterpret_cast<CRCPBasic *>(s);
 }
 
 const char *symengine_version()
@@ -174,72 +187,72 @@ const char *symengine_version()
 
 void basic_const_set(basic s, const char *c)
 {
-    s->m = SymEngine::constant(std::string(c));
+    basic_rcp(s) = SymEngine::constant(std::string(c));
 }
 
 void basic_const_zero(basic s)
 {
-    s->m = SymEngine::zero;
+    basic_rcp(s) = SymEngine::zero;
 }
 
 void basic_const_one(basic s)
 {
-    s->m = SymEngine::one;
+    basic_rcp(s) = SymEngine::one;
 }
 
 void basic_const_minus_one(basic s)
 {
-    s->m = SymEngine::minus_one;
+    basic_rcp(s) = SymEngine::minus_one;
 }
 
 void basic_const_I(basic s)
 {
-    s->m = SymEngine::I;
+    basic_rcp(s) = SymEngine::I;
 }
 
 void basic_const_pi(basic s)
 {
-    s->m = SymEngine::pi;
+    basic_rcp(s) = SymEngine::pi;
 }
 
 void basic_const_E(basic s)
 {
-    s->m = SymEngine::E;
+    basic_rcp(s) = SymEngine::E;
 }
 
 void basic_const_EulerGamma(basic s)
 {
-    s->m = SymEngine::EulerGamma;
+    basic_rcp(s) = SymEngine::EulerGamma;
 }
 
 void basic_const_Catalan(basic s)
 {
-    s->m = SymEngine::Catalan;
+    basic_rcp(s) = SymEngine::Catalan;
 }
 
 void basic_const_GoldenRatio(basic s)
 {
-    s->m = SymEngine::GoldenRatio;
+    basic_rcp(s) = SymEngine::GoldenRatio;
 }
 
 void basic_const_infinity(basic s)
 {
-    s->m = SymEngine::Inf;
+    basic_rcp(s) = SymEngine::Inf;
 }
 
 void basic_const_neginfinity(basic s)
 {
-    s->m = SymEngine::NegInf;
+    basic_rcp(s) = SymEngine::NegInf;
 }
 
 void basic_const_complex_infinity(basic s)
 {
-    s->m = SymEngine::ComplexInf;
+    basic_rcp(s) = SymEngine::ComplexInf;
 }
 
 void basic_const_nan(basic s)
 {
-    s->m = SymEngine::Nan;
+    basic_rcp(s) = SymEngine::Nan;
 }
 
 TypeID basic_get_class_id(const char *c)
@@ -273,56 +286,56 @@ char *basic_get_class_from_id(TypeID id)
 
 TypeID basic_get_type(const basic s)
 {
-    return static_cast<TypeID>(s->m->get_type_code());
+    return static_cast<TypeID>(basic_rcp(s)->get_type_code());
 }
 
 CWRAPPER_OUTPUT_TYPE symbol_set(basic s, const char *c)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::symbol(std::string(c));
+    basic_rcp(s) = SymEngine::symbol(std::string(c));
     CWRAPPER_END
 }
 
 int number_is_zero(const basic s)
 {
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-    return (int)((down_cast<const Number &>(*(s->m))).is_zero());
+    SYMENGINE_ASSERT(is_a_Number(*(basic_rcp(s))));
+    return (int)((down_cast<const Number &>(*(basic_rcp(s)))).is_zero());
 }
 
 int number_is_negative(const basic s)
 {
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-    return (int)((down_cast<const Number &>(*(s->m))).is_negative());
+    SYMENGINE_ASSERT(is_a_Number(*(basic_rcp(s))));
+    return (int)((down_cast<const Number &>(*(basic_rcp(s)))).is_negative());
 }
 
 int number_is_positive(const basic s)
 {
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-    return (int)((down_cast<const Number &>(*(s->m))).is_positive());
+    SYMENGINE_ASSERT(is_a_Number(*(basic_rcp(s))));
+    return (int)((down_cast<const Number &>(*(basic_rcp(s)))).is_positive());
 }
 
 int number_is_complex(const basic s)
 {
-    SYMENGINE_ASSERT(is_a_Number(*(s->m)));
-    return (int)((down_cast<const Number &>(*(s->m))).is_complex());
+    SYMENGINE_ASSERT(is_a_Number(*(basic_rcp(s))));
+    return (int)((down_cast<const Number &>(*(basic_rcp(s)))).is_complex());
 }
 
 int basic_has_symbol(const basic e, const basic s)
 {
-    return (int)(has_symbol(*(e->m), *(s->m)));
+    return (int)(has_symbol(*(basic_rcp(e)), *(basic_rcp(s))));
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_si(basic s, long i)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::integer(integer_class(i));
+    basic_rcp(s) = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE integer_set_ui(basic s, unsigned long i)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::integer(integer_class(i));
+    basic_rcp(s) = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
 
@@ -330,7 +343,7 @@ CWRAPPER_OUTPUT_TYPE integer_set_ui(basic s, unsigned long i)
 CWRAPPER_OUTPUT_TYPE integer_set_mpz(basic s, const mpz_t i)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::integer(integer_class(i));
+    basic_rcp(s) = SymEngine::integer(integer_class(i));
     CWRAPPER_END
 }
 #endif
@@ -338,21 +351,21 @@ CWRAPPER_OUTPUT_TYPE integer_set_mpz(basic s, const mpz_t i)
 CWRAPPER_OUTPUT_TYPE integer_set_str(basic s, const char *c)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::integer(integer_class(c));
+    basic_rcp(s) = SymEngine::integer(integer_class(c));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE real_double_set_d(basic s, double d)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::real_double(d);
+    basic_rcp(s) = SymEngine::real_double(d);
     CWRAPPER_END
 }
 
 double real_double_get_d(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<RealDouble>(*(s->m)));
-    return (down_cast<const RealDouble &>(*(s->m))).as_double();
+    SYMENGINE_ASSERT(is_a<RealDouble>(*(basic_rcp(s))));
+    return (down_cast<const RealDouble &>(*(basic_rcp(s)))).as_double();
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
@@ -362,45 +375,48 @@ CWRAPPER_OUTPUT_TYPE real_mpfr_set_d(basic s, double d, int prec)
     CWRAPPER_BEGIN
     mpfr_class mc = mpfr_class(prec);
     mpfr_set_d(mc.get_mpfr_t(), d, MPFR_RNDN);
-    s->m = SymEngine::real_mpfr(std::move(mc));
+    basic_rcp(s) = SymEngine::real_mpfr(std::move(mc));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE real_mpfr_set_str(basic s, const char *c, int prec)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
+    basic_rcp(s) = SymEngine::real_mpfr(mpfr_class(c, prec, 10));
     CWRAPPER_END
 }
 
 double real_mpfr_get_d(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(basic_rcp(s))));
     return mpfr_get_d(
-        ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_mpfr_t(),
+        ((down_cast<const RealMPFR &>(*(basic_rcp(s)))).as_mpfr()).get_mpfr_t(),
         MPFR_RNDN);
 }
 
 CWRAPPER_OUTPUT_TYPE real_mpfr_set(basic s, mpfr_srcptr m)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::real_mpfr(mpfr_class(m));
+    basic_rcp(s) = SymEngine::real_mpfr(mpfr_class(m));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE real_mpfr_get(mpfr_ptr m, const basic s)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    mpfr_set(m, ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_mpfr_t(),
-             MPFR_RNDN);
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(basic_rcp(s))));
+    mpfr_set(
+        m,
+        ((down_cast<const RealMPFR &>(*(basic_rcp(s)))).as_mpfr()).get_mpfr_t(),
+        MPFR_RNDN);
     CWRAPPER_END
 }
 
 mpfr_prec_t real_mpfr_get_prec(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<RealMPFR>(*(s->m)));
-    return ((down_cast<const RealMPFR &>(*(s->m))).as_mpfr()).get_prec();
+    SYMENGINE_ASSERT(is_a<RealMPFR>(*(basic_rcp(s))));
+    return ((down_cast<const RealMPFR &>(*(basic_rcp(s)))).as_mpfr())
+        .get_prec();
 }
 
 #endif // HAVE_SYMENGINE_MPFR
@@ -408,38 +424,44 @@ mpfr_prec_t real_mpfr_get_prec(const basic s)
 CWRAPPER_OUTPUT_TYPE complex_base_real_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
-    s->m = (down_cast<const ComplexBase &>(*(com->m))).real_part();
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(basic_rcp(com))));
+    basic_rcp(s)
+        = (down_cast<const ComplexBase &>(*(basic_rcp(com)))).real_part();
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE complex_base_imaginary_part(basic s, const basic com)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(com->m)));
-    s->m = (down_cast<const ComplexBase &>(*(com->m))).imaginary_part();
+    SYMENGINE_ASSERT(SymEngine::is_a_Complex(*(basic_rcp(com))));
+    basic_rcp(s)
+        = (down_cast<const ComplexBase &>(*(basic_rcp(com)))).imaginary_part();
     CWRAPPER_END
 }
 
 signed long integer_get_si(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mp_get_si((down_cast<const Integer &>(*(s->m))).as_integer_class());
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(s))));
+    return mp_get_si(
+        (down_cast<const Integer &>(*(basic_rcp(s)))).as_integer_class());
 }
 
 unsigned long integer_get_ui(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
-    return mp_get_ui((down_cast<const Integer &>(*(s->m))).as_integer_class());
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(s))));
+    return mp_get_ui(
+        (down_cast<const Integer &>(*(basic_rcp(s)))).as_integer_class());
 }
 
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(s->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(s))));
     mpz_set(
-        a, get_mpz_t((down_cast<const Integer &>(*(s->m))).as_integer_class()));
+        a,
+        get_mpz_t(
+            (down_cast<const Integer &>(*(basic_rcp(s)))).as_integer_class()));
     CWRAPPER_END
 }
 #endif
@@ -447,14 +469,14 @@ CWRAPPER_OUTPUT_TYPE integer_get_mpz(mpz_t a, const basic s)
 CWRAPPER_OUTPUT_TYPE rational_set_si(basic s, long a, long b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
+    basic_rcp(s) = SymEngine::Rational::from_mpq(rational_class(a, b));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE rational_set_ui(basic s, unsigned long a, unsigned long b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::Rational::from_mpq(rational_class(a, b));
+    basic_rcp(s) = SymEngine::Rational::from_mpq(rational_class(a, b));
     CWRAPPER_END
 }
 
@@ -463,9 +485,9 @@ CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic a, const basic b)
     if (not is_a_Integer(a) or not is_a_Integer(b)) {
         return SYMENGINE_RUNTIME_ERROR;
     }
-    s->m = SymEngine::Rational::from_two_ints(
-        *(rcp_static_cast<const Integer>(a->m)),
-        *(rcp_static_cast<const Integer>(b->m)));
+    basic_rcp(s) = SymEngine::Rational::from_two_ints(
+        *(rcp_static_cast<const Integer>(basic_rcp(a))),
+        *(rcp_static_cast<const Integer>(basic_rcp(b))));
     return SYMENGINE_NO_EXCEPTION;
 }
 
@@ -473,16 +495,16 @@ CWRAPPER_OUTPUT_TYPE rational_set(basic s, const basic a, const basic b)
 CWRAPPER_OUTPUT_TYPE rational_get_mpq(mpq_t a, const basic s)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Rational>(*(s->m)));
-    mpq_set(a, get_mpq_t(
-                   (down_cast<const Rational &>(*(s->m))).as_rational_class()));
+    SYMENGINE_ASSERT(is_a<Rational>(*(basic_rcp(s))));
+    mpq_set(a, get_mpq_t((down_cast<const Rational &>(*(basic_rcp(s))))
+                             .as_rational_class()));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::Rational::from_mpq(rational_class(i));
+    basic_rcp(s) = SymEngine::Rational::from_mpq(rational_class(i));
     CWRAPPER_END
 }
 #endif
@@ -490,18 +512,18 @@ CWRAPPER_OUTPUT_TYPE rational_set_mpq(basic s, const mpq_t i)
 CWRAPPER_OUTPUT_TYPE complex_set(basic s, const basic re, const basic im)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::Complex::from_two_nums(
-        *(rcp_static_cast<const Number>(re->m)),
-        *(rcp_static_cast<const Number>(im->m)));
+    basic_rcp(s) = SymEngine::Complex::from_two_nums(
+        *(rcp_static_cast<const Number>(basic_rcp(re))),
+        *(rcp_static_cast<const Number>(basic_rcp(im))));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::Complex::from_two_rats(
-        *(rcp_static_cast<const Rational>(re->m)),
-        *(rcp_static_cast<const Rational>(im->m)));
+    basic_rcp(s) = SymEngine::Complex::from_two_rats(
+        *(rcp_static_cast<const Rational>(basic_rcp(re))),
+        *(rcp_static_cast<const Rational>(basic_rcp(im))));
     CWRAPPER_END
 }
 
@@ -509,25 +531,28 @@ CWRAPPER_OUTPUT_TYPE complex_set_rat(basic s, const basic re, const basic im)
 CWRAPPER_OUTPUT_TYPE complex_set_mpq(basic s, const mpq_t re, const mpq_t im)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
+    basic_rcp(s)
+        = SymEngine::Complex::from_mpq(rational_class(re), rational_class(im));
     CWRAPPER_END
 }
 #endif
 
 dcomplex complex_double_get(const basic s)
 {
-    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(s->m)));
+    SYMENGINE_ASSERT(is_a<ComplexDouble>(*(basic_rcp(s))));
     dcomplex d;
-    d.real = (down_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
+    d.real = (down_cast<const ComplexDouble &>(*(basic_rcp(s)))
+                  .as_complex_double())
                  .real();
-    d.imag = (down_cast<const ComplexDouble &>(*(s->m)).as_complex_double())
+    d.imag = (down_cast<const ComplexDouble &>(*(basic_rcp(s)))
+                  .as_complex_double())
                  .imag();
     return d;
 }
 
 char *basic_dumps(const basic s, unsigned long *size)
 {
-    std::string str = s->m->dumps();
+    std::string str = basic_rcp(s)->dumps();
     *size = str.length();
     auto cc = new char[*size];
     str.copy(cc, *size);
@@ -538,7 +563,7 @@ CWRAPPER_OUTPUT_TYPE basic_loads(basic s, const char *c, unsigned long size)
 {
     CWRAPPER_BEGIN
     std::string data(c, size);
-    s->m = Basic::loads(data);
+    basic_rcp(s) = Basic::loads(data);
     CWRAPPER_END
 }
 
@@ -547,21 +572,22 @@ CWRAPPER_OUTPUT_TYPE basic_diff(basic s, const basic expr, basic const symbol)
     if (not is_a_Symbol(symbol))
         return SYMENGINE_RUNTIME_ERROR;
     CWRAPPER_BEGIN
-    s->m = expr->m->diff(rcp_static_cast<const Symbol>(symbol->m));
+    basic_rcp(s) = basic_rcp(expr)->diff(
+        rcp_static_cast<const Symbol>(basic_rcp(symbol)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_assign(basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    a->m = b->m;
+    basic_rcp(a) = basic_rcp(b);
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_parse(basic b, const char *str)
 {
     CWRAPPER_BEGIN
-    b->m = SymEngine::parse(str);
+    basic_rcp(b) = SymEngine::parse(str);
     CWRAPPER_END
 }
 
@@ -569,9 +595,9 @@ CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor)
 {
     CWRAPPER_BEGIN
     if (convert_xor > 0) {
-        b->m = SymEngine::parse(str);
+        basic_rcp(b) = SymEngine::parse(str);
     } else {
-        b->m = SymEngine::parse(str, false);
+        basic_rcp(b) = SymEngine::parse(str, false);
     }
     CWRAPPER_END
 }
@@ -579,53 +605,53 @@ CWRAPPER_OUTPUT_TYPE basic_parse2(basic b, const char *str, int convert_xor)
 CWRAPPER_OUTPUT_TYPE basic_add(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::add(a->m, b->m);
+    basic_rcp(s) = SymEngine::add(basic_rcp(a), basic_rcp(b));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_sub(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::sub(a->m, b->m);
+    basic_rcp(s) = SymEngine::sub(basic_rcp(a), basic_rcp(b));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_mul(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::mul(a->m, b->m);
+    basic_rcp(s) = SymEngine::mul(basic_rcp(a), basic_rcp(b));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_pow(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::pow(a->m, b->m);
+    basic_rcp(s) = SymEngine::pow(basic_rcp(a), basic_rcp(b));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_div(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::div(a->m, b->m);
+    basic_rcp(s) = SymEngine::div(basic_rcp(a), basic_rcp(b));
     CWRAPPER_END
 }
 
 int basic_eq(const basic a, const basic b)
 {
-    return SymEngine::eq(*(a->m), *(b->m)) ? 1 : 0;
+    return SymEngine::eq(*(basic_rcp(a)), *(basic_rcp(b))) ? 1 : 0;
 }
 
 int basic_neq(const basic a, const basic b)
 {
-    return SymEngine::neq(*(a->m), *(b->m)) ? 1 : 0;
+    return SymEngine::neq(*(basic_rcp(a)), *(basic_rcp(b))) ? 1 : 0;
 }
 
 #define IMPLEMENT_ONE_ARG_FUNC(func)                                           \
     CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a)                  \
     {                                                                          \
         CWRAPPER_BEGIN                                                         \
-        s->m = SymEngine::func(a->m);                                          \
+        basic_rcp(s) = SymEngine::func(basic_rcp(a));                          \
         CWRAPPER_END                                                           \
     }
 
@@ -675,7 +701,7 @@ IMPLEMENT_ONE_ARG_FUNC(sign)
     CWRAPPER_OUTPUT_TYPE basic_##func(basic s, const basic a, const basic b)   \
     {                                                                          \
         CWRAPPER_BEGIN                                                         \
-        s->m = SymEngine::func(a->m, b->m);                                    \
+        basic_rcp(s) = SymEngine::func(basic_rcp(a), basic_rcp(b));            \
         CWRAPPER_END                                                           \
     }
 
@@ -691,7 +717,7 @@ IMPLEMENT_TWO_ARG_FUNC(polygamma)
     {                                                                          \
         std::string str;                                                       \
         try {                                                                  \
-            str = func(*s->m);                                                 \
+            str = func(*basic_rcp(s));                                         \
         } catch (SymEngineException & e) {                                     \
             return nullptr;                                                    \
         } catch (...) {                                                        \
@@ -709,8 +735,9 @@ IMPLEMENT_TWO_ARG_FUNC(polygamma)
         std::string str;                                                       \
         try {                                                                  \
             str = settings == nullptr                                          \
-                      ? func(*s->m)                                            \
-                      : func(*s->m, to_code_printer_precision(settings));      \
+                      ? func(*basic_rcp(s))                                    \
+                      : func(*basic_rcp(s),                                    \
+                             to_code_printer_precision(settings));             \
         } catch (SymEngineException & e) {                                     \
             return nullptr;                                                    \
         } catch (...) {                                                        \
@@ -756,70 +783,71 @@ void basic_str_free(char *s)
 
 void bool_set_true(basic s)
 {
-    s->m = SymEngine::boolTrue;
+    basic_rcp(s) = SymEngine::boolTrue;
 }
 
 void bool_set_false(basic s)
 {
-    s->m = SymEngine::boolFalse;
+    basic_rcp(s) = SymEngine::boolFalse;
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_interval(basic s, const basic start,
                                         const basic end, int left_open,
                                         int right_open)
 {
-    SYMENGINE_ASSERT(is_a_Number(*(start->m)));
-    SYMENGINE_ASSERT(is_a_Number(*(end->m)));
+    SYMENGINE_ASSERT(is_a_Number(*(basic_rcp(start))));
+    SYMENGINE_ASSERT(is_a_Number(*(basic_rcp(end))));
 
     CWRAPPER_BEGIN
-    s->m = SymEngine::interval(rcp_static_cast<const Number>(start->m),
-                               rcp_static_cast<const Number>(end->m),
-                               (bool)left_open, (bool)right_open);
+    basic_rcp(s)
+        = SymEngine::interval(rcp_static_cast<const Number>(basic_rcp(start)),
+                              rcp_static_cast<const Number>(basic_rcp(end)),
+                              (bool)left_open, (bool)right_open);
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_finiteset(basic s, const CSetBasic *container)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::finiteset(container->m);
+    basic_rcp(s) = SymEngine::finiteset(container->m);
     CWRAPPER_END
 }
 
 void basic_set_emptyset(basic s)
 {
-    s->m = SymEngine::emptyset();
+    basic_rcp(s) = SymEngine::emptyset();
 }
 
 void basic_set_universalset(basic s)
 {
-    s->m = SymEngine::emptyset();
+    basic_rcp(s) = SymEngine::emptyset();
 }
 
 void basic_set_complexes(basic s)
 {
-    s->m = SymEngine::complexes();
+    basic_rcp(s) = SymEngine::complexes();
 }
 
 void basic_set_reals(basic s)
 {
-    s->m = SymEngine::reals();
+    basic_rcp(s) = SymEngine::reals();
 }
 
 void basic_set_rationals(basic s)
 {
-    s->m = SymEngine::rationals();
+    basic_rcp(s) = SymEngine::rationals();
 }
 
 void basic_set_integers(basic s)
 {
-    s->m = SymEngine::integers();
+    basic_rcp(s) = SymEngine::integers();
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_union(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = rcp_static_cast<const Set>(a->m)->set_union(
-        rcp_static_cast<const Set>(b->m));
+    basic_rcp(s) = rcp_static_cast<const Set>(basic_rcp(a))
+                       ->set_union(rcp_static_cast<const Set>(basic_rcp(b)));
     CWRAPPER_END
 }
 
@@ -827,90 +855,96 @@ CWRAPPER_OUTPUT_TYPE basic_set_intersection(basic s, const basic a,
                                             const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = rcp_static_cast<const Set>(a->m)->set_intersection(
-        rcp_static_cast<const Set>(b->m));
+    basic_rcp(s)
+        = rcp_static_cast<const Set>(basic_rcp(a))
+              ->set_intersection(rcp_static_cast<const Set>(basic_rcp(b)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_complement(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = rcp_static_cast<const Set>(a->m)->set_complement(
-        rcp_static_cast<const Set>(b->m));
+    basic_rcp(s)
+        = rcp_static_cast<const Set>(basic_rcp(a))
+              ->set_complement(rcp_static_cast<const Set>(basic_rcp(b)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_contains(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = rcp_static_cast<const Set>(a->m)->contains(b->m);
+    basic_rcp(s)
+        = rcp_static_cast<const Set>(basic_rcp(a))->contains(basic_rcp(b));
     CWRAPPER_END
 }
 
 int basic_set_is_subset(const basic a, const basic b)
 {
-    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
-    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
-    return rcp_static_cast<const Set>(a->m)->is_subset(
-        rcp_static_cast<const Set>(b->m));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(b))));
+    return rcp_static_cast<const Set>(basic_rcp(a))
+        ->is_subset(rcp_static_cast<const Set>(basic_rcp(b)));
 }
 
 int basic_set_is_proper_subset(const basic a, const basic b)
 {
-    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
-    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
-    return rcp_static_cast<const Set>(a->m)->is_proper_subset(
-        rcp_static_cast<const Set>(b->m));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(b))));
+    return rcp_static_cast<const Set>(basic_rcp(a))
+        ->is_proper_subset(rcp_static_cast<const Set>(basic_rcp(b)));
 }
 
 int basic_set_is_superset(const basic a, const basic b)
 {
-    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
-    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
-    return rcp_static_cast<const Set>(a->m)->is_superset(
-        rcp_static_cast<const Set>(b->m));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(b))));
+    return rcp_static_cast<const Set>(basic_rcp(a))
+        ->is_superset(rcp_static_cast<const Set>(basic_rcp(b)));
 }
 
 int basic_set_is_proper_superset(const basic a, const basic b)
 {
-    SYMENGINE_ASSERT(is_a_Set(*(a->m)));
-    SYMENGINE_ASSERT(is_a_Set(*(b->m)));
-    return rcp_static_cast<const Set>(a->m)->is_proper_superset(
-        rcp_static_cast<const Set>(b->m));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a_Set(*(basic_rcp(b))));
+    return rcp_static_cast<const Set>(basic_rcp(a))
+        ->is_proper_superset(rcp_static_cast<const Set>(basic_rcp(b)));
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_inf(basic s, const basic a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::inf(*rcp_static_cast<const Set>(a->m));
+    basic_rcp(s) = SymEngine::inf(*rcp_static_cast<const Set>(basic_rcp(a)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_sup(basic s, const basic a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::sup(*rcp_static_cast<const Set>(a->m));
+    basic_rcp(s) = SymEngine::sup(*rcp_static_cast<const Set>(basic_rcp(a)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_boundary(basic s, const basic a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::boundary(*rcp_static_cast<const Set>(a->m));
+    basic_rcp(s)
+        = SymEngine::boundary(*rcp_static_cast<const Set>(basic_rcp(a)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_interior(basic s, const basic a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::interior(*rcp_static_cast<const Set>(a->m));
+    basic_rcp(s)
+        = SymEngine::interior(*rcp_static_cast<const Set>(basic_rcp(a)));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_set_closure(basic s, const basic a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::closure(*rcp_static_cast<const Set>(a->m));
+    basic_rcp(s)
+        = SymEngine::closure(*rcp_static_cast<const Set>(basic_rcp(a)));
     CWRAPPER_END
 }
 
@@ -965,36 +999,36 @@ int symengine_have_component(const char *c)
 
 int is_a_Number(const basic s)
 {
-    return (int)is_a_Number(*(s->m));
+    return (int)is_a_Number(*(basic_rcp(s)));
 }
 int is_a_Integer(const basic c)
 {
-    return is_a<Integer>(*(c->m));
+    return is_a<Integer>(*(basic_rcp(c)));
 }
 int is_a_Rational(const basic c)
 {
-    return is_a<Rational>(*(c->m));
+    return is_a<Rational>(*(basic_rcp(c)));
 }
 int is_a_Symbol(const basic c)
 {
-    return is_a<Symbol>(*(c->m));
+    return is_a<Symbol>(*(basic_rcp(c)));
 }
 int is_a_Complex(const basic c)
 {
-    return is_a<Complex>(*(c->m));
+    return is_a<Complex>(*(basic_rcp(c)));
 }
 int is_a_RealDouble(const basic c)
 {
-    return is_a<RealDouble>(*(c->m));
+    return is_a<RealDouble>(*(basic_rcp(c)));
 }
 int is_a_ComplexDouble(const basic c)
 {
-    return is_a<ComplexDouble>(*(c->m));
+    return is_a<ComplexDouble>(*(basic_rcp(c)));
 }
 int is_a_RealMPFR(const basic c)
 {
 #ifdef HAVE_SYMENGINE_MPFR
-    return is_a<RealMPFR>(*(c->m));
+    return is_a<RealMPFR>(*(basic_rcp(c)));
 #else
     return false;
 #endif // HAVE_SYMENGINE_MPFR
@@ -1002,14 +1036,14 @@ int is_a_RealMPFR(const basic c)
 int is_a_ComplexMPC(const basic c)
 {
 #ifdef HAVE_SYMENGINE_MPC
-    return is_a<ComplexMPC>(*(c->m));
+    return is_a<ComplexMPC>(*(basic_rcp(c)));
 #else
     return false;
 #endif // HAVE_SYMENGINE_MPC
 }
 int is_a_Set(const basic c)
 {
-    return SymEngine::is_a_Set(*(c->m));
+    return SymEngine::is_a_Set(*(basic_rcp(c)));
 }
 
 // C wrapper for std::vector<int>
@@ -1084,7 +1118,7 @@ CWRAPPER_OUTPUT_TYPE vecbasic_push_back(CVecBasic *self, const basic value)
 {
     CWRAPPER_BEGIN
 
-    self->m.push_back(value->m);
+    self->m.push_back(basic_rcp(value));
 
     CWRAPPER_END
 }
@@ -1094,7 +1128,7 @@ CWRAPPER_OUTPUT_TYPE vecbasic_get(CVecBasic *self, size_t n, basic result)
     CWRAPPER_BEGIN
 
     SYMENGINE_ASSERT(n < self->m.size());
-    result->m = self->m[n];
+    basic_rcp(result) = self->m[n];
 
     CWRAPPER_END
 }
@@ -1103,7 +1137,7 @@ CWRAPPER_OUTPUT_TYPE vecbasic_set(CVecBasic *self, size_t n, const basic s)
 {
     CWRAPPER_BEGIN
     SYMENGINE_ASSERT(n < self->m.size());
-    self->m[n] = s->m;
+    self->m[n] = basic_rcp(s);
     CWRAPPER_END
 }
 
@@ -1123,28 +1157,28 @@ size_t vecbasic_size(CVecBasic *self)
 CWRAPPER_OUTPUT_TYPE basic_max(basic s, const CVecBasic *d)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::max(d->m);
+    basic_rcp(s) = SymEngine::max(d->m);
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_min(basic s, const CVecBasic *d)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::min(d->m);
+    basic_rcp(s) = SymEngine::min(d->m);
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_add_vec(basic s, const CVecBasic *d)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::add(d->m);
+    basic_rcp(s) = SymEngine::add(d->m);
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_mul_vec(basic s, const CVecBasic *d)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::mul(d->m);
+    basic_rcp(s) = SymEngine::mul(d->m);
     CWRAPPER_END
 }
 
@@ -1236,7 +1270,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_get_basic(basic s, const CDenseMatrix *mat,
                                             unsigned long int c)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.get(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c));
+    basic_rcp(s)
+        = mat->m.get(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c));
     CWRAPPER_END
 }
 
@@ -1245,7 +1280,8 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_set_basic(CDenseMatrix *mat,
                                             unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
-    mat->m.set(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c), s->m);
+    mat->m.set(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c),
+               basic_rcp(s));
     CWRAPPER_END
 }
 
@@ -1254,7 +1290,8 @@ CWRAPPER_OUTPUT_TYPE sparse_matrix_get_basic(basic s, const CSparseMatrix *mat,
                                              unsigned long int c)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.get(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c));
+    basic_rcp(s)
+        = mat->m.get(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c));
     CWRAPPER_END
 }
 
@@ -1263,14 +1300,15 @@ CWRAPPER_OUTPUT_TYPE sparse_matrix_set_basic(CSparseMatrix *mat,
                                              unsigned long int c, basic s)
 {
     CWRAPPER_BEGIN
-    mat->m.set(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c), s->m);
+    mat->m.set(numeric_cast<unsigned>(r), numeric_cast<unsigned>(c),
+               basic_rcp(s));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE dense_matrix_det(basic s, const CDenseMatrix *mat)
 {
     CWRAPPER_BEGIN
-    s->m = mat->m.det();
+    basic_rcp(s) = mat->m.det();
     CWRAPPER_END
 }
 CWRAPPER_OUTPUT_TYPE dense_matrix_inv(CDenseMatrix *s, const CDenseMatrix *mat)
@@ -1370,7 +1408,7 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_add_scalar(CDenseMatrix *s,
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
-    matA->m.add_scalar(b->m, s->m);
+    matA->m.add_scalar(basic_rcp(b), s->m);
     CWRAPPER_END
 }
 
@@ -1380,7 +1418,7 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_mul_scalar(CDenseMatrix *s,
 {
     CWRAPPER_BEGIN
     dense_matrix_rows_cols(s, matA->m.nrows(), matA->m.ncols());
-    matA->m.mul_scalar(b->m, s->m);
+    matA->m.mul_scalar(basic_rcp(b), s->m);
     CWRAPPER_END
 }
 
@@ -1482,7 +1520,7 @@ CWRAPPER_OUTPUT_TYPE dense_matrix_diff(CDenseMatrix *result,
     if (not is_a_Symbol(x))
         return SYMENGINE_RUNTIME_ERROR;
     CWRAPPER_BEGIN
-    diff(A->m, rcp_static_cast<const Symbol>(x->m), result->m);
+    diff(A->m, rcp_static_cast<const Symbol>(basic_rcp(x)), result->m);
     CWRAPPER_END
 }
 
@@ -1529,22 +1567,22 @@ void setbasic_free(CSetBasic *self)
 
 int setbasic_insert(CSetBasic *self, const basic value)
 {
-    return (self->m.insert(value->m)).second ? 1 : 0;
+    return (self->m.insert(basic_rcp(value))).second ? 1 : 0;
 }
 
 void setbasic_get(CSetBasic *self, int n, basic result)
 {
-    result->m = *std::next((self->m).begin(), n);
+    basic_rcp(result) = *std::next((self->m).begin(), n);
 }
 
 int setbasic_find(CSetBasic *self, basic value)
 {
-    return self->m.find(value->m) != (self->m).end() ? 1 : 0;
+    return self->m.find(basic_rcp(value)) != (self->m).end() ? 1 : 0;
 }
 
 int setbasic_erase(CSetBasic *self, const basic value)
 {
-    return (self->m.erase(value->m)) ? 1 : 0;
+    return (self->m.erase(basic_rcp(value))) ? 1 : 0;
 }
 
 size_t setbasic_size(CSetBasic *self)
@@ -1571,14 +1609,14 @@ void mapbasicbasic_free(CMapBasicBasic *self)
 void mapbasicbasic_insert(CMapBasicBasic *self, const basic key,
                           const basic mapped)
 {
-    (self->m)[key->m] = mapped->m;
+    (self->m)[basic_rcp(key)] = basic_rcp(mapped);
 }
 
 int mapbasicbasic_get(CMapBasicBasic *self, const basic key, basic mapped)
 {
-    auto it = self->m.find(key->m);
+    auto it = self->m.find(basic_rcp(key));
     if (it != self->m.end()) {
-        mapped->m = it->second;
+        basic_rcp(mapped) = it->second;
         return 1;
     }
     return 0;
@@ -1594,14 +1632,14 @@ size_t mapbasicbasic_size(CMapBasicBasic *self)
 CWRAPPER_OUTPUT_TYPE basic_get_args(const basic self, CVecBasic *args)
 {
     CWRAPPER_BEGIN
-    args->m = self->m->get_args();
+    args->m = basic_rcp(self)->get_args();
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE basic_free_symbols(const basic self, CSetBasic *symbols)
 {
     CWRAPPER_BEGIN
-    symbols->m = SymEngine::free_symbols(*(self->m));
+    symbols->m = SymEngine::free_symbols(*(basic_rcp(self)));
     CWRAPPER_END
 }
 
@@ -1609,20 +1647,21 @@ CWRAPPER_OUTPUT_TYPE basic_function_symbols(CSetBasic *symbols,
                                             const basic self)
 {
     CWRAPPER_BEGIN
-    symbols->m = SymEngine::atoms<SymEngine::FunctionSymbol>(*(self->m));
+    symbols->m
+        = SymEngine::atoms<SymEngine::FunctionSymbol>(*(basic_rcp(self)));
     CWRAPPER_END
 }
 
 size_t basic_hash(const basic self)
 {
-    return static_cast<size_t>(self->m->hash());
+    return static_cast<size_t>(basic_rcp(self)->hash());
 }
 
 CWRAPPER_OUTPUT_TYPE basic_subs(basic s, const basic e,
                                 const CMapBasicBasic *mapbb)
 {
     CWRAPPER_BEGIN
-    s->m = e->m->subs(mapbb->m);
+    basic_rcp(s) = basic_rcp(e)->subs(mapbb->m);
     CWRAPPER_END
 }
 
@@ -1630,7 +1669,7 @@ CWRAPPER_OUTPUT_TYPE basic_subs2(basic s, const basic e, const basic a,
                                  const basic b)
 {
     CWRAPPER_BEGIN
-    s->m = e->m->subs({{a->m, b->m}});
+    basic_rcp(s) = basic_rcp(e)->subs({{basic_rcp(a), basic_rcp(b)}});
     CWRAPPER_END
 }
 
@@ -1638,14 +1677,15 @@ CWRAPPER_OUTPUT_TYPE function_symbol_set(basic s, const char *c,
                                          const CVecBasic *arg)
 {
     CWRAPPER_BEGIN
-    s->m = function_symbol(c, arg->m);
+    basic_rcp(s) = function_symbol(c, arg->m);
     CWRAPPER_END
 }
 
 char *function_symbol_get_name(const basic b)
 {
-    SYMENGINE_ASSERT(is_a<FunctionSymbol>(*(b->m)));
-    std::string str = down_cast<const FunctionSymbol &>(*(b->m)).get_name();
+    SYMENGINE_ASSERT(is_a<FunctionSymbol>(*(basic_rcp(b))));
+    std::string str
+        = down_cast<const FunctionSymbol &>(*(basic_rcp(b))).get_name();
     auto cc = new char[str.length() + 1];
     std::strcpy(cc, str.c_str());
     return cc;
@@ -1655,7 +1695,8 @@ CWRAPPER_OUTPUT_TYPE basic_coeff(basic c, const basic b, const basic x,
                                  const basic n)
 {
     CWRAPPER_BEGIN
-    c->m = SymEngine::coeff(*(b->m), *(x->m), *(n->m));
+    basic_rcp(c)
+        = SymEngine::coeff(*(basic_rcp(b)), *(basic_rcp(x)), *(basic_rcp(n)));
     CWRAPPER_END
 }
 
@@ -1680,9 +1721,9 @@ CWRAPPER_OUTPUT_TYPE basic_solve_poly(CSetBasic *r, const basic f,
                                       const basic s)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Symbol>(*(s->m)));
-    RCP<const Set> set
-        = SymEngine::solve_poly(f->m, rcp_static_cast<const Symbol>(s->m));
+    SYMENGINE_ASSERT(is_a<Symbol>(*(basic_rcp(s))));
+    RCP<const Set> set = SymEngine::solve_poly(
+        basic_rcp(f), rcp_static_cast<const Symbol>(basic_rcp(s)));
     if (not is_a<FiniteSet>(*set)) {
         return SYMENGINE_NOT_IMPLEMENTED;
     }
@@ -1705,20 +1746,20 @@ char *ascii_art_str()
 CWRAPPER_OUTPUT_TYPE ntheory_gcd(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
-    s->m = SymEngine::gcd(down_cast<const Integer &>(*(a->m)),
-                          down_cast<const Integer &>(*(b->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(b))));
+    basic_rcp(s) = SymEngine::gcd(down_cast<const Integer &>(*(basic_rcp(a))),
+                                  down_cast<const Integer &>(*(basic_rcp(b))));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_lcm(basic s, const basic a, const basic b)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
-    s->m = SymEngine::lcm(down_cast<const Integer &>(*(a->m)),
-                          down_cast<const Integer &>(*(b->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(b))));
+    basic_rcp(s) = SymEngine::lcm(down_cast<const Integer &>(*(basic_rcp(a))),
+                                  down_cast<const Integer &>(*(basic_rcp(b))));
     CWRAPPER_END
 }
 
@@ -1726,44 +1767,46 @@ CWRAPPER_OUTPUT_TYPE ntheory_gcd_ext(basic g, basic s, basic t, const basic a,
                                      const basic b)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(b->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(b))));
     SymEngine::RCP<const Integer> g_, s_, t_;
     SymEngine::gcd_ext(SymEngine::outArg(g_), SymEngine::outArg(s_),
                        SymEngine::outArg(t_),
-                       down_cast<const Integer &>(*(a->m)),
-                       down_cast<const Integer &>(*(b->m)));
-    g->m = g_;
-    s->m = s_;
-    t->m = t_;
+                       down_cast<const Integer &>(*(basic_rcp(a))),
+                       down_cast<const Integer &>(*(basic_rcp(b))));
+    basic_rcp(g) = g_;
+    basic_rcp(s) = s_;
+    basic_rcp(t) = t_;
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_nextprime(basic s, const basic a)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    s->m = SymEngine::nextprime(down_cast<const Integer &>(*(a->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(a))));
+    basic_rcp(s)
+        = SymEngine::nextprime(down_cast<const Integer &>(*(basic_rcp(a))));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_mod(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::mod(down_cast<const Integer &>(*(n->m)),
-                          down_cast<const Integer &>(*(d->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(n))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(d))));
+    basic_rcp(s) = SymEngine::mod(down_cast<const Integer &>(*(basic_rcp(n))),
+                                  down_cast<const Integer &>(*(basic_rcp(d))));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_quotient(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::quotient(down_cast<const Integer &>(*(n->m)),
-                               down_cast<const Integer &>(*(d->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(n))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(d))));
+    basic_rcp(s)
+        = SymEngine::quotient(down_cast<const Integer &>(*(basic_rcp(n))),
+                              down_cast<const Integer &>(*(basic_rcp(d))));
     CWRAPPER_END
 }
 
@@ -1771,34 +1814,36 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod(basic q, basic r, const basic n,
                                           const basic d)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(n))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(d))));
     SymEngine::RCP<const Integer> q_, r_;
     SymEngine::quotient_mod(SymEngine::outArg(q_), SymEngine::outArg(r_),
-                            down_cast<const Integer &>(*(n->m)),
-                            down_cast<const Integer &>(*(d->m)));
-    q->m = q_;
-    r->m = r_;
+                            down_cast<const Integer &>(*(basic_rcp(n))),
+                            down_cast<const Integer &>(*(basic_rcp(d))));
+    basic_rcp(q) = q_;
+    basic_rcp(r) = r_;
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_mod_f(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::mod_f(down_cast<const Integer &>(*(n->m)),
-                            down_cast<const Integer &>(*(d->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(n))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(d))));
+    basic_rcp(s)
+        = SymEngine::mod_f(down_cast<const Integer &>(*(basic_rcp(n))),
+                           down_cast<const Integer &>(*(basic_rcp(d))));
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_quotient_f(basic s, const basic n, const basic d)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
-    s->m = SymEngine::quotient_f(down_cast<const Integer &>(*(n->m)),
-                                 down_cast<const Integer &>(*(d->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(n))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(d))));
+    basic_rcp(s)
+        = SymEngine::quotient_f(down_cast<const Integer &>(*(basic_rcp(n))),
+                                down_cast<const Integer &>(*(basic_rcp(d))));
     CWRAPPER_END
 }
 
@@ -1806,34 +1851,34 @@ CWRAPPER_OUTPUT_TYPE ntheory_quotient_mod_f(basic q, basic r, const basic n,
                                             const basic d)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(n->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(d->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(n))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(d))));
     SymEngine::RCP<const Integer> q_, r_;
     SymEngine::quotient_mod_f(SymEngine::outArg(q_), SymEngine::outArg(r_),
-                              down_cast<const Integer &>(*(n->m)),
-                              down_cast<const Integer &>(*(d->m)));
-    q->m = q_;
-    r->m = r_;
+                              down_cast<const Integer &>(*(basic_rcp(n))),
+                              down_cast<const Integer &>(*(basic_rcp(d))));
+    basic_rcp(q) = q_;
+    basic_rcp(r) = r_;
     CWRAPPER_END
 }
 
 int ntheory_mod_inverse(basic b, const basic a, const basic m)
 {
     int ret_val;
-    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    SYMENGINE_ASSERT(is_a<Integer>(*(m->m)));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(a))));
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(m))));
     SymEngine::RCP<const Integer> b_;
-    ret_val = SymEngine::mod_inverse(SymEngine::outArg(b_),
-                                     down_cast<const Integer &>(*(a->m)),
-                                     down_cast<const Integer &>(*(m->m)));
-    b->m = b_;
+    ret_val = SymEngine::mod_inverse(
+        SymEngine::outArg(b_), down_cast<const Integer &>(*(basic_rcp(a))),
+        down_cast<const Integer &>(*(basic_rcp(m))));
+    basic_rcp(b) = b_;
     return ret_val;
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_fibonacci(basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::fibonacci(a);
+    basic_rcp(s) = SymEngine::fibonacci(a);
     CWRAPPER_END
 }
 
@@ -1842,15 +1887,15 @@ CWRAPPER_OUTPUT_TYPE ntheory_fibonacci2(basic g, basic s, unsigned long a)
     CWRAPPER_BEGIN
     SymEngine::RCP<const Integer> g_, s_;
     SymEngine::fibonacci2(SymEngine::outArg(g_), SymEngine::outArg(s_), a);
-    g->m = g_;
-    s->m = s_;
+    basic_rcp(g) = g_;
+    basic_rcp(s) = s_;
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_lucas(basic s, unsigned long a)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::lucas(a);
+    basic_rcp(s) = SymEngine::lucas(a);
     CWRAPPER_END
 }
 
@@ -1859,23 +1904,24 @@ CWRAPPER_OUTPUT_TYPE ntheory_lucas2(basic g, basic s, unsigned long a)
     CWRAPPER_BEGIN
     SymEngine::RCP<const Integer> g_, s_;
     SymEngine::lucas2(SymEngine::outArg(g_), SymEngine::outArg(s_), a);
-    g->m = g_;
-    s->m = s_;
+    basic_rcp(g) = g_;
+    basic_rcp(s) = s_;
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_binomial(basic s, const basic a, unsigned long b)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Integer>(*(a->m)));
-    s->m = SymEngine::binomial(down_cast<const Integer &>(*(a->m)), b);
+    SYMENGINE_ASSERT(is_a<Integer>(*(basic_rcp(a))));
+    basic_rcp(s)
+        = SymEngine::binomial(down_cast<const Integer &>(*(basic_rcp(a))), b);
     CWRAPPER_END
 }
 
 CWRAPPER_OUTPUT_TYPE ntheory_factorial(basic s, unsigned long n)
 {
     CWRAPPER_BEGIN
-    s->m = SymEngine::factorial(n);
+    basic_rcp(s) = SymEngine::factorial(n);
     CWRAPPER_END
 }
 
@@ -1885,7 +1931,8 @@ CWRAPPER_OUTPUT_TYPE basic_evalf(basic s, const basic b, unsigned long bits,
 {
 
     CWRAPPER_BEGIN
-    s->m = SymEngine::evalf(*(b->m), bits, (SymEngine::EvalfDomain)real);
+    basic_rcp(s)
+        = SymEngine::evalf(*(basic_rcp(b)), bits, (SymEngine::EvalfDomain)real);
     CWRAPPER_END
 }
 
@@ -1893,8 +1940,8 @@ CWRAPPER_OUTPUT_TYPE basic_as_numer_denom(basic numer, basic denom,
                                           const basic x)
 {
     CWRAPPER_BEGIN
-    SymEngine::as_numer_denom(x->m, SymEngine::outArg(numer->m),
-                              SymEngine::outArg(denom->m));
+    SymEngine::as_numer_denom(basic_rcp(x), SymEngine::outArg(basic_rcp(numer)),
+                              SymEngine::outArg(basic_rcp(denom)));
     CWRAPPER_END
 }
 
@@ -1902,9 +1949,10 @@ CWRAPPER_OUTPUT_TYPE basic_add_as_two_terms(basic term1, basic term2,
                                             const basic s)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Add>(*(s->m)));
-    rcp_static_cast<const Add>(s->m)->as_two_terms(SymEngine::outArg(term1->m),
-                                                   SymEngine::outArg(term2->m));
+    SYMENGINE_ASSERT(is_a<Add>(*(basic_rcp(s))));
+    rcp_static_cast<const Add>(basic_rcp(s))
+        ->as_two_terms(SymEngine::outArg(basic_rcp(term1)),
+                       SymEngine::outArg(basic_rcp(term2)));
     CWRAPPER_END
 }
 
@@ -1912,9 +1960,10 @@ CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1, basic term2,
                                             const basic s)
 {
     CWRAPPER_BEGIN
-    SYMENGINE_ASSERT(is_a<Mul>(*(s->m)));
-    rcp_static_cast<const Mul>(s->m)->as_two_terms(SymEngine::outArg(term1->m),
-                                                   SymEngine::outArg(term2->m));
+    SYMENGINE_ASSERT(is_a<Mul>(*(basic_rcp(s))));
+    rcp_static_cast<const Mul>(basic_rcp(s))
+        ->as_two_terms(SymEngine::outArg(basic_rcp(term1)),
+                       SymEngine::outArg(basic_rcp(term2)));
     CWRAPPER_END
 }
 
