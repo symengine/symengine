@@ -9,7 +9,7 @@
 namespace SymEngine
 {
 
-class CodePrinter : public BaseVisitor<CodePrinter, StrPrinter>
+class CodePrinter : public RewriteTrigVisitor<CodePrinter, StrPrinter>
 {
 public:
     explicit CodePrinter(CodePrinterPrecision precision
@@ -63,6 +63,8 @@ protected:
     CodePrinterPrecision precision_;
     std::string print_scalar_literal(double d) const;
     std::string print_math_function(const std::string &name) const;
+    virtual std::string
+    format_codegen_function_name(const std::string &name) const;
     std::string print_binary_reduction(const vec_basic &args,
                                        const std::string &func_name);
     std::string print_binary_reduction_impl(vec_basic::const_iterator begin,
@@ -70,7 +72,7 @@ protected:
                                             const std::string &func_name);
 };
 
-class C89CodePrinter : public BaseVisitor<C89CodePrinter, CodePrinter>
+class C89CodePrinter : public RewriteTrigVisitor<C89CodePrinter, CodePrinter>
 {
 public:
     explicit C89CodePrinter(CodePrinterPrecision precision
@@ -83,7 +85,7 @@ public:
                     const RCP<const Basic> &b) override;
 };
 
-class C99CodePrinter : public BaseVisitor<C99CodePrinter, C89CodePrinter>
+class C99CodePrinter : public RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>
 {
 public:
     explicit C99CodePrinter(CodePrinterPrecision precision
@@ -98,7 +100,8 @@ public:
     void bvisit(const LogGamma &x);
 };
 
-class CudaCodePrinter : public BaseVisitor<CudaCodePrinter, C99CodePrinter>
+class CudaCodePrinter
+    : public RewriteTrigVisitor<CudaCodePrinter, C99CodePrinter>
 {
 public:
     explicit CudaCodePrinter(CodePrinterPrecision precision
@@ -112,7 +115,8 @@ public:
     void bvisit(const Infty &x);
 };
 
-class MetalCodePrinter : public BaseVisitor<MetalCodePrinter, CodePrinter>
+class MetalCodePrinter
+    : public RewriteTrigVisitor<MetalCodePrinter, CodePrinter>
 {
 public:
     explicit MetalCodePrinter(CodePrinterPrecision precision
@@ -128,12 +132,15 @@ public:
     void bvisit(const Truncate &x);
     void bvisit(const Max &x);
     void bvisit(const Min &x);
-    void bvisit(const Function &x);
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b) override;
+
+protected:
+    std::string
+    format_codegen_function_name(const std::string &name) const override;
 };
 
-class JSCodePrinter : public BaseVisitor<JSCodePrinter, CodePrinter>
+class JSCodePrinter : public RewriteTrigVisitor<JSCodePrinter, CodePrinter>
 {
 public:
     using CodePrinter::apply;
@@ -147,6 +154,10 @@ public:
     void bvisit(const Cos &x);
     void bvisit(const Max &x);
     void bvisit(const Min &x);
+
+protected:
+    std::string
+    format_codegen_function_name(const std::string &name) const override;
 };
 } // namespace SymEngine
 

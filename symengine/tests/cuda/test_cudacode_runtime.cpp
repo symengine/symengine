@@ -247,8 +247,16 @@ TEST_CASE("CUDA code matches Lambda visitor", "[cuda][cudacode]")
     auto min_expr = SymEngine::min({x, y, z});
     auto inverse_trig_expr
         = add(SymEngine::asin(y), add(SymEngine::acos(y), SymEngine::atan(x)));
+    auto reciprocal_trig_expr
+        = add(SymEngine::cot(x), add(SymEngine::csc(x), SymEngine::sec(y)));
+    auto reciprocal_inverse_trig_expr
+        = add(SymEngine::acot(x), add(SymEngine::acsc(x), SymEngine::asec(x)));
     auto inverse_hyperbolic_expr = add(
         SymEngine::asinh(x), add(SymEngine::acosh(z), SymEngine::atanh(y)));
+    auto reciprocal_hyperbolic_expr
+        = add(SymEngine::csch(x), add(SymEngine::sech(y), SymEngine::coth(z)));
+    auto reciprocal_inverse_hyperbolic_expr = add(
+        SymEngine::acsch(x), add(SymEngine::asech(y), SymEngine::acoth(z)));
     auto special_function_expr = add(
         gamma(x), add(loggamma(z), add(SymEngine::erf(y), SymEngine::erfc(x))));
     auto relational_expr = add(add(boolTrue, boolFalse),
@@ -290,7 +298,11 @@ TEST_CASE("CUDA code matches Lambda visitor", "[cuda][cudacode]")
         {"cosh", SymEngine::cosh(y)},
         {"tanh", SymEngine::tanh(z)},
         {"inverse trigonometric", inverse_trig_expr},
+        {"reciprocal trigonometric", reciprocal_trig_expr},
+        {"reciprocal inverse trigonometric", reciprocal_inverse_trig_expr},
         {"inverse hyperbolic", inverse_hyperbolic_expr},
+        {"reciprocal hyperbolic", reciprocal_hyperbolic_expr},
+        {"reciprocal inverse hyperbolic", reciprocal_inverse_hyperbolic_expr},
         {"floor", SymEngine::floor(x)},
         {"ceiling", SymEngine::ceiling(y)},
         {"truncate", SymEngine::truncate(add(x, y))},

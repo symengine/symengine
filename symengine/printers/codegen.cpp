@@ -1,4 +1,7 @@
 #include <symengine/printers/codegen.h>
+#include <symengine/constants.h>
+#include <symengine/mul.h>
+#include <symengine/visitor.h>
 #include <symengine/printers.h>
 #include <symengine/symengine_exception.h>
 
@@ -53,6 +56,12 @@ std::string CodePrinter::print_math_function(const std::string &name) const
         return name + "f";
     }
     return name;
+}
+
+std::string
+CodePrinter::format_codegen_function_name(const std::string &name) const
+{
+    return print_math_function(name);
 }
 
 std::string CodePrinter::print_binary_reduction(const vec_basic &args,
@@ -354,7 +363,7 @@ void CodePrinter::bvisit(const Function &x)
 {
     static const std::vector<std::string> names_ = init_str_printer_names();
     std::ostringstream o;
-    o << print_math_function(names_[x.get_type_code()]);
+    o << format_codegen_function_name(names_[x.get_type_code()]);
     vec_basic vec = x.get_args();
     o << parenthesize(apply(vec));
     str_ = o.str();
@@ -380,7 +389,7 @@ void CodePrinter::bvisit(const RealMPFR &x)
 #endif
 
 C89CodePrinter::C89CodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<C89CodePrinter, CodePrinter>(precision)
+    : RewriteTrigVisitor<C89CodePrinter, CodePrinter>(precision)
 {
     if (precision_ == CodePrinterPrecision::Half) {
         throw SymEngineException(
@@ -405,6 +414,8 @@ void C89CodePrinter::_print_pow(std::ostringstream &o,
 {
     if (eq(*a, *E)) {
         o << print_math_function("exp") << "(" << apply(b) << ")";
+    } else if (eq(*b, *minus_one)) {
+        o << apply(*one) << "/" << parenthesizeLE(a, PrecedenceEnum::Mul);
     } else if (eq(*b, *rational(1, 2))) {
         o << print_math_function("sqrt") << "(" << apply(a) << ")";
     } else {
@@ -414,7 +425,7 @@ void C89CodePrinter::_print_pow(std::ostringstream &o,
 }
 
 C99CodePrinter::C99CodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<C99CodePrinter, C89CodePrinter>(precision)
+    : RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>(precision)
 {
 }
 
@@ -435,6 +446,8 @@ void C99CodePrinter::_print_pow(std::ostringstream &o,
 {
     if (eq(*a, *E)) {
         o << print_math_function("exp") << "(" << apply(b) << ")";
+    } else if (eq(*b, *minus_one)) {
+        o << apply(*one) << "/" << parenthesizeLE(a, PrecedenceEnum::Mul);
     } else if (eq(*b, *rational(1, 2))) {
         o << print_math_function("sqrt") << "(" << apply(a) << ")";
     } else if (eq(*b, *rational(1, 3))) {
@@ -458,7 +471,7 @@ void C99CodePrinter::bvisit(const LogGamma &x)
 }
 
 CudaCodePrinter::CudaCodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<CudaCodePrinter, C99CodePrinter>(precision)
+    : RewriteTrigVisitor<CudaCodePrinter, C99CodePrinter>(precision)
 {
 }
 
@@ -498,7 +511,7 @@ void CudaCodePrinter::bvisit(const Infty &x)
 }
 
 MetalCodePrinter::MetalCodePrinter(CodePrinterPrecision precision)
-    : BaseVisitor<MetalCodePrinter, CodePrinter>(precision)
+    : RewriteTrigVisitor<MetalCodePrinter, CodePrinter>(precision)
 {
     if (precision_ == CodePrinterPrecision::Double) {
         throw SymEngineException(
@@ -571,14 +584,10 @@ void MetalCodePrinter::bvisit(const Min &x)
     str_ = print_binary_reduction(x.get_args(), "fmin");
 }
 
-void MetalCodePrinter::bvisit(const Function &x)
+std::string
+MetalCodePrinter::format_codegen_function_name(const std::string &name) const
 {
-    static const std::vector<std::string> names_ = init_str_printer_names();
-    std::ostringstream o;
-    o << names_[x.get_type_code()];
-    vec_basic vec = x.get_args();
-    o << parenthesize(apply(vec));
-    str_ = o.str();
+    return name;
 }
 
 void MetalCodePrinter::_print_pow(std::ostringstream &o,
@@ -587,6 +596,8 @@ void MetalCodePrinter::_print_pow(std::ostringstream &o,
 {
     if (eq(*a, *E)) {
         o << "exp(" << apply(b) << ")";
+    } else if (eq(*b, *minus_one)) {
+        o << apply(*one) << "/" << parenthesizeLE(a, PrecedenceEnum::Mul);
     } else if (eq(*b, *rational(1, 2))) {
         o << "sqrt(" << apply(a) << ")";
     } else {
@@ -609,6 +620,8 @@ void JSCodePrinter::_print_pow(std::ostringstream &o, const RCP<const Basic> &a,
 {
     if (eq(*a, *E)) {
         o << "Math.exp(" << apply(b) << ")";
+    } else if (eq(*b, *minus_one)) {
+        o << apply(*one) << "/" << parenthesizeLE(a, PrecedenceEnum::Mul);
     } else if (eq(*b, *rational(1, 2))) {
         o << "Math.sqrt(" << apply(a) << ")";
     } else if (eq(*b, *rational(1, 3))) {
@@ -656,6 +669,12 @@ void JSCodePrinter::bvisit(const Min &x)
         s << ((i == args.size() - 1) ? ")" : ", ");
     }
     str_ = s.str();
+}
+
+std::string
+JSCodePrinter::format_codegen_function_name(const std::string &name) const
+{
+    return "Math." + name;
 }
 
 std::string ccode(const Basic &x, CodePrinterPrecision precision)

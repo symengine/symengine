@@ -360,6 +360,63 @@ public:
     void bvisit(const Basic &x);
 };
 
+template <class Derived, class Base = Visitor>
+class RewriteTrigVisitor : public BaseVisitor<Derived, Base>
+{
+public:
+    using BaseVisitor<Derived, Base>::BaseVisitor;
+    using BaseVisitor<Derived, Base>::visit;
+
+    void visit(const Cot &x) override
+    {
+        div(one, tan(x.get_arg()))->accept(*this);
+    };
+    void visit(const Csc &x) override
+    {
+        div(one, sin(x.get_arg()))->accept(*this);
+    };
+    void visit(const Sec &x) override
+    {
+        div(one, cos(x.get_arg()))->accept(*this);
+    };
+    void visit(const ACot &x) override
+    {
+        atan(div(one, x.get_arg()))->accept(*this);
+    };
+    void visit(const ACsc &x) override
+    {
+        asin(div(one, x.get_arg()))->accept(*this);
+    };
+    void visit(const ASec &x) override
+    {
+        acos(div(one, x.get_arg()))->accept(*this);
+    };
+    void visit(const Coth &x) override
+    {
+        div(one, tanh(x.get_arg()))->accept(*this);
+    };
+    void visit(const Csch &x) override
+    {
+        div(one, sinh(x.get_arg()))->accept(*this);
+    };
+    void visit(const Sech &x) override
+    {
+        div(one, cosh(x.get_arg()))->accept(*this);
+    };
+    void visit(const ACoth &x) override
+    {
+        atanh(div(one, x.get_arg()))->accept(*this);
+    };
+    void visit(const ACsch &x) override
+    {
+        asinh(div(one, x.get_arg()))->accept(*this);
+    };
+    void visit(const ASech &x) override
+    {
+        acosh(div(one, x.get_arg()))->accept(*this);
+    };
+};
+
 unsigned count_ops(const vec_basic &a);
 
 } // namespace SymEngine

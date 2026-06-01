@@ -440,6 +440,45 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
     }
 }
 
+TEST_CASE("Check llvm and lambda are equal for lowered functions",
+          "[llvm_double]")
+{
+    auto x = symbol("x");
+
+    struct Case {
+        RCP<const Basic> expr;
+        double input;
+    };
+
+    const std::vector<Case> cases = {
+        {cot(x), 0.5},  {csc(x), 0.5},   {sec(x), 0.5},   {acot(x), 3.0},
+        {acsc(x), 2.0}, {asec(x), 2.0},  {csch(x), 0.5},  {sech(x), 0.5},
+        {coth(x), 0.9}, {acsch(x), 2.0}, {asech(x), 0.5}, {acoth(x), 3.3},
+    };
+
+    for (const auto &test_case : cases) {
+        std::cout << "expr=" << test_case.expr->__str__()
+                  << ", x=" << test_case.input << std::endl;
+
+        LambdaRealDoubleVisitor lambda;
+        lambda.init({x}, *test_case.expr);
+        const double expected = lambda.call({test_case.input});
+        std::cout << "expected: " << expected << std::endl;
+
+        LLVMDoubleVisitor llvm_double;
+        llvm_double.init({x}, *test_case.expr);
+
+        LLVMFloatVisitor llvm_float;
+        llvm_float.init({x}, *test_case.expr);
+
+        std::cout << "result: " << llvm_double.call({test_case.input})
+                  << std::endl;
+        REQUIRE(llvm_double.call({test_case.input}) == Approx(expected));
+        REQUIRE(llvm_float.call({static_cast<float>(test_case.input)})
+                == Approx(expected).epsilon(1e-5));
+    }
+}
+
 TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
           "[llvm_double]")
 {
