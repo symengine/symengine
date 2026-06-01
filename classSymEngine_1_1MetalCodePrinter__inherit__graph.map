@@ -1,9 +1,6 @@
 <map id="SymEngine::MetalCodePrinter" name="SymEngine::MetalCodePrinter">
-<area shape="rect" id="node1" title=" " alt="" coords="22,518,237,547"/>
-<area shape="rect" id="node2" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="5,424,254,470"/>
-<area shape="rect" id="node3" href="$classSymEngine_1_1CodePrinter.html" title=" " alt="" coords="40,347,219,376"/>
-<area shape="rect" id="node4" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="31,253,228,299"/>
-<area shape="rect" id="node5" href="$classSymEngine_1_1StrPrinter.html" title=" " alt="" coords="48,176,211,205"/>
-<area shape="rect" id="node6" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="41,82,218,128"/>
-<area shape="rect" id="node7" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="57,5,202,34"/>
+<area shape="rect" id="node1" title=" " alt="" coords="22,270,237,299"/>
+<area shape="rect" id="node2" href="$classSymEngine_1_1RewriteTrigVisitor.html" title=" " alt="" coords="5,176,254,222"/>
+<area shape="rect" id="node3" href="$classSymEngine_1_1BaseVisitor.html" title=" " alt="" coords="41,82,218,128"/>
+<area shape="rect" id="node4" href="$classSymEngine_1_1Visitor.html" title=" " alt="" coords="57,5,202,34"/>
 </map>
