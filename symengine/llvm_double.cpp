@@ -958,7 +958,6 @@ void LLVMVisitor::loads(const std::string &s)
     // resolver)
     modify_execution_engine(executionengine.get());
 
-
     class MCJITObjectLoader : public llvm::ObjectCache
     {
         const std::string &s_;
