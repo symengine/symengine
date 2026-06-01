@@ -51,6 +51,7 @@ using SymEngine::Eq;
 using SymEngine::evalf;
 using SymEngine::floor;
 using SymEngine::gamma;
+using SymEngine::Gt;
 using SymEngine::Inf;
 using SymEngine::integer;
 using SymEngine::LambdaComplexDoubleVisitor;
@@ -59,6 +60,8 @@ using SymEngine::Le;
 using SymEngine::log;
 using SymEngine::loggamma;
 using SymEngine::logical_and;
+using SymEngine::logical_not;
+using SymEngine::logical_xor;
 using SymEngine::Lt;
 using SymEngine::map_basic_basic;
 using SymEngine::max;
@@ -140,6 +143,83 @@ TEST_CASE("Evaluate to double", "[lambda_double]")
     d = v.call({5.5, 3.3});
     REQUIRE(::fabs(d - 8.8) < 1e-12);
 }
+
+TEST_CASE("Evaluate logical xor to double", "[lambda_double]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto expr = logical_xor({Lt(x, integer(2)), Lt(y, integer(5))});
+
+    LambdaRealDoubleVisitor v;
+    v.init({x, y}, *expr);
+
+    REQUIRE(v.call({1.0, 4.0}) == Approx(0.0));
+    REQUIRE(v.call({1.0, 6.0}) == Approx(1.0));
+    REQUIRE(v.call({3.0, 4.0}) == Approx(1.0));
+    REQUIRE(v.call({3.0, 6.0}) == Approx(0.0));
+}
+
+#ifdef HAVE_SYMENGINE_LLVM
+TEST_CASE("Evaluate logical xor with llvm visitors", "[llvm_double]")
+{
+    auto x = symbol("x");
+    auto y = symbol("y");
+    auto expr = logical_xor({Lt(x, integer(2)), Lt(y, integer(5))});
+
+    LambdaRealDoubleVisitor lambda;
+    lambda.init({x, y}, *expr);
+
+    LLVMDoubleVisitor llvm_double;
+    llvm_double.init({x, y}, *expr);
+
+    LLVMFloatVisitor llvm_float;
+    llvm_float.init({x, y}, *expr);
+
+    struct Case {
+        double x;
+        double y;
+        double expected;
+    };
+
+    const std::array<Case, 4> cases = {
+        {{1.0, 4.0, 0.0}, {1.0, 6.0, 1.0}, {3.0, 4.0, 1.0}, {3.0, 6.0, 0.0}}};
+
+    for (const auto &test_case : cases) {
+        INFO("x=" << test_case.x << ", y=" << test_case.y);
+        REQUIRE(lambda.call({test_case.x, test_case.y})
+                == Approx(test_case.expected));
+        REQUIRE(llvm_double.call({test_case.x, test_case.y})
+                == Approx(test_case.expected));
+        REQUIRE(llvm_float.call({static_cast<float>(test_case.x),
+                                 static_cast<float>(test_case.y)})
+                == Approx(test_case.expected));
+    }
+}
+
+TEST_CASE("Evaluate logical not with llvm visitors", "[llvm_double]")
+{
+    auto x = symbol("x");
+    auto expr
+        = logical_not(logical_xor({Gt(x, integer(2)), Lt(x, integer(4))}));
+
+    LambdaRealDoubleVisitor lambda;
+    lambda.init({x}, *expr);
+
+    LLVMDoubleVisitor llvm_double;
+    llvm_double.init({x}, *expr);
+
+    LLVMFloatVisitor llvm_float;
+    llvm_float.init({x}, *expr);
+
+    REQUIRE(lambda.call({1.0}) == Approx(0.0));
+    REQUIRE(llvm_double.call({1.0}) == Approx(0.0));
+    REQUIRE(llvm_float.call({1.0f}) == Approx(0.0));
+
+    REQUIRE(lambda.call({3.0}) == Approx(1.0));
+    REQUIRE(llvm_double.call({3.0}) == Approx(1.0));
+    REQUIRE(llvm_float.call({3.0f}) == Approx(1.0));
+}
+#endif
 
 TEST_CASE("Evaluate double cse", "[lambda_double_cse]")
 {
@@ -357,6 +437,45 @@ TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
         v.call(out, {});
         REQUIRE(std::isnan(out[0]));
         REQUIRE(std::isinf(out[1]));
+    }
+}
+
+TEST_CASE("Check llvm and lambda are equal for lowered functions",
+          "[llvm_double]")
+{
+    auto x = symbol("x");
+
+    struct Case {
+        RCP<const Basic> expr;
+        double input;
+    };
+
+    const std::vector<Case> cases = {
+        {cot(x), 0.5},  {csc(x), 0.5},   {sec(x), 0.5},   {acot(x), 3.0},
+        {acsc(x), 2.0}, {asec(x), 2.0},  {csch(x), 0.5},  {sech(x), 0.5},
+        {coth(x), 0.9}, {acsch(x), 2.0}, {asech(x), 0.5}, {acoth(x), 3.3},
+    };
+
+    for (const auto &test_case : cases) {
+        std::cout << "expr=" << test_case.expr->__str__()
+                  << ", x=" << test_case.input << std::endl;
+
+        LambdaRealDoubleVisitor lambda;
+        lambda.init({x}, *test_case.expr);
+        const double expected = lambda.call({test_case.input});
+        std::cout << "expected: " << expected << std::endl;
+
+        LLVMDoubleVisitor llvm_double;
+        llvm_double.init({x}, *test_case.expr);
+
+        LLVMFloatVisitor llvm_float;
+        llvm_float.init({x}, *test_case.expr);
+
+        std::cout << "result: " << llvm_double.call({test_case.input})
+                  << std::endl;
+        REQUIRE(llvm_double.call({test_case.input}) == Approx(expected));
+        REQUIRE(llvm_float.call({static_cast<float>(test_case.input)})
+                == Approx(expected).epsilon(1e-5));
     }
 }
 

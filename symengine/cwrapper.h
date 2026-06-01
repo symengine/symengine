@@ -1,6 +1,7 @@
 #ifndef CWRAPPER_H
 #define CWRAPPER_H
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "symengine/symengine_config.h"
@@ -31,6 +32,15 @@ extern "C" {
     }
 
 typedef symengine_exceptions_t CWRAPPER_OUTPUT_TYPE;
+
+//! Precision for code printers (ccode, cudacode, metalcode)
+typedef enum {
+    SYMENGINE_DOUBLE = 0,
+    SYMENGINE_FLOAT = 1,
+    SYMENGINE_HALF = 2,
+} BasicCodePrinterPrecision;
+//! Code printer settings object
+typedef struct BasicCodePrinterSettings BasicCodePrinterSettings;
 
 typedef enum {
 #define SYMENGINE_INCLUDE_ALL
@@ -81,14 +91,8 @@ struct CRCPBasic_C {
 //  goes out of scope, basic_free_stack() must be called.
 //
 //  For downstream projects, define a dummy struct with the right size, so
-//  that it can be allocated on the stack. When building the library in
-//  cwrapper.cpp, the CRCPBasic is declared in cwrapper.cpp which removes
-//  the need to cast the C struct to C++ struct every time.
-#ifdef symengine_EXPORTS
-typedef struct CRCPBasic basic_struct;
-#else
+//  that it can be allocated on the stack.
 typedef struct CRCPBasic_C basic_struct;
-#endif
 
 typedef struct CSetBasic CSetBasic;
 
@@ -376,6 +380,14 @@ char *basic_dumps(const basic s, unsigned long *size);
 //! Deserialize an expression
 CWRAPPER_OUTPUT_TYPE basic_loads(basic s, const char *c, unsigned long size);
 
+//! Return a struct for holding code printer settings
+BasicCodePrinterSettings *basic_code_printer_settings_new();
+//! Free a struct for holding code printer settings
+void basic_code_printer_settings_free(BasicCodePrinterSettings *self);
+//! Set the precision in the code printer settings
+void basic_code_printer_settings_set_precision(BasicCodePrinterSettings *self,
+                                               BasicCodePrinterPrecision prec);
+
 //! Returns a new char pointer to the string representation of s.
 char *basic_str(const basic s);
 //! Returns a new char pointer to the string representation of s.
@@ -387,6 +399,19 @@ char *basic_str_mathml(const basic s);
 char *basic_str_latex(const basic s);
 //! Printing C code
 char *basic_str_ccode(const basic s);
+//! Printing C code with optional settings; NULL uses defaults
+char *basic_str_ccode_settings(const basic s,
+                               const BasicCodePrinterSettings *settings);
+//! Printing CUDA code
+char *basic_str_cudacode(const basic s);
+//! Printing CUDA code with optional settings; NULL uses defaults
+char *basic_str_cudacode_settings(const basic s,
+                                  const BasicCodePrinterSettings *settings);
+//! Printing Metal code
+char *basic_str_metalcode(const basic s);
+//! Printing Metal code with optional settings; NULL uses float defaults
+char *basic_str_metalcode_settings(const basic s,
+                                   const BasicCodePrinterSettings *settings);
 //! Printing JavaScript code
 char *basic_str_jscode(const basic s);
 //! Frees the string s

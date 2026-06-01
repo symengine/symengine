@@ -13,3 +13,11 @@ add_subdirectory(cwrapper)
 add_subdirectory(expression)
 add_subdirectory(logic)
 add_subdirectory(finitediff)
+
+if (BUILD_CUDA_TESTS)
+    add_subdirectory(cuda)
+endif()
+
+if (BUILD_METAL_TESTS)
+    add_subdirectory(metal)
+endif()

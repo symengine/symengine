@@ -6,7 +6,7 @@ jobs:
   test_tutorials:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: Run tutorials
         run: |
           source bin/install_deps.sh
