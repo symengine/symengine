@@ -166,20 +166,24 @@ jobs:
 
           - BUILD_TYPE: Debug
             WITH_LLVM: 5.0
+            BUILD_METAL_TESTS: yes
             OS: macos-14
             CC: clang
 
           - BUILD_TYPE: Release
             WITH_LLVM: 5.0
+            BUILD_METAL_TESTS: yes
             OS: macos-14
             CC: clang
 
           - BUILD_TYPE: Debug
+            BUILD_METAL_TESTS: yes
             OS: macos-14
             CC: gcc
             WITH_SYMENGINE_RCP: yes
 
           - BUILD_TYPE: Release
+            BUILD_METAL_TESTS: yes
             OS: macos-14
             CC: gcc
 
@@ -280,13 +284,14 @@ jobs:
       CXX: ${{ matrix.CXX }}
       WITH_UNITY_BUILD: ${{ matrix.WITH_UNITY_BUILD }}
       WITH_COVERAGE: ${{ matrix.WITH_COVERAGE }}
+      BUILD_METAL_TESTS: ${{ matrix.BUILD_METAL_TESTS }}
       BUILD_TYPE: ${{ matrix.BUILD_TYPE }}
       WITH_SANITIZE: ${{ matrix.WITH_SANITIZE }}
       WITH_MPC: ${{ matrix.WITH_MPC }}
       BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
       NO_RTTI: ${{ matrix.NO_RTTI }}
       MSYS_ENV: ${{ matrix.MSYS_ENV }}
-      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_UNITY_BUILD }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}-${{ matrix.NO_RTTI }}-${{ matrix.MSYS_ENV }}
+      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_UNITY_BUILD }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.BUILD_METAL_TESTS }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}-${{ matrix.NO_RTTI }}-${{ matrix.MSYS_ENV }}
       CCACHE_DIR: 'D:\a\_temp\msys\msys64\home\runneradmin\.ccache'
 
     steps:
@@ -302,7 +307,7 @@ jobs:
       if: matrix.MSYS_ENV == ''
       run: echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
 
-    - uses: conda-incubator/setup-miniconda@v3
+    - uses: conda-incubator/setup-miniconda@v4
       if: matrix.MSYS_ENV == ''
       with:
         activate-environment: symengine
@@ -312,14 +317,14 @@ jobs:
         conda-remove-defaults: "true"
 
     - name: Cache ccache
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-${{ github.job }}-${{ env.OPTIONS }}-${{ runner.os }}-${{ github.sha }}
         restore-keys: ccache-${{ github.job }}-${{ env.OPTIONS }}-${{ runner.os }}-
 
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         fetch-depth: 2
 
@@ -336,8 +341,8 @@ jobs:
   matchpycpp:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: actions/checkout@v6
+      - uses: conda-incubator/setup-miniconda@v4
         with:
           channels: conda-forge
           environment-file: symengine/utilities/matchpycpp/environment.yml
@@ -347,7 +352,7 @@ jobs:
   clang-format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - run: pip install "clang-format==11.1.0.2" && ./bin/run_clang_format.sh
 
   check:

@@ -722,7 +722,11 @@ SYMENGINE_LOGIC_FUNCTION(Xor, CreateXor);
 
 void LLVMVisitor::bvisit(const Not &x)
 {
-    builder->CreateNot(apply(*x.get_arg()));
+    set_double(0.0);
+    llvm::Value *zero_val = result_;
+    llvm::Value *value = builder->CreateFCmpONE(apply(*x.get_arg()), zero_val);
+    result_ = builder->CreateUIToFP(builder->CreateNot(value),
+                                    get_float_type(&mod->getContext()));
 }
 
 #define SYMENGINE_RELATIONAL_FUNCTION(Class, method)                           \

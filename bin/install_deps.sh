@@ -143,6 +143,15 @@ else
 
 fi
 
+if [[ "${RUNNER_OS}" == "macOS" ]] && [[ "${BUILD_METAL_TESTS}" == "yes" ]]; then
+  METALCPP_ARCHIVE_URL="https://developer.apple.com/metal/cpp/files/metal-cpp_macOS14.2_iOS17.2.zip"
+  METALCPP_ARCHIVE_PATH="/tmp/metal-cpp.zip"
+  export METALCPP_ROOT="/tmp/metal-cpp"
+  rm -rf "${METALCPP_ROOT}" "${METALCPP_ARCHIVE_PATH}"
+  curl -L "${METALCPP_ARCHIVE_URL}" -o "${METALCPP_ARCHIVE_PATH}"
+  unzip -q "${METALCPP_ARCHIVE_PATH}" -d /tmp
+fi
+
 export CXX="ccache ${CXX}"
 export CC="ccache ${CC}"
 export CCACHE_SLOPPINESS="pch_defines,time_macros"

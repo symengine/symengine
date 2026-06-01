@@ -9,12 +9,12 @@ jobs:
       run:
         shell: bash -l {0}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           submodules: "recursive"
           fetch-depth: 0
       - name: Cache conda
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         env:
           CACHE_NUMBER: 0
         with:
@@ -23,14 +23,14 @@ jobs:
             ${{ runner.os }}-conda-${{ env.CACHE_NUMBER }}-${{
             hashFiles('doxygendoc.yml') }}
       - name: Cache pip
-        uses: actions/cache@v3
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('doxygendoc.yml') }}
           restore-keys: |
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: conda-incubator/setup-miniconda@v4
         with:
           activate-environment: doxygendoc
           environment-file: ./binder/doxygendoc.yml
@@ -47,7 +47,7 @@ jobs:
           cd ../../
       - name: Deploy Docs
         if: ${{ github.ref == 'refs/heads/master' && github.repository == 'Symengine/symengine' }}
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages

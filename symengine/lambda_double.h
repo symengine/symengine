@@ -474,7 +474,7 @@ public:
 
         result_ = [=](const double *x) {
             bool result = bool(applys[0](x));
-            for (unsigned int i = 0; i < applys.size(); i++) {
+            for (unsigned int i = 1; i < applys.size(); i++) {
                 result = result != bool(applys[i](x));
             }
             return double(result);

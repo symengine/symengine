@@ -154,6 +154,12 @@ fi
 if [[ "${WITH_COVERAGE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_COVERAGE=${WITH_COVERAGE}"
 fi
+if [[ "${BUILD_METAL_TESTS}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_METAL_TESTS=${BUILD_METAL_TESTS}"
+fi
+if [[ "${METALCPP_ROOT}" != "" ]]; then
+    cmake_line="$cmake_line -DMETALCPP_ROOT=${METALCPP_ROOT}"
+fi
 if [[ "${WITH_UNITY_BUILD}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_UNITY_BUILD=${WITH_UNITY_BUILD}"
 fi
