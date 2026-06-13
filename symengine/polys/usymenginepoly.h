@@ -6,6 +6,15 @@
 namespace SymEngine
 {
 
+namespace detail
+{
+template <typename T>
+inline void mp_pow_ui_dispatch(T &res, const T &base, unsigned long exp)
+{
+    mp_pow_ui(res, base, exp);
+}
+} // namespace detail
+
 template <typename Container, template <typename X, typename Y> class BaseType,
           typename Poly>
 class USymEnginePoly : public BaseType<Container, Poly>
@@ -70,11 +79,11 @@ public:
 
         for (auto it = this->get_poly().dict_.rbegin();
              it != this->get_poly().dict_.rend(); ++it) {
-            mp_pow_ui(x_pow, x, last_deg - (*it).first);
+            detail::mp_pow_ui_dispatch(x_pow, x, last_deg - (*it).first);
             last_deg = (*it).first;
             result = (*it).second + x_pow * result;
         }
-        mp_pow_ui(x_pow, x, last_deg);
+        detail::mp_pow_ui_dispatch(x_pow, x, last_deg);
         result *= x_pow;
 
         return result;

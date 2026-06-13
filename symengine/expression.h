@@ -269,6 +269,12 @@ inline Expression pow(const Expression &base, const Expression &exp)
     return pow(base.get_basic(), exp.get_basic());
 }
 
+inline void mp_pow_ui(Expression &res, const Expression &base,
+                      unsigned long exp)
+{
+    res = pow(base, Expression(integer(static_cast<signed long>(exp))));
+}
+
 inline Expression expand(const Expression &arg)
 {
     return expand(arg.get_basic());
