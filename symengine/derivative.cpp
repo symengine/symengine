@@ -760,12 +760,12 @@ void DiffVisitor::bvisit(const Boolean &self)
 void DiffVisitor::bvisit(const GaloisField &self)
 {
     GaloisFieldDict d;
-    if (self.get_var()->__eq__(*x)) {
+    if (self.get_degree() > 0) {
         d = self.get_poly().gf_diff();
-        result_ = GaloisField::from_dict(self.get_var(), std::move(d));
     } else {
-        result_ = GaloisField::from_dict(self.get_var(), std::move(d));
+        d.modulo_ = self.get_poly().modulo_;
     }
+    result_ = GaloisField::from_dict(self.get_var(), std::move(d));
 }
 
 void DiffVisitor::bvisit(const Piecewise &self)
