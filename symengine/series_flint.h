@@ -34,6 +34,8 @@ public:
     static fqp_t convert(const Rational &x);
     static fqp_t convert(const Integer &x);
     static fqp_t convert(const Basic &x);
+    using SeriesBase<fqp_t, fmpq_wrapper, URatPSeriesFlint>::mul;
+    using SeriesBase<fqp_t, fmpq_wrapper, URatPSeriesFlint>::pow;
     static inline fqp_t mul(const fqp_t &s, const fqp_t &r, unsigned prec)
     {
         return s.mullow(r, prec);
