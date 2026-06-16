@@ -49,6 +49,7 @@ using SymEngine::NegInf;
 using SymEngine::Number;
 using SymEngine::one;
 using SymEngine::parse;
+using SymEngine::parse_old;
 using SymEngine::ParseError;
 using SymEngine::pi;
 using SymEngine::piecewise;
@@ -60,6 +61,7 @@ using SymEngine::real_double;
 using SymEngine::RealDouble;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::truncate;
 using SymEngine::UIntPoly;
 using SymEngine::zero;
 
@@ -325,6 +327,23 @@ TEST_CASE("Parsing: functions", "[parser]")
     s = "floor(x) + ceiling(y)";
     res = parse(s);
     REQUIRE(eq(*res, *add(floor(x), ceiling(y))));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "truncate(5.2)";
+    res = parse(s);
+    REQUIRE(eq(*res, *integer(5)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "truncate(x)";
+    res = parse(s);
+    REQUIRE(is_a<SymEngine::Truncate>(*res));
+    REQUIRE(eq(*res, *truncate(x)));
+    REQUIRE(eq(*res, *parse(res->__str__())));
+
+    s = "truncate(x + y)";
+    res = parse(s);
+    REQUIRE(is_a<SymEngine::Truncate>(*res));
+    REQUIRE(eq(*res, *truncate(add(x, y))));
     REQUIRE(eq(*res, *parse(res->__str__())));
 
     s = "beta(x, y)";
@@ -972,6 +991,15 @@ TEST_CASE("Parsing: errors", "[parser]")
 
     s = "And(x, y)";
     CHECK_THROWS_AS(parse(s), ParseError);
+}
+
+TEST_CASE("Parsing: parse_old handles truncate", "[parser]")
+{
+    RCP<const Basic> x = symbol("x");
+    auto res = parse_old("truncate(x)");
+
+    REQUIRE(is_a<SymEngine::Truncate>(*res));
+    REQUIRE(eq(*res, *truncate(x)));
 }
 
 TEST_CASE("Parsing: bison stack reallocation", "[parser]")

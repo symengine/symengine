@@ -132,6 +132,7 @@ init_sbml_parser_single_arg_functions()
                      {"floor", floor},
                      {"ceil", ceiling},
                      {"ceiling", ceiling},
+                     {"truncate", truncate},
                      {"ln", (single_arg_func)log},
                      {"log", log10},
                      {"log10", log10},
