@@ -202,22 +202,86 @@ void save_helper(Archive &ar, const rational_class &rat)
     save_helper(ar, num);
     save_helper(ar, den);
 }
-// Following is an ugly hack for templated integer classes
-// Not sure why a direct version doesn't work
+template <typename Archive>
+void save_helper(Archive &ar, const Expression &c)
+{
+    ar(c.get_basic());
+}
+template <typename Archive, typename Container>
+void save_poly_dict(Archive &ar, const Container &c)
+{
+    ar(c.dict_.size());
+    for (const auto &term : c.dict_) {
+        ar(term.first);
+        save_helper(ar, term.second);
+    }
+}
+template <typename Archive>
+void save_basic(Archive &ar, const UIntPoly &b)
+{
+    ar(b.get_var());
+    save_poly_dict(ar, b.get_poly());
+}
 template <typename Archive>
 void save_basic(Archive &ar, const URatPoly &b)
 {
     ar(b.get_var());
-    const URatDict &urd = b.get_poly();
-    size_t l = urd.size();
-    ar(l);
-    for (auto &p : urd.dict_) {
-        unsigned int first = p.first;
-        const rational_class &second = p.second;
-        ar(first);
-        save_helper(ar, second);
+    save_poly_dict(ar, b.get_poly());
+}
+template <typename Archive>
+void save_basic(Archive &ar, const UExprPoly &b)
+{
+    ar(b.get_var());
+    save_poly_dict(ar, b.get_poly());
+}
+template <typename Archive>
+void save_basic(Archive &ar, const MIntPoly &b)
+{
+    ar(b.get_vars());
+    save_poly_dict(ar, b.get_poly());
+}
+template <typename Archive>
+void save_basic(Archive &ar, const MExprPoly &b)
+{
+    ar(b.get_vars());
+    save_poly_dict(ar, b.get_poly());
+}
+#if defined(HAVE_SYMENGINE_FLINT) || defined(HAVE_SYMENGINE_PIRANHA)
+template <typename Archive, typename Poly>
+void save_dense_poly(Archive &ar, const Poly &b)
+{
+    ar(b.get_var());
+    unsigned int size = static_cast<unsigned int>(b.size());
+    ar(size);
+    for (unsigned int i = 0; i < size; ++i) {
+        save_helper(ar, b.get_coeff(i));
     }
 }
+#endif
+#ifdef HAVE_SYMENGINE_FLINT
+template <typename Archive>
+void save_basic(Archive &ar, const UIntPolyFlint &b)
+{
+    save_dense_poly(ar, b);
+}
+template <typename Archive>
+void save_basic(Archive &ar, const URatPolyFlint &b)
+{
+    save_dense_poly(ar, b);
+}
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+template <typename Archive>
+void save_basic(Archive &ar, const UIntPolyPiranha &b)
+{
+    save_dense_poly(ar, b);
+}
+template <typename Archive>
+void save_basic(Archive &ar, const URatPolyPiranha &b)
+{
+    save_dense_poly(ar, b);
+}
+#endif
 template <class Archive>
 inline void save_basic(Archive &ar, const Integer &b)
 {
@@ -493,36 +557,117 @@ void load_helper(Archive &ar, integer_class &intgr)
     intgr = integer_class(std::move(int_str));
 }
 template <typename Archive>
-void load_helper(Archive &ar, const rational_class &rat)
+void load_helper(Archive &ar, rational_class &rat)
 {
     integer_class num, den;
     load_helper(ar, num);
     load_helper(ar, den);
+    rat = rational_class(num, den);
 }
-// Following is an ugly hack for templated integer classes
-// Not sure why the other clean version doesn't work
 template <typename Archive>
-RCP<const Basic> load_basic(Archive &ar, const URatPoly &b)
+void load_helper(Archive &ar, Expression &c)
+{
+    RCP<const Basic> b;
+    ar(b);
+    c = Expression(std::move(b));
+}
+template <typename RawDict, typename Archive>
+RawDict load_poly_dict(Archive &ar)
+{
+    size_t size;
+    ar(size);
+    RawDict dict;
+    for (size_t i = 0; i < size; ++i) {
+        typename RawDict::key_type exponent;
+        typename RawDict::mapped_type coeff;
+        ar(exponent);
+        load_helper(ar, coeff);
+        dict.emplace(std::move(exponent), std::move(coeff));
+    }
+    return dict;
+}
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const UIntPoly> &)
 {
     RCP<const Basic> var;
-    size_t l;
     ar(var);
-    ar(l);
-    std::map<unsigned, rational_class> d;
-    auto hint = d.begin();
-    for (size_t i = 0; i < l; i++) {
-        unsigned int first;
-        rational_class second;
-        ar(first);
-        load_helper(ar, second);
-#if !defined(__clang__) && (__GNUC__ == 4 && __GNUC_MINOR__ <= 7)
-        d.insert(hint, std::make_pair(std::move(first), std::move(second)));
-#else
-        d.emplace_hint(hint, std::move(first), std::move(second));
-#endif
-    }
-    return make_rcp<const URatPoly>(var, URatDict(std::move(d)));
+    return make_rcp<const UIntPoly>(var,
+                                    UIntDict(load_poly_dict<map_uint_mpz>(ar)));
 }
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const URatPoly> &)
+{
+    RCP<const Basic> var;
+    ar(var);
+    return make_rcp<const URatPoly>(var,
+                                    URatDict(load_poly_dict<map_uint_mpq>(ar)));
+}
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const UExprPoly> &)
+{
+    RCP<const Basic> var;
+    ar(var);
+    return make_rcp<const UExprPoly>(
+        var, UExprDict(load_poly_dict<map_int_Expr>(ar)));
+}
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const MIntPoly> &)
+{
+    set_basic vars;
+    ar(vars);
+    auto dict = load_poly_dict<umap_uvec_mpz>(ar);
+    return MIntPoly::from_container(
+        vars, MIntDict(std::move(dict), static_cast<unsigned>(vars.size())));
+}
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const MExprPoly> &)
+{
+    set_basic vars;
+    ar(vars);
+    auto dict = load_poly_dict<umap_vec_expr>(ar);
+    return MExprPoly::from_container(
+        vars, MExprDict(std::move(dict), static_cast<unsigned>(vars.size())));
+}
+#if defined(HAVE_SYMENGINE_FLINT) || defined(HAVE_SYMENGINE_PIRANHA)
+template <typename Poly, typename Cf, typename Archive>
+RCP<const Basic> load_dense_poly(Archive &ar)
+{
+    RCP<const Basic> var;
+    unsigned int size;
+    ar(var, size);
+    std::map<unsigned, Cf> dict;
+    for (unsigned int i = 0; i < size; ++i) {
+        Cf coeff;
+        load_helper(ar, coeff);
+        dict.emplace(i, std::move(coeff));
+    }
+    return Poly::from_dict(var, std::move(dict));
+}
+#endif
+#ifdef HAVE_SYMENGINE_FLINT
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const UIntPolyFlint> &)
+{
+    return load_dense_poly<UIntPolyFlint, integer_class>(ar);
+}
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const URatPolyFlint> &)
+{
+    return load_dense_poly<URatPolyFlint, rational_class>(ar);
+}
+#endif
+#ifdef HAVE_SYMENGINE_PIRANHA
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const UIntPolyPiranha> &)
+{
+    return load_dense_poly<UIntPolyPiranha, integer_class>(ar);
+}
+template <typename Archive>
+RCP<const Basic> load_basic(Archive &ar, RCP<const URatPolyPiranha> &)
+{
+    return load_dense_poly<URatPolyPiranha, rational_class>(ar);
+}
+#endif
 template <class Archive>
 RCP<const Basic> load_basic(Archive &ar, RCP<const Integer> &)
 {
