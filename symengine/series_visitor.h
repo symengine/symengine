@@ -2,6 +2,7 @@
 #define SYMENGINE_SERIES_VISITOR_H
 
 #include <symengine/visitor.h>
+#include <symengine/calculate.h>
 
 namespace SymEngine
 {
@@ -132,7 +133,7 @@ public:
         RCP<const Symbol> s = symbol(varname);
         RCP<const Basic> arg = x.get_args()[0];
         if (eq(*arg->subs({{s, zero}}), *zero)) {
-            RCP<const Basic> g = gamma(add(arg, one));
+            RCP<const Basic> g = calculate(gamma(add(arg, one)));
             if (is_a<Gamma>(*g)) {
                 bvisit(down_cast<const Function &>(*g));
                 p *= Series::pow(var, -1, prec);

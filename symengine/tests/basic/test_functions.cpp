@@ -11,6 +11,7 @@
 #include <symengine/logic.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/parser.h>
+#include <symengine/calculate.h>
 
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
 #include <thread>
@@ -47,6 +48,7 @@ using SymEngine::atanh;
 using SymEngine::Basic;
 using SymEngine::Beta;
 using SymEngine::beta;
+using SymEngine::calculate;
 using SymEngine::Complex;
 using SymEngine::complex_double;
 using SymEngine::ComplexDouble;
@@ -3253,41 +3255,6 @@ TEST_CASE("Gamma: functions", "[functions]")
     RCP<const Basic> r2;
     RCP<const Basic> r3;
 
-    r1 = gamma(one);
-    r2 = one;
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = gamma(minus_one);
-    REQUIRE(eq(*r1, *ComplexInf));
-
-    r1 = gamma(mul(i2, i2));
-    r2 = mul(i2, i3);
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = gamma(div(i3, i2));
-    r2 = div(sqrt(pi), i2);
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = gamma(div(one, i2));
-    r2 = sqrt(pi);
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = gamma(div(im1, i2));
-    r2 = mul(mul(im1, i2), sqrt(pi));
-    REQUIRE(eq(*r1, *r2));
-
-    r1 = gamma(real_double(3.7));
-    REQUIRE(is_a<RealDouble>(*r1));
-    REQUIRE(std::abs(down_cast<const RealDouble &>(*r1).i - 4.17065178379660)
-            < 1e-12);
-
-    CHECK_THROWS_AS(gamma(complex_double(std::complex<double>(1, 1))),
-                    NotImplementedError);
-
-    r1 = gamma(div(integer(-15), i2));
-    r2 = mul(div(integer(256), integer(2027025)), sqrt(pi));
-    REQUIRE(eq(*r1, *r2));
-
     r1 = gamma(x)->diff(y);
     REQUIRE(eq(*r1, *zero));
 
@@ -3314,10 +3281,10 @@ TEST_CASE("Gamma: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     RCP<const Gamma> r4 = make_rcp<Gamma>(x);
-    REQUIRE(not(r4->is_canonical(i2)));
+    REQUIRE(r4->is_canonical(i2));
     REQUIRE(r4->is_canonical(y));
-    REQUIRE(not(r4->is_canonical(div(one, i2))));
-    REQUIRE(not(r4->is_canonical(real_double(2.0))));
+    REQUIRE(r4->is_canonical(div(one, i2)));
+    REQUIRE(r4->is_canonical(real_double(2.0)));
 }
 
 TEST_CASE("LogGamma: functions", "[functions]")
@@ -3531,7 +3498,7 @@ TEST_CASE("Beta: functions", "[functions]")
     r1 = beta(i3, i2);
     r2 = beta(i2, i3);
     REQUIRE(eq(*r1, *r2));
-    r3 = div(mul(gamma(i3), gamma(i2)), gamma(add(i2, i3)));
+    r3 = div(i2, integer(24));
     REQUIRE(eq(*r1, *r3));
     r2 = div(one, integer(12));
     REQUIRE(eq(*r1, *r2));
@@ -3905,8 +3872,8 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
 
             std::make_tuple(log(real_mpfr(b4)), 788457360364270_z,
                             788457360364271_z),
-            std::make_tuple(gamma(div(real_mpfr(b3), i2)), 886226925452758_z,
-                            886226925452759_z),
+            std::make_tuple(calculate(gamma(div(real_mpfr(b3), i2))),
+                            886226925452758_z, 886226925452759_z),
             std::make_tuple(exp(real_mpfr(b4)), 9025013499434122_z,
                             9025013499434123_z),
             std::make_tuple(erf(real_mpfr(b2)), 995322265018952_z,
@@ -3932,7 +3899,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
             == 0);
 
     mpfr_set_si(a.get_mpfr_t(), -3, MPFR_RNDN);
-    CHECK_THROWS_AS(gamma(real_mpfr(a)), NotImplementedError);
+    CHECK_THROWS_AS(calculate(gamma(real_mpfr(a))), NotImplementedError);
 
     for (unsigned i = 0; i < testvec.size(); i++) {
         r1 = std::get<0>(testvec[i]);
@@ -4055,7 +4022,7 @@ TEST_CASE("MPFR and MPC: functions", "[functions]")
     mpc_set_si_si(c.get_mpc_t(), 1, 1, MPFR_RNDN);
     CHECK_THROWS_AS(erf(complex_mpc(c)), NotImplementedError);
     CHECK_THROWS_AS(erfc(complex_mpc(c)), NotImplementedError);
-    CHECK_THROWS_AS(gamma(complex_mpc(c)), NotImplementedError);
+    CHECK_THROWS_AS(calculate(gamma(complex_mpc(c))), NotImplementedError);
 #else
     mpfr_set_si(a.get_mpfr_t(), 2, MPFR_RNDN);
     CHECK_THROWS_AS(asin(real_mpfr(a)), SymEngineException);

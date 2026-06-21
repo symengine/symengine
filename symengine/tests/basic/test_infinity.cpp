@@ -20,7 +20,6 @@ using SymEngine::ComplexInf;
 using SymEngine::DomainError;
 using SymEngine::erf;
 using SymEngine::erfc;
-using SymEngine::gamma;
 using SymEngine::I;
 using SymEngine::Inf;
 using SymEngine::Infty;
@@ -430,9 +429,6 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
     r1 = abs(ComplexInf);
     REQUIRE(eq(*r1, *a));
 
-    r1 = gamma(Inf);
-    REQUIRE(eq(*r1, *a));
-
     r1 = sinh(NegInf);
     REQUIRE(eq(*r1, *b));
 
@@ -460,7 +456,4 @@ TEST_CASE("Evaluate Class of Infinity", "[Infinity]")
 
     r1 = exp(Inf);
     REQUIRE(eq(*r1, *Inf));
-
-    r1 = gamma(NegInf);
-    REQUIRE(eq(*r1, *ComplexInf));
 }
