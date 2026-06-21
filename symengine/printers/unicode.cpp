@@ -417,8 +417,7 @@ void UnicodePrinter::bvisit(const Add &x)
             if (down_cast<const Number &>(*p.second).is_negative()) {
                 minus = true;
             }
-            // FIXME: Double minus here
-            t = parenthesizeLT(p.second, PrecedenceEnum::Mul);
+            t = parenthesizeLT(abs(p.second), PrecedenceEnum::Mul);
             auto op = print_mul();
             t.add_right(op);
             auto rhs = parenthesizeLT(p.first, PrecedenceEnum::Mul);
@@ -437,7 +436,14 @@ void UnicodePrinter::bvisit(const Add &x)
                 box.add_right(t);
             }
         } else {
-            box.add_right(t);
+            if (minus) {
+                StringBox op("- ");
+                box.add_right(op);
+                box.add_right(t);
+                minus = false;
+            } else
+                box.add_right(t);
+
             first = false;
         }
     }
@@ -474,7 +480,9 @@ void UnicodePrinter::bvisit(const Mul &x)
     } else if (neq(*(x.get_coef()), *one)) {
         RCP<const Basic> numer, denom;
         as_numer_denom(x.get_coef(), outArg(numer), outArg(denom));
-        if (neq(*numer, *one)) {
+        if (eq(*numer, *minus_one)) {
+            box1 = StringBox("-");
+        } else if (neq(*numer, *one)) {
             num = true;
             box1 = parenthesizeLT(numer, PrecedenceEnum::Mul);
             first_box1 = false;
@@ -522,7 +530,6 @@ void UnicodePrinter::bvisit(const Mul &x)
     if (not num) {
         auto onebox = StringBox("1");
         box1.add_right(onebox);
-        box1.add_right(mulbox);
     }
 
     if (den != 0) {
