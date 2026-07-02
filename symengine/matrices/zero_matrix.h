@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class ZeroMatrix : public MatrixExpr
+class SYMENGINE_EXPORT ZeroMatrix : public MatrixExpr
 {
 private:
     RCP<const Basic> m_, n_; // m >= 0, n >= 0
@@ -39,6 +39,7 @@ public:
     }
 };
 
+SYMENGINE_EXPORT
 RCP<const MatrixExpr> zero_matrix(const RCP<const Basic> &m,
                                   const RCP<const Basic> &n);
 

@@ -8,7 +8,7 @@
 namespace SymEngine
 {
 
-class MatrixAdd : public MatrixExpr
+class SYMENGINE_EXPORT MatrixAdd : public MatrixExpr
 {
 private:
     vec_basic terms_;
@@ -35,7 +35,7 @@ public:
     }
 };
 
-RCP<const MatrixExpr> matrix_add(const vec_basic &terms);
+SYMENGINE_EXPORT RCP<const MatrixExpr> matrix_add(const vec_basic &terms);
 
 } // namespace SymEngine
 

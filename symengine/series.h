@@ -713,10 +713,12 @@ public:
     }
 };
 
+SYMENGINE_EXPORT
 RCP<const SeriesCoeffInterface> series(const RCP<const Basic> &ex,
                                        const RCP<const Symbol> &var,
                                        unsigned int prec);
 
+SYMENGINE_EXPORT
 RCP<const SeriesCoeffInterface> series_invfunc(const RCP<const Basic> &ex,
                                                const RCP<const Symbol> &var,
                                                unsigned int prec);

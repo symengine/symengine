@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class SbmlPrinter : public BaseVisitor<SbmlPrinter, StrPrinter>
+class SYMENGINE_EXPORT SbmlPrinter : public BaseVisitor<SbmlPrinter, StrPrinter>
 {
 public:
     using StrPrinter::apply;

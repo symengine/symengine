@@ -103,11 +103,13 @@ struct storage_for {
 #endif
 
 #define DEFINE_CONSTANT(t, n, d)                                               \
-    static storage_for<RCP<const t>> n##_buf;                                  \
+    storage_for<RCP<const t>> n##_buf;                                         \
     RCP<const t> &n = reinterpret_cast<RCP<const t> &>(n##_buf);
 
 DEFINE_CONSTANTS
 #undef DEFINE_CONSTANT
+
+ConstantInitializer constantInitializer;
 
 ConstantInitializer::ConstantInitializer()
 {

@@ -22,18 +22,29 @@
 namespace SymEngine
 {
 
+SYMENGINE_EXPORT
 tribool is_diagonal(const MatrixExpr &m,
                     const Assumptions *assumptions = nullptr);
-tribool is_lower(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
-tribool is_real(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_lower(const MatrixExpr &m,
+                                  const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_real(const MatrixExpr &m,
+                                 const Assumptions *assumptions = nullptr);
+
+SYMENGINE_EXPORT
 tribool is_square(const MatrixExpr &m,
                   const Assumptions *assumptions = nullptr);
+
+SYMENGINE_EXPORT
 tribool is_symmetric(const MatrixExpr &m,
                      const Assumptions *assumptions = nullptr);
+
+SYMENGINE_EXPORT
 tribool is_toeplitz(const MatrixExpr &m,
                     const Assumptions *assumptions = nullptr);
-tribool is_upper(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
-tribool is_zero(const MatrixExpr &m, const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_upper(const MatrixExpr &m,
+                                  const Assumptions *assumptions = nullptr);
+SYMENGINE_EXPORT tribool is_zero(const MatrixExpr &m,
+                                 const Assumptions *assumptions = nullptr);
 
 }; // namespace SymEngine
 

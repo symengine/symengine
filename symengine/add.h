@@ -23,7 +23,7 @@ namespace SymEngine
  *   @class Add
  *   @brief The base class for representing addition in symbolic expressions.
  **/
-class Add : public Basic
+class SYMENGINE_EXPORT Add : public Basic
 {
 private:
     RCP<const Number> coef_; //!< The numeric coefficient of the expression
@@ -159,7 +159,8 @@ public:
  *
  *  @relatesalso Add
  */
-RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b);
+SYMENGINE_EXPORT RCP<const Basic> add(const RCP<const Basic> &a,
+                                      const RCP<const Basic> &b);
 
 /**
  *  @brief Sums the elements of a vector.
@@ -168,7 +169,7 @@ RCP<const Basic> add(const RCP<const Basic> &a, const RCP<const Basic> &b);
  *
  *  @relatesalso Add.
  */
-RCP<const Basic> add(const vec_basic &a);
+SYMENGINE_EXPORT RCP<const Basic> add(const vec_basic &a);
 
 /**
  *  @brief Substracts `b` from `a`.
@@ -178,7 +179,8 @@ RCP<const Basic> add(const vec_basic &a);
  *
  *  @relatesalso Add.
  */
-RCP<const Basic> sub(const RCP<const Basic> &a, const RCP<const Basic> &b);
+SYMENGINE_EXPORT RCP<const Basic> sub(const RCP<const Basic> &a,
+                                      const RCP<const Basic> &b);
 
 } // namespace SymEngine
 
