@@ -760,7 +760,7 @@ void DiffVisitor::bvisit(const Boolean &self)
 void DiffVisitor::bvisit(const GaloisField &self)
 {
     GaloisFieldDict d;
-    if (self.get_degree() > 0) {
+    if (self.get_var()->__eq__(*x) && self.get_degree() > 0) {
         d = self.get_poly().gf_diff();
     } else {
         d.modulo_ = self.get_poly().modulo_;
