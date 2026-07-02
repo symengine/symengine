@@ -504,6 +504,7 @@ TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
           "[basic]")
 {
     RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
     std::vector<integer_class> a, mp;
     GaloisFieldDict d1, d2, d3, d4;
     a = {};
@@ -528,6 +529,8 @@ TEST_CASE("GaloisFieldDict Differentiation, Square Free Algorithms : Basic",
     U = gf_poly(x, std::move(d1));
     b = U->diff(x);
     REQUIRE(b->__str__() == "3*x + 3");
+    b = U->diff(y);
+    REQUIRE(b->__str__() == "0");
     a = {1_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 0_z, 1_z};
     d1 = GaloisFieldDict::from_vec(a, 11_z);
     U = gf_poly(x, std::move(d1));
