@@ -11,6 +11,8 @@
 #include <symengine/rational.h>
 #include <symengine/expression.h>
 #include <memory>
+#include <type_traits>
+#include <utility>
 
 #ifdef HAVE_SYMENGINE_FLINT
 #include <symengine/flint_wrapper.h>
@@ -498,6 +500,76 @@ public:
 template <typename Container, typename Poly>
 class UIntPolyBase : public UNonExprPoly<Container, Poly, integer_class>
 {
+private:
+    template <typename It>
+    struct is_pair_iterator {
+        template <typename T>
+        static auto test(int)
+            -> decltype(std::declval<T &>().operator->()->first,
+                        std::declval<T &>().operator->()->second,
+                        std::true_type());
+        template <typename>
+        static std::false_type test(...);
+        static const bool value = decltype(test<It>(0))::value;
+    };
+
+    void append_symbolic_term(vec_basic &args, unsigned int i,
+                              const integer_class &m) const
+    {
+        if (i == 0) {
+            args.push_back(integer(m));
+        } else if (i == 1) {
+            if (m == 1) {
+                args.push_back(this->get_var());
+            } else {
+                args.push_back(
+                    Mul::from_dict(integer(m), {{this->get_var(), one}}));
+            }
+        } else {
+            if (m == 1) {
+                args.push_back(pow(this->get_var(), integer(i)));
+            } else {
+                args.push_back(Mul::from_dict(integer(m),
+                                              {{this->get_var(), integer(i)}}));
+            }
+        }
+    }
+
+    template <typename P = Poly,
+              typename std::enable_if<
+                  is_pair_iterator<typename P::iterator>::value, int>::type
+              = 0>
+    RCP<const Basic> as_symbolic_impl() const
+    {
+        const auto &self = down_cast<const P &>(*this);
+        auto it = self.begin();
+        auto end = self.end();
+
+        vec_basic args;
+        for (; it != end; ++it) {
+            append_symbolic_term(args, it->first, it->second);
+        }
+        return SymEngine::add(args);
+    }
+
+    template <typename P = Poly,
+              typename std::enable_if<
+                  not is_pair_iterator<typename P::iterator>::value, int>::type
+              = 0>
+    RCP<const Basic> as_symbolic_impl() const
+    {
+        const auto &self = down_cast<const P &>(*this);
+        vec_basic args;
+        auto deg = self.get_degree();
+        for (int i = 0; i <= deg; ++i) {
+            integer_class m = self.get_coeff(i);
+            if (m == 0)
+                continue;
+            append_symbolic_term(args, numeric_cast<unsigned int>(i), m);
+        }
+        return SymEngine::add(args);
+    }
+
 public:
     UIntPolyBase(const RCP<const Basic> &var, Container &&container)
         : UNonExprPoly<Container, Poly, integer_class>(var,
@@ -507,32 +579,7 @@ public:
 
     RCP<const Basic> as_symbolic() const
     {
-        const auto &self = down_cast<const Poly &>(*this);
-        vec_basic args;
-        auto deg = self.get_degree();
-        for (int i = 0; i <= deg; ++i) {
-            integer_class m = self.get_coeff(i);
-            if (m == 0)
-                continue;
-            if (i == 0) {
-                args.push_back(integer(m));
-            } else if (i == 1) {
-                if (m == 1) {
-                    args.push_back(this->get_var());
-                } else {
-                    args.push_back(
-                        Mul::from_dict(integer(m), {{this->get_var(), one}}));
-                }
-            } else {
-                if (m == 1) {
-                    args.push_back(pow(this->get_var(), integer(i)));
-                } else {
-                    args.push_back(Mul::from_dict(
-                        integer(m), {{this->get_var(), integer(i)}}));
-                }
-            }
-        }
-        return SymEngine::add(args);
+        return as_symbolic_impl();
     }
 };
 
