@@ -110,3 +110,131 @@ TEST_CASE("Test rcp_from_this const 2", "[rcp]")
     f2_hybrid(*m2);
     REQUIRE(m2->use_count() == 1);
 }
+
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+TEST_CASE("Test RCP move construct", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->use_count() == 1);
+    RCP<Mesh> m2 = std::move(m);
+    REQUIRE(m.is_null());
+    REQUIRE(m2->use_count() == 1);
+}
+
+TEST_CASE("Test RCP move assign", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->use_count() == 1);
+    RCP<Mesh> m2;
+    m2 = std::move(m);
+    REQUIRE(m.is_null());
+    REQUIRE(m2->use_count() == 1);
+}
+#endif
+
+TEST_CASE("Test RCP reset", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->use_count() == 1);
+    m.reset();
+    REQUIRE(m.is_null());
+
+    // reset on null is safe
+    m.reset();
+    REQUIRE(m.is_null());
+}
+
+TEST_CASE("Test RCP copy does not affect source", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->use_count() == 1);
+    {
+        RCP<Mesh> m2 = m;
+        REQUIRE(m->use_count() == 2);
+        REQUIRE(m2->use_count() == 2);
+    }
+    REQUIRE(m->use_count() == 1);
+}
+
+TEST_CASE("Test RCP field access", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    m->x = 10;
+    m->y = 20;
+    REQUIRE(m->x == 10);
+    REQUIRE(m->y == 20);
+}
+
+TEST_CASE("Test make_rcp const", "[rcp]")
+{
+    RCP<const Mesh> m = make_rcp<const Mesh>();
+    REQUIRE(m->use_count() == 1);
+    REQUIRE(not(m == null));
+}
+
+TEST_CASE("Test rcp_from_this increments count", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->use_count() == 1);
+    {
+        RCP<Mesh> m2 = m->rcp_from_this();
+        REQUIRE(m->use_count() == 2);
+        REQUIRE(m2->use_count() == 2);
+    }
+    REQUIRE(m->use_count() == 1);
+}
+
+TEST_CASE("Test RCP null comparison", "[rcp]")
+{
+    RCP<Mesh> m;
+    REQUIRE(m == null);
+    m = make_rcp<Mesh>();
+    REQUIRE(not(m == null));
+}
+
+TEST_CASE("Test RCP copy assign to null RCP", "[rcp]")
+{
+    RCP<Mesh> m;
+    RCP<Mesh> m2 = make_rcp<Mesh>();
+    m = m2;
+    REQUIRE(m->use_count() == 2);
+    REQUIRE(m2->use_count() == 2);
+}
+
+TEST_CASE("Test RCP copy assign from null", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->use_count() == 1);
+    RCP<Mesh> m2;
+    m = m2;
+    REQUIRE(m.is_null());
+}
+
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+TEST_CASE("Test cooperative_intrusive counter queries", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+    REQUIRE(m->is_uniquely_owned_by_cpp());
+    REQUIRE(m->is_uniquely_owned());
+    REQUIRE(not m->is_external_owned());
+
+    RCP<Mesh> m2 = m;
+    REQUIRE(not m->is_uniquely_owned_by_cpp());
+    REQUIRE(not m->is_uniquely_owned());
+    REQUIRE(not m->is_external_owned());
+}
+#endif
+
+TEST_CASE("Test backend-neutral unique ownership query", "[rcp]")
+{
+    RCP<Mesh> m = make_rcp<Mesh>();
+#if defined(WITH_SYMENGINE_THREAD_SAFE)
+    // Thread-safe legacy RCP intentionally preserves the historical no-steal
+    // behavior until that optimization can be reviewed independently.
+    REQUIRE(not m->is_uniquely_owned());
+#else
+    REQUIRE(m->is_uniquely_owned());
+    RCP<Mesh> m2 = m;
+    REQUIRE(not m->is_uniquely_owned());
+#endif
+}

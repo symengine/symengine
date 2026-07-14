@@ -514,27 +514,86 @@ elseif (CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
         "${CMAKE_CXX_FLAGS_RELEASE} -Wno-unknown-pragmas")
 endif()
 
+# --- Pointer (RCP) backend selection -------------------------------------
+# Three mutually exclusive backends:
+#   symengine    : SymEngine's original internal intrusive RCP (default Release)
+#   teuchos      : Teuchos::RCP (default Debug)
+#   cooperative_intrusive : foreign-runtime cooperative intrusive RCP
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     # In Debug mode we use Teuchos::RCP and enable debugging checks that make
     # the usage 100% safe, as long as the Teuchos guidelines are followed.
-    set(WITH_SYMENGINE_RCP_DEFAULT no) # Use the Teuchos::RCP
+    set(SYMENGINE_RCP_BACKEND_DEFAULT teuchos)
     set(HAVE_TEUCHOS_DEBUG yes) # Enable safety checks
     set(HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING yes) # Enable safety checks
 
     set(WITH_SYMENGINE_ASSERT yes) # Also enable assertions
 else ()
-    set(WITH_SYMENGINE_RCP_DEFAULT yes)
+    set(SYMENGINE_RCP_BACKEND_DEFAULT symengine)
 endif()
 
-# SYMENGINE_RCP
-set(WITH_SYMENGINE_RCP ${WITH_SYMENGINE_RCP_DEFAULT}
-    CACHE BOOL "Enable SYMENGINE_RCP support")
+if (DEFINED SYMENGINE_RCP_BACKEND)
+    set(SYMENGINE_RCP_BACKEND_WAS_SET yes)
+else ()
+    set(SYMENGINE_RCP_BACKEND_WAS_SET no)
+endif ()
+if (DEFINED WITH_SYMENGINE_RCP)
+    set(WITH_SYMENGINE_RCP_WAS_SET yes)
+else ()
+    set(WITH_SYMENGINE_RCP_WAS_SET no)
+endif ()
+
+set(SYMENGINE_RCP_BACKEND "${SYMENGINE_RCP_BACKEND_DEFAULT}"
+    CACHE STRING "RCP backend: symengine, teuchos, or cooperative_intrusive")
+set_property(CACHE SYMENGINE_RCP_BACKEND PROPERTY STRINGS
+    symengine teuchos cooperative_intrusive)
+
+# Backwards-compatibility: -DWITH_SYMENGINE_RCP=ON/OFF still works.
+# If both the selector and legacy alias are provided, the selector wins.
+if (WITH_SYMENGINE_RCP_WAS_SET)
+    if (WITH_SYMENGINE_RCP)
+        set(SYMENGINE_RCP_BACKEND_LEGACY_VALUE symengine)
+    else ()
+        set(SYMENGINE_RCP_BACKEND_LEGACY_VALUE teuchos)
+    endif ()
+
+    if (SYMENGINE_RCP_BACKEND_WAS_SET)
+        if (NOT SYMENGINE_RCP_BACKEND STREQUAL SYMENGINE_RCP_BACKEND_LEGACY_VALUE)
+            message(WARNING
+                "Both SYMENGINE_RCP_BACKEND='${SYMENGINE_RCP_BACKEND}' and "
+                "WITH_SYMENGINE_RCP='${WITH_SYMENGINE_RCP}' were provided; "
+                "using SYMENGINE_RCP_BACKEND.")
+        endif ()
+    else ()
+        set(SYMENGINE_RCP_BACKEND "${SYMENGINE_RCP_BACKEND_LEGACY_VALUE}"
+            CACHE STRING "RCP backend: symengine, teuchos, or cooperative_intrusive" FORCE)
+    endif ()
+
+    message(DEPRECATION
+        "WITH_SYMENGINE_RCP is deprecated; use SYMENGINE_RCP_BACKEND "
+        "(symengine|teuchos|cooperative_intrusive). Mapped to ${SYMENGINE_RCP_BACKEND}.")
+endif ()
+
+set(WITH_SYMENGINE_RCP no)
+set(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP no)
+
+if (SYMENGINE_RCP_BACKEND STREQUAL "symengine")
+    set(WITH_SYMENGINE_RCP yes)
+elseif (SYMENGINE_RCP_BACKEND STREQUAL "cooperative_intrusive")
+    set(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP yes)
+elseif (SYMENGINE_RCP_BACKEND STREQUAL "teuchos")
+    # both booleans stay 'no' -> Teuchos path
+else ()
+    message(FATAL_ERROR
+        "SYMENGINE_RCP_BACKEND='${SYMENGINE_RCP_BACKEND}' is invalid; "
+        "use one of: symengine, teuchos, cooperative_intrusive")
+endif ()
 
 if (WITH_COVERAGE)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} --coverage")
 endif()
 
-if ((NOT WITH_SYMENGINE_RCP) OR HAVE_TEUCHOS_BFD)
+if ((NOT WITH_SYMENGINE_RCP AND NOT WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+        OR HAVE_TEUCHOS_BFD)
     set(WITH_SYMENGINE_TEUCHOS yes)
 endif()
 
@@ -660,9 +719,11 @@ message("BUILD_SHARED_LIBS: ${BUILD_SHARED_LIBS}")
 message("INTEGER_CLASS : ${SYMENGINE_INTEGER_CLASS}")
 message("HAVE_SYMENGINE_GMP: ${HAVE_SYMENGINE_GMP}")
 message("WITH_SYMENGINE_ASSERT: ${WITH_SYMENGINE_ASSERT}")
+message("SYMENGINE_RCP_BACKEND: ${SYMENGINE_RCP_BACKEND}")
 message("WITH_SYMENGINE_RCP: ${WITH_SYMENGINE_RCP}")
+message("WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP: ${WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP}")
 message("WITH_SYMENGINE_TEUCHOS: ${WITH_SYMENGINE_TEUCHOS}")
-if (NOT WITH_SYMENGINE_RCP)
+if (SYMENGINE_RCP_BACKEND STREQUAL "teuchos")
     message("HAVE_TEUCHOS_DEBUG: ${HAVE_TEUCHOS_DEBUG}")
     message("HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING: ${HAVE_TEUCHOS_DEBUG_RCP_NODE_TRACING}")
 endif ()

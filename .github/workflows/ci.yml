@@ -220,6 +220,15 @@ jobs:
             CC: clang
             OS: ubuntu-22.04
 
+          # cooperative_intrusive ASAN
+          - BUILD_TYPE: Debug
+            SYMENGINE_RCP_BACKEND: cooperative_intrusive
+            WITH_SYMENGINE_THREAD_SAFE: yes
+            WITH_SANITIZE: thread
+            COOPERATIVE_INTRUSIVE_CONSUME: yes  # install-consume test
+            CC: clang
+            OS: ubuntu-26.04
+
           - MSYS_ENV: UCRT64
             ARCH: x86_64
             OS: windows-latest
@@ -291,7 +300,9 @@ jobs:
       BUILD_SHARED_LIBS: ${{ matrix.BUILD_SHARED_LIBS }}
       NO_RTTI: ${{ matrix.NO_RTTI }}
       MSYS_ENV: ${{ matrix.MSYS_ENV }}
-      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_UNITY_BUILD }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.BUILD_METAL_TESTS }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}-${{ matrix.NO_RTTI }}-${{ matrix.MSYS_ENV }}
+      SYMENGINE_RCP_BACKEND: ${{ matrix.SYMENGINE_RCP_BACKEND }}
+      COOPERATIVE_INTRUSIVE_CONSUME: ${{ matrix.COOPERATIVE_INTRUSIVE_CONSUME }}
+      OPTIONS: ${{ matrix.BUILD_TYPE }}-${{ matrix.OS }}-${{ matrix.CC }}-${{ matrix.USE_GLIBCXX_DEBUG }}-${{ matrix.WITH_MPFR }}-${{ matrix.WITH_LLVM }}-${{ matrix.WITH_BENCHMARKS }}-${{ matrix.WITH_BENCHMARKS_GOOGLE }}-${{ matrix.WITH_SYMENGINE_RCP }}-${{ matrix.TEST_IN_TREE }}-${{ matrix.WITH_SYMENGINE_THREAD_SAFE }}-${{ matrix.WITH_PRIMESIEVE }}-${{ matrix.INTEGER_CLASS }}-${{ matrix.WITH_ARB }}-${{ matrix.WITH_PIRANHA }}-${{ matrix.WITH_BFD }}-${{ matrix.WITH_FLINT }}-${{ matrix.WITH_ECM }}-${{ matrix.WITH_LATEST_GCC }}-${{ matrix.WITH_FLINT_DEV }}-${{ matrix.WITH_UNITY_BUILD }}-${{ matrix.WITH_COVERAGE }}-${{ matrix.BUILD_METAL_TESTS }}-${{ matrix.WITH_SANITIZE }}-${{ matrix.WITH_MPC }}-${{ matrix.BUILD_SHARED_LIBS }}-${{ matrix.NO_RTTI }}-${{ matrix.MSYS_ENV }}-${{ matrix.SYMENGINE_RCP_BACKEND }}-${{ matrix.COOPERATIVE_INTRUSIVE_CONSUME }}
       CCACHE_DIR: 'D:\a\_temp\msys\msys64\home\runneradmin\.ccache'
 
     steps:

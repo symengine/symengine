@@ -76,7 +76,7 @@ typedef struct dcomplex {
 // and/or alignment.
 struct CRCPBasic_C {
     void *data;
-#if !defined(WITH_SYMENGINE_RCP)
+#if !defined(WITH_SYMENGINE_RCP) && !defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
     void *teuchos_handle;
     int teuchos_strength;
 #endif
