@@ -151,7 +151,7 @@ if (MSVC)
 	    endforeach()
     endif()
     foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
-      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL}")
+      set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /bigobj")
     endforeach()
 endif()
 
