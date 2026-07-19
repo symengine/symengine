@@ -9,3 +9,8 @@ project(test_cooperative_intrusive_rcp)
 add_executable(${PROJECT_NAME} test_cooperative_intrusive_rcp.cpp)
 target_link_libraries(${PROJECT_NAME} symengine catch)
 add_test(${PROJECT_NAME} ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
+# The Python-owned test cases use fake hooks that cannot trigger deallocation,
+# so ASAN/LSAN would report intentional leaks.  Disable leak detection.
+set_tests_properties(${PROJECT_NAME} PROPERTIES
+    ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0:symbolize=1")
+
