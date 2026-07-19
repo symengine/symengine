@@ -14,3 +14,7 @@ add_test(${PROJECT_NAME} ${PROJECT_BINARY_DIR}/${PROJECT_NAME})
 set_tests_properties(${PROJECT_NAME} PROPERTIES
     ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0:symbolize=1")
 
+# Regression guard: ownership gates must use the backend-neutral predicate,
+# never use_count() == 1.
+add_test(NAME check_use_count_eq1
+    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/check_use_count_eq1.sh)
