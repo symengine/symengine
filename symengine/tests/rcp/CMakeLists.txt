@@ -15,6 +15,10 @@ set_tests_properties(${PROJECT_NAME} PROPERTIES
     ENVIRONMENT "ASAN_OPTIONS=detect_leaks=0:symbolize=1")
 
 # Regression guard: ownership gates must use the backend-neutral predicate,
-# never use_count() == 1.
-add_test(NAME check_use_count_eq1
-    COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/check_use_count_eq1.sh)
+# never use_count() == 1. This POSIX shell test is intentionally not
+# registered on Windows. Use the legacy add_test signature so it remains
+# available to ctest without -C under Unix multi-config generators.
+if (NOT WIN32)
+    add_test(check_use_count_eq1
+        bash ${CMAKE_CURRENT_SOURCE_DIR}/check_use_count_eq1.sh)
+endif()
