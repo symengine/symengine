@@ -228,7 +228,7 @@ TEST_CASE("Test cooperative_intrusive counter queries", "[rcp]")
 TEST_CASE("Test backend-neutral unique ownership query", "[rcp]")
 {
     RCP<Mesh> m = make_rcp<Mesh>();
-#if defined(WITH_SYMENGINE_THREAD_SAFE)
+#if defined(WITH_SYMENGINE_RCP) && defined(WITH_SYMENGINE_THREAD_SAFE)
     // Thread-safe legacy RCP intentionally preserves the historical no-steal
     // behavior until that optimization can be reviewed independently.
     REQUIRE(not m->is_uniquely_owned());

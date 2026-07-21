@@ -36,8 +36,16 @@ namespace SymEngine
 {
 
 // ---------------------------------------------------------------------------
+// noexcept is part of a function-pointer type only since C++17. Keep the
+// public hook types usable by the C++11/C++14 configurations that SymEngine
+// supports; a noexcept callback still converts to either pointer type.
+#if __cplusplus >= 201703L
 using cooperative_incref_hook = void (*)(void *) noexcept;
 using cooperative_decref_hook = void (*)(void *) noexcept;
+#else
+using cooperative_incref_hook = void (*)(void *);
+using cooperative_decref_hook = void (*)(void *);
+#endif
 
 void cooperative_intrusive_init(cooperative_incref_hook incref,
                                 cooperative_decref_hook decref) noexcept;
