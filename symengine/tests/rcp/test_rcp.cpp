@@ -111,7 +111,8 @@ TEST_CASE("Test rcp_from_this const 2", "[rcp]")
     REQUIRE(m2->use_count() == 1);
 }
 
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
 TEST_CASE("Test RCP move construct", "[rcp]")
 {
     RCP<Mesh> m = make_rcp<Mesh>();

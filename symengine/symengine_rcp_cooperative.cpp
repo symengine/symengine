@@ -5,11 +5,6 @@
     Copyright (c) 2023 Wenzel Jakob.
     nanobind is distributed under the BSD 3-Clause License.
 
-    The atomic operations deliberately use relaxed ordering to stay in lockstep
-    with nanobind's reference implementation. Before strengthening them (for
-    example with a release decrement plus an acquire fence before deletion),
-    first coordinate the corresponding change upstream so the two counters do
-    not silently diverge. Keep weakly ordered architectures in sanitizer CI.
 */
 
 #include <symengine/symengine_config.h>
@@ -21,27 +16,28 @@
 #include <cstdio>
 #include <cstdlib>
 
-namespace {
+namespace
+{
 
 #if !defined(_MSC_VER)
 #define SYMENGINE_ATOMIC_LOAD(ptr) __atomic_load_n(ptr, 0)
-#define SYMENGINE_ATOMIC_CMPXCHG(ptr, cmp, xchg) \
+#define SYMENGINE_ATOMIC_CMPXCHG(ptr, cmp, xchg)                               \
     __atomic_compare_exchange_n(ptr, cmp, xchg, true, 0, 0)
 #else
-extern "C" void *_InterlockedCompareExchangePointer(
-    void *volatile *Destination,
-    void *Exchange, void *Comparand);
+extern "C" void *_InterlockedCompareExchangePointer(void *volatile *Destination,
+                                                    void *Exchange,
+                                                    void *Comparand);
 #pragma intrinsic(_InterlockedCompareExchangePointer)
 
-#define SYMENGINE_ATOMIC_LOAD(ptr) *((volatile const uintptr_t *) ptr)
-#define SYMENGINE_ATOMIC_CMPXCHG(ptr, cmp, xchg) \
+#define SYMENGINE_ATOMIC_LOAD(ptr) *((volatile const uintptr_t *)ptr)
+#define SYMENGINE_ATOMIC_CMPXCHG(ptr, cmp, xchg)                               \
     symengine_cmpxchg(ptr, cmp, xchg)
 
 static bool symengine_cmpxchg(uintptr_t *ptr, uintptr_t *cmp, uintptr_t xchg)
 {
     uintptr_t cmpv = *cmp;
-    uintptr_t prev = (uintptr_t) _InterlockedCompareExchangePointer(
-        (void * volatile *) ptr, (void *) xchg, (void *) cmpv);
+    uintptr_t prev = (uintptr_t)_InterlockedCompareExchangePointer(
+        (void *volatile *)ptr, (void *)xchg, (void *)cmpv);
     if (prev == cmpv) {
         return true;
     }
@@ -62,9 +58,9 @@ SymEngine::cooperative_decref_hook g_cooperative_decref = nullptr;
 void ensure_hooks_ready(const void *ptr)
 {
     if (!g_cooperative_incref || !g_cooperative_decref) [[unlikely]] {
-        cooperative_abort(
-            "cooperative_intrusive backend used before cooperative_intrusive_init()",
-            ptr);
+        cooperative_abort("cooperative_intrusive backend used before "
+                          "cooperative_intrusive_init()",
+                          ptr);
     }
 }
 
@@ -90,7 +86,7 @@ void symengine_cooperative_intrusive_counter::inc_ref() const noexcept
                 continue;
         } else {
             ensure_hooks_ready(this);
-            g_cooperative_incref((void *) v);
+            g_cooperative_incref((void *)v);
         }
         break;
     }
@@ -103,9 +99,9 @@ bool symengine_cooperative_intrusive_counter::dec_ref() const noexcept
     while (true) {
         if (v & 1) {
             if (v == 1) [[unlikely]] {
-                cooperative_abort(
-                    "symengine_cooperative_intrusive_counter::dec_ref underflow",
-                    this);
+                cooperative_abort("symengine_cooperative_intrusive_counter::"
+                                  "dec_ref underflow",
+                                  this);
             }
 
             if (!SYMENGINE_ATOMIC_CMPXCHG(&m_state, &v, v - 2))
@@ -115,21 +111,22 @@ bool symengine_cooperative_intrusive_counter::dec_ref() const noexcept
                 return true;
         } else {
             ensure_hooks_ready(this);
-            g_cooperative_decref((void *) v);
+            g_cooperative_decref((void *)v);
         }
 
         return false;
     }
 }
 
-void symengine_cooperative_intrusive_counter::set_self_external(void *o) noexcept
+void symengine_cooperative_intrusive_counter::set_self_external(
+    void *o) noexcept
 {
     uintptr_t v = SYMENGINE_ATOMIC_LOAD(&m_state);
 
     if (!(v & 1)) [[unlikely]] {
-        cooperative_abort(
-            "symengine_cooperative_intrusive_counter::set_self_external already external-owned",
-            this);
+        cooperative_abort("symengine_cooperative_intrusive_counter::set_self_"
+                          "external already external-owned",
+                          this);
     }
 
     ensure_hooks_ready(this);
@@ -138,7 +135,7 @@ void symengine_cooperative_intrusive_counter::set_self_external(void *o) noexcep
     do {
         for (uintptr_t count = v >> 1; transferred < count; ++transferred)
             g_cooperative_incref(o);
-    } while (!SYMENGINE_ATOMIC_CMPXCHG(&m_state, &v, (uintptr_t) o));
+    } while (!SYMENGINE_ATOMIC_CMPXCHG(&m_state, &v, (uintptr_t)o));
 
     for (uintptr_t count = v >> 1; transferred > count; --transferred)
         g_cooperative_decref(o);
@@ -147,7 +144,7 @@ void symengine_cooperative_intrusive_counter::set_self_external(void *o) noexcep
 void *symengine_cooperative_intrusive_counter::self_external() const noexcept
 {
     uintptr_t v = SYMENGINE_ATOMIC_LOAD(&m_state);
-    return (v & 1) ? nullptr : (void *) v;
+    return (v & 1) ? nullptr : (void *)v;
 }
 
 unsigned int symengine_cooperative_intrusive_counter::use_count() const noexcept
@@ -163,7 +160,8 @@ bool symengine_cooperative_intrusive_counter::is_external_owned() const noexcept
     return (SYMENGINE_ATOMIC_LOAD(&m_state) & 1) == 0;
 }
 
-bool symengine_cooperative_intrusive_counter::is_uniquely_owned_by_cpp() const noexcept
+bool symengine_cooperative_intrusive_counter::is_uniquely_owned_by_cpp()
+    const noexcept
 {
     uintptr_t v = SYMENGINE_ATOMIC_LOAD(&m_state);
     return (v & 1) && (v >> 1) == 1;
@@ -180,8 +178,8 @@ void *symengine_cooperative_intrusive_counter::detach_external() const noexcept
     while (true) {
         if (v & 1)
             return nullptr;
-        if (SYMENGINE_ATOMIC_CMPXCHG(&m_state, &v, (uintptr_t) 1))
-            return (void *) v;
+        if (SYMENGINE_ATOMIC_CMPXCHG(&m_state, &v, (uintptr_t)1))
+            return (void *)v;
     }
 }
 

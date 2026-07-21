@@ -7,7 +7,8 @@
 #include <symengine/symengine_rcp.h>
 #include <symengine/symbol.h>
 
-// Guard so this file is empty (no test cases) for non-cooperative_intrusive backends
+// Guard so this file is empty (no test cases) for non-cooperative_intrusive
+// backends
 #if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
 
 // The cooperative counter lives in symengine_rcp_cooperative.cpp.
@@ -17,7 +18,8 @@ using SymEngine::EnableRCPFromThis;
 using SymEngine::make_rcp;
 using SymEngine::RCP;
 
-class Node : public EnableRCPFromThis<Node> {
+class Node : public EnableRCPFromThis<Node>
+{
 public:
     int v = 0;
 };
@@ -26,8 +28,14 @@ public:
 static int g_inc_count = 0;
 static int g_dec_count = 0;
 
-static void counting_inc_hook(void *) noexcept { ++g_inc_count; }
-static void counting_dec_hook(void *) noexcept { ++g_dec_count; }
+static void counting_inc_hook(void *) noexcept
+{
+    ++g_inc_count;
+}
+static void counting_dec_hook(void *) noexcept
+{
+    ++g_dec_count;
+}
 
 // Fake foreign-runtime pointer (properly aligned - bit 0 must be 0)
 alignas(2) static char fake_runtime_storage;
@@ -35,13 +43,16 @@ static void *fake_runtime = &fake_runtime_storage;
 
 // Install hooks once at process start
 struct HookInstaller {
-    HookInstaller() {
-        SymEngine::cooperative_intrusive_init(counting_inc_hook, counting_dec_hook);
+    HookInstaller()
+    {
+        SymEngine::cooperative_intrusive_init(counting_inc_hook,
+                                              counting_dec_hook);
     }
 };
 static HookInstaller installer;
 
-TEST_CASE("C++-owned counting", "[cooperative_intrusive_rcp]") {
+TEST_CASE("C++-owned counting", "[cooperative_intrusive_rcp]")
+{
     g_inc_count = 0;
     g_dec_count = 0;
 
@@ -76,7 +87,8 @@ TEST_CASE("C++-owned counting", "[cooperative_intrusive_rcp]") {
     REQUIRE(a->is_uniquely_owned());
 }
 
-TEST_CASE("Handoff changes mode", "[cooperative_intrusive_rcp]") {
+TEST_CASE("Handoff changes mode", "[cooperative_intrusive_rcp]")
+{
     g_inc_count = 0;
     g_dec_count = 0;
 
@@ -103,7 +115,9 @@ TEST_CASE("Handoff changes mode", "[cooperative_intrusive_rcp]") {
     a = SymEngine::null;
 }
 
-TEST_CASE("External-owned inc/dec route through hooks", "[cooperative_intrusive_rcp]") {
+TEST_CASE("External-owned inc/dec route through hooks",
+          "[cooperative_intrusive_rcp]")
+{
     g_inc_count = 0;
     g_dec_count = 0;
 
@@ -119,7 +133,7 @@ TEST_CASE("External-owned inc/dec route through hooks", "[cooperative_intrusive_
     {
         RCP<Node> b = a;
         REQUIRE(g_inc_count == inc_after_handoff + 1);
-        REQUIRE(a->use_count() == 0);  // Always 0 when external-owned
+        REQUIRE(a->use_count() == 0); // Always 0 when external-owned
         REQUIRE(a->is_external_owned());
 
         // Destroying b should call the dec hook
@@ -134,7 +148,9 @@ TEST_CASE("External-owned inc/dec route through hooks", "[cooperative_intrusive_
     a = SymEngine::null;
 }
 
-TEST_CASE("use_count() is never 1 when external-owned", "[cooperative_intrusive_rcp]") {
+TEST_CASE("use_count() is never 1 when external-owned",
+          "[cooperative_intrusive_rcp]")
+{
     g_inc_count = 0;
     g_dec_count = 0;
 
@@ -174,7 +190,9 @@ TEST_CASE("use_count() is never 1 when external-owned", "[cooperative_intrusive_
     a = SymEngine::null;
 }
 
-TEST_CASE("detach external and replay inline references", "[cooperative_intrusive_rcp]") {
+TEST_CASE("detach external and replay inline references",
+          "[cooperative_intrusive_rcp]")
+{
     g_inc_count = 0;
     g_dec_count = 0;
 
@@ -227,8 +245,8 @@ TEST_CASE("Add::from_dict retains an external Mul dictionary",
     // An external wrapper can still hand this object back to a foreign
     // runtime. The copy path must therefore leave the original Mul intact.
     REQUIRE(term_mul->get_dict().size() == original_size);
-    REQUIRE(SymEngine::eq(
-        *collapsed, *SymEngine::mul(SymEngine::integer(2), SymEngine::mul(x, y))));
+    REQUIRE(SymEngine::eq(*collapsed, *SymEngine::mul(SymEngine::integer(2),
+                                                      SymEngine::mul(x, y))));
 
     // The fake runtime hooks deliberately do not free the external object.
     term = SymEngine::null;
@@ -248,8 +266,8 @@ TEST_CASE("Add::from_dict collapses a uniquely C++-owned Mul",
 
     RCP<const SymEngine::Basic> collapsed
         = SymEngine::Add::from_dict(SymEngine::zero, std::move(terms));
-    REQUIRE(SymEngine::eq(
-        *collapsed, *SymEngine::mul(SymEngine::integer(2), SymEngine::mul(x, y))));
+    REQUIRE(SymEngine::eq(*collapsed, *SymEngine::mul(SymEngine::integer(2),
+                                                      SymEngine::mul(x, y))));
 }
 
 #endif // WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP

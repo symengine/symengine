@@ -81,8 +81,9 @@ public:
 private:
     mutable uintptr_t m_state;
 };
-static_assert(sizeof(symengine_cooperative_intrusive_counter) == sizeof(void *),
-              "cooperative-intrusive counter must stay pointer-sized for the C ABI");
+static_assert(
+    sizeof(symengine_cooperative_intrusive_counter) == sizeof(void *),
+    "cooperative-intrusive counter must stay pointer-sized for the C ABI");
 #endif
 
 // ---------------------------------------------------------------------------
@@ -90,7 +91,8 @@ static_assert(sizeof(symengine_cooperative_intrusive_counter) == sizeof(void *),
 // Ptr<T>, ENull, rcp(), rcp_*_cast, outArg, ptrFromRef, typeName,
 // print_stack_on_segfault.
 // ---------------------------------------------------------------------------
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
 
 /* Ptr */
 
@@ -166,8 +168,9 @@ enum ENull { null };
 // RCP can be null. Functionally it should be equivalent to Teuchos::RCP.
 
 // ---------------------------------------------------------------------------
-// cooperative_intrusive RCP<T>: uses inc_ref()/dec_ref() methods instead of direct
-// field access.  Counter lives inside the object (via EnableRCPFromThis<T>).
+// cooperative_intrusive RCP<T>: uses inc_ref()/dec_ref() methods instead of
+// direct field access.  Counter lives inside the object (via
+// EnableRCPFromThis<T>).
 // ---------------------------------------------------------------------------
 #if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
 
@@ -434,7 +437,8 @@ void print_stack_on_segfault();
 // ---------------------------------------------------------------------------
 // Teuchos backend aliases
 // ---------------------------------------------------------------------------
-#if !defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) && !defined(WITH_SYMENGINE_RCP)
+#if !defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                         \
+    && !defined(WITH_SYMENGINE_RCP)
 
 using Teuchos::null;
 using Teuchos::outArg;
@@ -458,7 +462,8 @@ public:
     //! Get RCP<T> pointer to self (it will cast the pointer to T)
     inline RCP<T> rcp_from_this()
     {
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<T *>(this));
 #else
         return rcp_static_cast<T>(weak_self_ptr_.create_strong());
@@ -468,7 +473,8 @@ public:
     //! Get RCP<const T> pointer to self (it will cast the pointer to const T)
     inline RCP<const T> rcp_from_this() const
     {
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T *>(this));
 #else
         return rcp_static_cast<const T>(weak_self_ptr_.create_strong());
@@ -479,7 +485,8 @@ public:
     template <class T2>
     inline RCP<const T2> rcp_from_this_cast() const
     {
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T2 *>(this));
 #else
         return rcp_static_cast<const T2>(weak_self_ptr_.create_strong());
@@ -532,10 +539,22 @@ private:
 public:
     EnableRCPFromThis() = default;
 
-    void inc_ref() const noexcept { refcount_.inc_ref(); }
-    bool dec_ref() const noexcept { return refcount_.dec_ref(); }
-    void set_self_external(void *o) const noexcept { refcount_.set_self_external(o); }
-    void *self_external() const noexcept { return refcount_.self_external(); }
+    void inc_ref() const noexcept
+    {
+        refcount_.inc_ref();
+    }
+    bool dec_ref() const noexcept
+    {
+        return refcount_.dec_ref();
+    }
+    void set_self_external(void *o) const noexcept
+    {
+        refcount_.set_self_external(o);
+    }
+    void *self_external() const noexcept
+    {
+        return refcount_.self_external();
+    }
 
     bool is_external_owned() const noexcept
     {
@@ -594,7 +613,8 @@ private:
     }
 #endif // WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP / WITH_SYMENGINE_RCP
 
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
     template <class T_>
     friend class RCP;
 #endif
@@ -606,7 +626,8 @@ private:
 template <typename T, typename... Args>
 inline RCP<T> make_rcp(Args &&...args)
 {
-#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP) || defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
     return rcp(new T(std::forward<Args>(args)...));
 #else
     RCP<T> p = rcp(new T(std::forward<Args>(args)...));
