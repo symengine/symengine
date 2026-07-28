@@ -343,6 +343,15 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
         std::make_tuple(abs(x), -1.112111321, 1.112111321),
         std::make_tuple(erf(x), 1.1, 0.88020506957408169),
         std::make_tuple(erfc(x), 2.1, 0.00297946665633298),
+        std::make_tuple(floor(x), 1.7, 1.0),
+        std::make_tuple(floor(x), -1.5, -2.0),
+        std::make_tuple(floor(x), 5.0, 5.0),
+        std::make_tuple(ceiling(x), 1.2, 2.0),
+        std::make_tuple(ceiling(x), -1.5, -1.0),
+        std::make_tuple(ceiling(x), 5.0, 5.0),
+        std::make_tuple(truncate(x), 2.7, 2.0),
+        std::make_tuple(truncate(x), -1.5, -1.0),
+        std::make_tuple(truncate(x), 5.0, 5.0),
     };
 
     for (unsigned i = 0; i < testvec.size(); i++) {
@@ -371,6 +380,32 @@ TEST_CASE("Evaluate functions", "[lambda_gamma]")
 }
 
 #ifdef HAVE_SYMENGINE_LLVM
+TEST_CASE("Evaluate rounding functions with LLVM", "[llvm_double]")
+{
+    auto x = symbol("x");
+
+    struct Case {
+        RCP<const Basic> expr;
+        double input;
+        double expected;
+    };
+
+    const std::vector<Case> cases = {
+        {floor(x), 1.7, 1.0},     {floor(x), -1.5, -2.0},
+        {floor(x), 5.0, 5.0},     {ceiling(x), 1.2, 2.0},
+        {ceiling(x), -1.5, -1.0}, {ceiling(x), 5.0, 5.0},
+        {truncate(x), 2.7, 2.0},  {truncate(x), -1.5, -1.0},
+        {truncate(x), 5.0, 5.0},
+    };
+
+    for (const auto &test_case : cases) {
+        LLVMDoubleVisitor llvm_double;
+        llvm_double.init({x}, *test_case.expr);
+        REQUIRE(llvm_double.call({test_case.input})
+                == Approx(test_case.expected));
+    }
+}
+
 TEST_CASE("Check llvm and lambda are equal", "[llvm_double]")
 {
 
