@@ -26,6 +26,8 @@ if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
             "CMAKE_BUILD_TYPE must be one of: Debug, Release, RelWithDebInfo, MinSizeRel (current value: '${CMAKE_BUILD_TYPE}')")
 endif ()
 
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
