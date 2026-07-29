@@ -9,6 +9,7 @@ set -x
 
 if [[ "${WITH_SANITIZE}" != "" ]]; then
         export CXXFLAGS="$CXXFLAGS -fsanitize=${WITH_SANITIZE}"
+        export CFLAGS="$CFLAGS -fsanitize=${WITH_SANITIZE}"
         if [[ "${WITH_SANITIZE}" == "address" ]]; then
             export ASAN_OPTIONS=symbolize=1,detect_leaks=1,external_symbolizer_path=/usr/lib/llvm-12/bin/llvm-symbolizer
         elif [[ "${WITH_SANITIZE}" == "undefined" ]]; then
