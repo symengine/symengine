@@ -57,6 +57,7 @@ using SymEngine::RealDouble;
 using SymEngine::sbml;
 using SymEngine::Symbol;
 using SymEngine::symbol;
+using SymEngine::truncate;
 using SymEngine::vec_basic;
 using SymEngine::zero;
 
@@ -406,6 +407,12 @@ TEST_CASE("Parsing: functions", "[sbml_parser]")
     s = "floor(x)";
     res = parse_sbml(s);
     REQUIRE(eq(*res, *floor(x)));
+    REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
+
+    s = "truncate(x)";
+    res = parse_sbml(s);
+    REQUIRE(is_a<SymEngine::Truncate>(*res));
+    REQUIRE(eq(*res, *truncate(x)));
     REQUIRE(eq(*res, *parse_sbml(sbml(*res))));
 
     s = "csc(x)";

@@ -102,6 +102,7 @@ init_parser_single_arg_functions()
             {"dirichlet_eta", dirichlet_eta},
             {"floor", floor},
             {"ceiling", ceiling},
+            {"truncate", truncate},
             {"ln", (single_arg_func)log},
             {"log", (single_arg_func)log},
             {"zeta", (single_arg_func)zeta},

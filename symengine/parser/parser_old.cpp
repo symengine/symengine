@@ -115,6 +115,7 @@ private:
             {"loggamma", loggamma},
             {"lambertw", lambertw},
             {"dirichlet_eta", dirichlet_eta},
+            {"truncate", truncate},
             {"ln", single_casted_log},
             {"log", single_casted_log},
             {"zeta", single_casted_zeta}};
