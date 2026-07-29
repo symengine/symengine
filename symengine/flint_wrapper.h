@@ -972,6 +972,12 @@ public:
                                   q.get_fmpq_t());
         return r;
     }
+    fmpq_poly_wrapper &operator/=(const fmpq_wrapper &q)
+    {
+        fmpq_poly_scalar_div_fmpq(*get_fmpq_poly_t(), *get_fmpq_poly_t(),
+                                  q.get_fmpq_t());
+        return *this;
+    }
     void divrem(fmpq_poly_wrapper &q, fmpq_poly_wrapper &r,
                 const fmpq_poly_wrapper &b) const
     {
