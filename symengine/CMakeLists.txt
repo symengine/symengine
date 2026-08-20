@@ -286,9 +286,17 @@ include_directories(BEFORE ${symengine_SOURCE_DIR})
 add_library(symengine ${SRC})
 set_target_properties (symengine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-include(GenerateExportHeader)
-generate_export_header(symengine)
-set_target_properties(symengine PROPERTIES COMPILE_DEFINITIONS "symengine_EXPORTS")
+include(CMakeDependentOption)
+cmake_dependent_option(WITH_VISIBILITY_HIDDEN "Build shared libraries with hidden visibility for private functions" ON "NOT WITH_PIRANHA" OFF)
+
+if (WITH_VISIBILITY_HIDDEN)
+    set_target_properties(symengine PROPERTIES
+        CXX_VISIBILITY_PRESET hidden
+        C_VISIBILITY_PRESET hidden
+        VISIBILITY_INLINES_HIDDEN YES
+    )
+endif()
+
 if (BUILD_SHARED_LIBS)
     set_target_properties(
         symengine
@@ -335,6 +343,9 @@ if (WITH_LLVM AND NOT SYMENGINE_LLVM_LINK_DOWNSTREAM AND NOT WITH_SYMENGINE_TEUC
         set_property(TARGET symengine APPEND_STRING PROPERTY LINK_FLAGS "${LLVM_SYMBOLS_AVOID}")
     endif()
 endif()
+
+include(GenerateExportHeader)
+generate_export_header(symengine)
 
 install(TARGETS symengine
             EXPORT SymEngineTargets

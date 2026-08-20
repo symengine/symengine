@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class ConjugateMatrix : public MatrixExpr
+class SYMENGINE_EXPORT ConjugateMatrix : public MatrixExpr
 {
 private:
     RCP<const MatrixExpr> arg_;
@@ -32,7 +32,8 @@ public:
     }
 };
 
-RCP<const MatrixExpr> conjugate_matrix(const RCP<const MatrixExpr> &arg);
+SYMENGINE_EXPORT RCP<const MatrixExpr>
+conjugate_matrix(const RCP<const MatrixExpr> &arg);
 } // namespace SymEngine
 
 #endif

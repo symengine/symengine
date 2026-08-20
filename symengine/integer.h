@@ -15,7 +15,7 @@ namespace SymEngine
 {
 
 //! Integer Class
-class Integer : public Number
+class SYMENGINE_EXPORT Integer : public Number
 {
 private:
     //! `i` : object of `integer_class`
@@ -206,16 +206,17 @@ inline RCP<const Integer> integer(integer_class i)
 }
 
 //! Integer Square root
-RCP<const Integer> isqrt(const Integer &n);
+SYMENGINE_EXPORT RCP<const Integer> isqrt(const Integer &n);
 //! Integer nth root
+SYMENGINE_EXPORT
 int i_nth_root(const Ptr<RCP<const Integer>> &r, const Integer &a,
                unsigned long int n);
 //! Perfect Square
-bool perfect_square(const Integer &n);
+SYMENGINE_EXPORT bool perfect_square(const Integer &n);
 //! Perfect Square
-bool perfect_power(const Integer &n);
+SYMENGINE_EXPORT bool perfect_power(const Integer &n);
 //! Integer Absolute value
-RCP<const Integer> iabs(const Integer &n);
+SYMENGINE_EXPORT RCP<const Integer> iabs(const Integer &n);
 
 } // namespace SymEngine
 

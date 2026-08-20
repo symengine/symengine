@@ -15,7 +15,7 @@ namespace SymEngine
 
 class SbmlTokenizer;
 
-class SbmlParser : public Parser
+class SYMENGINE_EXPORT SbmlParser : public Parser
 {
 public:
     std::unique_ptr<SbmlTokenizer> m_tokenizer;

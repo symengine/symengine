@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class MatrixSymbol : public MatrixExpr
+class SYMENGINE_EXPORT MatrixSymbol : public MatrixExpr
 {
 private:
     std::string name_;
@@ -34,7 +34,7 @@ public:
     }
 };
 
-RCP<const MatrixExpr> matrix_symbol(const std::string &name);
+SYMENGINE_EXPORT RCP<const MatrixExpr> matrix_symbol(const std::string &name);
 
 } // namespace SymEngine
 

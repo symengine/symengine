@@ -12,9 +12,10 @@
 namespace SymEngine
 {
 
+SYMENGINE_EXPORT
 vec_basic generate_fdiff_weights_vector(const vec_basic &grid,
                                         const unsigned max_deriv,
                                         const RCP<const Basic> around);
-}
+} // namespace SymEngine
 
 #endif

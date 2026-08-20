@@ -28,7 +28,7 @@ namespace SymEngine
 
 class Tokenizer;
 
-class Parser
+class SYMENGINE_EXPORT Parser
 {
 protected:
     std::string inp;

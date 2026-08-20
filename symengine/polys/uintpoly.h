@@ -112,7 +112,8 @@ public:
 
 }; // UIntDict
 
-class UIntPoly : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
+class SYMENGINE_EXPORT UIntPoly
+    : public USymEnginePoly<UIntDict, UIntPolyBase, UIntPoly>
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_UINTPOLY)
@@ -124,6 +125,7 @@ public:
 }; // UIntPoly
 
 // true & sets `out` to b/a if a exactly divides b, otherwise false & undefined
+SYMENGINE_EXPORT
 bool divides_upoly(const UIntPoly &a, const UIntPoly &b,
                    const Ptr<RCP<const UIntPoly>> &res);
 

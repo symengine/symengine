@@ -12,7 +12,7 @@
 
 namespace SymEngine
 {
-class GaloisFieldDict
+class SYMENGINE_EXPORT GaloisFieldDict
 {
 public:
     std::vector<integer_class> dict_;
@@ -544,7 +544,8 @@ public:
     }
 };
 
-class GaloisField : public UIntPolyBase<GaloisFieldDict, GaloisField>
+class SYMENGINE_EXPORT GaloisField
+    : public UIntPolyBase<GaloisFieldDict, GaloisField>
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_GALOISFIELD)
@@ -558,7 +559,7 @@ public:
     hash_t __hash__() const override;
     int compare(const Basic &o) const override;
 
-    // creates a GaloisField in cannonical form based on the
+    // creates a GaloisField in canonical form based on the
     // dictionary.
     static RCP<const GaloisField> from_dict(const RCP<const Basic> &var,
                                             GaloisFieldDict &&d);
@@ -613,6 +614,13 @@ public:
         if (get_poly().empty())
             return 0;
         return get_degree() + 1;
+    }
+
+    static GaloisFieldDict
+    container_from_dict(const RCP<const Basic> &var,
+                        std::map<unsigned, integer_class> &&d)
+    {
+        return GaloisFieldDict(d, integer_class(0));
     }
 };
 

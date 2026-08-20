@@ -26,6 +26,8 @@ if (NOT (CMAKE_BUILD_TYPE STREQUAL "Debug" OR
             "CMAKE_BUILD_TYPE must be one of: Debug, Release, RelWithDebInfo, MinSizeRel (current value: '${CMAKE_BUILD_TYPE}')")
 endif ()
 
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+
 set(BUILD_FOR_DISTRIBUTION no
     CACHE BOOL "Building SymEngine for a distribution")
 
@@ -153,17 +155,6 @@ if (MSVC)
     foreach(CompilerFlag CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE)
       set(${CompilerFlag} "${${CompilerFlag}} /W${MSVC_WARNING_LEVEL} /bigobj")
     endforeach()
-endif()
-
-if (BUILD_SHARED_LIBS)
-    if (WIN32)
-        if (MSVC)
-            # Use CMake 3.4 feature
-            set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS yes)
-        else()
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
-        endif()
-    endif()
 endif()
 
 # ECM

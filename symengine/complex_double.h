@@ -12,7 +12,7 @@
 namespace SymEngine
 {
 //! Complex Double Class to hold std::complex<double> values
-class ComplexDouble : public ComplexBase
+class SYMENGINE_EXPORT ComplexDouble : public ComplexBase
 {
 public:
     std::complex<double> i;
@@ -560,8 +560,10 @@ public:
     }
 };
 
-RCP<const ComplexDouble> complex_double(std::complex<double> x);
-RCP<const ComplexDouble> complex_double(double real, double imag);
+SYMENGINE_EXPORT RCP<const ComplexDouble>
+complex_double(std::complex<double> x);
+SYMENGINE_EXPORT RCP<const ComplexDouble> complex_double(double real,
+                                                         double imag);
 
 } // namespace SymEngine
 

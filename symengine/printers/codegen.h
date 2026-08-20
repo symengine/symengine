@@ -9,7 +9,8 @@
 namespace SymEngine
 {
 
-class CodePrinter : public RewriteTrigVisitor<CodePrinter, StrPrinter>
+class SYMENGINE_EXPORT CodePrinter
+    : public RewriteTrigVisitor<CodePrinter, StrPrinter>
 {
 public:
     explicit CodePrinter(CodePrinterPrecision precision
@@ -72,7 +73,8 @@ protected:
                                             const std::string &func_name);
 };
 
-class C89CodePrinter : public RewriteTrigVisitor<C89CodePrinter, CodePrinter>
+class SYMENGINE_EXPORT C89CodePrinter
+    : public RewriteTrigVisitor<C89CodePrinter, CodePrinter>
 {
 public:
     explicit C89CodePrinter(CodePrinterPrecision precision
@@ -85,7 +87,8 @@ public:
                     const RCP<const Basic> &b) override;
 };
 
-class C99CodePrinter : public RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>
+class SYMENGINE_EXPORT C99CodePrinter
+    : public RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>
 {
 public:
     explicit C99CodePrinter(CodePrinterPrecision precision
@@ -100,7 +103,7 @@ public:
     void bvisit(const LogGamma &x);
 };
 
-class CudaCodePrinter
+class SYMENGINE_EXPORT CudaCodePrinter
     : public RewriteTrigVisitor<CudaCodePrinter, C99CodePrinter>
 {
 public:
@@ -115,7 +118,7 @@ public:
     void bvisit(const Infty &x);
 };
 
-class MetalCodePrinter
+class SYMENGINE_EXPORT MetalCodePrinter
     : public RewriteTrigVisitor<MetalCodePrinter, CodePrinter>
 {
 public:
@@ -140,7 +143,8 @@ protected:
     format_codegen_function_name(const std::string &name) const override;
 };
 
-class JSCodePrinter : public RewriteTrigVisitor<JSCodePrinter, CodePrinter>
+class SYMENGINE_EXPORT JSCodePrinter
+    : public RewriteTrigVisitor<JSCodePrinter, CodePrinter>
 {
 public:
     using CodePrinter::apply;

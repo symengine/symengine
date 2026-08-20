@@ -7,7 +7,7 @@
 namespace SymEngine
 {
 
-class Transpose : public MatrixExpr
+class SYMENGINE_EXPORT Transpose : public MatrixExpr
 {
 private:
     RCP<const MatrixExpr> arg_;
@@ -32,7 +32,8 @@ public:
     }
 };
 
-RCP<const MatrixExpr> transpose(const RCP<const MatrixExpr> &arg);
+SYMENGINE_EXPORT RCP<const MatrixExpr>
+transpose(const RCP<const MatrixExpr> &arg);
 } // namespace SymEngine
 
 #endif

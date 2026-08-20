@@ -19,13 +19,15 @@ namespace SymEngine
 
 // Forward declare these here to avoid including derivative.h and break the
 // cycle
+SYMENGINE_EXPORT
 RCP<const Basic> diff(const RCP<const Basic> &arg, const RCP<const Symbol> &x,
                       bool cache);
 
+SYMENGINE_EXPORT
 RCP<const Basic> sdiff(const RCP<const Basic> &arg, const RCP<const Basic> &x,
                        bool cache);
 
-class Expression
+class SYMENGINE_EXPORT Expression
 {
 private:
     RCP<const Basic> m_basic;
@@ -267,6 +269,12 @@ inline Expression pow(const Expression &base, const Expression &exp)
     return pow(base.get_basic(), exp.get_basic());
 }
 
+inline void mp_pow_ui(Expression &res, const Expression &base,
+                      unsigned long exp)
+{
+    res = pow(base, Expression(integer(static_cast<signed long>(exp))));
+}
+
 inline Expression expand(const Expression &arg)
 {
     return expand(arg.get_basic());
@@ -287,7 +295,7 @@ inline int unified_compare(const Expression &a, const Expression &b)
 namespace detail
 {
 // This function must have external linkage
-std::string poly_print(const Expression &x);
+SYMENGINE_EXPORT std::string poly_print(const Expression &x);
 } // namespace detail
 
 } // namespace SymEngine

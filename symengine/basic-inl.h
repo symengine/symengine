@@ -121,10 +121,18 @@ std::string to_string(const T &value)
 #endif
 }
 
-static struct ConstantInitializer {
+struct SYMENGINE_EXPORT ConstantInitializer {
     ConstantInitializer();
     ~ConstantInitializer();
-} constantInitializer; // static initializer for every translation unit
+};
+
+inline bool _symengine_init_constants()
+{
+    static ConstantInitializer ci;
+    return true;
+}
+
+static bool _symengine_constants_initialized = _symengine_init_constants();
 
 } // namespace SymEngine
 
