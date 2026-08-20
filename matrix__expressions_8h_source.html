@@ -122,22 +122,33 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;{</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;tribool is_diagonal(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;                    <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;tribool is_lower(<span class="keyword">const</span> MatrixExpr &amp;m, <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;tribool is_real(<span class="keyword">const</span> MatrixExpr &amp;m, <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;tribool is_square(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                  <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;tribool is_symmetric(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;                     <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;tribool is_toeplitz(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;                    <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;tribool is_upper(<span class="keyword">const</span> MatrixExpr &amp;m, <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;tribool is_zero(<span class="keyword">const</span> MatrixExpr &amp;m, <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;}; <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160; </div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;SYMENGINE_EXPORT</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;tribool is_diagonal(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;                    <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;SYMENGINE_EXPORT tribool is_lower(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;                                  <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;SYMENGINE_EXPORT tribool is_real(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;                                 <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;SYMENGINE_EXPORT</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;tribool is_square(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;                  <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;SYMENGINE_EXPORT</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;tribool is_symmetric(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;                     <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;SYMENGINE_EXPORT</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;tribool is_toeplitz(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;                    <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;SYMENGINE_EXPORT tribool is_upper(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;                                  <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;SYMENGINE_EXPORT tribool is_zero(<span class="keyword">const</span> MatrixExpr &amp;m,</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;                                 <span class="keyword">const</span> Assumptions *assumptions = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160; </div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;}; <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="ainteger_8h_html"><div class="ttname"><a href="integer_8h.html">integer.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>

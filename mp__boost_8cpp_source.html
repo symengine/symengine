@@ -173,7 +173,7 @@ $(function() {
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;}</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160; </div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">void</span> mp_gcdext(integer_class &amp;<a class="code" href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">gcd</a>, integer_class &amp;s, integer_class &amp;t,</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keywordtype">void</span> mp_gcdext(integer_class &amp;<a class="code" href="namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9">gcd</a>, integer_class &amp;s, integer_class &amp;t,</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;               <span class="keyword">const</span> integer_class &amp;a, <span class="keyword">const</span> integer_class &amp;b)</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;{</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
@@ -203,7 +203,7 @@ $(function() {
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        this_s *= -1;</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        this_t *= -1;</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">gcd</a> = std::move(this_r);</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <a class="code" href="namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9">gcd</a> = std::move(this_r);</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    s = std::move(this_s);</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    t = std::move(this_t);</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
@@ -211,9 +211,9 @@ $(function() {
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="keywordtype">bool</span> mp_invert(integer_class &amp;res, <span class="keyword">const</span> integer_class &amp;a,</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;               <span class="keyword">const</span> integer_class &amp;m)</div>
 <div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;{</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    integer_class <a class="code" href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">gcd</a>, s, t;</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    mp_gcdext(<a class="code" href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">gcd</a>, s, t, a, m);</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">gcd</a> != 1) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    integer_class <a class="code" href="namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9">gcd</a>, s, t;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    mp_gcdext(<a class="code" href="namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9">gcd</a>, s, t, a, m);</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9">gcd</a> != 1) {</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;        res = 0;</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    } <span class="keywordflow">else</span> {</div>
@@ -228,11 +228,11 @@ $(function() {
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;<span class="comment">// floored modulus</span></div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;integer_class fmod(<span class="keyword">const</span> integer_class &amp;a, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>)</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;integer_class fmod(<span class="keyword">const</span> integer_class &amp;a, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">mod</a>)</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;{</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    integer_class res = a % <a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    integer_class res = a % <a class="code" href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">mod</a>;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordflow">if</span> (res &lt; 0) {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        res += <a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>;</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;        res += <a class="code" href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">mod</a>;</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    }</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    <span class="keywordflow">return</span> res;</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}</div>
@@ -247,23 +247,23 @@ $(function() {
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;}</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160; </div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;<span class="keywordtype">void</span> mp_powm(integer_class &amp;res, <span class="keyword">const</span> integer_class &amp;base,</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;             <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, <span class="keyword">const</span> integer_class &amp;m)</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;             <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a81b47f727d98f28005cb77e80b184b13">exp</a>, <span class="keyword">const</span> integer_class &amp;m)</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;{</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    <span class="comment">// if exp is negative, interpret as follows</span></div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="comment">// base**(exp) mod m    == (base**(-1))**abs(exp) mod m</span></div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    <span class="comment">//                      == (base**(-1) mod m) ** abs(exp) mod m</span></div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="comment">// where base**(-1) mod m is the modular inverse</span></div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a> &lt; 0) {</div>
+<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a81b47f727d98f28005cb77e80b184b13">exp</a> &lt; 0) {</div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;        integer_class base_inverse;</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;        <span class="keywordflow">if</span> (!mp_invert(base_inverse, base, m)) {</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            <span class="keywordflow">throw</span> SymEngine::SymEngineException(<span class="stringliteral">&quot;negative exponent undefined &quot;</span></div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;                                                <span class="stringliteral">&quot;in powm if base is not &quot;</span></div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;                                                <span class="stringliteral">&quot;invertible mod m&quot;</span>);</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;        }</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        res = boost::multiprecision::powm(base_inverse, mp_abs(<a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>), m);</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        res = boost::multiprecision::powm(base_inverse, mp_abs(<a class="code" href="namespaceSymEngine.html#a81b47f727d98f28005cb77e80b184b13">exp</a>), m);</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        res = boost::multiprecision::powm(base, <a class="code" href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">exp</a>, m);</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;        res = boost::multiprecision::powm(base, <a class="code" href="namespaceSymEngine.html#a81b47f727d98f28005cb77e80b184b13">exp</a>, m);</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;        <span class="comment">// boost&#39;s powm calculates base**exp % m, but uses truncated</span></div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;        <span class="comment">// modulus, e.g. powm(-2,3,5) == -3.  We want powm(-2,3,5) == 2</span></div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;        <span class="keywordflow">if</span> (res &lt; 0) {</div>
@@ -523,7 +523,7 @@ $(function() {
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    <span class="comment">// case where i is a prime power of two</span></div>
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;    <span class="comment">// so check all prime roots up to log(i) base 2.</span></div>
 <div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160; </div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a> = std::ilogb(i.convert_to&lt;<span class="keywordtype">double</span>&gt;());</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> <a class="code" href="namespaceSymEngine.html#a415ed54fe0082bfd961903a811b0d856">max</a> = std::ilogb(i.convert_to&lt;<span class="keywordtype">double</span>&gt;());</div>
 <div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160; </div>
 <div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;    <span class="comment">// treat case p=2 separately b/c mp_root throws exception</span></div>
 <div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    <span class="comment">// with an even root of a negative</span></div>
@@ -534,7 +534,7 @@ $(function() {
 <div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    integer_class root(0);</div>
 <div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
 <div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;        mp_nextprime(p, p);</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        <span class="keywordflow">if</span> (p &gt; <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>) {</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        <span class="keywordflow">if</span> (p &gt; <a class="code" href="namespaceSymEngine.html#a415ed54fe0082bfd961903a811b0d856">max</a>) {</div>
 <div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;        }</div>
 <div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;        <span class="keywordflow">if</span> (mp_root(root, i, p.convert_to&lt;<span class="keywordtype">unsigned</span> <span class="keywordtype">long</span>&gt;())) {</div>
@@ -714,10 +714,10 @@ $(function() {
 <div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160; </div>
 <div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;<span class="preprocessor">#endif </span><span class="comment">// SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP</span></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a23e7d19677dfaf17bce40fd767860bfd"><div class="ttname"><a href="namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd">SymEngine::gcd</a></div><div class="ttdeci">RCP&lt; const Integer &gt; gcd(const Integer &amp;a, const Integer &amp;b)</div><div class="ttdoc">Greatest Common Divisor.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00032">ntheory.cpp:32</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a266cbfda523325a93b19b5dd2f113862"><div class="ttname"><a href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">SymEngine::max</a></div><div class="ttdeci">RCP&lt; const Basic &gt; max(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Max:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03555">functions.cpp:3555</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a2cee70993b6160daf2870c1a5dc0a532"><div class="ttname"><a href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">SymEngine::mod</a></div><div class="ttdeci">RCP&lt; const Integer &gt; mod(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdoc">modulo round toward zero</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00067">ntheory.cpp:67</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a59e3d537409ce295f1a798525ed39df1"><div class="ttname"><a href="namespaceSymEngine.html#a59e3d537409ce295f1a798525ed39df1">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a0db64f0736910da482ddd5cc5c1cc3b9"><div class="ttname"><a href="namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9">SymEngine::gcd</a></div><div class="ttdeci">RCP&lt; const Integer &gt; gcd(const Integer &amp;a, const Integer &amp;b)</div><div class="ttdoc">Greatest Common Divisor.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00032">ntheory.cpp:32</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a415ed54fe0082bfd961903a811b0d856"><div class="ttname"><a href="namespaceSymEngine.html#a415ed54fe0082bfd961903a811b0d856">SymEngine::max</a></div><div class="ttdeci">RCP&lt; const Basic &gt; max(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Max:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03555">functions.cpp:3555</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a81b47f727d98f28005cb77e80b184b13"><div class="ttname"><a href="namespaceSymEngine.html#a81b47f727d98f28005cb77e80b184b13">SymEngine::exp</a></div><div class="ttdeci">RCP&lt; const Basic &gt; exp(const RCP&lt; const Basic &gt; &amp;x)</div><div class="ttdoc">Returns the natural exponential function E**x = pow(E, x)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8cpp_source.html#l00271">pow.cpp:271</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ae2a97e5d41db5addf653a6cf7e69e98d"><div class="ttname"><a href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">SymEngine::mod</a></div><div class="ttdeci">RCP&lt; const Integer &gt; mod(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdoc">modulo round toward zero</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00067">ntheory.cpp:67</a></div></div>
 <div class="ttc" id="astructSymEngine_1_1two__by__two__matrix_html"><div class="ttname"><a href="structSymEngine_1_1two__by__two__matrix.html">SymEngine::two_by_two_matrix</a></div><div class="ttdef"><b>Definition:</b> <a href="mp__boost_8cpp_source.html#l00287">mp_boost.cpp:287</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

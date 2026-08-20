@@ -110,9 +110,9 @@ $(function() {
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classSymEngine_1_1GaloisField__inherit__graph.png" border="0" usemap="#aSymEngine_1_1GaloisField_inherit__map" alt="Inheritance graph"/></div>
 <map name="aSymEngine_1_1GaloisField_inherit__map" id="aSymEngine_1_1GaloisField_inherit__map">
-<area shape="rect" title=" " alt="" coords="33,458,207,487"/>
-<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="5,364,235,410"/>
-<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="22,270,218,316"/>
+<area shape="rect" title=" " alt="" coords="33,475,207,504"/>
+<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="5,381,235,427"/>
+<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="11,270,229,333"/>
 <area shape="rect" href="classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="34,176,206,222"/>
 <area shape="rect" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="51,99,189,128"/>
 <area shape="rect" href="classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="17,5,223,51"/>
@@ -125,9 +125,9 @@ $(function() {
 <div id="dynsection-1-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classSymEngine_1_1GaloisField__coll__graph.png" border="0" usemap="#aSymEngine_1_1GaloisField_coll__map" alt="Collaboration graph"/></div>
 <map name="aSymEngine_1_1GaloisField_coll__map" id="aSymEngine_1_1GaloisField_coll__map">
-<area shape="rect" title=" " alt="" coords="110,498,284,527"/>
-<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="83,402,312,448"/>
-<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="100,307,295,353"/>
+<area shape="rect" title=" " alt="" coords="110,515,284,544"/>
+<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="83,419,312,465"/>
+<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="88,307,306,370"/>
 <area shape="rect" href="classSymEngine_1_1UPolyBase.html" title=" " alt="" coords="111,212,284,258"/>
 <area shape="rect" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="39,109,177,138"/>
 <area shape="rect" href="classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,5,211,51"/>
@@ -143,9 +143,9 @@ typedef vec_integer_class::const_iterator&#160;</td><td class="memItemRight" val
 <tr class="memitem:ae61ab8b8687b493e1d1fdafd5ec28a50"><td class="memItemLeft" align="right" valign="top"><a id="ae61ab8b8687b493e1d1fdafd5ec28a50"></a>
 typedef vec_integer_class::const_reverse_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_iterator</b></td></tr>
 <tr class="separator:ae61ab8b8687b493e1d1fdafd5ec28a50"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_types_classSymEngine_1_1UNonExprPoly"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classSymEngine_1_1UNonExprPoly')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classSymEngine_1_1UNonExprPoly.html">SymEngine::UNonExprPoly&lt; Container, Poly, Cf &gt;</a></td></tr>
+<tr class="inherit_header pub_types_classSymEngine_1_1UNonExprPoly"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classSymEngine_1_1UNonExprPoly')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classSymEngine_1_1UNonExprPoly.html">SymEngine::UNonExprPoly&lt; GaloisFieldDict, GaloisField, integer_class &gt;</a></td></tr>
 <tr class="memitem:acf4a81960e89468a73d01fb0f822a8a8 inherit pub_types_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="acf4a81960e89468a73d01fb0f822a8a8"></a>
-typedef Cf&#160;</td><td class="memItemRight" valign="bottom"><b>coef_type</b></td></tr>
+typedef integer_class&#160;</td><td class="memItemRight" valign="bottom"><b>coef_type</b></td></tr>
 <tr class="separator:acf4a81960e89468a73d01fb0f822a8a8 inherit pub_types_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classSymEngine_1_1UPolyBase"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classSymEngine_1_1UPolyBase')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classSymEngine_1_1UPolyBase.html">SymEngine::UPolyBase&lt; Container, Poly &gt;</a></td></tr>
 <tr class="memitem:ac7a7a88b09663086f842c3a01e1ebaf1 inherit pub_types_classSymEngine_1_1UPolyBase"><td class="memItemLeft" align="right" valign="top"><a id="ac7a7a88b09663086f842c3a01e1ebaf1"></a>
@@ -208,21 +208,18 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const over
 <tr class="memitem:a748e5dda986370f44d38d0ed8a3bfa76 inherit pub_methods_classSymEngine_1_1UIntPolyBase"><td class="memItemLeft" align="right" valign="top"><a id="a748e5dda986370f44d38d0ed8a3bfa76"></a>
 RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>as_symbolic</b> () const</td></tr>
 <tr class="separator:a748e5dda986370f44d38d0ed8a3bfa76 inherit pub_methods_classSymEngine_1_1UIntPolyBase"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_methods_classSymEngine_1_1UNonExprPoly"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSymEngine_1_1UNonExprPoly')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSymEngine_1_1UNonExprPoly.html">SymEngine::UNonExprPoly&lt; Container, Poly, Cf &gt;</a></td></tr>
+<tr class="inherit_header pub_methods_classSymEngine_1_1UNonExprPoly"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSymEngine_1_1UNonExprPoly')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSymEngine_1_1UNonExprPoly.html">SymEngine::UNonExprPoly&lt; GaloisFieldDict, GaloisField, integer_class &gt;</a></td></tr>
 <tr class="memitem:a52041c3622b2d1a66fcdc2fec2b80a5c inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="a52041c3622b2d1a66fcdc2fec2b80a5c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UNonExprPoly</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, Container &amp;&amp;container)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>UNonExprPoly</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;container)</td></tr>
 <tr class="separator:a52041c3622b2d1a66fcdc2fec2b80a5c inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7901d754232b65e754ed8a69c01dfb55 inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="a7901d754232b65e754ed8a69c01dfb55"></a>
-virtual Cf&#160;</td><td class="memItemRight" valign="bottom"><b>eval</b> (const Cf &amp;x) const =0</td></tr>
-<tr class="separator:a7901d754232b65e754ed8a69c01dfb55 inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7ca7f75e68798d8c1d311d989572d7ce inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="a7ca7f75e68798d8c1d311d989572d7ce"></a>
-std::vector&lt; Cf &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>multieval</b> (const std::vector&lt; Cf &gt; &amp;v) const</td></tr>
+std::vector&lt; integer_class &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>multieval</b> (const std::vector&lt; integer_class &gt; &amp;v) const</td></tr>
 <tr class="separator:a7ca7f75e68798d8c1d311d989572d7ce inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afbd56fa4ac1867cd24585f9291d90c5f inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="afbd56fa4ac1867cd24585f9291d90c5f"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>get_degree</b> () const</td></tr>
 <tr class="separator:afbd56fa4ac1867cd24585f9291d90c5f inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae54f3a4e3072cfe97b4c3e0089d6b733 inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="ae54f3a4e3072cfe97b4c3e0089d6b733"></a>
-Cf&#160;</td><td class="memItemRight" valign="bottom"><b>get_lc</b> () const</td></tr>
+integer_class&#160;</td><td class="memItemRight" valign="bottom"><b>get_lc</b> () const</td></tr>
 <tr class="separator:ae54f3a4e3072cfe97b4c3e0089d6b733 inherit pub_methods_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classSymEngine_1_1UPolyBase"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classSymEngine_1_1UPolyBase')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classSymEngine_1_1UPolyBase.html">SymEngine::UPolyBase&lt; Container, Poly &gt;</a></td></tr>
 <tr class="memitem:a9fd7bd2714e30459dcef5d19d4af869d inherit pub_methods_classSymEngine_1_1UPolyBase"><td class="memItemLeft" align="right" valign="top"><a id="a9fd7bd2714e30459dcef5d19d4af869d"></a>
@@ -321,9 +318,12 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1GaloisField.html">Gal
 <tr class="memitem:a98b75f29e22b8aca666a81146c7b462d"><td class="memItemLeft" align="right" valign="top"><a id="a98b75f29e22b8aca666a81146c7b462d"></a>
 static RCP&lt; const <a class="el" href="classSymEngine_1_1GaloisField.html">GaloisField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>from_uintpoly</b> (const <a class="el" href="classSymEngine_1_1UIntPoly.html">UIntPoly</a> &amp;a, const integer_class &amp;modulo)</td></tr>
 <tr class="separator:a98b75f29e22b8aca666a81146c7b462d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="inherit_header pub_static_methods_classSymEngine_1_1UNonExprPoly"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classSymEngine_1_1UNonExprPoly')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classSymEngine_1_1UNonExprPoly.html">SymEngine::UNonExprPoly&lt; Container, Poly, Cf &gt;</a></td></tr>
+<tr class="memitem:a84922331292907c3f6f8d456b82ba923"><td class="memItemLeft" align="right" valign="top"><a id="a84922331292907c3f6f8d456b82ba923"></a>
+static <a class="el" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a>&#160;</td><td class="memItemRight" valign="bottom"><b>container_from_dict</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, std::map&lt; unsigned, integer_class &gt; &amp;&amp;d)</td></tr>
+<tr class="separator:a84922331292907c3f6f8d456b82ba923"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_classSymEngine_1_1UNonExprPoly"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classSymEngine_1_1UNonExprPoly')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classSymEngine_1_1UNonExprPoly.html">SymEngine::UNonExprPoly&lt; GaloisFieldDict, GaloisField, integer_class &gt;</a></td></tr>
 <tr class="memitem:a4d00570f25b4fef57ff58105655b5354 inherit pub_static_methods_classSymEngine_1_1UNonExprPoly"><td class="memItemLeft" align="right" valign="top"><a id="a4d00570f25b4fef57ff58105655b5354"></a>
-static RCP&lt; const Poly &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>from_dict</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, std::map&lt; unsigned, Cf &gt; &amp;&amp;d)</td></tr>
+static RCP&lt; const <a class="el" href="classSymEngine_1_1GaloisField.html">GaloisField</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>from_dict</b> (const RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt; &amp;var, std::map&lt; unsigned, integer_class &gt; &amp;&amp;d)</td></tr>
 <tr class="separator:a4d00570f25b4fef57ff58105655b5354 inherit pub_static_methods_classSymEngine_1_1UNonExprPoly"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_static_methods_classSymEngine_1_1UPolyBase"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classSymEngine_1_1UPolyBase')"><img src="closed.png" alt="-"/>&#160;Static Public Member Functions inherited from <a class="el" href="classSymEngine_1_1UPolyBase.html">SymEngine::UPolyBase&lt; Container, Poly &gt;</a></td></tr>
 <tr class="memitem:a7d4afd8974ba007e8ada9ba05104814e inherit pub_static_methods_classSymEngine_1_1UPolyBase"><td class="memItemLeft" align="right" valign="top"><a id="a7d4afd8974ba007e8ada9ba05104814e"></a>
@@ -493,7 +493,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Type_code_id shared by all instances </p>
 
-<p class="definition">Definition at line <a class="el" href="fields_8h_source.html#l00550">550</a> of file <a class="el" href="fields_8h_source.html">fields.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="fields_8h_source.html#l00551">551</a> of file <a class="el" href="fields_8h_source.html">fields.h</a>.</p>
 
 </div>
 </div>

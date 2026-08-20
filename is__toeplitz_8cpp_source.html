@@ -144,7 +144,7 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        }</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        <span class="keyword">auto</span> first = vec[0];</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = vec.begin() + 1; it != vec.end(); ++it) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keyword">auto</span> diff = <a class="code" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(first, *it);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;            <span class="keyword">auto</span> diff = <a class="code" href="namespaceSymEngine.html#a939f8f7488fcc2688257c73240ac26a2">sub</a>(first, *it);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            tribool next = is_zero(*diff, assumptions_);</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;            <span class="keywordflow">if</span> (is_false(next)) {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;                is_toeplitz_ = next;</div>
@@ -179,7 +179,7 @@ $(function() {
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                <span class="keywordflow">for</span> (i = i_start + 1, j = j_start + 1;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                     i &lt; x.nrows() &amp;&amp; j &lt; x.ncols(); i++, j++) {</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;                    is_toeplitz_ = and_tribool(</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                        is_toeplitz_, visitor.apply(*<a class="code" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(first, x.get(i, j))));</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;                        is_toeplitz_, visitor.apply(*<a class="code" href="namespaceSymEngine.html#a939f8f7488fcc2688257c73240ac26a2">sub</a>(first, x.get(i, j))));</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;                    <span class="keywordflow">if</span> (is_false(is_toeplitz_)) {</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;                        <span class="keywordflow">return</span>;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;                    }</div>
@@ -214,7 +214,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1ZeroMatrix_html"><div class="ttname"><a href="classSymEngine_1_1ZeroMatrix.html">SymEngine::ZeroMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="zero__matrix_8h_source.html#l00010">zero_matrix.h:11</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ZeroVisitor_html"><div class="ttname"><a href="classSymEngine_1_1ZeroVisitor.html">SymEngine::ZeroVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8h_source.html#l00009">test_visitors.h:10</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a939f8f7488fcc2688257c73240ac26a2"><div class="ttname"><a href="namespaceSymEngine.html#a939f8f7488fcc2688257c73240ac26a2">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

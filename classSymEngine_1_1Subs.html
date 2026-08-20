@@ -275,7 +275,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classSymEngine_1_1Subs.html">Subs</a> operator <a class="el" href="classSymEngine_1_1Subs.html">Subs</a>(f, {x1 : x2, y1: y2, ...}) represents <code>f</code> after substituting <code>x1</code> with <code>x2</code>, <code>y1</code> with <code>y2</code>, and so on. </p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00738">738</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00746">746</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="aa1c9a5902d3f2729a7e9d59cec79f3ad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa1c9a5902d3f2729a7e9d59cec79f3ad">&#9670;&nbsp;</a></span>__eq__()</h2>
@@ -302,7 +302,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Test equality. </p>
-<p>A virtual function for testing the equality of two <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> objects </p><dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5" title="Checks equality for a and b">eq(const Basic &amp;a, const Basic &amp;b)</a> non-member method</dd></dl>
+<p>A virtual function for testing the equality of two <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> objects </p><dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4" title="Checks equality for a and b">eq(const Basic &amp;a, const Basic &amp;b)</a> non-member method</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">o</td><td>a constant reference to object to test against </td></tr>
@@ -315,12 +315,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02056">2056</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l02057"></a><span class="lineno"> 2057</span>&#160;{</div>
-<div class="line"><a name="l02058"></a><span class="lineno"> 2058</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Subs&gt;(o) and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg_, *(down_cast&lt;const Subs &amp;&gt;(o).arg_))</div>
+<div class="line"><a name="l02058"></a><span class="lineno"> 2058</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Subs&gt;(o) and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg_, *(down_cast&lt;const Subs &amp;&gt;(o).arg_))</div>
 <div class="line"><a name="l02059"></a><span class="lineno"> 2059</span>&#160;        and unified_eq(dict_, down_cast&lt;const Subs &amp;&gt;(o).dict_))</div>
 <div class="line"><a name="l02060"></a><span class="lineno"> 2060</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l02061"></a><span class="lineno"> 2061</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l02062"></a><span class="lineno"> 2062</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a918202b85d6622197791129a91fa04a4"><div class="ttname"><a href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -426,7 +426,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 <p>Type_code_id shared by all instances </p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00745">745</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00753">753</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
 
 </div>
 </div>

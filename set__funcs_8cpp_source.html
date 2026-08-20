@@ -157,7 +157,7 @@ $(function() {
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    {</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        <span class="keyword">const</span> set_basic &amp;container = x.get_container();</div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        vec_basic v(container.begin(), container.end());</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        sup_ = <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>(v);</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        sup_ = <a class="code" href="namespaceSymEngine.html#a415ed54fe0082bfd961903a811b0d856">max</a>(v);</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    };</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
@@ -167,7 +167,7 @@ $(function() {
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            a-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            suprema.push_back(sup_);</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        sup_ = <a class="code" href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">max</a>(suprema);</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        sup_ = <a class="code" href="namespaceSymEngine.html#a415ed54fe0082bfd961903a811b0d856">max</a>(suprema);</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    };</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complement.html">Complement</a> &amp;x)</div>
@@ -237,7 +237,7 @@ $(function() {
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    {</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        <span class="keyword">const</span> set_basic &amp;container = x.get_container();</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        vec_basic v(container.begin(), container.end());</div>
-<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        inf_ = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>(v);</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;        inf_ = <a class="code" href="namespaceSymEngine.html#ac32eca3b4b0a5143e98c71056a4bc83d">min</a>(v);</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;    };</div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160; </div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Union.html">Union</a> &amp;x)</div>
@@ -247,7 +247,7 @@ $(function() {
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;            a-&gt;accept(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;            infima.push_back(inf_);</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        }</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        inf_ = <a class="code" href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">min</a>(infima);</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;        inf_ = <a class="code" href="namespaceSymEngine.html#ac32eca3b4b0a5143e98c71056a4bc83d">min</a>(infima);</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    };</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complement.html">Complement</a> &amp;x)</div>
@@ -418,13 +418,13 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a17c4fb234fb676cbdcd3e5b19a559356"><div class="ttname"><a href="namespaceSymEngine.html#a17c4fb234fb676cbdcd3e5b19a559356">SymEngine::integer</a></div><div class="ttdeci">std::enable_if&lt; std::is_integral&lt; T &gt;::value, RCP&lt; const Integer &gt; &gt;::type integer(T i)</div><div class="ttdef"><b>Definition:</b> <a href="integer_8h_source.html#l00197">integer.h:197</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a20fa00efb8df384d548f63a448a6aeac"><div class="ttname"><a href="namespaceSymEngine.html#a20fa00efb8df384d548f63a448a6aeac">SymEngine::reals</a></div><div class="ttdeci">RCP&lt; const Reals &gt; reals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00560">sets.h:560</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a266cbfda523325a93b19b5dd2f113862"><div class="ttname"><a href="namespaceSymEngine.html#a266cbfda523325a93b19b5dd2f113862">SymEngine::max</a></div><div class="ttdeci">RCP&lt; const Basic &gt; max(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Max:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03555">functions.cpp:3555</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2be09355e8feb258ce7f16fa60a6065b"><div class="ttname"><a href="namespaceSymEngine.html#a2be09355e8feb258ce7f16fa60a6065b">SymEngine::naturals</a></div><div class="ttdeci">RCP&lt; const Naturals &gt; naturals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00578">sets.h:578</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a2eb0d05b781ff2948b07f612f83a82bc"><div class="ttname"><a href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">SymEngine::emptyset</a></div><div class="ttdeci">RCP&lt; const EmptySet &gt; emptyset()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00590">sets.h:590</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a3bff051987cba6af42babac321c4d61d"><div class="ttname"><a href="namespaceSymEngine.html#a3bff051987cba6af42babac321c4d61d">SymEngine::integers</a></div><div class="ttdeci">RCP&lt; const Integers &gt; integers()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00572">sets.h:572</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a415ed54fe0082bfd961903a811b0d856"><div class="ttname"><a href="namespaceSymEngine.html#a415ed54fe0082bfd961903a811b0d856">SymEngine::max</a></div><div class="ttdeci">RCP&lt; const Basic &gt; max(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Max:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03555">functions.cpp:3555</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abbdc2f1f3c92c9560d10a5b7998e33e3"><div class="ttname"><a href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">SymEngine::finiteset</a></div><div class="ttdeci">RCP&lt; const Set &gt; finiteset(const set_basic &amp;container)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00602">sets.h:602</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ac173c8dd31830a8392c91aa7143b0428"><div class="ttname"><a href="namespaceSymEngine.html#ac173c8dd31830a8392c91aa7143b0428">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03659">functions.cpp:3659</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac2d57ac420ac353f747eac11c3e3dba3"><div class="ttname"><a href="namespaceSymEngine.html#ac2d57ac420ac353f747eac11c3e3dba3">SymEngine::naturals0</a></div><div class="ttdeci">RCP&lt; const Naturals0 &gt; naturals0()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00584">sets.h:584</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ac32eca3b4b0a5143e98c71056a4bc83d"><div class="ttname"><a href="namespaceSymEngine.html#ac32eca3b4b0a5143e98c71056a4bc83d">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03659">functions.cpp:3659</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

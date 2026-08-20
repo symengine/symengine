@@ -171,7 +171,7 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1DiagonalMatrix.html">DiagonalMatrix</a> &amp;x)</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        trace_ = <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(x.get_container());</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        trace_ = <a class="code" href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">add</a>(x.get_container());</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImmutableDenseMatrix.html">ImmutableDenseMatrix</a> &amp;x)</div>
@@ -183,7 +183,7 @@ $(function() {
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; x.nrows(); i++) {</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;            diag.push_back(x.get(i, i));</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;        }</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        trace_ = <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(diag);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;        trace_ = <a class="code" href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">add</a>(diag);</div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1MatrixAdd.html">MatrixAdd</a> &amp;x)</div>
@@ -192,7 +192,7 @@ $(function() {
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;        RCP&lt;const Basic&gt; sum = zero;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;e : x.get_terms()) {</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            e-&gt;accept(*<span class="keyword">this</span>);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            sum = <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(sum, trace_);</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            sum = <a class="code" href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">add</a>(sum, trace_);</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        }</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        trace_ = sum;</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    }</div>
@@ -226,7 +226,7 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1Trace_html_af0f0fb45c223833538cf6a3131fabbe7"><div class="ttname"><a href="classSymEngine_1_1Trace.html#af0f0fb45c223833538cf6a3131fabbe7">SymEngine::Trace::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="trace_8cpp_source.html#l00028">trace.cpp:28</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ZeroMatrix_html"><div class="ttname"><a href="classSymEngine_1_1ZeroMatrix.html">SymEngine::ZeroMatrix</a></div><div class="ttdef"><b>Definition:</b> <a href="zero__matrix_8h_source.html#l00010">zero_matrix.h:11</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a095f07c5d5725953257c91aaca35956b"><div class="ttname"><a href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

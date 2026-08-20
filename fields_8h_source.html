@@ -109,7 +109,7 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160; </div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;{</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisFieldDict.html">   15</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a></div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisFieldDict.html">   15</a></span>&#160;<span class="keyword">class </span>SYMENGINE_EXPORT <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    std::vector&lt;integer_class&gt; dict_;</div>
@@ -141,9 +141,9 @@ $(function() {
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;          modulo_(std::move(other.modulo_))</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    {</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    }</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;i, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> map_uint_mpz &amp;p, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> integer_class &amp;i, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">mod</a>);</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> <span class="keywordtype">int</span> &amp;i, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">mod</a>);</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> map_uint_mpz &amp;p, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">mod</a>);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    GaloisFieldDict(<span class="keyword">const</span> integer_class &amp;i, <span class="keyword">const</span> integer_class &amp;<a class="code" href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">mod</a>);</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="keyword">static</span> GaloisFieldDict from_vec(<span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;v,</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;                                    <span class="keyword">const</span> integer_class &amp;modulo);</div>
@@ -379,7 +379,7 @@ $(function() {
 <div class="line"><a name="l00282"></a><span class="lineno">  282</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;GaloisFieldDict &amp;&gt;(*<span class="keyword">this</span>);</div>
 <div class="line"><a name="l00283"></a><span class="lineno">  283</span>&#160;    }</div>
 <div class="line"><a name="l00284"></a><span class="lineno">  284</span>&#160; </div>
-<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keyword">static</span> GaloisFieldDict mul(<span class="keyword">const</span> GaloisFieldDict &amp;a,</div>
+<div class="line"><a name="l00285"></a><span class="lineno">  285</span>&#160;    <span class="keyword">static</span> GaloisFieldDict <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(<span class="keyword">const</span> GaloisFieldDict &amp;a,</div>
 <div class="line"><a name="l00286"></a><span class="lineno">  286</span>&#160;                               <span class="keyword">const</span> GaloisFieldDict &amp;b);</div>
 <div class="line"><a name="l00287"></a><span class="lineno">  287</span>&#160; </div>
 <div class="line"><a name="l00288"></a><span class="lineno">  288</span>&#160;    <span class="keyword">friend</span> GaloisFieldDict operator*(<span class="keyword">const</span> GaloisFieldDict &amp;a,</div>
@@ -641,112 +641,116 @@ $(function() {
 <div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;    }</div>
 <div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;};</div>
 <div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160; </div>
-<div class="line"><a name="l00547"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisField.html">  547</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1GaloisField.html">GaloisField</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1UIntPolyBase.html">UIntPolyBase</a>&lt;GaloisFieldDict, GaloisField&gt;</div>
-<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;{</div>
-<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00550"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisField.html#a04d2f67601b005772dec7cde4f873dfc">  550</a></span>&#160;    <a class="code" href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a>(SYMENGINE_GALOISFIELD)</div>
-<div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160; </div>
-<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;    </div>
-<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;    <a class="code" href="classSymEngine_1_1GaloisField.html#a758ea12eb1bee68e1da89a596f5f1e2d">GaloisField</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var, <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;dict);</div>
-<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160; </div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;    <span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1GaloisField.html#a84a3f28b8234b1c9c8564105b68fcd3d">is_canonical</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;dict) <span class="keyword">const</span>;</div>
-<div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;    hash_t <a class="code" href="classSymEngine_1_1GaloisField.html#ab0e4d072e27c748c2f69d4141004a705">__hash__</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;    <span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1GaloisField.html#aef391ecda49ccc1372774267bd08e240">compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
-<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;    <span class="comment">// creates a GaloisField in cannonical form based on the</span></div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    <span class="comment">// dictionary.</span></div>
-<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_dict(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
-<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;                                            <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;d);</div>
-<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_vec(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
-<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;                                           <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;v,</div>
-<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;                                           <span class="keyword">const</span> integer_class &amp;modulo);</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_uintpoly(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1UIntPoly.html">UIntPoly</a> &amp;a,</div>
-<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;                                                <span class="keyword">const</span> integer_class &amp;modulo);</div>
-<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160; </div>
-<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;    integer_class eval(<span class="keyword">const</span> integer_class &amp;x)<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;        <span class="keywordflow">return</span> get_poly().gf_eval(x);</div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;    }</div>
-<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160; </div>
-<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;    vec_integer_class multieval(<span class="keyword">const</span> vec_integer_class &amp;v)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;        <span class="keywordflow">return</span> get_poly().gf_multi_eval(v);</div>
-<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;    }</div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160; </div>
-<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;    <span class="keyword">typedef</span> vec_integer_class::const_iterator iterator;</div>
-<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;    <span class="keyword">typedef</span> vec_integer_class::const_reverse_iterator reverse_iterator;</div>
-<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;    iterator begin()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.begin();</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;    }</div>
-<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;    iterator end()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.end();</div>
-<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;    }</div>
-<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;    reverse_iterator obegin()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.rbegin();</div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;    }</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    reverse_iterator oend()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.rend();</div>
-<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;    }</div>
-<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160; </div>
-<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160;    <span class="keyword">inline</span> integer_class get_coeff(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x)<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;        <span class="keywordflow">return</span> get_poly().get_coeff(x);</div>
-<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;    }</div>
-<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160; </div>
-<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160;    vec_basic <a class="code" href="classSymEngine_1_1GaloisField.html#adc157d8144d9de88ae99168b160c55b4">get_args</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;get_dict()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_;</div>
-<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;    }</div>
-<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160; </div>
-<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> size()<span class="keyword"> const override</span></div>
-<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;        <span class="keywordflow">if</span> (get_poly().empty())</div>
-<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;            <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;        <span class="keywordflow">return</span> get_degree() + 1;</div>
-<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;    }</div>
-<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;};</div>
+<div class="line"><a name="l00547"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisField.html">  547</a></span>&#160;<span class="keyword">class </span>SYMENGINE_EXPORT <a class="code" href="classSymEngine_1_1GaloisField.html">GaloisField</a></div>
+<div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160;    : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1UIntPolyBase.html">UIntPolyBase</a>&lt;GaloisFieldDict, GaloisField&gt;</div>
+<div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;{</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00551"></a><span class="lineno"><a class="line" href="classSymEngine_1_1GaloisField.html#a04d2f67601b005772dec7cde4f873dfc">  551</a></span>&#160;    <a class="code" href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a>(SYMENGINE_GALOISFIELD)</div>
+<div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160; </div>
+<div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;    </div>
+<div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160;    <a class="code" href="classSymEngine_1_1GaloisField.html">GaloisField</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var, <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;dict);</div>
+<div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160; </div>
+<div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;    <span class="keywordtype">bool</span> is_canonical(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;dict) <span class="keyword">const</span>;</div>
+<div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;    hash_t __hash__() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160;    <span class="keywordtype">int</span> compare(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o) <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160; </div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;    <span class="comment">// creates a GaloisField in canonical form based on the</span></div>
+<div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;    <span class="comment">// dictionary.</span></div>
+<div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_dict(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
+<div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;                                            <a class="code" href="classSymEngine_1_1GaloisFieldDict.html">GaloisFieldDict</a> &amp;&amp;d);</div>
+<div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_vec(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
+<div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;                                           <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;v,</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;                                           <span class="keyword">const</span> integer_class &amp;modulo);</div>
+<div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;    <span class="keyword">static</span> RCP&lt;const GaloisField&gt; from_uintpoly(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1UIntPoly.html">UIntPoly</a> &amp;a,</div>
+<div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;                                                <span class="keyword">const</span> integer_class &amp;modulo);</div>
+<div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160; </div>
+<div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160;    integer_class eval(<span class="keyword">const</span> integer_class &amp;x)<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;        <span class="keywordflow">return</span> get_poly().gf_eval(x);</div>
+<div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;    }</div>
+<div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160; </div>
+<div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;    vec_integer_class multieval(<span class="keyword">const</span> vec_integer_class &amp;v)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;        <span class="keywordflow">return</span> get_poly().gf_multi_eval(v);</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;    }</div>
+<div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160; </div>
+<div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;    <span class="keyword">typedef</span> vec_integer_class::const_iterator iterator;</div>
+<div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;    <span class="keyword">typedef</span> vec_integer_class::const_reverse_iterator reverse_iterator;</div>
+<div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160;    iterator begin()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.begin();</div>
+<div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;    }</div>
+<div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;    iterator end()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.end();</div>
+<div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;    }</div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;    reverse_iterator obegin()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.rbegin();</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;    }</div>
+<div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;    reverse_iterator oend()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_.rend();</div>
+<div class="line"><a name="l00599"></a><span class="lineno">  599</span>&#160;    }</div>
+<div class="line"><a name="l00600"></a><span class="lineno">  600</span>&#160; </div>
+<div class="line"><a name="l00601"></a><span class="lineno">  601</span>&#160;    <span class="keyword">inline</span> integer_class get_coeff(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> x)<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00602"></a><span class="lineno">  602</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00603"></a><span class="lineno">  603</span>&#160;        <span class="keywordflow">return</span> get_poly().get_coeff(x);</div>
+<div class="line"><a name="l00604"></a><span class="lineno">  604</span>&#160;    }</div>
+<div class="line"><a name="l00605"></a><span class="lineno">  605</span>&#160; </div>
+<div class="line"><a name="l00606"></a><span class="lineno">  606</span>&#160;    vec_basic get_args() <span class="keyword">const override</span>;</div>
+<div class="line"><a name="l00607"></a><span class="lineno">  607</span>&#160;    <span class="keyword">inline</span> <span class="keyword">const</span> std::vector&lt;integer_class&gt; &amp;get_dict()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00608"></a><span class="lineno">  608</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00609"></a><span class="lineno">  609</span>&#160;        <span class="keywordflow">return</span> get_poly().dict_;</div>
+<div class="line"><a name="l00610"></a><span class="lineno">  610</span>&#160;    }</div>
+<div class="line"><a name="l00611"></a><span class="lineno">  611</span>&#160; </div>
+<div class="line"><a name="l00612"></a><span class="lineno">  612</span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> size()<span class="keyword"> const override</span></div>
+<div class="line"><a name="l00613"></a><span class="lineno">  613</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00614"></a><span class="lineno">  614</span>&#160;        <span class="keywordflow">if</span> (get_poly().empty())</div>
+<div class="line"><a name="l00615"></a><span class="lineno">  615</span>&#160;            <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00616"></a><span class="lineno">  616</span>&#160;        <span class="keywordflow">return</span> get_degree() + 1;</div>
+<div class="line"><a name="l00617"></a><span class="lineno">  617</span>&#160;    }</div>
 <div class="line"><a name="l00618"></a><span class="lineno">  618</span>&#160; </div>
-<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; gf_poly(RCP&lt;const Basic&gt; i,</div>
-<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;                                      GaloisFieldDict &amp;&amp;dict)</div>
-<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;{</div>
-<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, std::move(dict));</div>
-<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;}</div>
-<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160; </div>
-<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; gf_poly(RCP&lt;const Basic&gt; i, map_uint_mpz &amp;&amp;dict,</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;                                      integer_class modulo_)</div>
-<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;{</div>
-<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;    GaloisFieldDict wrapper(dict, modulo_);</div>
-<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, std::move(wrapper));</div>
-<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;}</div>
-<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160; </div>
-<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; pow_upoly(<span class="keyword">const</span> GaloisField &amp;a, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> p)</div>
-<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;{</div>
-<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;    <span class="keyword">auto</span> dict = GaloisField::container_type::pow(a.get_poly(), p);</div>
-<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_container(a.get_var(), std::move(dict));</div>
-<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;}</div>
-<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160; </div>
-<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00619"></a><span class="lineno">  619</span>&#160;    <span class="keyword">static</span> GaloisFieldDict</div>
+<div class="line"><a name="l00620"></a><span class="lineno">  620</span>&#160;    container_from_dict(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;var,</div>
+<div class="line"><a name="l00621"></a><span class="lineno">  621</span>&#160;                        std::map&lt;unsigned, integer_class&gt; &amp;&amp;d)</div>
+<div class="line"><a name="l00622"></a><span class="lineno">  622</span>&#160;    {</div>
+<div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160;        <span class="keywordflow">return</span> GaloisFieldDict(d, integer_class(0));</div>
+<div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;    }</div>
+<div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;};</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160; </div>
+<div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; gf_poly(RCP&lt;const Basic&gt; i,</div>
+<div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;                                      GaloisFieldDict &amp;&amp;dict)</div>
+<div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;{</div>
+<div class="line"><a name="l00630"></a><span class="lineno">  630</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, std::move(dict));</div>
+<div class="line"><a name="l00631"></a><span class="lineno">  631</span>&#160;}</div>
+<div class="line"><a name="l00632"></a><span class="lineno">  632</span>&#160; </div>
+<div class="line"><a name="l00633"></a><span class="lineno">  633</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; gf_poly(RCP&lt;const Basic&gt; i, map_uint_mpz &amp;&amp;dict,</div>
+<div class="line"><a name="l00634"></a><span class="lineno">  634</span>&#160;                                      integer_class modulo_)</div>
+<div class="line"><a name="l00635"></a><span class="lineno">  635</span>&#160;{</div>
+<div class="line"><a name="l00636"></a><span class="lineno">  636</span>&#160;    GaloisFieldDict wrapper(dict, modulo_);</div>
+<div class="line"><a name="l00637"></a><span class="lineno">  637</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_dict(i, std::move(wrapper));</div>
+<div class="line"><a name="l00638"></a><span class="lineno">  638</span>&#160;}</div>
+<div class="line"><a name="l00639"></a><span class="lineno">  639</span>&#160; </div>
+<div class="line"><a name="l00640"></a><span class="lineno">  640</span>&#160;<span class="keyword">inline</span> RCP&lt;const GaloisField&gt; pow_upoly(<span class="keyword">const</span> GaloisField &amp;a, <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> p)</div>
+<div class="line"><a name="l00641"></a><span class="lineno">  641</span>&#160;{</div>
+<div class="line"><a name="l00642"></a><span class="lineno">  642</span>&#160;    <span class="keyword">auto</span> dict = GaloisField::container_type::pow(a.get_poly(), p);</div>
+<div class="line"><a name="l00643"></a><span class="lineno">  643</span>&#160;    <span class="keywordflow">return</span> GaloisField::from_container(a.get_var(), std::move(dict));</div>
+<div class="line"><a name="l00644"></a><span class="lineno">  644</span>&#160;}</div>
+<div class="line"><a name="l00645"></a><span class="lineno">  645</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00646"></a><span class="lineno">  646</span>&#160; </div>
+<div class="line"><a name="l00647"></a><span class="lineno">  647</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
-<div class="ttc" id="abasic_8h_html_a945f4a70c3ac1d14cb0637ef01a81b69"><div class="ttname"><a href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a></div><div class="ttdeci">#define IMPLEMENT_TYPEID(SYMENGINE_ID)</div><div class="ttdoc">Inline members and functions.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00340">basic.h:340</a></div></div>
+<div class="ttc" id="abasic_8h_html_a945f4a70c3ac1d14cb0637ef01a81b69"><div class="ttname"><a href="basic_8h.html#a945f4a70c3ac1d14cb0637ef01a81b69">IMPLEMENT_TYPEID</a></div><div class="ttdeci">#define IMPLEMENT_TYPEID(SYMENGINE_ID)</div><div class="ttdoc">Inline members and functions.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00344">basic.h:344</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1GaloisFieldDict_html"><div class="ttname"><a href="classSymEngine_1_1GaloisFieldDict.html">SymEngine::GaloisFieldDict</a></div><div class="ttdef"><b>Definition:</b> <a href="fields_8h_source.html#l00015">fields.h:16</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1GaloisField_html"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html">SymEngine::GaloisField</a></div><div class="ttdef"><b>Definition:</b> <a href="fields_8h_source.html#l00547">fields.h:548</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1GaloisField_html_a758ea12eb1bee68e1da89a596f5f1e2d"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html#a758ea12eb1bee68e1da89a596f5f1e2d">SymEngine::GaloisField::GaloisField</a></div><div class="ttdeci">GaloisField(const RCP&lt; const Basic &gt; &amp;var, GaloisFieldDict &amp;&amp;dict)</div><div class="ttdoc">Constructor of GaloisField class.</div><div class="ttdef"><b>Definition:</b> <a href="fields_8cpp_source.html#l00010">fields.cpp:10</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1GaloisField_html_a84a3f28b8234b1c9c8564105b68fcd3d"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html#a84a3f28b8234b1c9c8564105b68fcd3d">SymEngine::GaloisField::is_canonical</a></div><div class="ttdeci">bool is_canonical(const GaloisFieldDict &amp;dict) const</div><div class="ttdef"><b>Definition:</b> <a href="fields_8cpp_source.html#l00017">fields.cpp:17</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1GaloisField_html_ab0e4d072e27c748c2f69d4141004a705"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html#ab0e4d072e27c748c2f69d4141004a705">SymEngine::GaloisField::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="fields_8cpp_source.html#l00028">fields.cpp:28</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1GaloisField_html_adc157d8144d9de88ae99168b160c55b4"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html#adc157d8144d9de88ae99168b160c55b4">SymEngine::GaloisField::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="fields_8cpp_source.html#l00081">fields.cpp:81</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1GaloisField_html_aef391ecda49ccc1372774267bd08e240"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html#aef391ecda49ccc1372774267bd08e240">SymEngine::GaloisField::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="fields_8cpp_source.html#l00041">fields.cpp:41</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1GaloisField_html"><div class="ttname"><a href="classSymEngine_1_1GaloisField.html">SymEngine::GaloisField</a></div><div class="ttdef"><b>Definition:</b> <a href="fields_8h_source.html#l00547">fields.h:549</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1UIntPolyBase_html"><div class="ttname"><a href="classSymEngine_1_1UIntPolyBase.html">SymEngine::UIntPolyBase</a></div><div class="ttdef"><b>Definition:</b> <a href="upolybase_8h_source.html#l00501">upolybase.h:502</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1UIntPoly_html"><div class="ttname"><a href="classSymEngine_1_1UIntPoly.html">SymEngine::UIntPoly</a></div><div class="ttdef"><b>Definition:</b> <a href="uintpoly_8h_source.html#l00115">uintpoly.h:116</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1UIntPoly_html"><div class="ttname"><a href="classSymEngine_1_1UIntPoly.html">SymEngine::UIntPoly</a></div><div class="ttdef"><b>Definition:</b> <a href="uintpoly_8h_source.html#l00115">uintpoly.h:117</a></div></div>
 <div class="ttc" id="adict_8h_html"><div class="ttname"><a href="dict_8h.html">dict.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a2cee70993b6160daf2870c1a5dc0a532"><div class="ttname"><a href="namespaceSymEngine.html#a2cee70993b6160daf2870c1a5dc0a532">SymEngine::mod</a></div><div class="ttdeci">RCP&lt; const Integer &gt; mod(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdoc">modulo round toward zero</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00067">ntheory.cpp:67</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a337eec9e6485fe5d2a868e07a478d053"><div class="ttname"><a href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ae2a97e5d41db5addf653a6cf7e69e98d"><div class="ttname"><a href="namespaceSymEngine.html#ae2a97e5d41db5addf653a6cf7e69e98d">SymEngine::mod</a></div><div class="ttdeci">RCP&lt; const Integer &gt; mod(const Integer &amp;n, const Integer &amp;d)</div><div class="ttdoc">modulo round toward zero</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00067">ntheory.cpp:67</a></div></div>
 <div class="ttc" id="astructSymEngine_1_1GaloisFieldDict_1_1DictLess_html"><div class="ttname"><a href="structSymEngine_1_1GaloisFieldDict_1_1DictLess.html">SymEngine::GaloisFieldDict::DictLess</a></div><div class="ttdef"><b>Definition:</b> <a href="fields_8h_source.html#l00022">fields.h:22</a></div></div>
 <div class="ttc" id="auintpoly_8h_html"><div class="ttname"><a href="uintpoly_8h.html">uintpoly.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -242,16 +242,19 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a26b2bfb8312d75ae09a452f96fa4d798"><td class="memItemLeft" align="right" valign="top"><a id="a26b2bfb8312d75ae09a452f96fa4d798"></a>
-RCP&lt; const Basic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a26b2bfb8312d75ae09a452f96fa4d798">SymEngine::diff</a> (const RCP&lt; const Basic &gt; &amp;arg, const RCP&lt; const Symbol &gt; &amp;x, bool cache=true)</td></tr>
-<tr class="memdesc:a26b2bfb8312d75ae09a452f96fa4d798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differentiation w.r.t symbols. <br /></td></tr>
-<tr class="separator:a26b2bfb8312d75ae09a452f96fa4d798"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a314022f742a11a24af260b71b5a59bed"><td class="memItemLeft" align="right" valign="top">RCP&lt; const Basic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a314022f742a11a24af260b71b5a59bed">SymEngine::sdiff</a> (const RCP&lt; const Basic &gt; &amp;arg, const RCP&lt; const Basic &gt; &amp;x, bool cache)</td></tr>
-<tr class="memdesc:a314022f742a11a24af260b71b5a59bed"><td class="mdescLeft">&#160;</td><td class="mdescRight">SymPy style differentiation for non-symbol variables.  <a href="namespaceSymEngine.html#a314022f742a11a24af260b71b5a59bed">More...</a><br /></td></tr>
-<tr class="separator:a314022f742a11a24af260b71b5a59bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ecda1b66deb99a2494a976213081ef0"><td class="memItemLeft" align="right" valign="top"><a id="a4ecda1b66deb99a2494a976213081ef0"></a>
+RCP&lt; const Basic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a4ecda1b66deb99a2494a976213081ef0">SymEngine::diff</a> (const RCP&lt; const Basic &gt; &amp;arg, const RCP&lt; const Symbol &gt; &amp;x, bool cache=true)</td></tr>
+<tr class="memdesc:a4ecda1b66deb99a2494a976213081ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Differentiation w.r.t symbols. <br /></td></tr>
+<tr class="separator:a4ecda1b66deb99a2494a976213081ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79ff5807a80555b1343b4c979de08081"><td class="memItemLeft" align="right" valign="top">RCP&lt; const Basic &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSymEngine.html#a79ff5807a80555b1343b4c979de08081">SymEngine::sdiff</a> (const RCP&lt; const Basic &gt; &amp;arg, const RCP&lt; const Basic &gt; &amp;x, bool cache)</td></tr>
+<tr class="memdesc:a79ff5807a80555b1343b4c979de08081"><td class="mdescLeft">&#160;</td><td class="mdescRight">SymPy style differentiation for non-symbol variables.  <a href="namespaceSymEngine.html#a79ff5807a80555b1343b4c979de08081">More...</a><br /></td></tr>
+<tr class="separator:a79ff5807a80555b1343b4c979de08081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4986c6feb6b56fe61080472b36458aa9"><td class="memItemLeft" align="right" valign="top"><a id="a4986c6feb6b56fe61080472b36458aa9"></a>
 Expression&#160;</td><td class="memItemRight" valign="bottom"><b>SymEngine::pow</b> (const Expression &amp;base, const Expression &amp;exp)</td></tr>
 <tr class="separator:a4986c6feb6b56fe61080472b36458aa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72d3d4993f66aee06eb5bfe6b25399ed"><td class="memItemLeft" align="right" valign="top"><a id="a72d3d4993f66aee06eb5bfe6b25399ed"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>SymEngine::mp_pow_ui</b> (Expression &amp;res, const Expression &amp;base, unsigned long exp)</td></tr>
+<tr class="separator:a72d3d4993f66aee06eb5bfe6b25399ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4321c60108537f834ae2067a3b01c1af"><td class="memItemLeft" align="right" valign="top"><a id="a4321c60108537f834ae2067a3b01c1af"></a>
 Expression&#160;</td><td class="memItemRight" valign="bottom"><b>SymEngine::expand</b> (const Expression &amp;arg)</td></tr>
 <tr class="separator:a4321c60108537f834ae2067a3b01c1af"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -261,9 +264,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>SymEngine::unified_eq
 <tr class="memitem:aa27372019239f6dd6e6f9944774c64cb"><td class="memItemLeft" align="right" valign="top"><a id="aa27372019239f6dd6e6f9944774c64cb"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>SymEngine::unified_compare</b> (const Expression &amp;a, const Expression &amp;b)</td></tr>
 <tr class="separator:aa27372019239f6dd6e6f9944774c64cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afa8b4b0ddfb0eae5cfbe5c1a9b22067d"><td class="memItemLeft" align="right" valign="top"><a id="afa8b4b0ddfb0eae5cfbe5c1a9b22067d"></a>
+<tr class="memitem:a2d32e65ed72935b16ef1fa87121f90ee"><td class="memItemLeft" align="right" valign="top"><a id="a2d32e65ed72935b16ef1fa87121f90ee"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>SymEngine::detail::poly_print</b> (const Expression &amp;x)</td></tr>
-<tr class="separator:afa8b4b0ddfb0eae5cfbe5c1a9b22067d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a2d32e65ed72935b16ef1fa87121f90ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Includes the Expression class </p>

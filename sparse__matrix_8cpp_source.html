@@ -168,7 +168,7 @@ $(function() {
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; this-&gt;p_[row]; i++)</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordflow">if</span> ((this-&gt;j_[i] != o.j_[i]) or <a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*this-&gt;x_[i], *(o.x_[i])))</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            <span class="keywordflow">if</span> ((this-&gt;j_[i] != o.j_[i]) or <a class="code" href="namespaceSymEngine.html#ab1f70f681a35f988f3b80a1e480f42db">neq</a>(*this-&gt;x_[i], *(o.x_[i])))</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
@@ -329,7 +329,7 @@ $(function() {
 <div class="line"><a name="l00229"></a><span class="lineno">  229</span>&#160;        std::vector&lt;unsigned&gt; p(p_), j(j_);</div>
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;        vec_basic x(x_.size());</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> i = 0; i &lt; x_.size(); ++i) {</div>
-<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            x[i] = <a class="code" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
+<div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            x[i] = <a class="code" href="namespaceSymEngine.html#a2eac9e258fd088e21b0e45fdbd695c32">SymEngine::conjugate</a>(x_[i]);</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;        }</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        r = CSRMatrix(col_, row_, std::move(p), std::move(j), std::move(x));</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;    } <span class="keywordflow">else</span> {</div>
@@ -364,7 +364,7 @@ $(function() {
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;            <span class="keyword">const</span> <span class="keywordtype">unsigned</span> k = p[ci] + tmp[ci];</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;            j[k] = ri;</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;            <span class="keywordflow">if</span> (conjugate) {</div>
-<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                x[k] = <a class="code" href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a>(x_[i]);</div>
+<div class="line"><a name="l00267"></a><span class="lineno">  267</span>&#160;                x[k] = <a class="code" href="namespaceSymEngine.html#a2eac9e258fd088e21b0e45fdbd695c32">SymEngine::conjugate</a>(x_[i]);</div>
 <div class="line"><a name="l00268"></a><span class="lineno">  268</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00269"></a><span class="lineno">  269</span>&#160;                x[k] = x_[i];</div>
 <div class="line"><a name="l00270"></a><span class="lineno">  270</span>&#160;            }</div>
@@ -455,7 +455,7 @@ $(function() {
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;            jj++;</div>
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160; </div>
 <div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;            <span class="keywordflow">while</span> (jj &lt; row_end and j_[jj] == j) {</div>
-<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                x = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(x, x_[jj]);</div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;                x = <a class="code" href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">add</a>(x, x_[jj]);</div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;                jj++;</div>
 <div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;            }</div>
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160; </div>
@@ -691,7 +691,7 @@ $(function() {
 <div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> kk = kk_start; kk &lt; kk_end; kk++) {</div>
 <div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;                <span class="keywordtype">unsigned</span> k = B.j_[kk];</div>
 <div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160; </div>
-<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;                sums[k] = <a class="code" href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">add</a>(sums[k], <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(v, B.x_[kk]));</div>
+<div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;                sums[k] = <a class="code" href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">add</a>(sums[k], <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(v, B.x_[kk]));</div>
 <div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160; </div>
 <div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160;                <span class="keywordflow">if</span> (next[k] == -1) {</div>
 <div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;                    next[k] = head;</div>
@@ -764,7 +764,7 @@ $(function() {
 <div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;        <span class="keywordflow">if</span> (is_true(<a class="code" href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">is_zero</a>(*X.get(i, 0))))</div>
 <div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Scaling factor can&#39;t be zero&quot;</span>);</div>
 <div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> jj = A.p_[i]; jj &lt; A.p_[i + 1]; jj++)</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;            A.x_[jj] = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[jj], X.get(i, 0));</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;            A.x_[jj] = <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(A.x_[jj], X.get(i, 0));</div>
 <div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;    }</div>
 <div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;}</div>
 <div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160; </div>
@@ -783,7 +783,7 @@ $(function() {
 <div class="line"><a name="l00683"></a><span class="lineno">  683</span>&#160;    }</div>
 <div class="line"><a name="l00684"></a><span class="lineno">  684</span>&#160; </div>
 <div class="line"><a name="l00685"></a><span class="lineno">  685</span>&#160;    <span class="keywordflow">for</span> (i = 0; i &lt; nnz; i++)</div>
-<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;        A.x_[i] = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(A.x_[i], X.get(A.j_[i], 0));</div>
+<div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;        A.x_[i] = <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(A.x_[i], X.get(A.j_[i], 0));</div>
 <div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;}</div>
 <div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160; </div>
 <div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;<span class="comment">// Compute C = A (binary_op) B for CSR matrices that are in the</span></div>
@@ -875,15 +875,15 @@ $(function() {
 <div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160; </div>
 <div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
-<div class="ttc" id="aclassSymEngine_1_1Add_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="classSymEngine_1_1Add.html#ab2c2fd8b576973746d871681781e7130">SymEngine::Add::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Add_html_a095f07c5d5725953257c91aaca35956b"><div class="ttname"><a href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">SymEngine::Add::add</a></div><div class="ttdeci">SYMENGINE_EXPORT RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="aconstants_8h_html"><div class="ttname"><a href="constants_8h.html">constants.h</a></div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_af02f97d82354b66c939ae206f0057edd"><div class="ttname"><a href="namespaceSymEngine.html#af02f97d82354b66c939ae206f0057edd">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00149">functions.cpp:149</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a2eac9e258fd088e21b0e45fdbd695c32"><div class="ttname"><a href="namespaceSymEngine.html#a2eac9e258fd088e21b0e45fdbd695c32">SymEngine::conjugate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; conjugate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Conjugate.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00149">functions.cpp:149</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a337eec9e6485fe5d2a868e07a478d053"><div class="ttname"><a href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ab1f70f681a35f988f3b80a1e480f42db"><div class="ttname"><a href="namespaceSymEngine.html#ab1f70f681a35f988f3b80a1e480f42db">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ab930e860c8b1ff6cd03daff9c60c819a"><div class="ttname"><a href="namespaceSymEngine.html#ab930e860c8b1ff6cd03daff9c60c819a">SymEngine::is_zero</a></div><div class="ttdeci">SYMENGINE_EXPORT tribool is_zero(const Basic &amp;b, const Assumptions *assumptions=nullptr)</div><div class="ttdoc">Check if a number is zero.</div><div class="ttdef"><b>Definition:</b> <a href="test__visitors_8cpp_source.html#l00082">test_visitors.cpp:82</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

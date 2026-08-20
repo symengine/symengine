@@ -110,20 +110,21 @@ $(function() {
 <div id="dynsection-0-content" class="dyncontent" style="display:none;">
 <div class="center"><img src="classSymEngine_1_1UPolyBase__inherit__graph.png" border="0" usemap="#aSymEngine_1_1UPolyBase_3_01Container_00_01Poly_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="aSymEngine_1_1UPolyBase_3_01Container_00_01Poly_01_4_inherit__map" id="aSymEngine_1_1UPolyBase_3_01Container_00_01Poly_01_4_inherit__map">
-<area shape="rect" title=" " alt="" coords="444,100,616,146"/>
-<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="664,5,860,68"/>
-<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="664,92,860,155"/>
-<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="664,179,860,225"/>
-<area shape="rect" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="259,109,396,138"/>
-<area shape="rect" href="classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,100,211,146"/>
-<area shape="rect" href="classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="925,14,1120,60"/>
-<area shape="rect" href="classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1185,5,1398,68"/>
-<area shape="rect" href="classSymEngine_1_1URatPoly.html" title=" " alt="" coords="1446,22,1609,51"/>
-<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="928,100,1117,146"/>
-<area shape="rect" href="classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1185,92,1398,155"/>
-<area shape="rect" href="classSymEngine_1_1UIntPoly.html" title=" " alt="" coords="1449,109,1606,138"/>
-<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="908,179,1137,225"/>
-<area shape="rect" href="classSymEngine_1_1GaloisField.html" title=" " alt="" coords="1204,188,1379,217"/>
+<area shape="rect" title=" " alt="" coords="444,144,616,190"/>
+<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="664,5,883,68"/>
+<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="676,92,871,155"/>
+<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="676,179,871,242"/>
+<area shape="rect" href="classSymEngine_1_1UNonExprPoly.html" title=" " alt="" coords="676,266,871,312"/>
+<area shape="rect" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation." alt="" coords="259,153,396,182"/>
+<area shape="rect" href="classSymEngine_1_1EnableRCPFromThis.html" title=" " alt="" coords="5,144,211,190"/>
+<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="931,14,1160,60"/>
+<area shape="rect" href="classSymEngine_1_1GaloisField.html" title=" " alt="" coords="1228,22,1402,51"/>
+<area shape="rect" href="classSymEngine_1_1URatPolyBase.html" title=" " alt="" coords="948,100,1142,146"/>
+<area shape="rect" href="classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1208,92,1421,155"/>
+<area shape="rect" href="classSymEngine_1_1URatPoly.html" title=" " alt="" coords="1469,109,1632,138"/>
+<area shape="rect" href="classSymEngine_1_1UIntPolyBase.html" title=" " alt="" coords="951,187,1140,233"/>
+<area shape="rect" href="classSymEngine_1_1USymEnginePoly.html" title=" " alt="" coords="1208,179,1421,242"/>
+<area shape="rect" href="classSymEngine_1_1UIntPoly.html" title=" " alt="" coords="1472,196,1629,225"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div id="dynsection-1" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
@@ -312,11 +313,11 @@ template&lt;typename Container , typename Poly &gt; </div>
 <p class="definition">Definition at line <a class="el" href="upolybase_8h_source.html#l00376">376</a> of file <a class="el" href="upolybase_8h_source.html">upolybase.h</a>.</p>
 <div class="fragment"><div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    {</div>
 <div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Poly&gt;(o))</div>
-<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*var_, *(down_cast&lt;const Poly &amp;&gt;(o).var_))</div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*var_, *(down_cast&lt;const Poly &amp;&gt;(o).var_))</div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;                   and poly_ == down_cast&lt;const Poly &amp;&gt;(o).poly_;</div>
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;    }</div>
-<div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a918202b85d6622197791129a91fa04a4"><div class="ttname"><a href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

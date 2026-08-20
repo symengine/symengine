@@ -271,7 +271,7 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classSymEngine_1_1Derivative.html">Derivative</a> operator Derivative(f, [x, y, ...]) represents a derivative of <code>f</code> with respect to <code>x</code>, <code>y</code>, and so on. </p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00686">686</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00694">694</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a5908ab62ea315cdb3f0c22f9691765fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5908ab62ea315cdb3f0c22f9691765fd">&#9670;&nbsp;</a></span>__eq__()</h2>
@@ -298,7 +298,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Test equality. </p>
-<p>A virtual function for testing the equality of two <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> objects </p><dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5" title="Checks equality for a and b">eq(const Basic &amp;a, const Basic &amp;b)</a> non-member method</dd></dl>
+<p>A virtual function for testing the equality of two <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> objects </p><dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4" title="Checks equality for a and b">eq(const Basic &amp;a, const Basic &amp;b)</a> non-member method</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">o</td><td>a constant reference to object to test against </td></tr>
@@ -312,13 +312,13 @@ Additional Inherited Members</h2></td></tr>
 <p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02008">2008</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l02009"></a><span class="lineno"> 2009</span>&#160;{</div>
 <div class="line"><a name="l02010"></a><span class="lineno"> 2010</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Derivative&gt;(o)</div>
-<div class="line"><a name="l02011"></a><span class="lineno"> 2011</span>&#160;        and <a class="code" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">eq</a>(*arg_, *(down_cast&lt;const Derivative &amp;&gt;(o).arg_))</div>
+<div class="line"><a name="l02011"></a><span class="lineno"> 2011</span>&#160;        and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg_, *(down_cast&lt;const Derivative &amp;&gt;(o).arg_))</div>
 <div class="line"><a name="l02012"></a><span class="lineno"> 2012</span>&#160;        and unified_eq(<a class="code" href="classSymEngine_1_1Derivative.html#a67f2c6782989da34088ec245bbf84c3d">x_</a>, down_cast&lt;const Derivative &amp;&gt;(o).<a class="code" href="classSymEngine_1_1Derivative.html#a67f2c6782989da34088ec245bbf84c3d">x_</a>))</div>
 <div class="line"><a name="l02013"></a><span class="lineno"> 2013</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l02014"></a><span class="lineno"> 2014</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l02015"></a><span class="lineno"> 2015</span>&#160;}</div>
-<div class="ttc" id="aclassSymEngine_1_1Derivative_html_a67f2c6782989da34088ec245bbf84c3d"><div class="ttname"><a href="classSymEngine_1_1Derivative.html#a67f2c6782989da34088ec245bbf84c3d">SymEngine::Derivative::x_</a></div><div class="ttdeci">multiset_basic x_</div><div class="ttdoc">The expression to be differentiated.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00701">functions.h:701</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a2861dd1747fa1416cd6ef023ef08fca5"><div class="ttname"><a href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Derivative_html_a67f2c6782989da34088ec245bbf84c3d"><div class="ttname"><a href="classSymEngine_1_1Derivative.html#a67f2c6782989da34088ec245bbf84c3d">SymEngine::Derivative::x_</a></div><div class="ttdeci">multiset_basic x_</div><div class="ttdoc">The expression to be differentiated.</div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00709">functions.h:709</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a918202b85d6622197791129a91fa04a4"><div class="ttname"><a href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -425,7 +425,7 @@ Additional Inherited Members</h2></td></tr>
 <p>x, y, ... </p>
 <p>Type_code_id shared by all instances </p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00704">704</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="functions_8h_source.html#l00712">712</a> of file <a class="el" href="functions_8h_source.html">functions.h</a>.</p>
 
 </div>
 </div>

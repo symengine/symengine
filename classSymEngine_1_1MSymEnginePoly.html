@@ -279,7 +279,7 @@ Additional Inherited Members</h2></td></tr>
 class SymEngine::MSymEnginePoly&lt; Container, Poly &gt;</h3>
 
 
-<p class="definition">Definition at line <a class="el" href="msymenginepoly_8h_source.html#l00313">313</a> of file <a class="el" href="msymenginepoly_8h_source.html">msymenginepoly.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="msymenginepoly_8h_source.html#l00315">315</a> of file <a class="el" href="msymenginepoly_8h_source.html">msymenginepoly.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="acc4027223688de74170fb19e8a8317c6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc4027223688de74170fb19e8a8317c6">&#9670;&nbsp;</a></span>__eq__()</h2>
@@ -308,7 +308,7 @@ template&lt;typename Container , typename Poly &gt; </div>
 </div><div class="memdoc">
 
 <p>Test equality. </p>
-<p>A virtual function for testing the equality of two <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> objects </p><dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespaceSymEngine.html#a2861dd1747fa1416cd6ef023ef08fca5" title="Checks equality for a and b">eq(const Basic &amp;a, const Basic &amp;b)</a> non-member method</dd></dl>
+<p>A virtual function for testing the equality of two <code><a class="el" href="classSymEngine_1_1Basic.html" title="The lowest unit of symbolic representation.">Basic</a></code> objects </p><dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000002">Deprecated:</a></b></dt><dd>Use <a class="el" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4" title="Checks equality for a and b">eq(const Basic &amp;a, const Basic &amp;b)</a> non-member method</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">o</td><td>a constant reference to object to test against </td></tr>
@@ -319,33 +319,33 @@ template&lt;typename Container , typename Poly &gt; </div>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="msymenginepoly_8h_source.html#l00410">410</a> of file <a class="el" href="msymenginepoly_8h_source.html">msymenginepoly.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;    {</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;        <span class="comment">// TODO : fix for when vars are different, but there is an intersection</span></div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        <span class="keywordflow">if</span> (not is_a&lt;Poly&gt;(o))</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <span class="keyword">const</span> Poly &amp;o_ = down_cast&lt;const Poly &amp;&gt;(o);</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <span class="comment">// compare constants without regards to vars</span></div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        <span class="keywordflow">if</span> (1 == poly_.dict_.size() &amp;&amp; 1 == o_.poly_.dict_.size()) {</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;            <span class="keywordflow">if</span> (poly_.dict_.begin()-&gt;second != o_.poly_.dict_.begin()-&gt;second)</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            <span class="keywordflow">if</span> (poly_.dict_.begin()-&gt;first == o_.poly_.dict_.begin()-&gt;first</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;                &amp;&amp; unified_eq(vars_, o_.vars_))</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;            <span class="keyword">typename</span> Container::vec_type v1, v2;</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;            v1.resize(vars_.size(), 0);</div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            v2.resize(o_.vars_.size(), 0);</div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;            <span class="keywordflow">if</span> (poly_.dict_.begin()-&gt;first == v1</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;                || o_.poly_.dict_.begin()-&gt;first == v2)</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0 == poly_.dict_.size() &amp;&amp; 0 == o_.poly_.dict_.size()) {</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            <span class="keywordflow">return</span> (unified_eq(vars_, o_.vars_)</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;                    &amp;&amp; unified_eq(poly_.dict_, o_.poly_.dict_));</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;        }</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    }</div>
+<p class="definition">Definition at line <a class="el" href="msymenginepoly_8h_source.html#l00412">412</a> of file <a class="el" href="msymenginepoly_8h_source.html">msymenginepoly.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;    {</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;        <span class="comment">// TODO : fix for when vars are different, but there is an intersection</span></div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        <span class="keywordflow">if</span> (not is_a&lt;Poly&gt;(o))</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        <span class="keyword">const</span> Poly &amp;o_ = down_cast&lt;const Poly &amp;&gt;(o);</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;        <span class="comment">// compare constants without regards to vars</span></div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;        <span class="keywordflow">if</span> (1 == poly_.dict_.size() &amp;&amp; 1 == o_.poly_.dict_.size()) {</div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;            <span class="keywordflow">if</span> (poly_.dict_.begin()-&gt;second != o_.poly_.dict_.begin()-&gt;second)</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;            <span class="keywordflow">if</span> (poly_.dict_.begin()-&gt;first == o_.poly_.dict_.begin()-&gt;first</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;                &amp;&amp; unified_eq(vars_, o_.vars_))</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;            <span class="keyword">typename</span> Container::vec_type v1, v2;</div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;            v1.resize(vars_.size(), 0);</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;            v2.resize(o_.vars_.size(), 0);</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;            <span class="keywordflow">if</span> (poly_.dict_.begin()-&gt;first == v1</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;                || o_.poly_.dict_.begin()-&gt;first == v2)</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (0 == poly_.dict_.size() &amp;&amp; 0 == o_.poly_.dict_.size()) {</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;            <span class="keywordflow">return</span> (unified_eq(vars_, o_.vars_)</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;                    &amp;&amp; unified_eq(poly_.dict_, o_.poly_.dict_));</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        }</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -378,23 +378,23 @@ template&lt;typename Container , typename Poly &gt; </div>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="msymenginepoly_8h_source.html#l00333">333</a> of file <a class="el" href="msymenginepoly_8h_source.html">msymenginepoly.h</a>.</p>
-<div class="fragment"><div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    {</div>
-<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;        SYMENGINE_ASSERT(is_a&lt;Poly&gt;(o))</div>
-<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
-<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        <span class="keyword">const</span> Poly &amp;s = down_cast&lt;const Poly &amp;&gt;(o);</div>
+<p class="definition">Definition at line <a class="el" href="msymenginepoly_8h_source.html#l00335">335</a> of file <a class="el" href="msymenginepoly_8h_source.html">msymenginepoly.h</a>.</p>
+<div class="fragment"><div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;    {</div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;        SYMENGINE_ASSERT(is_a&lt;Poly&gt;(o))</div>
 <div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
-<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <span class="keywordflow">if</span> (vars_.size() != s.vars_.size())</div>
-<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160;            <span class="keywordflow">return</span> vars_.size() &lt; s.vars_.size() ? -1 : 1;</div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        <span class="keywordflow">if</span> (poly_.dict_.size() != s.poly_.dict_.size())</div>
-<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            <span class="keywordflow">return</span> poly_.dict_.size() &lt; s.poly_.dict_.size() ? -1 : 1;</div>
-<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160; </div>
-<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keywordtype">int</span> cmp = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(vars_, s.vars_);</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        <span class="keywordflow">if</span> (cmp != 0)</div>
-<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;            <span class="keywordflow">return</span> cmp;</div>
-<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(poly_.dict_, s.poly_.dict_);</div>
-<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    }</div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;        <span class="keyword">const</span> Poly &amp;s = down_cast&lt;const Poly &amp;&gt;(o);</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;        <span class="keywordflow">if</span> (vars_.size() != s.vars_.size())</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;            <span class="keywordflow">return</span> vars_.size() &lt; s.vars_.size() ? -1 : 1;</div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        <span class="keywordflow">if</span> (poly_.dict_.size() != s.poly_.dict_.size())</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;            <span class="keywordflow">return</span> poly_.dict_.size() &lt; s.poly_.dict_.size() ? -1 : 1;</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160; </div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;        <span class="keywordtype">int</span> cmp = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(vars_, s.vars_);</div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;        <span class="keywordflow">if</span> (cmp != 0)</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;            <span class="keywordflow">return</span> cmp;</div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160; </div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(poly_.dict_, s.poly_.dict_);</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    }</div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment -->
 </div>

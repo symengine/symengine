@@ -3,11 +3,11 @@ var searchData=
   ['galoisfield_339',['GaloisField',['../classSymEngine_1_1GaloisField.html#a758ea12eb1bee68e1da89a596f5f1e2d',1,'SymEngine::GaloisField::GaloisField()'],['../classSymEngine_1_1GaloisField.html',1,'SymEngine::GaloisField']]],
   ['galoisfielddict_340',['GaloisFieldDict',['../classSymEngine_1_1GaloisFieldDict.html',1,'SymEngine']]],
   ['gamma_341',['Gamma',['../classSymEngine_1_1Gamma.html#abc1d3f939c3c88585e4e31494a5f6809',1,'SymEngine::Gamma']]],
-  ['gamma_342',['gamma',['../namespaceSymEngine.html#a5427bd85fc080a17d0718a7d97353a49',1,'SymEngine']]],
+  ['gamma_342',['gamma',['../namespaceSymEngine.html#a9fb20de004dbb902c70c16cfac954019',1,'SymEngine']]],
   ['gamma_343',['Gamma',['../classSymEngine_1_1Gamma.html',1,'SymEngine']]],
-  ['gcd_344',['gcd',['../namespaceSymEngine.html#a23e7d19677dfaf17bce40fd767860bfd',1,'SymEngine']]],
-  ['gcd_5fext_345',['gcd_ext',['../namespaceSymEngine.html#abb07748aa4b318e5fb3cfc942dc7dafa',1,'SymEngine']]],
-  ['ge_346',['Ge',['../namespaceSymEngine.html#a0a7185d0fb25140df9797a462bde11c6',1,'SymEngine']]],
+  ['gcd_344',['gcd',['../namespaceSymEngine.html#a0db64f0736910da482ddd5cc5c1cc3b9',1,'SymEngine']]],
+  ['gcd_5fext_345',['gcd_ext',['../namespaceSymEngine.html#ab24be87f0c11e1ddefe868c91b414610',1,'SymEngine']]],
+  ['ge_346',['Ge',['../namespaceSymEngine.html#a3f577817dce794daf04f22bb20175be1',1,'SymEngine']]],
   ['generate_5fprimes_347',['generate_primes',['../classSymEngine_1_1Sieve.html#a0d2a47d29dda15aa0e061c9b69cb1d3d',1,'SymEngine::Sieve']]],
   ['get_5fa_348',['get_a',['../classSymEngine_1_1Zeta.html#a33fa10be45f1e67056b0f62da20151b1',1,'SymEngine::Zeta']]],
   ['get_5farg_349',['get_arg',['../classSymEngine_1_1OneArgFunction.html#ad9a9339b325658981d6fa47c3e4414e5',1,'SymEngine::OneArgFunction']]],
@@ -22,8 +22,8 @@ var searchData=
   ['get_5fexp_358',['get_exp',['../classSymEngine_1_1Pow.html#a8210eaaee4900725026ce3beefbcf9b3',1,'SymEngine::Pow']]],
   ['get_5fname_359',['get_name',['../classSymEngine_1_1Constant.html#aa1a584f0282090d9be312b1c10a2ba48',1,'SymEngine::Constant::get_name()'],['../classSymEngine_1_1FunctionSymbol.html#a85d0fa58580c5661a2694e17adf7f126',1,'SymEngine::FunctionSymbol::get_name()'],['../classSymEngine_1_1Symbol.html#a440a2db68b0a83d06402c10b93db996c',1,'SymEngine::Symbol::get_name()']]],
   ['get_5fnum_360',['get_num',['../classSymEngine_1_1ATan2.html#abd5d6f86ee8e4f04a23c025492224e19',1,'SymEngine::ATan2']]],
-  ['get_5fnum_5fden_361',['get_num_den',['../namespaceSymEngine.html#a099fdf0478ebd3ed479f40ddb04f0315',1,'SymEngine']]],
-  ['get_5fpi_5fshift_362',['get_pi_shift',['../namespaceSymEngine.html#a2fffbf87e0516fd6b0ce4075ab644c07',1,'SymEngine']]],
+  ['get_5fnum_5fden_361',['get_num_den',['../namespaceSymEngine.html#afeb50f9cd96c718d144532a2e7be6335',1,'SymEngine']]],
+  ['get_5fpi_5fshift_362',['get_pi_shift',['../namespaceSymEngine.html#aec2af692237d03603c6e001c13d80b42',1,'SymEngine']]],
   ['get_5fs_363',['get_s',['../classSymEngine_1_1Zeta.html#a7ad99b79e5322eb548cb67106f1c5b9e',1,'SymEngine::Zeta::get_s()'],['../classSymEngine_1_1Dirichlet__eta.html#a092e646bf9b9f73fc658243fcebf8129',1,'SymEngine::Dirichlet_eta::get_s()']]],
-  ['gt_364',['Gt',['../namespaceSymEngine.html#ada2f0b220c4770c1c1fbbe96dfcf7af8',1,'SymEngine']]]
+  ['gt_364',['Gt',['../namespaceSymEngine.html#a58b0e7db131d8fce79cd5c372ffb5d20',1,'SymEngine']]]
 ];

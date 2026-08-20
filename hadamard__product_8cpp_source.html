@@ -143,14 +143,14 @@ $(function() {
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <span class="keywordtype">size_t</span> num_diag = 0;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keywordtype">size_t</span> num_dense = 0;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">size_t</span> num_ident = 0;</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a> : factors) {</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ZeroMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>) || is_a&lt;HadamardProduct&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a> : factors) {</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ZeroMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>) || is_a&lt;HadamardProduct&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;DiagonalMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;DiagonalMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;            num_diag++;</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ImmutableDenseMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ImmutableDenseMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;            num_dense++;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;IdentityMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;IdentityMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;            num_ident++;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        }</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
@@ -173,13 +173,13 @@ $(function() {
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// extract nested HadamardProduct</span></div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    vec_basic expanded;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a> : factors) {</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;const HadamardProduct&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a> : factors) {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;const HadamardProduct&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            <span class="keyword">auto</span> container</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;                = down_cast&lt;const HadamardProduct &amp;&gt;(*factor).get_factors();</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;            expanded.insert(expanded.end(), container.begin(), container.end());</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            expanded.push_back(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;            expanded.push_back(<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>);</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        }</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    check_matching_sizes(expanded);</div>
@@ -187,44 +187,44 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    RCP&lt;const DiagonalMatrix&gt; diag;</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    RCP&lt;const ImmutableDenseMatrix&gt; dense;</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordtype">bool</span> have_identity = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a> : expanded) {</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ZeroMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keywordflow">return</span> rcp_static_cast&lt;const MatrixExpr&gt;(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;IdentityMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a> : expanded) {</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;ZeroMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            <span class="keywordflow">return</span> rcp_static_cast&lt;const MatrixExpr&gt;(<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>);</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;IdentityMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            <span class="keywordflow">if</span> (!have_identity) {</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;                have_identity = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                keep.push_back(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;                keep.push_back(<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;            }</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;DiagonalMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;DiagonalMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;            <span class="keywordflow">if</span> (diag.is_null()) {</div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                diag = rcp_static_cast&lt;const DiagonalMatrix&gt;(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;                diag = rcp_static_cast&lt;const DiagonalMatrix&gt;(<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>);</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;                vec_basic container;</div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; diag-&gt;get_container().size(); i++) {</div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;                    container.push_back(</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                        <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(diag-&gt;get_container()[i],</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                            down_cast&lt;const DiagonalMatrix &amp;&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;                        <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(diag-&gt;get_container()[i],</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;                            down_cast&lt;const DiagonalMatrix &amp;&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;                                .get_container()[i]));</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;                }</div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;                diag = make_rcp&lt;const DiagonalMatrix&gt;(container);</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;            }</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ImmutableDenseMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)) {</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;ImmutableDenseMatrix&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)) {</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;            <span class="keywordflow">if</span> (dense.is_null()) {</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                dense = rcp_static_cast&lt;const ImmutableDenseMatrix&gt;(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;                dense = rcp_static_cast&lt;const ImmutableDenseMatrix&gt;(<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>);</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;            } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;                <span class="keyword">const</span> vec_basic &amp;vec1</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                    = down_cast&lt;const ImmutableDenseMatrix &amp;&gt;(*<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>)</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                    = down_cast&lt;const ImmutableDenseMatrix &amp;&gt;(*<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>)</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                          .get_values();</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                <span class="keyword">const</span> vec_basic &amp;vec2 = dense-&gt;get_values();</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                vec_basic product(vec1.size());</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; vec1.size(); i++) {</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                    product[i] = <a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(vec1[i], vec2[i]);</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                    product[i] = <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(vec1[i], vec2[i]);</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                }</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;                dense = make_rcp&lt;const ImmutableDenseMatrix&gt;(</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;                    dense-&gt;nrows(), dense-&gt;ncols(), product);</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;            }</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            keep.push_back(<a class="code" href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">factor</a>);</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;            keep.push_back(<a class="code" href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">factor</a>);</div>
 <div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        }</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    }</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordflow">if</span> (!dense.is_null()) {</div>
@@ -232,7 +232,7 @@ $(function() {
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;            <span class="comment">// Multiply diagonal with dense matrix</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;            vec_basic product;</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; dense-&gt;nrows(); i++) {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                product.push_back(<a class="code" href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">mul</a>(dense-&gt;get(i, i), diag-&gt;get(i)));</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                product.push_back(<a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(dense-&gt;get(i, i), diag-&gt;get(i)));</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            }</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;            diag = make_rcp&lt;const DiagonalMatrix&gt;(product);</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;        } <span class="keywordflow">else</span> {</div>
@@ -256,8 +256,8 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1HadamardProduct_html_adaf35de3052e2e14c6ebcbef3d7ff519"><div class="ttname"><a href="classSymEngine_1_1HadamardProduct.html#adaf35de3052e2e14c6ebcbef3d7ff519">SymEngine::HadamardProduct::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="hadamard__product_8cpp_source.html#l00022">hadamard_product.cpp:22</a></div></div>
 <div class="ttc" id="amul_8h_html"><div class="ttname"><a href="mul_8h.html">mul.h</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a896396e3101c37df65e7a2b46fc7cadd"><div class="ttname"><a href="namespaceSymEngine.html#a896396e3101c37df65e7a2b46fc7cadd">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_aaf56a84de825e1940da213fd1ae6ff65"><div class="ttname"><a href="namespaceSymEngine.html#aaf56a84de825e1940da213fd1ae6ff65">SymEngine::factor</a></div><div class="ttdeci">int factor(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n, double B1)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00371">ntheory.cpp:371</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a29556820636746c9b7a280a71c7f1298"><div class="ttname"><a href="namespaceSymEngine.html#a29556820636746c9b7a280a71c7f1298">SymEngine::factor</a></div><div class="ttdeci">int factor(const Ptr&lt; RCP&lt; const Integer &gt;&gt; &amp;f, const Integer &amp;n, double B1)</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l00371">ntheory.cpp:371</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a337eec9e6485fe5d2a868e07a478d053"><div class="ttname"><a href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">SymEngine::mul</a></div><div class="ttdeci">RCP&lt; const Basic &gt; mul(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Multiplication.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00352">mul.cpp:352</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

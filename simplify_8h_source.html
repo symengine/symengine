@@ -108,35 +108,37 @@ $(function() {
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;{</div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
-<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSymEngine_1_1SimplifyVisitor.html">   11</a></span>&#160;<span class="keyword">class </span><a class="code" href="classSymEngine_1_1SimplifyVisitor.html">SimplifyVisitor</a> : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;SimplifyVisitor, TransformVisitor&gt;</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;    std::pair&lt;RCP&lt;const Basic&gt;, RCP&lt;const Basic&gt;&gt;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    simplify_pow(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;e, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b);</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">using</span> TransformVisitor::bvisit;</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160; </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classSymEngine_1_1SimplifyVisitor.html">SimplifyVisitor</a>() : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;SimplifyVisitor, TransformVisitor&gt;</a>() {}</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Mul.html">Mul</a> &amp;x);</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x);</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1OneArgFunction.html">OneArgFunction</a> &amp;x);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;};</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;RCP&lt;const Basic&gt; simplify(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;                          <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="classSymEngine_1_1SimplifyVisitor.html">   11</a></span>&#160;<span class="keyword">class </span>SYMENGINE_EXPORT <a class="code" href="classSymEngine_1_1SimplifyVisitor.html">SimplifyVisitor</a></div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    : <span class="keyword">public</span> <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor</a>&lt;SimplifyVisitor, TransformVisitor&gt;</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    std::pair&lt;RCP&lt;const Basic&gt;, RCP&lt;const Basic&gt;&gt;</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    simplify_pow(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;e, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;b);</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">using</span> TransformVisitor::bvisit;</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="classSymEngine_1_1SimplifyVisitor.html">SimplifyVisitor</a>() : <a class="code" href="classSymEngine_1_1BaseVisitor.html">BaseVisitor&lt;SimplifyVisitor, TransformVisitor&gt;</a>() {}</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Mul.html">Mul</a> &amp;x);</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Pow.html">Pow</a> &amp;x);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    <span class="keywordtype">void</span> bvisit(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1OneArgFunction.html">OneArgFunction</a> &amp;x);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;};</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;SYMENGINE_EXPORT</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;RCP&lt;const Basic&gt; simplify(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;x,</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;                          <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Assumptions.html">Assumptions</a> *assumptions = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Assumptions_html"><div class="ttname"><a href="classSymEngine_1_1Assumptions.html">SymEngine::Assumptions</a></div><div class="ttdef"><b>Definition:</b> <a href="assumptions_8h_source.html#l00013">assumptions.h:14</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1BaseVisitor_html"><div class="ttname"><a href="classSymEngine_1_1BaseVisitor.html">SymEngine::BaseVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="visitor_8h_source.html#l00047">visitor.h:48</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Mul_html"><div class="ttname"><a href="classSymEngine_1_1Mul.html">SymEngine::Mul</a></div><div class="ttdef"><b>Definition:</b> <a href="mul_8h_source.html#l00073">mul.h:74</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1OneArgFunction_html"><div class="ttname"><a href="classSymEngine_1_1OneArgFunction.html">SymEngine::OneArgFunction</a></div><div class="ttdef"><b>Definition:</b> <a href="functions_8h_source.html#l00021">functions.h:22</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Pow_html"><div class="ttname"><a href="classSymEngine_1_1Pow.html">SymEngine::Pow</a></div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00017">pow.h:18</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1SimplifyVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SimplifyVisitor.html">SymEngine::SimplifyVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="simplify_8h_source.html#l00011">simplify.h:12</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1SimplifyVisitor_html"><div class="ttname"><a href="classSymEngine_1_1SimplifyVisitor.html">SymEngine::SimplifyVisitor</a></div><div class="ttdef"><b>Definition:</b> <a href="simplify_8h_source.html#l00011">simplify.h:13</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="avisitor_8h_html"><div class="ttname"><a href="visitor_8h.html">visitor.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

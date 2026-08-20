@@ -169,12 +169,12 @@ $(function() {
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keywordflow">if</span> (second_size.first.is_null()) {</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;                <span class="keywordflow">continue</span>;</div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            }</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keyword">auto</span> rowdiff = <a class="code" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(first_size.first, second_size.first);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;            <span class="keyword">auto</span> rowdiff = <a class="code" href="namespaceSymEngine.html#a939f8f7488fcc2688257c73240ac26a2">sub</a>(first_size.first, second_size.first);</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;            tribool rowmatch = is_zero(*rowdiff);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            <span class="keywordflow">if</span> (is_false(rowmatch)) {</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;                <span class="keywordflow">throw</span> DomainError(<span class="stringliteral">&quot;Matrix dimension mismatch&quot;</span>);</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;            }</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keyword">auto</span> coldiff = <a class="code" href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">sub</a>(first_size.second, second_size.second);</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;            <span class="keyword">auto</span> coldiff = <a class="code" href="namespaceSymEngine.html#a939f8f7488fcc2688257c73240ac26a2">sub</a>(first_size.second, second_size.second);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;            tribool colmatch = is_zero(*coldiff);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;            <span class="keywordflow">if</span> (is_false(colmatch)) {</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;                <span class="keywordflow">throw</span> DomainError(<span class="stringliteral">&quot;Matrix dimension mismatch&quot;</span>);</div>
@@ -216,7 +216,7 @@ $(function() {
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;                vec_basic container;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; diag-&gt;get_container().size(); i++) {</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;                    container.push_back(</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                        <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(diag-&gt;get_container()[i],</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;                        <a class="code" href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">add</a>(diag-&gt;get_container()[i],</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;                            down_cast&lt;const DiagonalMatrix &amp;&gt;(*term)</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;                                .get_container()[i]));</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;                }</div>
@@ -232,7 +232,7 @@ $(function() {
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;                <span class="keyword">const</span> vec_basic &amp;vec2 = dense-&gt;get_values();</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;                vec_basic sum(vec1.size());</div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; vec1.size(); i++) {</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                    sum[i] = <a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(vec1[i], vec2[i]);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;                    sum[i] = <a class="code" href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">add</a>(vec1[i], vec2[i]);</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;                }</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;                dense = make_rcp&lt;const ImmutableDenseMatrix&gt;(</div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;                    dense-&gt;nrows(), dense-&gt;ncols(), sum);</div>
@@ -249,7 +249,7 @@ $(function() {
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;            <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; dense-&gt;nrows(); i++) {</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;                <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> j = 0; j &lt; dense-&gt;ncols(); j++) {</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;                    <span class="keywordflow">if</span> (i == j) {</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                        sum.push_back(<a class="code" href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">add</a>(dense-&gt;get(i, j), diag-&gt;get(i)));</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;                        sum.push_back(<a class="code" href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">add</a>(dense-&gt;get(i, j), diag-&gt;get(i)));</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;                    } <span class="keywordflow">else</span> {</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;                        sum.push_back(dense-&gt;get(i, j));</div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;                    }</div>
@@ -281,8 +281,8 @@ $(function() {
 <div class="ttc" id="aclassSymEngine_1_1MatrixAdd_html_a379ac832d9922f59cc9b96579f61dab7"><div class="ttname"><a href="classSymEngine_1_1MatrixAdd.html#a379ac832d9922f59cc9b96579f61dab7">SymEngine::MatrixAdd::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="matrix__add_8cpp_source.html#l00028">matrix_add.cpp:28</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1MatrixAdd_html_a97671ddd2e73a3bb431cd536ae011e67"><div class="ttname"><a href="classSymEngine_1_1MatrixAdd.html#a97671ddd2e73a3bb431cd536ae011e67">SymEngine::MatrixAdd::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="matrix__add_8cpp_source.html#l00010">matrix_add.cpp:10</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a55dff9563772a56967626d9697b4f6a3"><div class="ttname"><a href="namespaceSymEngine.html#a55dff9563772a56967626d9697b4f6a3">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_ab2c2fd8b576973746d871681781e7130"><div class="ttname"><a href="namespaceSymEngine.html#ab2c2fd8b576973746d871681781e7130">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a095f07c5d5725953257c91aaca35956b"><div class="ttname"><a href="namespaceSymEngine.html#a095f07c5d5725953257c91aaca35956b">SymEngine::add</a></div><div class="ttdeci">RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a939f8f7488fcc2688257c73240ac26a2"><div class="ttname"><a href="namespaceSymEngine.html#a939f8f7488fcc2688257c73240ac26a2">SymEngine::sub</a></div><div class="ttdeci">RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

@@ -288,9 +288,9 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l00794">794</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
 <div class="fragment"><div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;{</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aa4550752e62ed1fbf09556fd21536e17">truncate</a>(arg);</div>
+<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#add699724173801d9934b80915581f51b">truncate</a>(arg);</div>
 <div class="line"><a name="l00797"></a><span class="lineno">  797</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_aa4550752e62ed1fbf09556fd21536e17"><div class="ttname"><a href="namespaceSymEngine.html#aa4550752e62ed1fbf09556fd21536e17">SymEngine::truncate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; truncate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Truncate:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00799">functions.cpp:799</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_add699724173801d9934b80915581f51b"><div class="ttname"><a href="namespaceSymEngine.html#add699724173801d9934b80915581f51b">SymEngine::truncate</a></div><div class="ttdeci">RCP&lt; const Basic &gt; truncate(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Canonicalize Truncate:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l00799">functions.cpp:799</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -333,14 +333,14 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 <div class="line"><a name="l00784"></a><span class="lineno">  784</span>&#160;    }</div>
 <div class="line"><a name="l00785"></a><span class="lineno">  785</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Add&gt;(*arg)) {</div>
 <div class="line"><a name="l00786"></a><span class="lineno">  786</span>&#160;        RCP&lt;const Number&gt; s = down_cast&lt;const Add &amp;&gt;(*arg).get_coef();</div>
-<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">neq</a>(*zero, *s) and is_a&lt;Integer&gt;(*s)) {</div>
+<div class="line"><a name="l00787"></a><span class="lineno">  787</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#ab1f70f681a35f988f3b80a1e480f42db">neq</a>(*zero, *s) and is_a&lt;Integer&gt;(*s)) {</div>
 <div class="line"><a name="l00788"></a><span class="lineno">  788</span>&#160;            <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;        }</div>
 <div class="line"><a name="l00790"></a><span class="lineno">  790</span>&#160;    }</div>
 <div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_abf6f7e3994231895bdcb94a8aac5e4fb"><div class="ttname"><a href="namespaceSymEngine.html#abf6f7e3994231895bdcb94a8aac5e4fb">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_ab1f70f681a35f988f3b80a1e480f42db"><div class="ttname"><a href="namespaceSymEngine.html#ab1f70f681a35f988f3b80a1e480f42db">SymEngine::neq</a></div><div class="ttdeci">bool neq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks inequality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00029">basic-inl.h:29</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -95,7 +95,9 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pri-methods">Private Member Functions</a>  </div>
   <div class="headertitle">
 <div class="title">SymEngine::UIntPolyBase&lt; Container, Poly &gt; Class Template Reference</div>  </div>
 </div><!--header-->
@@ -132,6 +134,11 @@ $(function() {
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSymEngine_1_1UIntPolyBase_1_1is__pair__iterator.html">is_pair_iterator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:acc7b62055d64f01f0dd9c961ec8ec42d"><td class="memItemLeft" align="right" valign="top"><a id="acc7b62055d64f01f0dd9c961ec8ec42d"></a>
@@ -257,6 +264,20 @@ RCP&lt; const T2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a clas
 <tr class="memitem:acbea1ba6881779f17a5b81c0fd0eb2d2 inherit pub_methods_classSymEngine_1_1EnableRCPFromThis"><td class="memItemLeft" align="right" valign="top"><a id="acbea1ba6881779f17a5b81c0fd0eb2d2"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>use_count</b> () const</td></tr>
 <tr class="separator:acbea1ba6881779f17a5b81c0fd0eb2d2 inherit pub_methods_classSymEngine_1_1EnableRCPFromThis"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a578ba5d459e6a3b442eef43f6966a01d"><td class="memItemLeft" align="right" valign="top"><a id="a578ba5d459e6a3b442eef43f6966a01d"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>append_symbolic_term</b> (vec_basic &amp;args, unsigned int i, const integer_class &amp;m) const</td></tr>
+<tr class="separator:a578ba5d459e6a3b442eef43f6966a01d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eca4b17fd0bbd485c09037b4afbb89a"><td class="memTemplParams" colspan="2"><a id="a3eca4b17fd0bbd485c09037b4afbb89a"></a>
+template&lt;typename P  = Poly, typename std::enable_if&lt; is_pair_iterator&lt; typename P::iterator &gt;::value, int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a3eca4b17fd0bbd485c09037b4afbb89a"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>as_symbolic_impl</b> () const</td></tr>
+<tr class="separator:a3eca4b17fd0bbd485c09037b4afbb89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3eca4b17fd0bbd485c09037b4afbb89a"><td class="memTemplParams" colspan="2"><a id="a3eca4b17fd0bbd485c09037b4afbb89a"></a>
+template&lt;typename P  = Poly, typename std::enable_if&lt; not is_pair_iterator&lt; typename P::iterator &gt;::value, int &gt;::type  = 0&gt; </td></tr>
+<tr class="memitem:a3eca4b17fd0bbd485c09037b4afbb89a"><td class="memTemplItemLeft" align="right" valign="top">RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>as_symbolic_impl</b> () const</td></tr>
+<tr class="separator:a3eca4b17fd0bbd485c09037b4afbb89a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>

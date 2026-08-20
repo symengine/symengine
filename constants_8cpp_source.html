@@ -203,31 +203,33 @@ $(function() {
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160; </div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor">#define DEFINE_CONSTANT(t, n, d)                                               \</span></div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">    static storage_for&lt;RCP&lt;const t&gt;&gt; n##_buf;                                  \</span></div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="preprocessor">    storage_for&lt;RCP&lt;const t&gt;&gt; n##_buf;                                         \</span></div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;<span class="preprocessor">    RCP&lt;const t&gt; &amp;n = reinterpret_cast&lt;RCP&lt;const t&gt; &amp;&gt;(n##_buf);</span></div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;DEFINE_CONSTANTS</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#undef DEFINE_CONSTANT</span></div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;ConstantInitializer::ConstantInitializer()</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;{</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">if</span> (nifty_counter++ == 0) {</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="preprocessor">#define DEFINE_CONSTANT(t, n, d) new (&amp;n) RCP&lt;const t&gt;(d);</span></div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;        DEFINE_CONSTANTS</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#undef DEFINE_CONSTANT</span></div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    }</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;}</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;ConstantInitializer::~ConstantInitializer()</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;{</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    <span class="keywordflow">if</span> (--nifty_counter == 0) {</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;<span class="preprocessor">#define DEFINE_CONSTANT(t, n, d) n.~RCP();</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;        DEFINE_CONSTANTS</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#undef DEFINE_CONSTANT</span></div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    }</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;}</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<a class="code" href="structSymEngine_1_1ConstantInitializer.html">ConstantInitializer</a> constantInitializer;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160; </div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;ConstantInitializer::ConstantInitializer()</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;{</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">if</span> (nifty_counter++ == 0) {</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="preprocessor">#define DEFINE_CONSTANT(t, n, d) new (&amp;n) RCP&lt;const t&gt;(d);</span></div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        DEFINE_CONSTANTS</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;<span class="preprocessor">#undef DEFINE_CONSTANT</span></div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    }</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;}</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160; </div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;ConstantInitializer::~ConstantInitializer()</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;{</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <span class="keywordflow">if</span> (--nifty_counter == 0) {</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;<span class="preprocessor">#define DEFINE_CONSTANT(t, n, d) n.~RCP();</span></div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        DEFINE_CONSTANTS</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;<span class="preprocessor">#undef DEFINE_CONSTANT</span></div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    }</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;}</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160; </div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Constant_html"><div class="ttname"><a href="classSymEngine_1_1Constant.html">SymEngine::Constant</a></div><div class="ttdef"><b>Definition:</b> <a href="constants_8h_source.html#l00018">constants.h:19</a></div></div>
@@ -242,6 +244,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
 <div class="ttc" id="anan_8h_html"><div class="ttname"><a href="nan_8h.html">nan.h</a></div></div>
 <div class="ttc" id="apow_8h_html"><div class="ttname"><a href="pow_8h.html">pow.h</a></div></div>
+<div class="ttc" id="astructSymEngine_1_1ConstantInitializer_html"><div class="ttname"><a href="structSymEngine_1_1ConstantInitializer.html">SymEngine::ConstantInitializer</a></div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00124">basic-inl.h:124</a></div></div>
 <div class="ttc" id="astructSymEngine_1_1storage__for_html"><div class="ttname"><a href="structSymEngine_1_1storage__for.html">SymEngine::storage_for</a></div><div class="ttdef"><b>Definition:</b> <a href="constants_8cpp_source.html#l00100">constants.cpp:100</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>

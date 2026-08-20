@@ -107,18 +107,19 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespaceSymEngine.html">SymEngine</a></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;{</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a6017105ba64d2df0e0f96bdb1fe2cd29">expr2poly</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;p, umap_basic_num &amp;syms,</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;               umap_vec_mpz &amp;P);</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;SYMENGINE_EXPORT <span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a935968f5950dbf5ff976b26cfea1bf5e">expr2poly</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;p, umap_basic_num &amp;syms,</div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;                                umap_vec_mpz &amp;P);</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">poly_mul</a>(<span class="keyword">const</span> umap_vec_mpz &amp;A, <span class="keyword">const</span> umap_vec_mpz &amp;B, umap_vec_mpz &amp;C);</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;SYMENGINE_EXPORT <span class="keywordtype">void</span> <a class="code" href="namespaceSymEngine.html#a5d45183af7ff16f8ce72656956bf238d">poly_mul</a>(<span class="keyword">const</span> umap_vec_mpz &amp;A, <span class="keyword">const</span> umap_vec_mpz &amp;B,</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;                               umap_vec_mpz &amp;C);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abasic_8h_html"><div class="ttname"><a href="basic_8h.html">basic.h</a></div><div class="ttdoc">The base class for SymEngine.</div></div>
 <div class="ttc" id="anamespaceSymEngine_html"><div class="ttname"><a href="namespaceSymEngine.html">SymEngine</a></div><div class="ttdoc">Main namespace for SymEngine package.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00018">add.cpp:19</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a6017105ba64d2df0e0f96bdb1fe2cd29"><div class="ttname"><a href="namespaceSymEngine.html#a6017105ba64d2df0e0f96bdb1fe2cd29">SymEngine::expr2poly</a></div><div class="ttdeci">void expr2poly(const RCP&lt; const Basic &gt; &amp;p, umap_basic_num &amp;syms, umap_vec_mpz &amp;P)</div><div class="ttdoc">Converts expression p into a polynomial P, with symbols sym</div><div class="ttdef"><b>Definition:</b> <a href="rings_8cpp_source.html#l00010">rings.cpp:10</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_aab1d7303c130d7ef8cfa033236bbe4b2"><div class="ttname"><a href="namespaceSymEngine.html#aab1d7303c130d7ef8cfa033236bbe4b2">SymEngine::poly_mul</a></div><div class="ttdeci">void poly_mul(const umap_vec_mpz &amp;A, const umap_vec_mpz &amp;B, umap_vec_mpz &amp;C)</div><div class="ttdoc">Multiply two polynomials: C = A*B</div><div class="ttdef"><b>Definition:</b> <a href="rings_8cpp_source.html#l00071">rings.cpp:71</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a5d45183af7ff16f8ce72656956bf238d"><div class="ttname"><a href="namespaceSymEngine.html#a5d45183af7ff16f8ce72656956bf238d">SymEngine::poly_mul</a></div><div class="ttdeci">void poly_mul(const umap_vec_mpz &amp;A, const umap_vec_mpz &amp;B, umap_vec_mpz &amp;C)</div><div class="ttdoc">Multiply two polynomials: C = A*B</div><div class="ttdef"><b>Definition:</b> <a href="rings_8cpp_source.html#l00071">rings.cpp:71</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a935968f5950dbf5ff976b26cfea1bf5e"><div class="ttname"><a href="namespaceSymEngine.html#a935968f5950dbf5ff976b26cfea1bf5e">SymEngine::expr2poly</a></div><div class="ttdeci">void expr2poly(const RCP&lt; const Basic &gt; &amp;p, umap_basic_num &amp;syms, umap_vec_mpz &amp;P)</div><div class="ttdoc">Converts expression p into a polynomial P, with symbols sym</div><div class="ttdef"><b>Definition:</b> <a href="rings_8cpp_source.html#l00010">rings.cpp:10</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");
