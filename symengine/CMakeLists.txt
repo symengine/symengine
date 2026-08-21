@@ -287,7 +287,7 @@ add_library(symengine ${SRC})
 set_target_properties (symengine PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 include(CMakeDependentOption)
-cmake_dependent_option(WITH_VISIBILITY_HIDDEN "Build shared libraries with hidden visibility for private functions" ON "NOT WITH_PIRANHA" OFF)
+cmake_dependent_option(WITH_VISIBILITY_HIDDEN "Build shared libraries with hidden visibility for private functions" ON "BUILD_SHARED_LIBS AND NOT WITH_PIRANHA" OFF)
 
 if (WITH_VISIBILITY_HIDDEN)
     set_target_properties(symengine PROPERTIES
