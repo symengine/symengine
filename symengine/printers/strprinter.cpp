@@ -596,7 +596,7 @@ void StrPrinter::bvisit(const Mul &x)
             and down_cast<const Number &>(*p.second).is_negative()
             and neq(*(p.first), *E)) {
             if (eq(*(p.second), *minus_one)) {
-                o2 << parenthesizeLT(p.first, PrecedenceEnum::Mul);
+                o2 << parenthesizeLE(p.first, PrecedenceEnum::Mul);
             } else {
                 _print_pow(o2, p.first, neg(p.second));
             }
@@ -604,7 +604,7 @@ void StrPrinter::bvisit(const Mul &x)
             den++;
         } else {
             if (eq(*(p.second), *one)) {
-                o << parenthesizeLT(p.first, PrecedenceEnum::Mul);
+                o << parenthesizeLE(p.first, PrecedenceEnum::Mul);
             } else {
                 _print_pow(o, p.first, p.second);
             }

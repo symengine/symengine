@@ -302,6 +302,23 @@ TEST_CASE("test_printing(): printing", "[printing]")
     r1 = Subs::create(Derivative::create(function_symbol("f", {y, x}), {x}),
                       {{x, add(x, y)}});
     REQUIRE(r1->__str__() == "Subs(Derivative(f(y, x), x), (x), (x + y))");
+
+    // Issue #2091: Negative numbers in Mul should be parenthesized
+    // Test that mul with negative rational factor prints correctly
+    r = mul(Rational::from_two_ints(*integer(1), *integer(20)),
+            Rational::from_two_ints(*integer(-1), *integer(2)));
+    REQUIRE(r->__str__() == "-1/40");
+
+    // Negative coefficient still prints correctly (without extra parens)
+    r = mul(real_double(-0.5), x);
+    REQUIRE(r->__str__() == "-0.5*x");
+
+    r = mul(integer(-2), x);
+    REQUIRE(r->__str__() == "-2*x");
+
+    // Add with negative Mul term
+    r = add(real_double(0.95), mul(real_double(-0.5), x));
+    REQUIRE(r->__str__() == "0.95 - 0.5*x");
 }
 
 TEST_CASE("test_matrix(): printing", "[printing]")
