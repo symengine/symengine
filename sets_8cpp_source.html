@@ -1365,612 +1365,621 @@ $(function() {
 <div class="line"><a name="l01265"></a><span class="lineno"> 1265</span>&#160; </div>
 <div class="line"><a name="l01266"></a><span class="lineno"> 1266</span>&#160;RCP&lt;const Boolean&gt; Union::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;o)<span class="keyword"> const</span></div>
 <div class="line"><a name="l01267"></a><span class="lineno"> 1267</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;        <span class="keyword">auto</span> contain = a-&gt;contains(o);</div>
-<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue)) {</div>
-<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;            <span class="keywordflow">return</span> boolean(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;        }</div>
-<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain))</div>
-<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;            <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not implemented&quot;</span>);</div>
-<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160;    }</div>
-<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;    <span class="keywordflow">return</span> boolean(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;}</div>
-<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160; </div>
-<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;RCP&lt;const Set&gt; Union::create(<span class="keyword">const</span> set_set &amp;in)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_union(in);</div>
+<div class="line"><a name="l01268"></a><span class="lineno"> 1268</span>&#160;    <span class="keywordtype">bool</span> has_contains = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01269"></a><span class="lineno"> 1269</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
+<div class="line"><a name="l01270"></a><span class="lineno"> 1270</span>&#160;        <span class="keyword">auto</span> contain = a-&gt;contains(o);</div>
+<div class="line"><a name="l01271"></a><span class="lineno"> 1271</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue)) {</div>
+<div class="line"><a name="l01272"></a><span class="lineno"> 1272</span>&#160;            <span class="keywordflow">return</span> boolean(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l01273"></a><span class="lineno"> 1273</span>&#160;        }</div>
+<div class="line"><a name="l01274"></a><span class="lineno"> 1274</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
+<div class="line"><a name="l01275"></a><span class="lineno"> 1275</span>&#160;            has_contains = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01276"></a><span class="lineno"> 1276</span>&#160;        }</div>
+<div class="line"><a name="l01277"></a><span class="lineno"> 1277</span>&#160;    }</div>
+<div class="line"><a name="l01278"></a><span class="lineno"> 1278</span>&#160;    <span class="keywordflow">if</span> (has_contains) {</div>
+<div class="line"><a name="l01279"></a><span class="lineno"> 1279</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;Contains&gt;(o, rcp_from_this_cast&lt;const Set&gt;());</div>
+<div class="line"><a name="l01280"></a><span class="lineno"> 1280</span>&#160;    }</div>
+<div class="line"><a name="l01281"></a><span class="lineno"> 1281</span>&#160;    <span class="keywordflow">return</span> boolean(<span class="keyword">false</span>);</div>
 <div class="line"><a name="l01282"></a><span class="lineno"> 1282</span>&#160;}</div>
 <div class="line"><a name="l01283"></a><span class="lineno"> 1283</span>&#160; </div>
-<div class="line"><a name="l01284"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7"> 1284</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">Union::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01284"></a><span class="lineno"> 1284</span>&#160;RCP&lt;const Set&gt; Union::create(<span class="keyword">const</span> set_set &amp;in)<span class="keyword"> const</span></div>
 <div class="line"><a name="l01285"></a><span class="lineno"> 1285</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;    vec_basic v(container_.begin(), container_.end());</div>
-<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;    <span class="keywordflow">return</span> v;</div>
-<div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160;}</div>
-<div class="line"><a name="l01289"></a><span class="lineno"> 1289</span>&#160; </div>
-<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;Intersection::Intersection(<span class="keyword">const</span> set_set &amp;in)</div>
-<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    : container_(in){SYMENGINE_ASSIGN_TYPEID()</div>
-<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;                         SYMENGINE_ASSERT(<a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a>::is_canonical(in))}</div>
-<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160; </div>
-<div class="line"><a name="l01294"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a62ba54bc8ff5dae6b2941e229dc71669"> 1294</a></span>&#160;      hash_t <a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a>::<a class="code" href="classSymEngine_1_1Union.html#a164f7bd5439429feb5a16e281bfa2dad">__hash__</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;    hash_t seed = SYMENGINE_INTERSECTION;</div>
-<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
-<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
-<div class="line"><a name="l01299"></a><span class="lineno"> 1299</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;}</div>
-<div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160; </div>
-<div class="line"><a name="l01302"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a0a15bcbd7cc07e8cf8fb39f05c81ce97"> 1302</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1Intersection.html#a0a15bcbd7cc07e8cf8fb39f05c81ce97">Intersection::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Intersection&gt;(o)) {</div>
-<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a> &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
-<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160;        <span class="keywordflow">return</span> unified_eq(container_, other.container_);</div>
-<div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160;    }</div>
-<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;}</div>
-<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160; </div>
-<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;<span class="keywordtype">bool</span> Intersection::is_canonical(<span class="keyword">const</span> set_set &amp;in)</div>
-<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;{</div>
-<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    <span class="keywordflow">if</span> (in.size() &lt;= 1)</div>
-<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01315"></a><span class="lineno"> 1315</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;}</div>
-<div class="line"><a name="l01317"></a><span class="lineno"> 1317</span>&#160; </div>
-<div class="line"><a name="l01318"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a30dac8484d12ce195c7986bc0e125225"> 1318</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1Intersection.html#a30dac8484d12ce195c7986bc0e125225">Intersection::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01320"></a><span class="lineno"> 1320</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Intersection&gt;(o))</div>
-<div class="line"><a name="l01321"></a><span class="lineno"> 1321</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a> &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
-<div class="line"><a name="l01322"></a><span class="lineno"> 1322</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
-<div class="line"><a name="l01323"></a><span class="lineno"> 1323</span>&#160;}</div>
-<div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160; </div>
-<div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;RCP&lt;const Set&gt; Intersection::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;    set_set container;</div>
-<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160;        container.insert(a-&gt;set_union(o));</div>
-<div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;    }</div>
-<div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
-<div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;}</div>
-<div class="line"><a name="l01333"></a><span class="lineno"> 1333</span>&#160; </div>
-<div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;RCP&lt;const Set&gt; Intersection::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160;    set_set container(container_);</div>
-<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> iter = container.begin(); iter != container.end(); ++iter) {</div>
-<div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160;        <span class="keyword">auto</span> temp = o-&gt;set_intersection(*iter);</div>
-<div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160;        <span class="comment">// If we are able to do intersection with `*iter`, we replace `*iter`</span></div>
-<div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;        <span class="comment">// with the result of intersection.</span></div>
-<div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;        <span class="keyword">auto</span> un = SymEngine::make_set_intersection({o, *iter});</div>
-<div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;        <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*temp, *un)) {</div>
-<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;            iter = container.erase(iter);</div>
-<div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160;            container.insert(temp);</div>
-<div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
-<div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160;        }</div>
-<div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160;    }</div>
-<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;    container.insert(o);</div>
-<div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;    <span class="keywordflow">return</span> SymEngine::make_set_intersection(container);</div>
-<div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;}</div>
-<div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160; </div>
-<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160;RCP&lt;const Set&gt; Intersection::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;    set_set container;</div>
-<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160;        container.insert(a-&gt;set_complement(o));</div>
-<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;    }</div>
-<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
-<div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;}</div>
-<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160; </div>
-<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;RCP&lt;const Boolean&gt; Intersection::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
-<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;        <span class="keyword">auto</span> contain = a-&gt;contains(o);</div>
-<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160;        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue)) {</div>
-<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160;            <span class="keywordflow">return</span> boolean(<span class="keyword">true</span>);</div>
-<div class="line"><a name="l01367"></a><span class="lineno"> 1367</span>&#160;        }</div>
-<div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain))</div>
-<div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;            <span class="keywordflow">throw</span> NotImplementedError(<span class="stringliteral">&quot;Not implemented&quot;</span>);</div>
-<div class="line"><a name="l01370"></a><span class="lineno"> 1370</span>&#160;    }</div>
-<div class="line"><a name="l01371"></a><span class="lineno"> 1371</span>&#160;    <span class="keywordflow">return</span> boolean(<span class="keyword">false</span>);</div>
-<div class="line"><a name="l01372"></a><span class="lineno"> 1372</span>&#160;}</div>
-<div class="line"><a name="l01373"></a><span class="lineno"> 1373</span>&#160; </div>
-<div class="line"><a name="l01374"></a><span class="lineno"> 1374</span>&#160;RCP&lt;const Set&gt; Intersection::create(<span class="keyword">const</span> set_set &amp;in)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01375"></a><span class="lineno"> 1375</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(in);</div>
-<div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160;}</div>
-<div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160; </div>
-<div class="line"><a name="l01379"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e"> 1379</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e">Intersection::get_args</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;    vec_basic v(container_.begin(), container_.end());</div>
-<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160;    <span class="keywordflow">return</span> v;</div>
-<div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;}</div>
-<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160; </div>
-<div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;Complement::Complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;universe,</div>
-<div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;                       <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;container)</div>
-<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160;    : universe_(universe), container_(container){SYMENGINE_ASSIGN_TYPEID()}</div>
-<div class="line"><a name="l01388"></a><span class="lineno"> 1388</span>&#160; </div>
-<div class="line"><a name="l01389"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Complement.html#ad87b637c0f937094c360f3adcb6f246c"> 1389</a></span>&#160;      hash_t <a class="code" href="classSymEngine_1_1Complement.html#ad87b637c0f937094c360f3adcb6f246c">Complement::__hash__</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;    hash_t seed = SYMENGINE_COMPLEMENT;</div>
-<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;    hash_combine&lt;Basic&gt;(seed, *universe_);</div>
-<div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160;    hash_combine&lt;Basic&gt;(seed, *container_);</div>
-<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160;}</div>
-<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160; </div>
-<div class="line"><a name="l01397"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Complement.html#ab291030a9acddd174896fc828612b9f3"> 1397</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1Complement.html#ab291030a9acddd174896fc828612b9f3">Complement::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01398"></a><span class="lineno"> 1398</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Complement&gt;(o)) {</div>
-<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complement.html">Complement</a> &amp;other = down_cast&lt;const Complement &amp;&gt;(o);</div>
-<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;        <span class="keywordflow">return</span> unified_eq(universe_, other.universe_)</div>
-<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;               and unified_eq(container_, other.container_);</div>
-<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;    }</div>
-<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160;}</div>
-<div class="line"><a name="l01406"></a><span class="lineno"> 1406</span>&#160; </div>
-<div class="line"><a name="l01407"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Complement.html#a0537b0355bbafbca440adf41718d7329"> 1407</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1Complement.html#a0537b0355bbafbca440adf41718d7329">Complement::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Complement&gt;(o))</div>
-<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complement.html">Complement</a> &amp;other = down_cast&lt;const Complement &amp;&gt;(o);</div>
-<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(universe_, other.universe_);</div>
-<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
-<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;        <span class="keywordflow">return</span> c1;</div>
-<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
-<div class="line"><a name="l01416"></a><span class="lineno"> 1416</span>&#160;    }</div>
-<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;}</div>
-<div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160; </div>
-<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;RCP&lt;const Boolean&gt; Complement::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;    <span class="keywordflow">return</span> logical_and(</div>
-<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;        {universe_-&gt;contains(a), logical_not(container_-&gt;contains(a))});</div>
-<div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;}</div>
-<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160; </div>
-<div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160;RCP&lt;const Set&gt; Complement::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160;    <span class="comment">// A&#39; U C = (A n C&#39;)&#39;</span></div>
-<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;    RCP&lt;const Set&gt; ocomplement = o-&gt;set_complement(universe_);</div>
-<div class="line"><a name="l01429"></a><span class="lineno"> 1429</span>&#160;    RCP&lt;const Set&gt; intersect</div>
-<div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;        = SymEngine::set_intersection({container_, ocomplement});</div>
-<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;    <span class="keywordflow">return</span> intersect-&gt;set_complement(universe_);</div>
+<div class="line"><a name="l01286"></a><span class="lineno"> 1286</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_union(in);</div>
+<div class="line"><a name="l01287"></a><span class="lineno"> 1287</span>&#160;}</div>
+<div class="line"><a name="l01288"></a><span class="lineno"> 1288</span>&#160; </div>
+<div class="line"><a name="l01289"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7"> 1289</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">Union::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01290"></a><span class="lineno"> 1290</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01291"></a><span class="lineno"> 1291</span>&#160;    vec_basic v(container_.begin(), container_.end());</div>
+<div class="line"><a name="l01292"></a><span class="lineno"> 1292</span>&#160;    <span class="keywordflow">return</span> v;</div>
+<div class="line"><a name="l01293"></a><span class="lineno"> 1293</span>&#160;}</div>
+<div class="line"><a name="l01294"></a><span class="lineno"> 1294</span>&#160; </div>
+<div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;Intersection::Intersection(<span class="keyword">const</span> set_set &amp;in)</div>
+<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;    : container_(in){SYMENGINE_ASSIGN_TYPEID()</div>
+<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160;                         SYMENGINE_ASSERT(<a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a>::is_canonical(in))}</div>
+<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160; </div>
+<div class="line"><a name="l01299"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a62ba54bc8ff5dae6b2941e229dc71669"> 1299</a></span>&#160;      hash_t <a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a>::<a class="code" href="classSymEngine_1_1Union.html#a164f7bd5439429feb5a16e281bfa2dad">__hash__</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160;    hash_t seed = SYMENGINE_INTERSECTION;</div>
+<div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
+<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
+<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;}</div>
+<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160; </div>
+<div class="line"><a name="l01307"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a0a15bcbd7cc07e8cf8fb39f05c81ce97"> 1307</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1Intersection.html#a0a15bcbd7cc07e8cf8fb39f05c81ce97">Intersection::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Intersection&gt;(o)) {</div>
+<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a> &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
+<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;        <span class="keywordflow">return</span> unified_eq(container_, other.container_);</div>
+<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;    }</div>
+<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;}</div>
+<div class="line"><a name="l01315"></a><span class="lineno"> 1315</span>&#160; </div>
+<div class="line"><a name="l01316"></a><span class="lineno"> 1316</span>&#160;<span class="keywordtype">bool</span> Intersection::is_canonical(<span class="keyword">const</span> set_set &amp;in)</div>
+<div class="line"><a name="l01317"></a><span class="lineno"> 1317</span>&#160;{</div>
+<div class="line"><a name="l01318"></a><span class="lineno"> 1318</span>&#160;    <span class="keywordflow">if</span> (in.size() &lt;= 1)</div>
+<div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01320"></a><span class="lineno"> 1320</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01321"></a><span class="lineno"> 1321</span>&#160;}</div>
+<div class="line"><a name="l01322"></a><span class="lineno"> 1322</span>&#160; </div>
+<div class="line"><a name="l01323"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a30dac8484d12ce195c7986bc0e125225"> 1323</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1Intersection.html#a30dac8484d12ce195c7986bc0e125225">Intersection::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Intersection&gt;(o))</div>
+<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Intersection.html">Intersection</a> &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
+<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
+<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;}</div>
+<div class="line"><a name="l01329"></a><span class="lineno"> 1329</span>&#160; </div>
+<div class="line"><a name="l01330"></a><span class="lineno"> 1330</span>&#160;RCP&lt;const Set&gt; Intersection::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01331"></a><span class="lineno"> 1331</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01332"></a><span class="lineno"> 1332</span>&#160;    set_set container;</div>
+<div class="line"><a name="l01333"></a><span class="lineno"> 1333</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
+<div class="line"><a name="l01334"></a><span class="lineno"> 1334</span>&#160;        container.insert(a-&gt;set_union(o));</div>
+<div class="line"><a name="l01335"></a><span class="lineno"> 1335</span>&#160;    }</div>
+<div class="line"><a name="l01336"></a><span class="lineno"> 1336</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
+<div class="line"><a name="l01337"></a><span class="lineno"> 1337</span>&#160;}</div>
+<div class="line"><a name="l01338"></a><span class="lineno"> 1338</span>&#160; </div>
+<div class="line"><a name="l01339"></a><span class="lineno"> 1339</span>&#160;RCP&lt;const Set&gt; Intersection::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01340"></a><span class="lineno"> 1340</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01341"></a><span class="lineno"> 1341</span>&#160;    set_set container(container_);</div>
+<div class="line"><a name="l01342"></a><span class="lineno"> 1342</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> iter = container.begin(); iter != container.end(); ++iter) {</div>
+<div class="line"><a name="l01343"></a><span class="lineno"> 1343</span>&#160;        <span class="keyword">auto</span> temp = o-&gt;set_intersection(*iter);</div>
+<div class="line"><a name="l01344"></a><span class="lineno"> 1344</span>&#160;        <span class="comment">// If we are able to do intersection with `*iter`, we replace `*iter`</span></div>
+<div class="line"><a name="l01345"></a><span class="lineno"> 1345</span>&#160;        <span class="comment">// with the result of intersection.</span></div>
+<div class="line"><a name="l01346"></a><span class="lineno"> 1346</span>&#160;        <span class="keyword">auto</span> un = SymEngine::make_set_intersection({o, *iter});</div>
+<div class="line"><a name="l01347"></a><span class="lineno"> 1347</span>&#160;        <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*temp, *un)) {</div>
+<div class="line"><a name="l01348"></a><span class="lineno"> 1348</span>&#160;            iter = container.erase(iter);</div>
+<div class="line"><a name="l01349"></a><span class="lineno"> 1349</span>&#160;            container.insert(temp);</div>
+<div class="line"><a name="l01350"></a><span class="lineno"> 1350</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
+<div class="line"><a name="l01351"></a><span class="lineno"> 1351</span>&#160;        }</div>
+<div class="line"><a name="l01352"></a><span class="lineno"> 1352</span>&#160;    }</div>
+<div class="line"><a name="l01353"></a><span class="lineno"> 1353</span>&#160;    container.insert(o);</div>
+<div class="line"><a name="l01354"></a><span class="lineno"> 1354</span>&#160;    <span class="keywordflow">return</span> SymEngine::make_set_intersection(container);</div>
+<div class="line"><a name="l01355"></a><span class="lineno"> 1355</span>&#160;}</div>
+<div class="line"><a name="l01356"></a><span class="lineno"> 1356</span>&#160; </div>
+<div class="line"><a name="l01357"></a><span class="lineno"> 1357</span>&#160;RCP&lt;const Set&gt; Intersection::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01358"></a><span class="lineno"> 1358</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01359"></a><span class="lineno"> 1359</span>&#160;    set_set container;</div>
+<div class="line"><a name="l01360"></a><span class="lineno"> 1360</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
+<div class="line"><a name="l01361"></a><span class="lineno"> 1361</span>&#160;        container.insert(a-&gt;set_complement(o));</div>
+<div class="line"><a name="l01362"></a><span class="lineno"> 1362</span>&#160;    }</div>
+<div class="line"><a name="l01363"></a><span class="lineno"> 1363</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(container);</div>
+<div class="line"><a name="l01364"></a><span class="lineno"> 1364</span>&#160;}</div>
+<div class="line"><a name="l01365"></a><span class="lineno"> 1365</span>&#160; </div>
+<div class="line"><a name="l01366"></a><span class="lineno"> 1366</span>&#160;RCP&lt;const Boolean&gt; Intersection::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01367"></a><span class="lineno"> 1367</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01368"></a><span class="lineno"> 1368</span>&#160;    <span class="keywordtype">bool</span> has_contains = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01369"></a><span class="lineno"> 1369</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : container_) {</div>
+<div class="line"><a name="l01370"></a><span class="lineno"> 1370</span>&#160;        <span class="keyword">auto</span> contain = a-&gt;contains(o);</div>
+<div class="line"><a name="l01371"></a><span class="lineno"> 1371</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
+<div class="line"><a name="l01372"></a><span class="lineno"> 1372</span>&#160;            has_contains = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01373"></a><span class="lineno"> 1373</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolFalse)) {</div>
+<div class="line"><a name="l01374"></a><span class="lineno"> 1374</span>&#160;            <span class="keywordflow">return</span> boolean(<span class="keyword">false</span>);</div>
+<div class="line"><a name="l01375"></a><span class="lineno"> 1375</span>&#160;        }</div>
+<div class="line"><a name="l01376"></a><span class="lineno"> 1376</span>&#160;    }</div>
+<div class="line"><a name="l01377"></a><span class="lineno"> 1377</span>&#160;    <span class="keywordflow">if</span> (has_contains) {</div>
+<div class="line"><a name="l01378"></a><span class="lineno"> 1378</span>&#160;        <span class="keywordflow">return</span> make_rcp&lt;Contains&gt;(o, rcp_from_this_cast&lt;const Set&gt;());</div>
+<div class="line"><a name="l01379"></a><span class="lineno"> 1379</span>&#160;    }</div>
+<div class="line"><a name="l01380"></a><span class="lineno"> 1380</span>&#160;    <span class="keywordflow">return</span> boolean(<span class="keyword">true</span>);</div>
+<div class="line"><a name="l01381"></a><span class="lineno"> 1381</span>&#160;}</div>
+<div class="line"><a name="l01382"></a><span class="lineno"> 1382</span>&#160; </div>
+<div class="line"><a name="l01383"></a><span class="lineno"> 1383</span>&#160;RCP&lt;const Set&gt; Intersection::create(<span class="keyword">const</span> set_set &amp;in)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01384"></a><span class="lineno"> 1384</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01385"></a><span class="lineno"> 1385</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection(in);</div>
+<div class="line"><a name="l01386"></a><span class="lineno"> 1386</span>&#160;}</div>
+<div class="line"><a name="l01387"></a><span class="lineno"> 1387</span>&#160; </div>
+<div class="line"><a name="l01388"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e"> 1388</a></span>&#160;vec_basic <a class="code" href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e">Intersection::get_args</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01389"></a><span class="lineno"> 1389</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01390"></a><span class="lineno"> 1390</span>&#160;    vec_basic v(container_.begin(), container_.end());</div>
+<div class="line"><a name="l01391"></a><span class="lineno"> 1391</span>&#160;    <span class="keywordflow">return</span> v;</div>
+<div class="line"><a name="l01392"></a><span class="lineno"> 1392</span>&#160;}</div>
+<div class="line"><a name="l01393"></a><span class="lineno"> 1393</span>&#160; </div>
+<div class="line"><a name="l01394"></a><span class="lineno"> 1394</span>&#160;Complement::Complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;universe,</div>
+<div class="line"><a name="l01395"></a><span class="lineno"> 1395</span>&#160;                       <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;container)</div>
+<div class="line"><a name="l01396"></a><span class="lineno"> 1396</span>&#160;    : universe_(universe), container_(container){SYMENGINE_ASSIGN_TYPEID()}</div>
+<div class="line"><a name="l01397"></a><span class="lineno"> 1397</span>&#160; </div>
+<div class="line"><a name="l01398"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Complement.html#ad87b637c0f937094c360f3adcb6f246c"> 1398</a></span>&#160;      hash_t <a class="code" href="classSymEngine_1_1Complement.html#ad87b637c0f937094c360f3adcb6f246c">Complement::__hash__</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01399"></a><span class="lineno"> 1399</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01400"></a><span class="lineno"> 1400</span>&#160;    hash_t seed = SYMENGINE_COMPLEMENT;</div>
+<div class="line"><a name="l01401"></a><span class="lineno"> 1401</span>&#160;    hash_combine&lt;Basic&gt;(seed, *universe_);</div>
+<div class="line"><a name="l01402"></a><span class="lineno"> 1402</span>&#160;    hash_combine&lt;Basic&gt;(seed, *container_);</div>
+<div class="line"><a name="l01403"></a><span class="lineno"> 1403</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01404"></a><span class="lineno"> 1404</span>&#160;}</div>
+<div class="line"><a name="l01405"></a><span class="lineno"> 1405</span>&#160; </div>
+<div class="line"><a name="l01406"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Complement.html#ab291030a9acddd174896fc828612b9f3"> 1406</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1Complement.html#ab291030a9acddd174896fc828612b9f3">Complement::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01407"></a><span class="lineno"> 1407</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01408"></a><span class="lineno"> 1408</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Complement&gt;(o)) {</div>
+<div class="line"><a name="l01409"></a><span class="lineno"> 1409</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complement.html">Complement</a> &amp;other = down_cast&lt;const Complement &amp;&gt;(o);</div>
+<div class="line"><a name="l01410"></a><span class="lineno"> 1410</span>&#160;        <span class="keywordflow">return</span> unified_eq(universe_, other.universe_)</div>
+<div class="line"><a name="l01411"></a><span class="lineno"> 1411</span>&#160;               and unified_eq(container_, other.container_);</div>
+<div class="line"><a name="l01412"></a><span class="lineno"> 1412</span>&#160;    }</div>
+<div class="line"><a name="l01413"></a><span class="lineno"> 1413</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01414"></a><span class="lineno"> 1414</span>&#160;}</div>
+<div class="line"><a name="l01415"></a><span class="lineno"> 1415</span>&#160; </div>
+<div class="line"><a name="l01416"></a><span class="lineno"><a class="line" href="classSymEngine_1_1Complement.html#a0537b0355bbafbca440adf41718d7329"> 1416</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1Complement.html#a0537b0355bbafbca440adf41718d7329">Complement::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01417"></a><span class="lineno"> 1417</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01418"></a><span class="lineno"> 1418</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Complement&gt;(o))</div>
+<div class="line"><a name="l01419"></a><span class="lineno"> 1419</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Complement.html">Complement</a> &amp;other = down_cast&lt;const Complement &amp;&gt;(o);</div>
+<div class="line"><a name="l01420"></a><span class="lineno"> 1420</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(universe_, other.universe_);</div>
+<div class="line"><a name="l01421"></a><span class="lineno"> 1421</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
+<div class="line"><a name="l01422"></a><span class="lineno"> 1422</span>&#160;        <span class="keywordflow">return</span> c1;</div>
+<div class="line"><a name="l01423"></a><span class="lineno"> 1423</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01424"></a><span class="lineno"> 1424</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
+<div class="line"><a name="l01425"></a><span class="lineno"> 1425</span>&#160;    }</div>
+<div class="line"><a name="l01426"></a><span class="lineno"> 1426</span>&#160;}</div>
+<div class="line"><a name="l01427"></a><span class="lineno"> 1427</span>&#160; </div>
+<div class="line"><a name="l01428"></a><span class="lineno"> 1428</span>&#160;RCP&lt;const Boolean&gt; Complement::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01429"></a><span class="lineno"> 1429</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01430"></a><span class="lineno"> 1430</span>&#160;    <span class="keywordflow">return</span> logical_and(</div>
+<div class="line"><a name="l01431"></a><span class="lineno"> 1431</span>&#160;        {universe_-&gt;contains(a), logical_not(container_-&gt;contains(a))});</div>
 <div class="line"><a name="l01432"></a><span class="lineno"> 1432</span>&#160;}</div>
 <div class="line"><a name="l01433"></a><span class="lineno"> 1433</span>&#160; </div>
-<div class="line"><a name="l01434"></a><span class="lineno"> 1434</span>&#160;RCP&lt;const Set&gt; Complement::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01434"></a><span class="lineno"> 1434</span>&#160;RCP&lt;const Set&gt; Complement::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
 <div class="line"><a name="l01435"></a><span class="lineno"> 1435</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01436"></a><span class="lineno"> 1436</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a name="l01437"></a><span class="lineno"> 1437</span>&#160;}</div>
-<div class="line"><a name="l01438"></a><span class="lineno"> 1438</span>&#160; </div>
-<div class="line"><a name="l01439"></a><span class="lineno"> 1439</span>&#160;RCP&lt;const Set&gt; Complement::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01440"></a><span class="lineno"> 1440</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01441"></a><span class="lineno"> 1441</span>&#160;    <span class="keyword">auto</span> newuniv = SymEngine::set_union({o, universe_});</div>
-<div class="line"><a name="l01442"></a><span class="lineno"> 1442</span>&#160;    <span class="keywordflow">return</span> container_-&gt;set_complement(newuniv);</div>
-<div class="line"><a name="l01443"></a><span class="lineno"> 1443</span>&#160;}</div>
-<div class="line"><a name="l01444"></a><span class="lineno"> 1444</span>&#160; </div>
-<div class="line"><a name="l01445"></a><span class="lineno"> 1445</span>&#160;ConditionSet::ConditionSet(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
-<div class="line"><a name="l01446"></a><span class="lineno"> 1446</span>&#160;                           <span class="keyword">const</span> RCP&lt;const Boolean&gt; &amp;condition)</div>
-<div class="line"><a name="l01447"></a><span class="lineno"> 1447</span>&#160;    : sym(sym), condition_(condition)</div>
-<div class="line"><a name="l01448"></a><span class="lineno"> 1448</span>&#160;{</div>
-<div class="line"><a name="l01449"></a><span class="lineno"> 1449</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
-<div class="line"><a name="l01450"></a><span class="lineno"> 1450</span>&#160;    SYMENGINE_ASSERT(ConditionSet::is_canonical(sym, condition))</div>
-<div class="line"><a name="l01451"></a><span class="lineno"> 1451</span>&#160;}</div>
-<div class="line"><a name="l01452"></a><span class="lineno"> 1452</span>&#160; </div>
-<div class="line"><a name="l01453"></a><span class="lineno"> 1453</span>&#160;<span class="keywordtype">bool</span> ConditionSet::is_canonical(const RCP&lt;const <a class="code" href="classSymEngine_1_1Basic.html#a5ad84ef8e2cdf821ad633a260021beec">Basic</a>&gt; &amp;sym,</div>
-<div class="line"><a name="l01454"></a><span class="lineno"> 1454</span>&#160;                                const RCP&lt;const Boolean&gt; &amp;condition)</div>
-<div class="line"><a name="l01455"></a><span class="lineno"> 1455</span>&#160;{</div>
-<div class="line"><a name="l01456"></a><span class="lineno"> 1456</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *boolFalse) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *boolTrue)</div>
-<div class="line"><a name="l01457"></a><span class="lineno"> 1457</span>&#160;        or not is_a_Symbol(*sym)) {</div>
-<div class="line"><a name="l01458"></a><span class="lineno"> 1458</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01459"></a><span class="lineno"> 1459</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
-<div class="line"><a name="l01460"></a><span class="lineno"> 1460</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01461"></a><span class="lineno"> 1461</span>&#160;    }</div>
-<div class="line"><a name="l01462"></a><span class="lineno"> 1462</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01463"></a><span class="lineno"> 1463</span>&#160;}</div>
-<div class="line"><a name="l01464"></a><span class="lineno"> 1464</span>&#160; </div>
-<div class="line"><a name="l01465"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97"> 1465</a></span>&#160;hash_t <a class="code" href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97">ConditionSet::__hash__</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01466"></a><span class="lineno"> 1466</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01467"></a><span class="lineno"> 1467</span>&#160;    hash_t seed = SYMENGINE_CONDITIONSET;</div>
-<div class="line"><a name="l01468"></a><span class="lineno"> 1468</span>&#160;    hash_combine&lt;Basic&gt;(seed, *sym);</div>
-<div class="line"><a name="l01469"></a><span class="lineno"> 1469</span>&#160;    hash_combine&lt;Basic&gt;(seed, *condition_);</div>
-<div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;}</div>
-<div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160; </div>
-<div class="line"><a name="l01473"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConditionSet.html#a5b9ee20e4f9c1d986d1138d8549d6ae6"> 1473</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1ConditionSet.html#a5b9ee20e4f9c1d986d1138d8549d6ae6">ConditionSet::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01474"></a><span class="lineno"> 1474</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;ConditionSet&gt;(o)) {</div>
-<div class="line"><a name="l01476"></a><span class="lineno"> 1476</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ConditionSet.html">ConditionSet</a> &amp;other = down_cast&lt;const ConditionSet &amp;&gt;(o);</div>
-<div class="line"><a name="l01477"></a><span class="lineno"> 1477</span>&#160;        <span class="keywordflow">return</span> unified_eq(sym, other.get_symbol())</div>
-<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;               and unified_eq(condition_, other.get_condition());</div>
-<div class="line"><a name="l01479"></a><span class="lineno"> 1479</span>&#160;    }</div>
-<div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160;}</div>
-<div class="line"><a name="l01482"></a><span class="lineno"> 1482</span>&#160; </div>
-<div class="line"><a name="l01483"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConditionSet.html#a42c5ff8be8838f43a6b2fc1b5e4cb3f8"> 1483</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1ConditionSet.html#a42c5ff8be8838f43a6b2fc1b5e4cb3f8">ConditionSet::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01485"></a><span class="lineno"> 1485</span>&#160;    SYMENGINE_ASSERT(is_a&lt;ConditionSet&gt;(o))</div>
-<div class="line"><a name="l01486"></a><span class="lineno"> 1486</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ConditionSet.html">ConditionSet</a> &amp;other = down_cast&lt;const ConditionSet &amp;&gt;(o);</div>
-<div class="line"><a name="l01487"></a><span class="lineno"> 1487</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(sym, other.get_symbol());</div>
-<div class="line"><a name="l01488"></a><span class="lineno"> 1488</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
-<div class="line"><a name="l01489"></a><span class="lineno"> 1489</span>&#160;        <span class="keywordflow">return</span> c1;</div>
-<div class="line"><a name="l01490"></a><span class="lineno"> 1490</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01491"></a><span class="lineno"> 1491</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(condition_, other.get_condition());</div>
-<div class="line"><a name="l01492"></a><span class="lineno"> 1492</span>&#160;    }</div>
-<div class="line"><a name="l01493"></a><span class="lineno"> 1493</span>&#160;}</div>
-<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160; </div>
-<div class="line"><a name="l01495"></a><span class="lineno"> 1495</span>&#160;RCP&lt;const Set&gt; ConditionSet::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01496"></a><span class="lineno"> 1496</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01497"></a><span class="lineno"> 1497</span>&#160;    <span class="keywordflow">return</span> SymEngine::make_set_union({o, rcp_from_this_cast&lt;const Set&gt;()});</div>
-<div class="line"><a name="l01498"></a><span class="lineno"> 1498</span>&#160;}</div>
-<div class="line"><a name="l01499"></a><span class="lineno"> 1499</span>&#160; </div>
-<div class="line"><a name="l01500"></a><span class="lineno"> 1500</span>&#160;RCP&lt;const Set&gt; ConditionSet::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;    <span class="keywordflow">if</span> (not is_a&lt;ConditionSet&gt;(*o)) {</div>
-<div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">conditionset</a>(sym, logical_and({condition_, o-&gt;contains(sym)}));</div>
-<div class="line"><a name="l01504"></a><span class="lineno"> 1504</span>&#160;    }</div>
-<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;    <span class="keywordflow">return</span> make_set_intersection({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;}</div>
-<div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160; </div>
-<div class="line"><a name="l01508"></a><span class="lineno"> 1508</span>&#160;RCP&lt;const Set&gt; ConditionSet::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01509"></a><span class="lineno"> 1509</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01510"></a><span class="lineno"> 1510</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Complement&gt;(o, rcp_from_this_cast&lt;const Set&gt;());</div>
-<div class="line"><a name="l01511"></a><span class="lineno"> 1511</span>&#160;}</div>
-<div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160; </div>
-<div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;RCP&lt;const Boolean&gt; ConditionSet::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01514"></a><span class="lineno"> 1514</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;    map_basic_basic d;</div>
-<div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160;    d[sym] = o;</div>
-<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;    <span class="keyword">auto</span> cond = condition_-&gt;subs(d);</div>
-<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;    <span class="keywordflow">if</span> (not is_a_Boolean(*cond)) {</div>
-<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Boolean&quot;</span>);</div>
-<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;    }</div>
-<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160;    <span class="keywordflow">return</span> rcp_static_cast&lt;const Boolean&gt;(cond);</div>
-<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;}</div>
-<div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160; </div>
-<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;ImageSet::ImageSet(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
-<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;                   <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)</div>
-<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;    : sym_(sym), expr_(expr), base_(base)</div>
-<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;{</div>
-<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
-<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;    SYMENGINE_ASSERT(ImageSet::is_canonical(sym, expr, base));</div>
-<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;}</div>
-<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160; </div>
-<div class="line"><a name="l01532"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ImageSet.html#a14b77f6bdb2eddafc7f352669a99f141"> 1532</a></span>&#160;hash_t <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a>::<a class="code" href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97">__hash__</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;    hash_t seed = SYMENGINE_IMAGESET;</div>
-<div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;    hash_combine&lt;Basic&gt;(seed, *sym_);</div>
-<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;    hash_combine&lt;Basic&gt;(seed, *expr_);</div>
-<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;    hash_combine&lt;Basic&gt;(seed, *base_);</div>
-<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01436"></a><span class="lineno"> 1436</span>&#160;    <span class="comment">// A&#39; U C = (A n C&#39;)&#39;</span></div>
+<div class="line"><a name="l01437"></a><span class="lineno"> 1437</span>&#160;    RCP&lt;const Set&gt; ocomplement = o-&gt;set_complement(universe_);</div>
+<div class="line"><a name="l01438"></a><span class="lineno"> 1438</span>&#160;    RCP&lt;const Set&gt; intersect</div>
+<div class="line"><a name="l01439"></a><span class="lineno"> 1439</span>&#160;        = SymEngine::set_intersection({container_, ocomplement});</div>
+<div class="line"><a name="l01440"></a><span class="lineno"> 1440</span>&#160;    <span class="keywordflow">return</span> intersect-&gt;set_complement(universe_);</div>
+<div class="line"><a name="l01441"></a><span class="lineno"> 1441</span>&#160;}</div>
+<div class="line"><a name="l01442"></a><span class="lineno"> 1442</span>&#160; </div>
+<div class="line"><a name="l01443"></a><span class="lineno"> 1443</span>&#160;RCP&lt;const Set&gt; Complement::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01444"></a><span class="lineno"> 1444</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01445"></a><span class="lineno"> 1445</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a name="l01446"></a><span class="lineno"> 1446</span>&#160;}</div>
+<div class="line"><a name="l01447"></a><span class="lineno"> 1447</span>&#160; </div>
+<div class="line"><a name="l01448"></a><span class="lineno"> 1448</span>&#160;RCP&lt;const Set&gt; Complement::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01449"></a><span class="lineno"> 1449</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01450"></a><span class="lineno"> 1450</span>&#160;    <span class="keyword">auto</span> newuniv = SymEngine::set_union({o, universe_});</div>
+<div class="line"><a name="l01451"></a><span class="lineno"> 1451</span>&#160;    <span class="keywordflow">return</span> container_-&gt;set_complement(newuniv);</div>
+<div class="line"><a name="l01452"></a><span class="lineno"> 1452</span>&#160;}</div>
+<div class="line"><a name="l01453"></a><span class="lineno"> 1453</span>&#160; </div>
+<div class="line"><a name="l01454"></a><span class="lineno"> 1454</span>&#160;ConditionSet::ConditionSet(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
+<div class="line"><a name="l01455"></a><span class="lineno"> 1455</span>&#160;                           <span class="keyword">const</span> RCP&lt;const Boolean&gt; &amp;condition)</div>
+<div class="line"><a name="l01456"></a><span class="lineno"> 1456</span>&#160;    : sym(sym), condition_(condition)</div>
+<div class="line"><a name="l01457"></a><span class="lineno"> 1457</span>&#160;{</div>
+<div class="line"><a name="l01458"></a><span class="lineno"> 1458</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
+<div class="line"><a name="l01459"></a><span class="lineno"> 1459</span>&#160;    SYMENGINE_ASSERT(ConditionSet::is_canonical(sym, condition))</div>
+<div class="line"><a name="l01460"></a><span class="lineno"> 1460</span>&#160;}</div>
+<div class="line"><a name="l01461"></a><span class="lineno"> 1461</span>&#160; </div>
+<div class="line"><a name="l01462"></a><span class="lineno"> 1462</span>&#160;<span class="keywordtype">bool</span> ConditionSet::is_canonical(const RCP&lt;const <a class="code" href="classSymEngine_1_1Basic.html#a5ad84ef8e2cdf821ad633a260021beec">Basic</a>&gt; &amp;sym,</div>
+<div class="line"><a name="l01463"></a><span class="lineno"> 1463</span>&#160;                                const RCP&lt;const Boolean&gt; &amp;condition)</div>
+<div class="line"><a name="l01464"></a><span class="lineno"> 1464</span>&#160;{</div>
+<div class="line"><a name="l01465"></a><span class="lineno"> 1465</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *boolFalse) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *boolTrue)</div>
+<div class="line"><a name="l01466"></a><span class="lineno"> 1466</span>&#160;        or not is_a_Symbol(*sym)) {</div>
+<div class="line"><a name="l01467"></a><span class="lineno"> 1467</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01468"></a><span class="lineno"> 1468</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
+<div class="line"><a name="l01469"></a><span class="lineno"> 1469</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01470"></a><span class="lineno"> 1470</span>&#160;    }</div>
+<div class="line"><a name="l01471"></a><span class="lineno"> 1471</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01472"></a><span class="lineno"> 1472</span>&#160;}</div>
+<div class="line"><a name="l01473"></a><span class="lineno"> 1473</span>&#160; </div>
+<div class="line"><a name="l01474"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97"> 1474</a></span>&#160;hash_t <a class="code" href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97">ConditionSet::__hash__</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l01475"></a><span class="lineno"> 1475</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01476"></a><span class="lineno"> 1476</span>&#160;    hash_t seed = SYMENGINE_CONDITIONSET;</div>
+<div class="line"><a name="l01477"></a><span class="lineno"> 1477</span>&#160;    hash_combine&lt;Basic&gt;(seed, *sym);</div>
+<div class="line"><a name="l01478"></a><span class="lineno"> 1478</span>&#160;    hash_combine&lt;Basic&gt;(seed, *condition_);</div>
+<div class="line"><a name="l01479"></a><span class="lineno"> 1479</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01480"></a><span class="lineno"> 1480</span>&#160;}</div>
+<div class="line"><a name="l01481"></a><span class="lineno"> 1481</span>&#160; </div>
+<div class="line"><a name="l01482"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConditionSet.html#a5b9ee20e4f9c1d986d1138d8549d6ae6"> 1482</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1ConditionSet.html#a5b9ee20e4f9c1d986d1138d8549d6ae6">ConditionSet::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01483"></a><span class="lineno"> 1483</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01484"></a><span class="lineno"> 1484</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;ConditionSet&gt;(o)) {</div>
+<div class="line"><a name="l01485"></a><span class="lineno"> 1485</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ConditionSet.html">ConditionSet</a> &amp;other = down_cast&lt;const ConditionSet &amp;&gt;(o);</div>
+<div class="line"><a name="l01486"></a><span class="lineno"> 1486</span>&#160;        <span class="keywordflow">return</span> unified_eq(sym, other.get_symbol())</div>
+<div class="line"><a name="l01487"></a><span class="lineno"> 1487</span>&#160;               and unified_eq(condition_, other.get_condition());</div>
+<div class="line"><a name="l01488"></a><span class="lineno"> 1488</span>&#160;    }</div>
+<div class="line"><a name="l01489"></a><span class="lineno"> 1489</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01490"></a><span class="lineno"> 1490</span>&#160;}</div>
+<div class="line"><a name="l01491"></a><span class="lineno"> 1491</span>&#160; </div>
+<div class="line"><a name="l01492"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ConditionSet.html#a42c5ff8be8838f43a6b2fc1b5e4cb3f8"> 1492</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1ConditionSet.html#a42c5ff8be8838f43a6b2fc1b5e4cb3f8">ConditionSet::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01493"></a><span class="lineno"> 1493</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01494"></a><span class="lineno"> 1494</span>&#160;    SYMENGINE_ASSERT(is_a&lt;ConditionSet&gt;(o))</div>
+<div class="line"><a name="l01495"></a><span class="lineno"> 1495</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ConditionSet.html">ConditionSet</a> &amp;other = down_cast&lt;const ConditionSet &amp;&gt;(o);</div>
+<div class="line"><a name="l01496"></a><span class="lineno"> 1496</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(sym, other.get_symbol());</div>
+<div class="line"><a name="l01497"></a><span class="lineno"> 1497</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
+<div class="line"><a name="l01498"></a><span class="lineno"> 1498</span>&#160;        <span class="keywordflow">return</span> c1;</div>
+<div class="line"><a name="l01499"></a><span class="lineno"> 1499</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01500"></a><span class="lineno"> 1500</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(condition_, other.get_condition());</div>
+<div class="line"><a name="l01501"></a><span class="lineno"> 1501</span>&#160;    }</div>
+<div class="line"><a name="l01502"></a><span class="lineno"> 1502</span>&#160;}</div>
+<div class="line"><a name="l01503"></a><span class="lineno"> 1503</span>&#160; </div>
+<div class="line"><a name="l01504"></a><span class="lineno"> 1504</span>&#160;RCP&lt;const Set&gt; ConditionSet::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01505"></a><span class="lineno"> 1505</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01506"></a><span class="lineno"> 1506</span>&#160;    <span class="keywordflow">return</span> SymEngine::make_set_union({o, rcp_from_this_cast&lt;const Set&gt;()});</div>
+<div class="line"><a name="l01507"></a><span class="lineno"> 1507</span>&#160;}</div>
+<div class="line"><a name="l01508"></a><span class="lineno"> 1508</span>&#160; </div>
+<div class="line"><a name="l01509"></a><span class="lineno"> 1509</span>&#160;RCP&lt;const Set&gt; ConditionSet::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01510"></a><span class="lineno"> 1510</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01511"></a><span class="lineno"> 1511</span>&#160;    <span class="keywordflow">if</span> (not is_a&lt;ConditionSet&gt;(*o)) {</div>
+<div class="line"><a name="l01512"></a><span class="lineno"> 1512</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">conditionset</a>(sym, logical_and({condition_, o-&gt;contains(sym)}));</div>
+<div class="line"><a name="l01513"></a><span class="lineno"> 1513</span>&#160;    }</div>
+<div class="line"><a name="l01514"></a><span class="lineno"> 1514</span>&#160;    <span class="keywordflow">return</span> make_set_intersection({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a name="l01515"></a><span class="lineno"> 1515</span>&#160;}</div>
+<div class="line"><a name="l01516"></a><span class="lineno"> 1516</span>&#160; </div>
+<div class="line"><a name="l01517"></a><span class="lineno"> 1517</span>&#160;RCP&lt;const Set&gt; ConditionSet::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01518"></a><span class="lineno"> 1518</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01519"></a><span class="lineno"> 1519</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Complement&gt;(o, rcp_from_this_cast&lt;const Set&gt;());</div>
+<div class="line"><a name="l01520"></a><span class="lineno"> 1520</span>&#160;}</div>
+<div class="line"><a name="l01521"></a><span class="lineno"> 1521</span>&#160; </div>
+<div class="line"><a name="l01522"></a><span class="lineno"> 1522</span>&#160;RCP&lt;const Boolean&gt; ConditionSet::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01523"></a><span class="lineno"> 1523</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01524"></a><span class="lineno"> 1524</span>&#160;    map_basic_basic d;</div>
+<div class="line"><a name="l01525"></a><span class="lineno"> 1525</span>&#160;    d[sym] = o;</div>
+<div class="line"><a name="l01526"></a><span class="lineno"> 1526</span>&#160;    <span class="keyword">auto</span> cond = condition_-&gt;subs(d);</div>
+<div class="line"><a name="l01527"></a><span class="lineno"> 1527</span>&#160;    <span class="keywordflow">if</span> (not is_a_Boolean(*cond)) {</div>
+<div class="line"><a name="l01528"></a><span class="lineno"> 1528</span>&#160;        <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;expected an object of type Boolean&quot;</span>);</div>
+<div class="line"><a name="l01529"></a><span class="lineno"> 1529</span>&#160;    }</div>
+<div class="line"><a name="l01530"></a><span class="lineno"> 1530</span>&#160;    <span class="keywordflow">return</span> rcp_static_cast&lt;const Boolean&gt;(cond);</div>
+<div class="line"><a name="l01531"></a><span class="lineno"> 1531</span>&#160;}</div>
+<div class="line"><a name="l01532"></a><span class="lineno"> 1532</span>&#160; </div>
+<div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;ImageSet::ImageSet(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym, <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
+<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;                   <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)</div>
+<div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;    : sym_(sym), expr_(expr), base_(base)</div>
+<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;{</div>
+<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;    SYMENGINE_ASSIGN_TYPEID()</div>
+<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;    SYMENGINE_ASSERT(ImageSet::is_canonical(sym, expr, base));</div>
 <div class="line"><a name="l01539"></a><span class="lineno"> 1539</span>&#160;}</div>
 <div class="line"><a name="l01540"></a><span class="lineno"> 1540</span>&#160; </div>
-<div class="line"><a name="l01541"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ImageSet.html#a1031981efa42253ea4cb05fb032e3ac4"> 1541</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1ImageSet.html#a1031981efa42253ea4cb05fb032e3ac4">ImageSet::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01541"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ImageSet.html#a14b77f6bdb2eddafc7f352669a99f141"> 1541</a></span>&#160;hash_t <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a>::<a class="code" href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97">__hash__</a>()<span class="keyword"> const</span></div>
 <div class="line"><a name="l01542"></a><span class="lineno"> 1542</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01543"></a><span class="lineno"> 1543</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;ImageSet&gt;(o)) {</div>
-<div class="line"><a name="l01544"></a><span class="lineno"> 1544</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
-<div class="line"><a name="l01545"></a><span class="lineno"> 1545</span>&#160;        <span class="keywordflow">return</span> unified_eq(sym_, other.sym_) and unified_eq(expr_, other.expr_)</div>
-<div class="line"><a name="l01546"></a><span class="lineno"> 1546</span>&#160;               and unified_eq(base_, other.base_);</div>
-<div class="line"><a name="l01547"></a><span class="lineno"> 1547</span>&#160;    }</div>
-<div class="line"><a name="l01548"></a><span class="lineno"> 1548</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01549"></a><span class="lineno"> 1549</span>&#160;}</div>
-<div class="line"><a name="l01550"></a><span class="lineno"> 1550</span>&#160; </div>
-<div class="line"><a name="l01551"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ImageSet.html#abc34045bd705c85568d0ebe7d80708f1"> 1551</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1ImageSet.html#abc34045bd705c85568d0ebe7d80708f1">ImageSet::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01552"></a><span class="lineno"> 1552</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160;    SYMENGINE_ASSERT(is_a&lt;ImageSet&gt;(o))</div>
-<div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
-<div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(sym_, other.sym_);</div>
-<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
-<div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;        <span class="keywordflow">return</span> c1;</div>
-<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160;        <span class="keywordtype">int</span> c2 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(expr_, other.expr_);</div>
-<div class="line"><a name="l01560"></a><span class="lineno"> 1560</span>&#160;        <span class="keywordflow">if</span> (c2 != 0) {</div>
-<div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;            <span class="keywordflow">return</span> c2;</div>
-<div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(base_, other.base_);</div>
-<div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;        }</div>
-<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;    }</div>
-<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;}</div>
-<div class="line"><a name="l01567"></a><span class="lineno"> 1567</span>&#160; </div>
-<div class="line"><a name="l01568"></a><span class="lineno"> 1568</span>&#160;<span class="keywordtype">bool</span> ImageSet::is_canonical(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
-<div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
-<div class="line"><a name="l01570"></a><span class="lineno"> 1570</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)</div>
-<div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;{</div>
-<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;    <span class="keywordflow">if</span> (not is_a_Symbol(*sym) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*expr, *sym) or <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*expr)</div>
-<div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;        or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*base, *<a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>()))</div>
-<div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01575"></a><span class="lineno"> 1575</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01576"></a><span class="lineno"> 1576</span>&#160;}</div>
-<div class="line"><a name="l01577"></a><span class="lineno"> 1577</span>&#160; </div>
-<div class="line"><a name="l01578"></a><span class="lineno"> 1578</span>&#160;RCP&lt;const Boolean&gt; ImageSet::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01579"></a><span class="lineno"> 1579</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01580"></a><span class="lineno"> 1580</span>&#160;    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Not implemented&quot;</span>);</div>
-<div class="line"><a name="l01581"></a><span class="lineno"> 1581</span>&#160;}</div>
-<div class="line"><a name="l01582"></a><span class="lineno"> 1582</span>&#160; </div>
-<div class="line"><a name="l01583"></a><span class="lineno"> 1583</span>&#160;RCP&lt;const Set&gt; ImageSet::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160;    <span class="keywordflow">return</span> make_set_union({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160;}</div>
-<div class="line"><a name="l01587"></a><span class="lineno"> 1587</span>&#160; </div>
-<div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;RCP&lt;const Set&gt; ImageSet::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
-<div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160;}</div>
-<div class="line"><a name="l01592"></a><span class="lineno"> 1592</span>&#160; </div>
-<div class="line"><a name="l01593"></a><span class="lineno"> 1593</span>&#160;RCP&lt;const Set&gt; ImageSet::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01594"></a><span class="lineno"> 1594</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01595"></a><span class="lineno"> 1595</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_complement(rcp_from_this_cast&lt;const Set&gt;(), o);</div>
-<div class="line"><a name="l01596"></a><span class="lineno"> 1596</span>&#160;}</div>
-<div class="line"><a name="l01597"></a><span class="lineno"> 1597</span>&#160; </div>
-<div class="line"><a name="l01598"></a><span class="lineno"> 1598</span>&#160;RCP&lt;const Set&gt; ImageSet::create(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
-<div class="line"><a name="l01599"></a><span class="lineno"> 1599</span>&#160;                                <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
-<div class="line"><a name="l01600"></a><span class="lineno"> 1600</span>&#160;                                <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)<span class="keyword"> const</span></div>
-<div class="line"><a name="l01601"></a><span class="lineno"> 1601</span>&#160;<span class="keyword"></span>{</div>
-<div class="line"><a name="l01602"></a><span class="lineno"> 1602</span>&#160;    <span class="keywordflow">return</span> imageset(sym, expr, base);</div>
-<div class="line"><a name="l01603"></a><span class="lineno"> 1603</span>&#160;}</div>
-<div class="line"><a name="l01604"></a><span class="lineno"> 1604</span>&#160; </div>
-<div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160;RCP&lt;const Set&gt; set_union(<span class="keyword">const</span> set_set &amp;in)</div>
-<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160;{</div>
-<div class="line"><a name="l01607"></a><span class="lineno"> 1607</span>&#160;    set_set input;</div>
-<div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;    set_basic combined_FiniteSet;</div>
-<div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = in.begin(); it != in.end(); ++it) {</div>
-<div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(**it)) {</div>
-<div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;            <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(**it);</div>
-<div class="line"><a name="l01612"></a><span class="lineno"> 1612</span>&#160;            combined_FiniteSet.insert(other.get_container().begin(),</div>
-<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160;                                      other.get_container().end());</div>
-<div class="line"><a name="l01614"></a><span class="lineno"> 1614</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(**it)) {</div>
-<div class="line"><a name="l01615"></a><span class="lineno"> 1615</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
-<div class="line"><a name="l01616"></a><span class="lineno"> 1616</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;EmptySet&gt;(**it)) {</div>
-<div class="line"><a name="l01617"></a><span class="lineno"> 1617</span>&#160;            input.insert(*it);</div>
-<div class="line"><a name="l01618"></a><span class="lineno"> 1618</span>&#160;        }</div>
-<div class="line"><a name="l01619"></a><span class="lineno"> 1619</span>&#160;    }</div>
-<div class="line"><a name="l01620"></a><span class="lineno"> 1620</span>&#160;    <span class="keywordflow">if</span> (input.empty()) {</div>
-<div class="line"><a name="l01621"></a><span class="lineno"> 1621</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(combined_FiniteSet);</div>
-<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.size() == 1 &amp;&amp; combined_FiniteSet.empty()) {</div>
-<div class="line"><a name="l01623"></a><span class="lineno"> 1623</span>&#160;        <span class="keywordflow">return</span> *input.begin();</div>
-<div class="line"><a name="l01624"></a><span class="lineno"> 1624</span>&#160;    }</div>
-<div class="line"><a name="l01625"></a><span class="lineno"> 1625</span>&#160;    <span class="comment">// Now we rely on respective containers&#39; own rules</span></div>
-<div class="line"><a name="l01626"></a><span class="lineno"> 1626</span>&#160;    <span class="comment">// TODO: Improve it to O(log n)</span></div>
-<div class="line"><a name="l01627"></a><span class="lineno"> 1627</span>&#160;    RCP&lt;const Set&gt; combined_Rest = <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(combined_FiniteSet);</div>
-<div class="line"><a name="l01628"></a><span class="lineno"> 1628</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = input.begin(); it != input.end(); ++it) {</div>
-<div class="line"><a name="l01629"></a><span class="lineno"> 1629</span>&#160;        combined_Rest = combined_Rest-&gt;set_union(*it);</div>
-<div class="line"><a name="l01630"></a><span class="lineno"> 1630</span>&#160;    }</div>
-<div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;    <span class="keywordflow">return</span> combined_Rest;</div>
-<div class="line"><a name="l01632"></a><span class="lineno"> 1632</span>&#160;}</div>
-<div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160; </div>
-<div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;RCP&lt;const Set&gt; set_intersection(<span class="keyword">const</span> set_set &amp;in)</div>
-<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;{</div>
-<div class="line"><a name="l01636"></a><span class="lineno"> 1636</span>&#160;    <span class="comment">// https://en.wikipedia.org/wiki/Intersection_(set_theory)#Nullary_intersection</span></div>
-<div class="line"><a name="l01637"></a><span class="lineno"> 1637</span>&#160;    <span class="keywordflow">if</span> (in.empty())</div>
-<div class="line"><a name="l01638"></a><span class="lineno"> 1638</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
-<div class="line"><a name="l01639"></a><span class="lineno"> 1639</span>&#160; </div>
-<div class="line"><a name="l01640"></a><span class="lineno"> 1640</span>&#160;    <span class="comment">// Global rules</span></div>
-<div class="line"><a name="l01641"></a><span class="lineno"> 1641</span>&#160;    <span class="comment">// If found any emptyset then return emptyset</span></div>
-<div class="line"><a name="l01642"></a><span class="lineno"> 1642</span>&#160;    set_set incopy;</div>
-<div class="line"><a name="l01643"></a><span class="lineno"> 1643</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : in) {</div>
-<div class="line"><a name="l01644"></a><span class="lineno"> 1644</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*input)) {</div>
-<div class="line"><a name="l01645"></a><span class="lineno"> 1645</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
-<div class="line"><a name="l01646"></a><span class="lineno"> 1646</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;UniversalSet&gt;(*input)) {</div>
-<div class="line"><a name="l01647"></a><span class="lineno"> 1647</span>&#160;            incopy.insert(input);</div>
-<div class="line"><a name="l01648"></a><span class="lineno"> 1648</span>&#160;        }</div>
-<div class="line"><a name="l01649"></a><span class="lineno"> 1649</span>&#160;    }</div>
-<div class="line"><a name="l01650"></a><span class="lineno"> 1650</span>&#160; </div>
-<div class="line"><a name="l01651"></a><span class="lineno"> 1651</span>&#160;    <span class="keywordflow">if</span> (incopy.empty())</div>
-<div class="line"><a name="l01652"></a><span class="lineno"> 1652</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
-<div class="line"><a name="l01653"></a><span class="lineno"> 1653</span>&#160;    <span class="keywordflow">if</span> (incopy.size() == 1)</div>
-<div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;        <span class="keywordflow">return</span> *incopy.begin();</div>
-<div class="line"><a name="l01655"></a><span class="lineno"> 1655</span>&#160; </div>
-<div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;    <span class="comment">// Handle finite sets</span></div>
-<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;    std::vector&lt;RCP&lt;const Set&gt;&gt; fsets, othersets;</div>
-<div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : incopy) {</div>
-<div class="line"><a name="l01659"></a><span class="lineno"> 1659</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*input)) {</div>
-<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;            fsets.push_back(input);</div>
-<div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;            othersets.push_back(input);</div>
-<div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;        }</div>
-<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160;    }</div>
-<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;    <span class="keywordflow">if</span> (fsets.size() != 0) {</div>
-<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;fs = down_cast&lt;const FiniteSet &amp;&gt;(**fsets.begin());</div>
-<div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;        <span class="keyword">auto</span> cont = fs.get_container();</div>
-<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;        fsets.erase(fsets.begin());</div>
-<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;        set_basic finalfs;</div>
-<div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fselement : cont) {</div>
-<div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;            <span class="keywordtype">bool</span> present = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fset : fsets) {</div>
-<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;                <span class="keyword">auto</span> contain = fset-&gt;contains(fselement);</div>
-<div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;                <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolFalse))) {</div>
-<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;                    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
-<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;                }</div>
-<div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;                present = present and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue);</div>
-<div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;            }</div>
-<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;            <span class="keywordflow">if</span> (!present)</div>
-<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;                <span class="keywordflow">continue</span>;</div>
-<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;oset : othersets) {</div>
-<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;                <span class="keyword">auto</span> contain = oset-&gt;contains(fselement);</div>
+<div class="line"><a name="l01543"></a><span class="lineno"> 1543</span>&#160;    hash_t seed = SYMENGINE_IMAGESET;</div>
+<div class="line"><a name="l01544"></a><span class="lineno"> 1544</span>&#160;    hash_combine&lt;Basic&gt;(seed, *sym_);</div>
+<div class="line"><a name="l01545"></a><span class="lineno"> 1545</span>&#160;    hash_combine&lt;Basic&gt;(seed, *expr_);</div>
+<div class="line"><a name="l01546"></a><span class="lineno"> 1546</span>&#160;    hash_combine&lt;Basic&gt;(seed, *base_);</div>
+<div class="line"><a name="l01547"></a><span class="lineno"> 1547</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01548"></a><span class="lineno"> 1548</span>&#160;}</div>
+<div class="line"><a name="l01549"></a><span class="lineno"> 1549</span>&#160; </div>
+<div class="line"><a name="l01550"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ImageSet.html#a1031981efa42253ea4cb05fb032e3ac4"> 1550</a></span>&#160;<span class="keywordtype">bool</span> <a class="code" href="classSymEngine_1_1ImageSet.html#a1031981efa42253ea4cb05fb032e3ac4">ImageSet::__eq__</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01551"></a><span class="lineno"> 1551</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01552"></a><span class="lineno"> 1552</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;ImageSet&gt;(o)) {</div>
+<div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160;        <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
+<div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;        <span class="keywordflow">return</span> unified_eq(sym_, other.sym_) and unified_eq(expr_, other.expr_)</div>
+<div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160;               and unified_eq(base_, other.base_);</div>
+<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;    }</div>
+<div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;}</div>
+<div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160; </div>
+<div class="line"><a name="l01560"></a><span class="lineno"><a class="line" href="classSymEngine_1_1ImageSet.html#abc34045bd705c85568d0ebe7d80708f1"> 1560</a></span>&#160;<span class="keywordtype">int</span> <a class="code" href="classSymEngine_1_1ImageSet.html#abc34045bd705c85568d0ebe7d80708f1">ImageSet::compare</a>(<span class="keyword">const</span> <a class="code" href="classSymEngine_1_1Basic.html">Basic</a> &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;    SYMENGINE_ASSERT(is_a&lt;ImageSet&gt;(o))</div>
+<div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;    <span class="keyword">const</span> <a class="code" href="classSymEngine_1_1ImageSet.html">ImageSet</a> &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
+<div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(sym_, other.sym_);</div>
+<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
+<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;        <span class="keywordflow">return</span> c1;</div>
+<div class="line"><a name="l01567"></a><span class="lineno"> 1567</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01568"></a><span class="lineno"> 1568</span>&#160;        <span class="keywordtype">int</span> c2 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(expr_, other.expr_);</div>
+<div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;        <span class="keywordflow">if</span> (c2 != 0) {</div>
+<div class="line"><a name="l01570"></a><span class="lineno"> 1570</span>&#160;            <span class="keywordflow">return</span> c2;</div>
+<div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(base_, other.base_);</div>
+<div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;        }</div>
+<div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;    }</div>
+<div class="line"><a name="l01575"></a><span class="lineno"> 1575</span>&#160;}</div>
+<div class="line"><a name="l01576"></a><span class="lineno"> 1576</span>&#160; </div>
+<div class="line"><a name="l01577"></a><span class="lineno"> 1577</span>&#160;<span class="keywordtype">bool</span> ImageSet::is_canonical(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
+<div class="line"><a name="l01578"></a><span class="lineno"> 1578</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
+<div class="line"><a name="l01579"></a><span class="lineno"> 1579</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)</div>
+<div class="line"><a name="l01580"></a><span class="lineno"> 1580</span>&#160;{</div>
+<div class="line"><a name="l01581"></a><span class="lineno"> 1581</span>&#160;    <span class="keywordflow">if</span> (not is_a_Symbol(*sym) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*expr, *sym) or <a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*expr)</div>
+<div class="line"><a name="l01582"></a><span class="lineno"> 1582</span>&#160;        or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*base, *<a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>()))</div>
+<div class="line"><a name="l01583"></a><span class="lineno"> 1583</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01584"></a><span class="lineno"> 1584</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01585"></a><span class="lineno"> 1585</span>&#160;}</div>
+<div class="line"><a name="l01586"></a><span class="lineno"> 1586</span>&#160; </div>
+<div class="line"><a name="l01587"></a><span class="lineno"> 1587</span>&#160;RCP&lt;const Boolean&gt; ImageSet::contains(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;a)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01588"></a><span class="lineno"> 1588</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01589"></a><span class="lineno"> 1589</span>&#160;    <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;Not implemented&quot;</span>);</div>
+<div class="line"><a name="l01590"></a><span class="lineno"> 1590</span>&#160;}</div>
+<div class="line"><a name="l01591"></a><span class="lineno"> 1591</span>&#160; </div>
+<div class="line"><a name="l01592"></a><span class="lineno"> 1592</span>&#160;RCP&lt;const Set&gt; ImageSet::set_union(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01593"></a><span class="lineno"> 1593</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01594"></a><span class="lineno"> 1594</span>&#160;    <span class="keywordflow">return</span> make_set_union({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a name="l01595"></a><span class="lineno"> 1595</span>&#160;}</div>
+<div class="line"><a name="l01596"></a><span class="lineno"> 1596</span>&#160; </div>
+<div class="line"><a name="l01597"></a><span class="lineno"> 1597</span>&#160;RCP&lt;const Set&gt; ImageSet::set_intersection(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01598"></a><span class="lineno"> 1598</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01599"></a><span class="lineno"> 1599</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_intersection({rcp_from_this_cast&lt;const Set&gt;(), o});</div>
+<div class="line"><a name="l01600"></a><span class="lineno"> 1600</span>&#160;}</div>
+<div class="line"><a name="l01601"></a><span class="lineno"> 1601</span>&#160; </div>
+<div class="line"><a name="l01602"></a><span class="lineno"> 1602</span>&#160;RCP&lt;const Set&gt; ImageSet::set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;o)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01603"></a><span class="lineno"> 1603</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01604"></a><span class="lineno"> 1604</span>&#160;    <span class="keywordflow">return</span> SymEngine::set_complement(rcp_from_this_cast&lt;const Set&gt;(), o);</div>
+<div class="line"><a name="l01605"></a><span class="lineno"> 1605</span>&#160;}</div>
+<div class="line"><a name="l01606"></a><span class="lineno"> 1606</span>&#160; </div>
+<div class="line"><a name="l01607"></a><span class="lineno"> 1607</span>&#160;RCP&lt;const Set&gt; ImageSet::create(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
+<div class="line"><a name="l01608"></a><span class="lineno"> 1608</span>&#160;                                <span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;expr,</div>
+<div class="line"><a name="l01609"></a><span class="lineno"> 1609</span>&#160;                                <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;base)<span class="keyword"> const</span></div>
+<div class="line"><a name="l01610"></a><span class="lineno"> 1610</span>&#160;<span class="keyword"></span>{</div>
+<div class="line"><a name="l01611"></a><span class="lineno"> 1611</span>&#160;    <span class="keywordflow">return</span> imageset(sym, expr, base);</div>
+<div class="line"><a name="l01612"></a><span class="lineno"> 1612</span>&#160;}</div>
+<div class="line"><a name="l01613"></a><span class="lineno"> 1613</span>&#160; </div>
+<div class="line"><a name="l01614"></a><span class="lineno"> 1614</span>&#160;RCP&lt;const Set&gt; set_union(<span class="keyword">const</span> set_set &amp;in)</div>
+<div class="line"><a name="l01615"></a><span class="lineno"> 1615</span>&#160;{</div>
+<div class="line"><a name="l01616"></a><span class="lineno"> 1616</span>&#160;    set_set input;</div>
+<div class="line"><a name="l01617"></a><span class="lineno"> 1617</span>&#160;    set_basic combined_FiniteSet;</div>
+<div class="line"><a name="l01618"></a><span class="lineno"> 1618</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = in.begin(); it != in.end(); ++it) {</div>
+<div class="line"><a name="l01619"></a><span class="lineno"> 1619</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(**it)) {</div>
+<div class="line"><a name="l01620"></a><span class="lineno"> 1620</span>&#160;            <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(**it);</div>
+<div class="line"><a name="l01621"></a><span class="lineno"> 1621</span>&#160;            combined_FiniteSet.insert(other.get_container().begin(),</div>
+<div class="line"><a name="l01622"></a><span class="lineno"> 1622</span>&#160;                                      other.get_container().end());</div>
+<div class="line"><a name="l01623"></a><span class="lineno"> 1623</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;UniversalSet&gt;(**it)) {</div>
+<div class="line"><a name="l01624"></a><span class="lineno"> 1624</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
+<div class="line"><a name="l01625"></a><span class="lineno"> 1625</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;EmptySet&gt;(**it)) {</div>
+<div class="line"><a name="l01626"></a><span class="lineno"> 1626</span>&#160;            input.insert(*it);</div>
+<div class="line"><a name="l01627"></a><span class="lineno"> 1627</span>&#160;        }</div>
+<div class="line"><a name="l01628"></a><span class="lineno"> 1628</span>&#160;    }</div>
+<div class="line"><a name="l01629"></a><span class="lineno"> 1629</span>&#160;    <span class="keywordflow">if</span> (input.empty()) {</div>
+<div class="line"><a name="l01630"></a><span class="lineno"> 1630</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(combined_FiniteSet);</div>
+<div class="line"><a name="l01631"></a><span class="lineno"> 1631</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (input.size() == 1 &amp;&amp; combined_FiniteSet.empty()) {</div>
+<div class="line"><a name="l01632"></a><span class="lineno"> 1632</span>&#160;        <span class="keywordflow">return</span> *input.begin();</div>
+<div class="line"><a name="l01633"></a><span class="lineno"> 1633</span>&#160;    }</div>
+<div class="line"><a name="l01634"></a><span class="lineno"> 1634</span>&#160;    <span class="comment">// Now we rely on respective containers&#39; own rules</span></div>
+<div class="line"><a name="l01635"></a><span class="lineno"> 1635</span>&#160;    <span class="comment">// TODO: Improve it to O(log n)</span></div>
+<div class="line"><a name="l01636"></a><span class="lineno"> 1636</span>&#160;    RCP&lt;const Set&gt; combined_Rest = <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(combined_FiniteSet);</div>
+<div class="line"><a name="l01637"></a><span class="lineno"> 1637</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = input.begin(); it != input.end(); ++it) {</div>
+<div class="line"><a name="l01638"></a><span class="lineno"> 1638</span>&#160;        combined_Rest = combined_Rest-&gt;set_union(*it);</div>
+<div class="line"><a name="l01639"></a><span class="lineno"> 1639</span>&#160;    }</div>
+<div class="line"><a name="l01640"></a><span class="lineno"> 1640</span>&#160;    <span class="keywordflow">return</span> combined_Rest;</div>
+<div class="line"><a name="l01641"></a><span class="lineno"> 1641</span>&#160;}</div>
+<div class="line"><a name="l01642"></a><span class="lineno"> 1642</span>&#160; </div>
+<div class="line"><a name="l01643"></a><span class="lineno"> 1643</span>&#160;RCP&lt;const Set&gt; set_intersection(<span class="keyword">const</span> set_set &amp;in)</div>
+<div class="line"><a name="l01644"></a><span class="lineno"> 1644</span>&#160;{</div>
+<div class="line"><a name="l01645"></a><span class="lineno"> 1645</span>&#160;    <span class="comment">// https://en.wikipedia.org/wiki/Intersection_(set_theory)#Nullary_intersection</span></div>
+<div class="line"><a name="l01646"></a><span class="lineno"> 1646</span>&#160;    <span class="keywordflow">if</span> (in.empty())</div>
+<div class="line"><a name="l01647"></a><span class="lineno"> 1647</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
+<div class="line"><a name="l01648"></a><span class="lineno"> 1648</span>&#160; </div>
+<div class="line"><a name="l01649"></a><span class="lineno"> 1649</span>&#160;    <span class="comment">// Global rules</span></div>
+<div class="line"><a name="l01650"></a><span class="lineno"> 1650</span>&#160;    <span class="comment">// If found any emptyset then return emptyset</span></div>
+<div class="line"><a name="l01651"></a><span class="lineno"> 1651</span>&#160;    set_set incopy;</div>
+<div class="line"><a name="l01652"></a><span class="lineno"> 1652</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : in) {</div>
+<div class="line"><a name="l01653"></a><span class="lineno"> 1653</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*input)) {</div>
+<div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
+<div class="line"><a name="l01655"></a><span class="lineno"> 1655</span>&#160;        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not is_a&lt;UniversalSet&gt;(*input)) {</div>
+<div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;            incopy.insert(input);</div>
+<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;        }</div>
+<div class="line"><a name="l01658"></a><span class="lineno"> 1658</span>&#160;    }</div>
+<div class="line"><a name="l01659"></a><span class="lineno"> 1659</span>&#160; </div>
+<div class="line"><a name="l01660"></a><span class="lineno"> 1660</span>&#160;    <span class="keywordflow">if</span> (incopy.empty())</div>
+<div class="line"><a name="l01661"></a><span class="lineno"> 1661</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
+<div class="line"><a name="l01662"></a><span class="lineno"> 1662</span>&#160;    <span class="keywordflow">if</span> (incopy.size() == 1)</div>
+<div class="line"><a name="l01663"></a><span class="lineno"> 1663</span>&#160;        <span class="keywordflow">return</span> *incopy.begin();</div>
+<div class="line"><a name="l01664"></a><span class="lineno"> 1664</span>&#160; </div>
+<div class="line"><a name="l01665"></a><span class="lineno"> 1665</span>&#160;    <span class="comment">// Handle finite sets</span></div>
+<div class="line"><a name="l01666"></a><span class="lineno"> 1666</span>&#160;    std::vector&lt;RCP&lt;const Set&gt;&gt; fsets, othersets;</div>
+<div class="line"><a name="l01667"></a><span class="lineno"> 1667</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;input : incopy) {</div>
+<div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*input)) {</div>
+<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;            fsets.push_back(input);</div>
+<div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;            othersets.push_back(input);</div>
+<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;        }</div>
+<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;    }</div>
+<div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;    <span class="keywordflow">if</span> (fsets.size() != 0) {</div>
+<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;fs = down_cast&lt;const FiniteSet &amp;&gt;(**fsets.begin());</div>
+<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;        <span class="keyword">auto</span> cont = fs.get_container();</div>
+<div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;        fsets.erase(fsets.begin());</div>
+<div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;        set_basic finalfs;</div>
+<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fselement : cont) {</div>
+<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;            <span class="keywordtype">bool</span> present = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;fset : fsets) {</div>
+<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;                <span class="keyword">auto</span> contain = fset-&gt;contains(fselement);</div>
 <div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;                <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolFalse))) {</div>
 <div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;                    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
 <div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;                }</div>
 <div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160;                present = present and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue);</div>
 <div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;            }</div>
-<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;            <span class="keywordflow">if</span> (present)</div>
-<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160;                finalfs.insert(fselement);</div>
-<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;        }</div>
-<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(finalfs);</div>
-<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;    }</div>
-<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160; </div>
-<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;    <span class="comment">// If any of the sets is union, then return a Union of Intersections</span></div>
-<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
-<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Union&gt;(**it)) {</div>
-<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;            <span class="keyword">auto</span> container = down_cast&lt;const Union &amp;&gt;(**it).get_container();</div>
-<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;            incopy.erase(it);</div>
-<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
-<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            set_set usets;</div>
-<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;c : container) {</div>
-<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;                usets.insert(SymEngine::set_intersection({c, other}));</div>
-<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;            }</div>
-<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(usets);</div>
-<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;        }</div>
-<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;    }</div>
-<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160; </div>
-<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160;    <span class="comment">// Simplify and return a `Complement` if any of the sets is a complement</span></div>
-<div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
-<div class="line"><a name="l01710"></a><span class="lineno"> 1710</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Complement&gt;(**it)) {</div>
-<div class="line"><a name="l01711"></a><span class="lineno"> 1711</span>&#160;            <span class="keyword">auto</span> container</div>
-<div class="line"><a name="l01712"></a><span class="lineno"> 1712</span>&#160;                = down_cast&lt;const Complement &amp;&gt;(**it).get_container();</div>
-<div class="line"><a name="l01713"></a><span class="lineno"> 1713</span>&#160;            <span class="keyword">auto</span> universe = down_cast&lt;const Complement &amp;&gt;(**it).get_universe();</div>
-<div class="line"><a name="l01714"></a><span class="lineno"> 1714</span>&#160;            incopy.erase(it);</div>
-<div class="line"><a name="l01715"></a><span class="lineno"> 1715</span>&#160;            incopy.insert(universe);</div>
-<div class="line"><a name="l01716"></a><span class="lineno"> 1716</span>&#160;            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
-<div class="line"><a name="l01717"></a><span class="lineno"> 1717</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_complement(other, container);</div>
-<div class="line"><a name="l01718"></a><span class="lineno"> 1718</span>&#160;        }</div>
-<div class="line"><a name="l01719"></a><span class="lineno"> 1719</span>&#160;    }</div>
-<div class="line"><a name="l01720"></a><span class="lineno"> 1720</span>&#160; </div>
-<div class="line"><a name="l01721"></a><span class="lineno"> 1721</span>&#160;    <span class="comment">// Pair-wise rules</span></div>
-<div class="line"><a name="l01722"></a><span class="lineno"> 1722</span>&#160;    <span class="comment">// TO-DO: needs the following improvement once Intersection</span></div>
-<div class="line"><a name="l01723"></a><span class="lineno"> 1723</span>&#160;    <span class="comment">// class is implemented.</span></div>
-<div class="line"><a name="l01724"></a><span class="lineno"> 1724</span>&#160;    <span class="comment">// input_oset if found to be not simplified, then skip this</span></div>
-<div class="line"><a name="l01725"></a><span class="lineno"> 1725</span>&#160;    <span class="comment">// pair.</span></div>
-<div class="line"><a name="l01726"></a><span class="lineno"> 1726</span>&#160;    <span class="keywordflow">if</span> (incopy.size() &gt; 1) {</div>
-<div class="line"><a name="l01727"></a><span class="lineno"> 1727</span>&#160;        <span class="keyword">auto</span> temp = *incopy.begin();</div>
-<div class="line"><a name="l01728"></a><span class="lineno"> 1728</span>&#160;        <span class="keyword">auto</span> it = std::next(incopy.begin());</div>
-<div class="line"><a name="l01729"></a><span class="lineno"> 1729</span>&#160;        <span class="keywordflow">for</span> (; it != incopy.end(); ++it) {</div>
-<div class="line"><a name="l01730"></a><span class="lineno"> 1730</span>&#160;            temp = temp-&gt;set_intersection(*it);</div>
-<div class="line"><a name="l01731"></a><span class="lineno"> 1731</span>&#160;        }</div>
-<div class="line"><a name="l01732"></a><span class="lineno"> 1732</span>&#160;        <span class="keywordflow">return</span> temp;</div>
-<div class="line"><a name="l01733"></a><span class="lineno"> 1733</span>&#160;    }</div>
-<div class="line"><a name="l01734"></a><span class="lineno"> 1734</span>&#160; </div>
-<div class="line"><a name="l01735"></a><span class="lineno"> 1735</span>&#160;    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
-<div class="line"><a name="l01736"></a><span class="lineno"> 1736</span>&#160;}</div>
-<div class="line"><a name="l01737"></a><span class="lineno"> 1737</span>&#160; </div>
-<div class="line"><a name="l01738"></a><span class="lineno"> 1738</span>&#160;<span class="comment">// helper to avoid redundant code</span></div>
-<div class="line"><a name="l01739"></a><span class="lineno"> 1739</span>&#160;RCP&lt;const Set&gt; set_complement_helper(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;container,</div>
-<div class="line"><a name="l01740"></a><span class="lineno"> 1740</span>&#160;                                     <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;universe)</div>
-<div class="line"><a name="l01741"></a><span class="lineno"> 1741</span>&#160;{</div>
-<div class="line"><a name="l01742"></a><span class="lineno"> 1742</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Union&gt;(*universe)) {</div>
-<div class="line"><a name="l01743"></a><span class="lineno"> 1743</span>&#160;        <span class="keyword">auto</span> univ = down_cast&lt;const Union &amp;&gt;(*universe).get_container();</div>
-<div class="line"><a name="l01744"></a><span class="lineno"> 1744</span>&#160;        set_set container_;</div>
-<div class="line"><a name="l01745"></a><span class="lineno"> 1745</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : univ) {</div>
-<div class="line"><a name="l01746"></a><span class="lineno"> 1746</span>&#160;            container_.insert(container-&gt;set_complement(a));</div>
-<div class="line"><a name="l01747"></a><span class="lineno"> 1747</span>&#160;        }</div>
-<div class="line"><a name="l01748"></a><span class="lineno"> 1748</span>&#160;        <span class="keywordflow">return</span> SymEngine::set_union(container_);</div>
-<div class="line"><a name="l01749"></a><span class="lineno"> 1749</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*universe)) {</div>
-<div class="line"><a name="l01750"></a><span class="lineno"> 1750</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
-<div class="line"><a name="l01751"></a><span class="lineno"> 1751</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*universe)) {</div>
-<div class="line"><a name="l01752"></a><span class="lineno"> 1752</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(*universe);</div>
-<div class="line"><a name="l01753"></a><span class="lineno"> 1753</span>&#160;        set_basic container_;</div>
-<div class="line"><a name="l01754"></a><span class="lineno"> 1754</span>&#160;        set_basic rest;</div>
-<div class="line"><a name="l01755"></a><span class="lineno"> 1755</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : other.get_container()) {</div>
-<div class="line"><a name="l01756"></a><span class="lineno"> 1756</span>&#160;            <span class="keyword">auto</span> contain = container-&gt;contains(a);</div>
-<div class="line"><a name="l01757"></a><span class="lineno"> 1757</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolFalse)) {</div>
-<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;                container_.insert(a);</div>
-<div class="line"><a name="l01759"></a><span class="lineno"> 1759</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
-<div class="line"><a name="l01760"></a><span class="lineno"> 1760</span>&#160;                rest.insert(a);</div>
-<div class="line"><a name="l01761"></a><span class="lineno"> 1761</span>&#160;            }</div>
-<div class="line"><a name="l01762"></a><span class="lineno"> 1762</span>&#160;        }</div>
-<div class="line"><a name="l01763"></a><span class="lineno"> 1763</span>&#160;        <span class="keywordflow">if</span> (rest.empty()) {</div>
-<div class="line"><a name="l01764"></a><span class="lineno"> 1764</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container_);</div>
-<div class="line"><a name="l01765"></a><span class="lineno"> 1765</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01766"></a><span class="lineno"> 1766</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
-<div class="line"><a name="l01767"></a><span class="lineno"> 1767</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container_),</div>
-<div class="line"><a name="l01768"></a><span class="lineno"> 1768</span>&#160;                 make_rcp&lt;const Complement&gt;(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(rest), container)});</div>
-<div class="line"><a name="l01769"></a><span class="lineno"> 1769</span>&#160;        }</div>
-<div class="line"><a name="l01770"></a><span class="lineno"> 1770</span>&#160;    }</div>
-<div class="line"><a name="l01771"></a><span class="lineno"> 1771</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Complement&gt;(universe, container);</div>
-<div class="line"><a name="l01772"></a><span class="lineno"> 1772</span>&#160;}</div>
-<div class="line"><a name="l01773"></a><span class="lineno"> 1773</span>&#160; </div>
-<div class="line"><a name="l01774"></a><span class="lineno"> 1774</span>&#160;RCP&lt;const Set&gt; set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;universe,</div>
-<div class="line"><a name="l01775"></a><span class="lineno"> 1775</span>&#160;                              <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;container)</div>
-<div class="line"><a name="l01776"></a><span class="lineno"> 1776</span>&#160;{</div>
-<div class="line"><a name="l01777"></a><span class="lineno"> 1777</span>&#160;    <span class="comment">// represents universe - container</span></div>
-<div class="line"><a name="l01778"></a><span class="lineno"> 1778</span>&#160;    <span class="keywordflow">return</span> container-&gt;set_complement(universe);</div>
-<div class="line"><a name="l01779"></a><span class="lineno"> 1779</span>&#160;}</div>
-<div class="line"><a name="l01780"></a><span class="lineno"> 1780</span>&#160; </div>
-<div class="line"><a name="l01781"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7"> 1781</a></span>&#160;RCP&lt;const Set&gt; <a class="code" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">conditionset</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
-<div class="line"><a name="l01782"></a><span class="lineno"> 1782</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Boolean&gt; &amp;condition)</div>
-<div class="line"><a name="l01783"></a><span class="lineno"> 1783</span>&#160;{</div>
-<div class="line"><a name="l01784"></a><span class="lineno"> 1784</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><a name="l01785"></a><span class="lineno"> 1785</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
-<div class="line"><a name="l01786"></a><span class="lineno"> 1786</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><a name="l01787"></a><span class="lineno"> 1787</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
-<div class="line"><a name="l01788"></a><span class="lineno"> 1788</span>&#160;    }</div>
-<div class="line"><a name="l01789"></a><span class="lineno"> 1789</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
-<div class="line"><a name="l01790"></a><span class="lineno"> 1790</span>&#160;        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
-<div class="line"><a name="l01791"></a><span class="lineno"> 1791</span>&#160;        set_boolean newcont;</div>
-<div class="line"><a name="l01792"></a><span class="lineno"> 1792</span>&#160;        set_basic present, others;</div>
-<div class="line"><a name="l01793"></a><span class="lineno"> 1793</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
-<div class="line"><a name="l01794"></a><span class="lineno"> 1794</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
-<div class="line"><a name="l01795"></a><span class="lineno"> 1795</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
-<div class="line"><a name="l01796"></a><span class="lineno"> 1796</span>&#160;                and is_a&lt;FiniteSet&gt;(</div>
-<div class="line"><a name="l01797"></a><span class="lineno"> 1797</span>&#160;                    *down_cast&lt;const Contains &amp;&gt;(**it).get_set())) {</div>
-<div class="line"><a name="l01798"></a><span class="lineno"> 1798</span>&#160;                <span class="keyword">auto</span> fset = down_cast&lt;const Contains &amp;&gt;(**it).get_set();</div>
-<div class="line"><a name="l01799"></a><span class="lineno"> 1799</span>&#160;                <span class="keyword">auto</span> fcont</div>
-<div class="line"><a name="l01800"></a><span class="lineno"> 1800</span>&#160;                    = down_cast&lt;const FiniteSet &amp;&gt;(*fset).get_container();</div>
-<div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
-<div class="line"><a name="l01802"></a><span class="lineno"> 1802</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
-<div class="line"><a name="l01803"></a><span class="lineno"> 1803</span>&#160;                    <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
-<div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160;                        others.insert(elem);</div>
-<div class="line"><a name="l01805"></a><span class="lineno"> 1805</span>&#160;                    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160;                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
-<div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160;                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
-<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;                        <span class="comment">// conditions</span></div>
-<div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160;                        <span class="comment">// it only assures that there doesn&#39;t exist any such</span></div>
-<div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160;                        <span class="comment">// element of finiteset that surely fails in other</span></div>
-<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;                        <span class="comment">// conditions.</span></div>
-<div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160;                        <span class="keyword">auto</span> restCont = cont;</div>
-<div class="line"><a name="l01813"></a><span class="lineno"> 1813</span>&#160;                        restCont.erase(*it);</div>
-<div class="line"><a name="l01814"></a><span class="lineno"> 1814</span>&#160;                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
-<div class="line"><a name="l01815"></a><span class="lineno"> 1815</span>&#160;                        map_basic_basic d;</div>
-<div class="line"><a name="l01816"></a><span class="lineno"> 1816</span>&#160;                        d[sym] = elem;</div>
-<div class="line"><a name="l01817"></a><span class="lineno"> 1817</span>&#160;                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
-<div class="line"><a name="l01818"></a><span class="lineno"> 1818</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
-<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;                            present.insert(elem);</div>
-<div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
-<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;                            others.insert(elem);</div>
-<div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160;                        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01823"></a><span class="lineno"> 1823</span>&#160;                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
-<div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
-<div class="line"><a name="l01825"></a><span class="lineno"> 1825</span>&#160;                                                     <span class="stringliteral">&quot;logical_and()&quot;</span>);</div>
-<div class="line"><a name="l01826"></a><span class="lineno"> 1826</span>&#160;                        }</div>
-<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;                    }</div>
-<div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;                }</div>
-<div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;            } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;                newcont.insert(*it);</div>
-<div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;            }</div>
-<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;        }</div>
-<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;        <span class="keywordflow">if</span> (not present.empty()) {</div>
-<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;            newcont.insert(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(others)-&gt;contains(sym));</div>
-<div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
-<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(present), <a class="code" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">conditionset</a>(sym, logical_and(newcont))});</div>
-<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;        }</div>
-<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;    }</div>
-<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
-<div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;const Contains &amp;&gt;(*condition).get_set();</div>
-<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;    }</div>
-<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ConditionSet&gt;(sym, condition);</div>
-<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;}</div>
-<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160; </div>
-<div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
+<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;            <span class="keywordflow">if</span> (!present)</div>
+<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160;                <span class="keywordflow">continue</span>;</div>
+<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;oset : othersets) {</div>
+<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;                <span class="keyword">auto</span> contain = oset-&gt;contains(fselement);</div>
+<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;                <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue) or <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolFalse))) {</div>
+<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160;                    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
+<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;                }</div>
+<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;                present = present and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolTrue);</div>
+<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;            }</div>
+<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;            <span class="keywordflow">if</span> (present)</div>
+<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;                finalfs.insert(fselement);</div>
+<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;        }</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(finalfs);</div>
+<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;    }</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160; </div>
+<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;    <span class="comment">// If any of the sets is union, then return a Union of Intersections</span></div>
+<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
+<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Union&gt;(**it)) {</div>
+<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;            <span class="keyword">auto</span> container = down_cast&lt;const Union &amp;&gt;(**it).get_container();</div>
+<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;            incopy.erase(it);</div>
+<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160;            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
+<div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160;            set_set usets;</div>
+<div class="line"><a name="l01710"></a><span class="lineno"> 1710</span>&#160;            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;c : container) {</div>
+<div class="line"><a name="l01711"></a><span class="lineno"> 1711</span>&#160;                usets.insert(SymEngine::set_intersection({c, other}));</div>
+<div class="line"><a name="l01712"></a><span class="lineno"> 1712</span>&#160;            }</div>
+<div class="line"><a name="l01713"></a><span class="lineno"> 1713</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(usets);</div>
+<div class="line"><a name="l01714"></a><span class="lineno"> 1714</span>&#160;        }</div>
+<div class="line"><a name="l01715"></a><span class="lineno"> 1715</span>&#160;    }</div>
+<div class="line"><a name="l01716"></a><span class="lineno"> 1716</span>&#160; </div>
+<div class="line"><a name="l01717"></a><span class="lineno"> 1717</span>&#160;    <span class="comment">// Simplify and return a `Complement` if any of the sets is a complement</span></div>
+<div class="line"><a name="l01718"></a><span class="lineno"> 1718</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = incopy.begin(); it != incopy.end(); ++it) {</div>
+<div class="line"><a name="l01719"></a><span class="lineno"> 1719</span>&#160;        <span class="keywordflow">if</span> (is_a&lt;Complement&gt;(**it)) {</div>
+<div class="line"><a name="l01720"></a><span class="lineno"> 1720</span>&#160;            <span class="keyword">auto</span> container</div>
+<div class="line"><a name="l01721"></a><span class="lineno"> 1721</span>&#160;                = down_cast&lt;const Complement &amp;&gt;(**it).get_container();</div>
+<div class="line"><a name="l01722"></a><span class="lineno"> 1722</span>&#160;            <span class="keyword">auto</span> universe = down_cast&lt;const Complement &amp;&gt;(**it).get_universe();</div>
+<div class="line"><a name="l01723"></a><span class="lineno"> 1723</span>&#160;            incopy.erase(it);</div>
+<div class="line"><a name="l01724"></a><span class="lineno"> 1724</span>&#160;            incopy.insert(universe);</div>
+<div class="line"><a name="l01725"></a><span class="lineno"> 1725</span>&#160;            <span class="keyword">auto</span> other = SymEngine::set_intersection(incopy);</div>
+<div class="line"><a name="l01726"></a><span class="lineno"> 1726</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_complement(other, container);</div>
+<div class="line"><a name="l01727"></a><span class="lineno"> 1727</span>&#160;        }</div>
+<div class="line"><a name="l01728"></a><span class="lineno"> 1728</span>&#160;    }</div>
+<div class="line"><a name="l01729"></a><span class="lineno"> 1729</span>&#160; </div>
+<div class="line"><a name="l01730"></a><span class="lineno"> 1730</span>&#160;    <span class="comment">// Pair-wise rules</span></div>
+<div class="line"><a name="l01731"></a><span class="lineno"> 1731</span>&#160;    <span class="comment">// TO-DO: needs the following improvement once Intersection</span></div>
+<div class="line"><a name="l01732"></a><span class="lineno"> 1732</span>&#160;    <span class="comment">// class is implemented.</span></div>
+<div class="line"><a name="l01733"></a><span class="lineno"> 1733</span>&#160;    <span class="comment">// input_oset if found to be not simplified, then skip this</span></div>
+<div class="line"><a name="l01734"></a><span class="lineno"> 1734</span>&#160;    <span class="comment">// pair.</span></div>
+<div class="line"><a name="l01735"></a><span class="lineno"> 1735</span>&#160;    <span class="keywordflow">if</span> (incopy.size() &gt; 1) {</div>
+<div class="line"><a name="l01736"></a><span class="lineno"> 1736</span>&#160;        <span class="keyword">auto</span> temp = *incopy.begin();</div>
+<div class="line"><a name="l01737"></a><span class="lineno"> 1737</span>&#160;        <span class="keyword">auto</span> it = std::next(incopy.begin());</div>
+<div class="line"><a name="l01738"></a><span class="lineno"> 1738</span>&#160;        <span class="keywordflow">for</span> (; it != incopy.end(); ++it) {</div>
+<div class="line"><a name="l01739"></a><span class="lineno"> 1739</span>&#160;            temp = temp-&gt;set_intersection(*it);</div>
+<div class="line"><a name="l01740"></a><span class="lineno"> 1740</span>&#160;        }</div>
+<div class="line"><a name="l01741"></a><span class="lineno"> 1741</span>&#160;        <span class="keywordflow">return</span> temp;</div>
+<div class="line"><a name="l01742"></a><span class="lineno"> 1742</span>&#160;    }</div>
+<div class="line"><a name="l01743"></a><span class="lineno"> 1743</span>&#160; </div>
+<div class="line"><a name="l01744"></a><span class="lineno"> 1744</span>&#160;    <span class="keywordflow">return</span> make_set_intersection(incopy);</div>
+<div class="line"><a name="l01745"></a><span class="lineno"> 1745</span>&#160;}</div>
+<div class="line"><a name="l01746"></a><span class="lineno"> 1746</span>&#160; </div>
+<div class="line"><a name="l01747"></a><span class="lineno"> 1747</span>&#160;<span class="comment">// helper to avoid redundant code</span></div>
+<div class="line"><a name="l01748"></a><span class="lineno"> 1748</span>&#160;RCP&lt;const Set&gt; set_complement_helper(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;container,</div>
+<div class="line"><a name="l01749"></a><span class="lineno"> 1749</span>&#160;                                     <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;universe)</div>
+<div class="line"><a name="l01750"></a><span class="lineno"> 1750</span>&#160;{</div>
+<div class="line"><a name="l01751"></a><span class="lineno"> 1751</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Union&gt;(*universe)) {</div>
+<div class="line"><a name="l01752"></a><span class="lineno"> 1752</span>&#160;        <span class="keyword">auto</span> univ = down_cast&lt;const Union &amp;&gt;(*universe).get_container();</div>
+<div class="line"><a name="l01753"></a><span class="lineno"> 1753</span>&#160;        set_set container_;</div>
+<div class="line"><a name="l01754"></a><span class="lineno"> 1754</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;a : univ) {</div>
+<div class="line"><a name="l01755"></a><span class="lineno"> 1755</span>&#160;            container_.insert(container-&gt;set_complement(a));</div>
+<div class="line"><a name="l01756"></a><span class="lineno"> 1756</span>&#160;        }</div>
+<div class="line"><a name="l01757"></a><span class="lineno"> 1757</span>&#160;        <span class="keywordflow">return</span> SymEngine::set_union(container_);</div>
+<div class="line"><a name="l01758"></a><span class="lineno"> 1758</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;EmptySet&gt;(*universe)) {</div>
+<div class="line"><a name="l01759"></a><span class="lineno"> 1759</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
+<div class="line"><a name="l01760"></a><span class="lineno"> 1760</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;FiniteSet&gt;(*universe)) {</div>
+<div class="line"><a name="l01761"></a><span class="lineno"> 1761</span>&#160;        <span class="keyword">const</span> FiniteSet &amp;other = down_cast&lt;const FiniteSet &amp;&gt;(*universe);</div>
+<div class="line"><a name="l01762"></a><span class="lineno"> 1762</span>&#160;        set_basic container_;</div>
+<div class="line"><a name="l01763"></a><span class="lineno"> 1763</span>&#160;        set_basic rest;</div>
+<div class="line"><a name="l01764"></a><span class="lineno"> 1764</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : other.get_container()) {</div>
+<div class="line"><a name="l01765"></a><span class="lineno"> 1765</span>&#160;            <span class="keyword">auto</span> contain = container-&gt;contains(a);</div>
+<div class="line"><a name="l01766"></a><span class="lineno"> 1766</span>&#160;            <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *boolFalse)) {</div>
+<div class="line"><a name="l01767"></a><span class="lineno"> 1767</span>&#160;                container_.insert(a);</div>
+<div class="line"><a name="l01768"></a><span class="lineno"> 1768</span>&#160;            } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*contain)) {</div>
+<div class="line"><a name="l01769"></a><span class="lineno"> 1769</span>&#160;                rest.insert(a);</div>
+<div class="line"><a name="l01770"></a><span class="lineno"> 1770</span>&#160;            }</div>
+<div class="line"><a name="l01771"></a><span class="lineno"> 1771</span>&#160;        }</div>
+<div class="line"><a name="l01772"></a><span class="lineno"> 1772</span>&#160;        <span class="keywordflow">if</span> (rest.empty()) {</div>
+<div class="line"><a name="l01773"></a><span class="lineno"> 1773</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container_);</div>
+<div class="line"><a name="l01774"></a><span class="lineno"> 1774</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01775"></a><span class="lineno"> 1775</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
+<div class="line"><a name="l01776"></a><span class="lineno"> 1776</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(container_),</div>
+<div class="line"><a name="l01777"></a><span class="lineno"> 1777</span>&#160;                 make_rcp&lt;const Complement&gt;(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(rest), container)});</div>
+<div class="line"><a name="l01778"></a><span class="lineno"> 1778</span>&#160;        }</div>
+<div class="line"><a name="l01779"></a><span class="lineno"> 1779</span>&#160;    }</div>
+<div class="line"><a name="l01780"></a><span class="lineno"> 1780</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const Complement&gt;(universe, container);</div>
+<div class="line"><a name="l01781"></a><span class="lineno"> 1781</span>&#160;}</div>
+<div class="line"><a name="l01782"></a><span class="lineno"> 1782</span>&#160; </div>
+<div class="line"><a name="l01783"></a><span class="lineno"> 1783</span>&#160;RCP&lt;const Set&gt; set_complement(<span class="keyword">const</span> RCP&lt;const Set&gt; &amp;universe,</div>
+<div class="line"><a name="l01784"></a><span class="lineno"> 1784</span>&#160;                              <span class="keyword">const</span> RCP&lt;const Set&gt; &amp;container)</div>
+<div class="line"><a name="l01785"></a><span class="lineno"> 1785</span>&#160;{</div>
+<div class="line"><a name="l01786"></a><span class="lineno"> 1786</span>&#160;    <span class="comment">// represents universe - container</span></div>
+<div class="line"><a name="l01787"></a><span class="lineno"> 1787</span>&#160;    <span class="keywordflow">return</span> container-&gt;set_complement(universe);</div>
+<div class="line"><a name="l01788"></a><span class="lineno"> 1788</span>&#160;}</div>
+<div class="line"><a name="l01789"></a><span class="lineno"> 1789</span>&#160; </div>
+<div class="line"><a name="l01790"></a><span class="lineno"><a class="line" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7"> 1790</a></span>&#160;RCP&lt;const Set&gt; <a class="code" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">conditionset</a>(<span class="keyword">const</span> RCP&lt;const Basic&gt; &amp;sym,</div>
+<div class="line"><a name="l01791"></a><span class="lineno"> 1791</span>&#160;                            <span class="keyword">const</span> RCP&lt;const Boolean&gt; &amp;condition)</div>
+<div class="line"><a name="l01792"></a><span class="lineno"> 1792</span>&#160;{</div>
+<div class="line"><a name="l01793"></a><span class="lineno"> 1793</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
+<div class="line"><a name="l01794"></a><span class="lineno"> 1794</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a2eb0d05b781ff2948b07f612f83a82bc">emptyset</a>();</div>
+<div class="line"><a name="l01795"></a><span class="lineno"> 1795</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*condition, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
+<div class="line"><a name="l01796"></a><span class="lineno"> 1796</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a5b43a939c87eecd5f2e74793b48850b5">universalset</a>();</div>
+<div class="line"><a name="l01797"></a><span class="lineno"> 1797</span>&#160;    }</div>
+<div class="line"><a name="l01798"></a><span class="lineno"> 1798</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;And&gt;(*condition)) {</div>
+<div class="line"><a name="l01799"></a><span class="lineno"> 1799</span>&#160;        <span class="keyword">auto</span> cont = down_cast&lt;const And &amp;&gt;(*condition).get_container();</div>
+<div class="line"><a name="l01800"></a><span class="lineno"> 1800</span>&#160;        set_boolean newcont;</div>
+<div class="line"><a name="l01801"></a><span class="lineno"> 1801</span>&#160;        set_basic present, others;</div>
+<div class="line"><a name="l01802"></a><span class="lineno"> 1802</span>&#160;        <span class="keywordflow">for</span> (<span class="keyword">auto</span> it = cont.begin(); it != cont.end(); it++) {</div>
+<div class="line"><a name="l01803"></a><span class="lineno"> 1803</span>&#160;            <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(**it)</div>
+<div class="line"><a name="l01804"></a><span class="lineno"> 1804</span>&#160;                and <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*down_cast&lt;const Contains &amp;&gt;(**it).get_expr(), *sym)</div>
+<div class="line"><a name="l01805"></a><span class="lineno"> 1805</span>&#160;                and is_a&lt;FiniteSet&gt;(</div>
+<div class="line"><a name="l01806"></a><span class="lineno"> 1806</span>&#160;                    *down_cast&lt;const Contains &amp;&gt;(**it).get_set())) {</div>
+<div class="line"><a name="l01807"></a><span class="lineno"> 1807</span>&#160;                <span class="keyword">auto</span> fset = down_cast&lt;const Contains &amp;&gt;(**it).get_set();</div>
+<div class="line"><a name="l01808"></a><span class="lineno"> 1808</span>&#160;                <span class="keyword">auto</span> fcont</div>
+<div class="line"><a name="l01809"></a><span class="lineno"> 1809</span>&#160;                    = down_cast&lt;const FiniteSet &amp;&gt;(*fset).get_container();</div>
+<div class="line"><a name="l01810"></a><span class="lineno"> 1810</span>&#160;                <span class="comment">// use the result of simplification done in `logical_and()`</span></div>
+<div class="line"><a name="l01811"></a><span class="lineno"> 1811</span>&#160;                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;elem : fcont) {</div>
+<div class="line"><a name="l01812"></a><span class="lineno"> 1812</span>&#160;                    <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*elem) or is_a&lt;Constant&gt;(*elem))) {</div>
+<div class="line"><a name="l01813"></a><span class="lineno"> 1813</span>&#160;                        others.insert(elem);</div>
+<div class="line"><a name="l01814"></a><span class="lineno"> 1814</span>&#160;                    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01815"></a><span class="lineno"> 1815</span>&#160;                        <span class="comment">// logical_and() doesn&#39;t guarantee that if element of a</span></div>
+<div class="line"><a name="l01816"></a><span class="lineno"> 1816</span>&#160;                        <span class="comment">// finiteset is a number, then it satisfies other</span></div>
+<div class="line"><a name="l01817"></a><span class="lineno"> 1817</span>&#160;                        <span class="comment">// conditions</span></div>
+<div class="line"><a name="l01818"></a><span class="lineno"> 1818</span>&#160;                        <span class="comment">// it only assures that there doesn&#39;t exist any such</span></div>
+<div class="line"><a name="l01819"></a><span class="lineno"> 1819</span>&#160;                        <span class="comment">// element of finiteset that surely fails in other</span></div>
+<div class="line"><a name="l01820"></a><span class="lineno"> 1820</span>&#160;                        <span class="comment">// conditions.</span></div>
+<div class="line"><a name="l01821"></a><span class="lineno"> 1821</span>&#160;                        <span class="keyword">auto</span> restCont = cont;</div>
+<div class="line"><a name="l01822"></a><span class="lineno"> 1822</span>&#160;                        restCont.erase(*it);</div>
+<div class="line"><a name="l01823"></a><span class="lineno"> 1823</span>&#160;                        <span class="keyword">auto</span> restCond = logical_and(restCont);</div>
+<div class="line"><a name="l01824"></a><span class="lineno"> 1824</span>&#160;                        map_basic_basic d;</div>
+<div class="line"><a name="l01825"></a><span class="lineno"> 1825</span>&#160;                        d[sym] = elem;</div>
+<div class="line"><a name="l01826"></a><span class="lineno"> 1826</span>&#160;                        <span class="keyword">auto</span> contain = restCond-&gt;subs(d);</div>
+<div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;                        <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">true</span>))) {</div>
+<div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;                            present.insert(elem);</div>
+<div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;                        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (not <a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*contain, *<span class="keywordtype">boolean</span>(<span class="keyword">false</span>))) {</div>
+<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;                            others.insert(elem);</div>
+<div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;                        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;                            <span class="keywordflow">throw</span> SymEngineException(<span class="stringliteral">&quot;element should have &quot;</span></div>
+<div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;                                                     <span class="stringliteral">&quot;been removed within &quot;</span></div>
+<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;                                                     <span class="stringliteral">&quot;logical_and()&quot;</span>);</div>
+<div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;                        }</div>
+<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;                    }</div>
+<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;                }</div>
+<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;            } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;                newcont.insert(*it);</div>
+<div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;            }</div>
+<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;        }</div>
+<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;        <span class="keywordflow">if</span> (not present.empty()) {</div>
+<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;            newcont.insert(<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(others)-&gt;contains(sym));</div>
+<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160;            <span class="keywordflow">return</span> SymEngine::set_union(</div>
+<div class="line"><a name="l01845"></a><span class="lineno"> 1845</span>&#160;                {<a class="code" href="namespaceSymEngine.html#abbdc2f1f3c92c9560d10a5b7998e33e3">finiteset</a>(present), <a class="code" href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">conditionset</a>(sym, logical_and(newcont))});</div>
+<div class="line"><a name="l01846"></a><span class="lineno"> 1846</span>&#160;        }</div>
+<div class="line"><a name="l01847"></a><span class="lineno"> 1847</span>&#160;    }</div>
+<div class="line"><a name="l01848"></a><span class="lineno"> 1848</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Contains&gt;(*condition)) {</div>
+<div class="line"><a name="l01849"></a><span class="lineno"> 1849</span>&#160;        <span class="keywordflow">return</span> down_cast&lt;const Contains &amp;&gt;(*condition).get_set();</div>
+<div class="line"><a name="l01850"></a><span class="lineno"> 1850</span>&#160;    }</div>
+<div class="line"><a name="l01851"></a><span class="lineno"> 1851</span>&#160;    <span class="keywordflow">return</span> make_rcp&lt;const ConditionSet&gt;(sym, condition);</div>
+<div class="line"><a name="l01852"></a><span class="lineno"> 1852</span>&#160;}</div>
+<div class="line"><a name="l01853"></a><span class="lineno"> 1853</span>&#160; </div>
+<div class="line"><a name="l01854"></a><span class="lineno"> 1854</span>&#160;} <span class="comment">// namespace SymEngine</span></div>
 <div class="ttc" id="aadd_8h_html"><div class="ttname"><a href="add_8h.html">add.h</a></div><div class="ttdoc">Classes and functions relating to the binary operation of addition.</div></div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a095f07c5d5725953257c91aaca35956b"><div class="ttname"><a href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">SymEngine::Add::add</a></div><div class="ttdeci">SYMENGINE_EXPORT RCP&lt; const Basic &gt; add(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Adds two objects (safely).</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00425">add.cpp:425</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html"><div class="ttname"><a href="classSymEngine_1_1Basic.html">SymEngine::Basic</a></div><div class="ttdoc">The lowest unit of symbolic representation.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00096">basic.h:97</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Basic_html_a5ad84ef8e2cdf821ad633a260021beec"><div class="ttname"><a href="classSymEngine_1_1Basic.html#a5ad84ef8e2cdf821ad633a260021beec">SymEngine::Basic::Basic</a></div><div class="ttdeci">Basic()</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition:</b> <a href="basic_8h_source.html#l00120">basic.h:120</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Complement_html"><div class="ttname"><a href="classSymEngine_1_1Complement.html">SymEngine::Complement</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00422">sets.h:423</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Complement_html_a0537b0355bbafbca440adf41718d7329"><div class="ttname"><a href="classSymEngine_1_1Complement.html#a0537b0355bbafbca440adf41718d7329">SymEngine::Complement::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01407">sets.cpp:1407</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Complement_html_ab291030a9acddd174896fc828612b9f3"><div class="ttname"><a href="classSymEngine_1_1Complement.html#ab291030a9acddd174896fc828612b9f3">SymEngine::Complement::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01397">sets.cpp:1397</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Complement_html_ad87b637c0f937094c360f3adcb6f246c"><div class="ttname"><a href="classSymEngine_1_1Complement.html#ad87b637c0f937094c360f3adcb6f246c">SymEngine::Complement::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01389">sets.cpp:1389</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Complement_html_a0537b0355bbafbca440adf41718d7329"><div class="ttname"><a href="classSymEngine_1_1Complement.html#a0537b0355bbafbca440adf41718d7329">SymEngine::Complement::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01416">sets.cpp:1416</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Complement_html_ab291030a9acddd174896fc828612b9f3"><div class="ttname"><a href="classSymEngine_1_1Complement.html#ab291030a9acddd174896fc828612b9f3">SymEngine::Complement::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01406">sets.cpp:1406</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Complement_html_ad87b637c0f937094c360f3adcb6f246c"><div class="ttname"><a href="classSymEngine_1_1Complement.html#ad87b637c0f937094c360f3adcb6f246c">SymEngine::Complement::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01398">sets.cpp:1398</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ConditionSet_html"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html">SymEngine::ConditionSet</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00455">sets.h:456</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1ConditionSet_html_a42c5ff8be8838f43a6b2fc1b5e4cb3f8"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html#a42c5ff8be8838f43a6b2fc1b5e4cb3f8">SymEngine::ConditionSet::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01483">sets.cpp:1483</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1ConditionSet_html_a5b9ee20e4f9c1d986d1138d8549d6ae6"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html#a5b9ee20e4f9c1d986d1138d8549d6ae6">SymEngine::ConditionSet::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01473">sets.cpp:1473</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1ConditionSet_html_aa63a7b912b132ee18cbeb873d4255c97"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97">SymEngine::ConditionSet::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01465">sets.cpp:1465</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1ConditionSet_html_a42c5ff8be8838f43a6b2fc1b5e4cb3f8"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html#a42c5ff8be8838f43a6b2fc1b5e4cb3f8">SymEngine::ConditionSet::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01492">sets.cpp:1492</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1ConditionSet_html_a5b9ee20e4f9c1d986d1138d8549d6ae6"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html#a5b9ee20e4f9c1d986d1138d8549d6ae6">SymEngine::ConditionSet::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01482">sets.cpp:1482</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1ConditionSet_html_aa63a7b912b132ee18cbeb873d4255c97"><div class="ttname"><a href="classSymEngine_1_1ConditionSet.html#aa63a7b912b132ee18cbeb873d4255c97">SymEngine::ConditionSet::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01474">sets.cpp:1474</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1FiniteSet_html"><div class="ttname"><a href="classSymEngine_1_1FiniteSet.html">SymEngine::FiniteSet</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00115">sets.h:116</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1FiniteSet_html_a13c9bea8169219cd7be9a020fa0cae9f"><div class="ttname"><a href="classSymEngine_1_1FiniteSet.html#a13c9bea8169219cd7be9a020fa0cae9f">SymEngine::FiniteSet::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l00869">sets.cpp:869</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1FiniteSet_html_aa0caf2c2bc80e790678b7b92b3732f06"><div class="ttname"><a href="classSymEngine_1_1FiniteSet.html#aa0caf2c2bc80e790678b7b92b3732f06">SymEngine::FiniteSet::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l00878">sets.cpp:878</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1FiniteSet_html_aace998f7790984b65d7a9777e2f7cc7b"><div class="ttname"><a href="classSymEngine_1_1FiniteSet.html#aace998f7790984b65d7a9777e2f7cc7b">SymEngine::FiniteSet::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l00861">sets.cpp:861</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1ImageSet_html"><div class="ttname"><a href="classSymEngine_1_1ImageSet.html">SymEngine::ImageSet</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00488">sets.h:489</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1ImageSet_html_a1031981efa42253ea4cb05fb032e3ac4"><div class="ttname"><a href="classSymEngine_1_1ImageSet.html#a1031981efa42253ea4cb05fb032e3ac4">SymEngine::ImageSet::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01541">sets.cpp:1541</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1ImageSet_html_abc34045bd705c85568d0ebe7d80708f1"><div class="ttname"><a href="classSymEngine_1_1ImageSet.html#abc34045bd705c85568d0ebe7d80708f1">SymEngine::ImageSet::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01551">sets.cpp:1551</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1ImageSet_html_a1031981efa42253ea4cb05fb032e3ac4"><div class="ttname"><a href="classSymEngine_1_1ImageSet.html#a1031981efa42253ea4cb05fb032e3ac4">SymEngine::ImageSet::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01550">sets.cpp:1550</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1ImageSet_html_abc34045bd705c85568d0ebe7d80708f1"><div class="ttname"><a href="classSymEngine_1_1ImageSet.html#abc34045bd705c85568d0ebe7d80708f1">SymEngine::ImageSet::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01560">sets.cpp:1560</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Intersection_html"><div class="ttname"><a href="classSymEngine_1_1Intersection.html">SymEngine::Intersection</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00395">sets.h:396</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Intersection_html_a0a15bcbd7cc07e8cf8fb39f05c81ce97"><div class="ttname"><a href="classSymEngine_1_1Intersection.html#a0a15bcbd7cc07e8cf8fb39f05c81ce97">SymEngine::Intersection::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01302">sets.cpp:1302</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Intersection_html_a2ed2a3ec126659bb127363856eeb530e"><div class="ttname"><a href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e">SymEngine::Intersection::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01379">sets.cpp:1379</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Intersection_html_a30dac8484d12ce195c7986bc0e125225"><div class="ttname"><a href="classSymEngine_1_1Intersection.html#a30dac8484d12ce195c7986bc0e125225">SymEngine::Intersection::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01318">sets.cpp:1318</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Intersection_html_a0a15bcbd7cc07e8cf8fb39f05c81ce97"><div class="ttname"><a href="classSymEngine_1_1Intersection.html#a0a15bcbd7cc07e8cf8fb39f05c81ce97">SymEngine::Intersection::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01307">sets.cpp:1307</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Intersection_html_a2ed2a3ec126659bb127363856eeb530e"><div class="ttname"><a href="classSymEngine_1_1Intersection.html#a2ed2a3ec126659bb127363856eeb530e">SymEngine::Intersection::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01388">sets.cpp:1388</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Intersection_html_a30dac8484d12ce195c7986bc0e125225"><div class="ttname"><a href="classSymEngine_1_1Intersection.html#a30dac8484d12ce195c7986bc0e125225">SymEngine::Intersection::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01323">sets.cpp:1323</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Interval_html"><div class="ttname"><a href="classSymEngine_1_1Interval.html">SymEngine::Interval</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00145">sets.h:146</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html"><div class="ttname"><a href="classSymEngine_1_1Union.html">SymEngine::Union</a></div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00368">sets.h:369</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html_a164f7bd5439429feb5a16e281bfa2dad"><div class="ttname"><a href="classSymEngine_1_1Union.html#a164f7bd5439429feb5a16e281bfa2dad">SymEngine::Union::__hash__</a></div><div class="ttdeci">hash_t __hash__() const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01191">sets.cpp:1191</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html_a47d8178f50ceefb0b74d8231b67b541c"><div class="ttname"><a href="classSymEngine_1_1Union.html#a47d8178f50ceefb0b74d8231b67b541c">SymEngine::Union::compare</a></div><div class="ttdeci">int compare(const Basic &amp;o) const override</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01223">sets.cpp:1223</a></div></div>
-<div class="ttc" id="aclassSymEngine_1_1Union_html_af86feeac91506b45eedd3fd8622cb0e7"><div class="ttname"><a href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">SymEngine::Union::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01284">sets.cpp:1284</a></div></div>
+<div class="ttc" id="aclassSymEngine_1_1Union_html_af86feeac91506b45eedd3fd8622cb0e7"><div class="ttname"><a href="classSymEngine_1_1Union.html#af86feeac91506b45eedd3fd8622cb0e7">SymEngine::Union::get_args</a></div><div class="ttdeci">vec_basic get_args() const override</div><div class="ttdoc">Returns the list of arguments.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01289">sets.cpp:1289</a></div></div>
 <div class="ttc" id="aclassSymEngine_1_1Union_html_afc198f7f84f13cb0afd17f1fdb272b55"><div class="ttname"><a href="classSymEngine_1_1Union.html#afc198f7f84f13cb0afd17f1fdb272b55">SymEngine::Union::__eq__</a></div><div class="ttdeci">bool __eq__(const Basic &amp;o) const override</div><div class="ttdoc">Test equality.</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01199">sets.cpp:1199</a></div></div>
 <div class="ttc" id="afunctions_8h_html"><div class="ttname"><a href="functions_8h.html">functions.h</a></div></div>
 <div class="ttc" id="alogic_8h_html"><div class="ttname"><a href="logic_8h.html">logic.h</a></div></div>
@@ -1997,7 +2006,7 @@ $(function() {
 <div class="ttc" id="anamespaceSymEngine_html_ac32eca3b4b0a5143e98c71056a4bc83d"><div class="ttname"><a href="namespaceSymEngine.html#ac32eca3b4b0a5143e98c71056a4bc83d">SymEngine::min</a></div><div class="ttdeci">RCP&lt; const Basic &gt; min(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize Min:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l03659">functions.cpp:3659</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ac7ed31f65bb252b7b4b3f1f45fdeec34"><div class="ttname"><a href="namespaceSymEngine.html#ac7ed31f65bb252b7b4b3f1f45fdeec34">SymEngine::rationals</a></div><div class="ttdeci">RCP&lt; const Rationals &gt; rationals()</div><div class="ttdef"><b>Definition:</b> <a href="sets_8h_source.html#l00566">sets.h:566</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ace618214d3c653a3cce6d9c9a69ee318"><div class="ttname"><a href="namespaceSymEngine.html#ace618214d3c653a3cce6d9c9a69ee318">SymEngine::Lt</a></div><div class="ttdeci">RCP&lt; const Boolean &gt; Lt(const RCP&lt; const Basic &gt; &amp;lhs, const RCP&lt; const Basic &gt; &amp;rhs)</div><div class="ttdoc">Returns the canonicalized StrictLessThan object from the arguments.</div><div class="ttdef"><b>Definition:</b> <a href="logic_8cpp_source.html#l00757">logic.cpp:757</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_aeb1f60c411ff9b0bc5210f6b4f1b11d7"><div class="ttname"><a href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">SymEngine::conditionset</a></div><div class="ttdeci">RCP&lt; const Set &gt; conditionset(const RCP&lt; const Basic &gt; &amp;sym, const RCP&lt; const Boolean &gt; &amp;condition)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01781">sets.cpp:1781</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_aeb1f60c411ff9b0bc5210f6b4f1b11d7"><div class="ttname"><a href="namespaceSymEngine.html#aeb1f60c411ff9b0bc5210f6b4f1b11d7">SymEngine::conditionset</a></div><div class="ttdeci">RCP&lt; const Set &gt; conditionset(const RCP&lt; const Basic &gt; &amp;sym, const RCP&lt; const Boolean &gt; &amp;condition)</div><div class="ttdef"><b>Definition:</b> <a href="sets_8cpp_source.html#l01790">sets.cpp:1790</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- Copyright 2020 Rohit Goswami <rog32@hi.is>
      Licensed under the Apache License, Version 2.0 (the "License");

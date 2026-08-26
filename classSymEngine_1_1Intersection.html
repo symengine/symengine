@@ -324,14 +324,14 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01302">1302</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;{</div>
-<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Intersection&gt;(o)) {</div>
-<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;        <span class="keyword">const</span> Intersection &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
-<div class="line"><a name="l01306"></a><span class="lineno"> 1306</span>&#160;        <span class="keywordflow">return</span> unified_eq(container_, other.container_);</div>
-<div class="line"><a name="l01307"></a><span class="lineno"> 1307</span>&#160;    }</div>
-<div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01307">1307</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01308"></a><span class="lineno"> 1308</span>&#160;{</div>
+<div class="line"><a name="l01309"></a><span class="lineno"> 1309</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;Intersection&gt;(o)) {</div>
+<div class="line"><a name="l01310"></a><span class="lineno"> 1310</span>&#160;        <span class="keyword">const</span> Intersection &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
+<div class="line"><a name="l01311"></a><span class="lineno"> 1311</span>&#160;        <span class="keywordflow">return</span> unified_eq(container_, other.container_);</div>
+<div class="line"><a name="l01312"></a><span class="lineno"> 1312</span>&#160;    }</div>
+<div class="line"><a name="l01313"></a><span class="lineno"> 1313</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01314"></a><span class="lineno"> 1314</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -361,13 +361,13 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01294">1294</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01295"></a><span class="lineno"> 1295</span>&#160;{</div>
-<div class="line"><a name="l01296"></a><span class="lineno"> 1296</span>&#160;    hash_t seed = SYMENGINE_INTERSECTION;</div>
-<div class="line"><a name="l01297"></a><span class="lineno"> 1297</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
-<div class="line"><a name="l01298"></a><span class="lineno"> 1298</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
-<div class="line"><a name="l01299"></a><span class="lineno"> 1299</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01299">1299</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01300"></a><span class="lineno"> 1300</span>&#160;{</div>
+<div class="line"><a name="l01301"></a><span class="lineno"> 1301</span>&#160;    hash_t seed = SYMENGINE_INTERSECTION;</div>
+<div class="line"><a name="l01302"></a><span class="lineno"> 1302</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;a : container_)</div>
+<div class="line"><a name="l01303"></a><span class="lineno"> 1303</span>&#160;        hash_combine&lt;Basic&gt;(seed, *a);</div>
+<div class="line"><a name="l01304"></a><span class="lineno"> 1304</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01305"></a><span class="lineno"> 1305</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -398,12 +398,12 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01318">1318</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01319"></a><span class="lineno"> 1319</span>&#160;{</div>
-<div class="line"><a name="l01320"></a><span class="lineno"> 1320</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Intersection&gt;(o))</div>
-<div class="line"><a name="l01321"></a><span class="lineno"> 1321</span>&#160;    <span class="keyword">const</span> Intersection &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
-<div class="line"><a name="l01322"></a><span class="lineno"> 1322</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
-<div class="line"><a name="l01323"></a><span class="lineno"> 1323</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01323">1323</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01324"></a><span class="lineno"> 1324</span>&#160;{</div>
+<div class="line"><a name="l01325"></a><span class="lineno"> 1325</span>&#160;    SYMENGINE_ASSERT(is_a&lt;Intersection&gt;(o))</div>
+<div class="line"><a name="l01326"></a><span class="lineno"> 1326</span>&#160;    <span class="keyword">const</span> Intersection &amp;other = down_cast&lt;const Intersection &amp;&gt;(o);</div>
+<div class="line"><a name="l01327"></a><span class="lineno"> 1327</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(container_, other.container_);</div>
+<div class="line"><a name="l01328"></a><span class="lineno"> 1328</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment -->
 </div>

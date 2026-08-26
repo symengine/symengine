@@ -336,15 +336,15 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac6a957e2006026f74c08ae6795f5ff7f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01541">1541</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01542"></a><span class="lineno"> 1542</span>&#160;{</div>
-<div class="line"><a name="l01543"></a><span class="lineno"> 1543</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;ImageSet&gt;(o)) {</div>
-<div class="line"><a name="l01544"></a><span class="lineno"> 1544</span>&#160;        <span class="keyword">const</span> ImageSet &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
-<div class="line"><a name="l01545"></a><span class="lineno"> 1545</span>&#160;        <span class="keywordflow">return</span> unified_eq(sym_, other.sym_) and unified_eq(expr_, other.expr_)</div>
-<div class="line"><a name="l01546"></a><span class="lineno"> 1546</span>&#160;               and unified_eq(base_, other.base_);</div>
-<div class="line"><a name="l01547"></a><span class="lineno"> 1547</span>&#160;    }</div>
-<div class="line"><a name="l01548"></a><span class="lineno"> 1548</span>&#160;    return false;</div>
-<div class="line"><a name="l01549"></a><span class="lineno"> 1549</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01550">1550</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01551"></a><span class="lineno"> 1551</span>&#160;{</div>
+<div class="line"><a name="l01552"></a><span class="lineno"> 1552</span>&#160;    <span class="keywordflow">if</span> (is_a&lt;ImageSet&gt;(o)) {</div>
+<div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160;        <span class="keyword">const</span> ImageSet &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
+<div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;        <span class="keywordflow">return</span> unified_eq(sym_, other.sym_) and unified_eq(expr_, other.expr_)</div>
+<div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160;               and unified_eq(base_, other.base_);</div>
+<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;    }</div>
+<div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;    return false;</div>
+<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -374,14 +374,14 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#ac950eca7e8403248252115bcba2e3ab1">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01532">1532</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01533"></a><span class="lineno"> 1533</span>&#160;{</div>
-<div class="line"><a name="l01534"></a><span class="lineno"> 1534</span>&#160;    hash_t seed = SYMENGINE_IMAGESET;</div>
-<div class="line"><a name="l01535"></a><span class="lineno"> 1535</span>&#160;    hash_combine&lt;Basic&gt;(seed, *sym_);</div>
-<div class="line"><a name="l01536"></a><span class="lineno"> 1536</span>&#160;    hash_combine&lt;Basic&gt;(seed, *expr_);</div>
-<div class="line"><a name="l01537"></a><span class="lineno"> 1537</span>&#160;    hash_combine&lt;Basic&gt;(seed, *base_);</div>
-<div class="line"><a name="l01538"></a><span class="lineno"> 1538</span>&#160;    <span class="keywordflow">return</span> seed;</div>
-<div class="line"><a name="l01539"></a><span class="lineno"> 1539</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01541">1541</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01542"></a><span class="lineno"> 1542</span>&#160;{</div>
+<div class="line"><a name="l01543"></a><span class="lineno"> 1543</span>&#160;    hash_t seed = SYMENGINE_IMAGESET;</div>
+<div class="line"><a name="l01544"></a><span class="lineno"> 1544</span>&#160;    hash_combine&lt;Basic&gt;(seed, *sym_);</div>
+<div class="line"><a name="l01545"></a><span class="lineno"> 1545</span>&#160;    hash_combine&lt;Basic&gt;(seed, *expr_);</div>
+<div class="line"><a name="l01546"></a><span class="lineno"> 1546</span>&#160;    hash_combine&lt;Basic&gt;(seed, *base_);</div>
+<div class="line"><a name="l01547"></a><span class="lineno"> 1547</span>&#160;    <span class="keywordflow">return</span> seed;</div>
+<div class="line"><a name="l01548"></a><span class="lineno"> 1548</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -412,22 +412,22 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Implements <a class="el" href="classSymEngine_1_1Basic.html#af03cfca16a93aaa0aff2382cc2b5087f">SymEngine::Basic</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01551">1551</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01552"></a><span class="lineno"> 1552</span>&#160;{</div>
-<div class="line"><a name="l01553"></a><span class="lineno"> 1553</span>&#160;    SYMENGINE_ASSERT(is_a&lt;ImageSet&gt;(o))</div>
-<div class="line"><a name="l01554"></a><span class="lineno"> 1554</span>&#160;    <span class="keyword">const</span> ImageSet &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
-<div class="line"><a name="l01555"></a><span class="lineno"> 1555</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(sym_, other.sym_);</div>
-<div class="line"><a name="l01556"></a><span class="lineno"> 1556</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
-<div class="line"><a name="l01557"></a><span class="lineno"> 1557</span>&#160;        <span class="keywordflow">return</span> c1;</div>
-<div class="line"><a name="l01558"></a><span class="lineno"> 1558</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01559"></a><span class="lineno"> 1559</span>&#160;        <span class="keywordtype">int</span> c2 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(expr_, other.expr_);</div>
-<div class="line"><a name="l01560"></a><span class="lineno"> 1560</span>&#160;        <span class="keywordflow">if</span> (c2 != 0) {</div>
-<div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;            <span class="keywordflow">return</span> c2;</div>
-<div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;        } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(base_, other.base_);</div>
-<div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;        }</div>
-<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;    }</div>
-<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="sets_8cpp_source.html#l01560">1560</a> of file <a class="el" href="sets_8cpp_source.html">sets.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01561"></a><span class="lineno"> 1561</span>&#160;{</div>
+<div class="line"><a name="l01562"></a><span class="lineno"> 1562</span>&#160;    SYMENGINE_ASSERT(is_a&lt;ImageSet&gt;(o))</div>
+<div class="line"><a name="l01563"></a><span class="lineno"> 1563</span>&#160;    <span class="keyword">const</span> ImageSet &amp;other = down_cast&lt;const ImageSet &amp;&gt;(o);</div>
+<div class="line"><a name="l01564"></a><span class="lineno"> 1564</span>&#160;    <span class="keywordtype">int</span> c1 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(sym_, other.sym_);</div>
+<div class="line"><a name="l01565"></a><span class="lineno"> 1565</span>&#160;    <span class="keywordflow">if</span> (c1 != 0) {</div>
+<div class="line"><a name="l01566"></a><span class="lineno"> 1566</span>&#160;        <span class="keywordflow">return</span> c1;</div>
+<div class="line"><a name="l01567"></a><span class="lineno"> 1567</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01568"></a><span class="lineno"> 1568</span>&#160;        <span class="keywordtype">int</span> c2 = <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(expr_, other.expr_);</div>
+<div class="line"><a name="l01569"></a><span class="lineno"> 1569</span>&#160;        <span class="keywordflow">if</span> (c2 != 0) {</div>
+<div class="line"><a name="l01570"></a><span class="lineno"> 1570</span>&#160;            <span class="keywordflow">return</span> c2;</div>
+<div class="line"><a name="l01571"></a><span class="lineno"> 1571</span>&#160;        } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l01572"></a><span class="lineno"> 1572</span>&#160;            <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">unified_compare</a>(base_, other.base_);</div>
+<div class="line"><a name="l01573"></a><span class="lineno"> 1573</span>&#160;        }</div>
+<div class="line"><a name="l01574"></a><span class="lineno"> 1574</span>&#160;    }</div>
+<div class="line"><a name="l01575"></a><span class="lineno"> 1575</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_abd6e504a0004aae351332d69343747fe"><div class="ttname"><a href="namespaceSymEngine.html#abd6e504a0004aae351332d69343747fe">SymEngine::unified_compare</a></div><div class="ttdeci">int unified_compare(const T &amp;a, const T &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="dict_8h_source.html#l00205">dict.h:205</a></div></div>
 </div><!-- fragment -->
 </div>
