@@ -1,7 +1,42 @@
 #include <symengine/logic.h>
+#include <symengine/mul.h>
+#include <symengine/add.h>
 
 namespace SymEngine
 {
+
+// Helper: if `expr` is a Mul with coef=-1 and an Add factor with an odd
+// integer exponent, absorb -1 into that Add (negating it) and return the
+// equivalent expression with coef=+1.  This lets Eq() recognise that
+// e.g.  -x/(1-(y-z))  ==  x/((y-z)-1).
+static RCP<const Basic> normalize_mul_sign(const RCP<const Basic> &expr)
+{
+    if (!is_a<Mul>(*expr))
+        return expr;
+    const Mul &m = down_cast<const Mul &>(*expr);
+    if (!m.get_coef()->is_minus_one())
+        return expr;
+    const auto &d = m.get_dict();
+    for (auto it = d.begin(); it != d.end(); ++it) {
+        if (is_a<Integer>(*(it->second)) && is_true(is_odd(*(it->second)))
+            && is_a<Add>(*(it->first))) {
+            RCP<const Basic> old_key = it->first;
+            RCP<const Basic> exp = it->second;
+            const Add &a = down_cast<const Add &>(*old_key);
+            umap_basic_num neg_dict;
+            for (const auto &p : a.get_dict()) {
+                neg_dict[p.first] = mulnum(minus_one, p.second);
+            }
+            RCP<const Basic> neg_key = Add::from_dict(
+                mulnum(minus_one, a.get_coef()), std::move(neg_dict));
+            map_basic_basic new_d = d;
+            new_d.erase(old_key);
+            new_d[neg_key] = exp;
+            return Mul::from_dict(one, std::move(new_d));
+        }
+    }
+    return expr;
+}
 
 RCP<const Boolean> Boolean::logical_not() const
 {
@@ -652,6 +687,14 @@ RCP<const Boolean> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
     if (b) {
         return boolean(true);
     } else {
+        // Try absorbing -1 into an Add denominator with odd exponent so
+        // that e.g.  -x/(1-(y-z))  ==  x/((y-z)-1)  is recognised.
+        // Expand first so that nested Adds like 1-(y-z) become 1-y+z.
+        RCP<const Basic> lhs_n = normalize_mul_sign(expand(lhs));
+        RCP<const Basic> rhs_n = normalize_mul_sign(expand(rhs));
+        if (eq(*lhs_n, *rhs_n)) {
+            return boolean(true);
+        }
         if ((is_a_Number(*lhs) and is_a_Number(*rhs))
             or (is_a<BooleanAtom>(*lhs) and is_a<BooleanAtom>(*rhs)))
             return boolean(false);

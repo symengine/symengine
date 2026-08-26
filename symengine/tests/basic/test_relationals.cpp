@@ -2,6 +2,7 @@
 #include <iostream>
 #include <symengine/logic.h>
 #include <symengine/add.h>
+#include <symengine/mul.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 
@@ -11,6 +12,7 @@ using SymEngine::boolFalse;
 using SymEngine::boolTrue;
 using SymEngine::complex_double;
 using SymEngine::ComplexInf;
+using SymEngine::div;
 using SymEngine::Eq;
 using SymEngine::Equality;
 using SymEngine::gamma;
@@ -23,6 +25,8 @@ using SymEngine::Le;
 using SymEngine::logical_not;
 using SymEngine::Lt;
 using SymEngine::make_rcp;
+using SymEngine::minus_one;
+using SymEngine::mul;
 using SymEngine::Nan;
 using SymEngine::Ne;
 using SymEngine::NegInf;
@@ -30,6 +34,7 @@ using SymEngine::one;
 using SymEngine::RCP;
 using SymEngine::rcp_static_cast;
 using SymEngine::real_double;
+using SymEngine::sub;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;
@@ -146,6 +151,12 @@ TEST_CASE("Eq", "[Relationals]")
     CHECK(eq(*Eq(a, b), *boolTrue));
     CHECK(eq(*Eq(sub(b, y), x), *boolTrue));
     CHECK(eq(*Eq(add(x, real_double(0.0)), x), *boolTrue));
+
+    // #2044: equality checking of division
+    RCP<const Symbol> z = symbol("z");
+    CHECK(eq(*Eq(div(mul(SymEngine::minus_one, x), sub(one, sub(y, z))),
+                 div(x, sub(sub(y, z), one))),
+             *boolTrue));
 }
 
 TEST_CASE("Infinity", "[Relationals]")
