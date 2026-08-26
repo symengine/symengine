@@ -1592,10 +1592,13 @@ i.e a % mod in set([i**n % mod for i in range(mod)]).
     prime_factor_multiplicities(prime_mul, *mod2);
     bool ret_val;
 
+    integer_class a_mod = a.as_integer_class();
+    mp_fdiv_r(a_mod, a_mod, _mod);
+
     for (const auto &it : prime_mul) {
-        ret_val = _is_nthroot_mod_prime_power(
-            a.as_integer_class(), n.as_integer_class(),
-            it.first->as_integer_class(), it.second);
+        ret_val = _is_nthroot_mod_prime_power(a_mod, n.as_integer_class(),
+                                              it.first->as_integer_class(),
+                                              it.second);
         if (not ret_val)
             return false;
     }
