@@ -395,7 +395,7 @@ inline RCP<const ComplexMPC> complex_mpc(mpc_class x)
 
 namespace SymEngine
 {
-class SYMENGINE_EXPORT ComplexMPC : public ComplexBase
+class ComplexMPC : public ComplexBase
 {
 public:
     IMPLEMENT_TYPEID(SYMENGINE_COMPLEX_MPC)
