@@ -5037,38 +5037,38 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The base and exponent as a pair of integers. (n, 1) if no perfect power exists.</dd></dl>
 <p>See <a href="https://en.wikipedia.org/wiki/Perfect_power">https://en.wikipedia.org/wiki/Perfect_power</a> </p>
 
-<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01677">1677</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01678"></a><span class="lineno"> 1678</span>&#160;{</div>
-<div class="line"><a name="l01679"></a><span class="lineno"> 1679</span>&#160;    <span class="comment">// From</span></div>
-<div class="line"><a name="l01680"></a><span class="lineno"> 1680</span>&#160;    <span class="comment">// https://codegolf.stackexchange.com/questions/1935/fastest-algorithm-for-decomposing-a-perfect-power</span></div>
-<div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> p = 2;</div>
-<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;    integer_class intone, i, j, m, res;</div>
-<div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;    intone = 1;</div>
-<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;    std::pair&lt;integer_class, integer_class&gt; respair;</div>
-<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;    respair = std::make_pair(n, intone);</div>
-<div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160; </div>
-<div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;    <span class="keywordflow">while</span> ((intone &lt;&lt; p) &lt;= n) {</div>
-<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;        i = 2;</div>
-<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160;        j = n;</div>
-<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;        <span class="keywordflow">while</span> (j &gt; i + 1) {</div>
-<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;            m = (i + j) / 2;</div>
-<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;            mp_pow_ui(res, m, p);</div>
-<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160;            <span class="keywordflow">if</span> (res &gt; n)</div>
-<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;                j = m;</div>
-<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;            <span class="keywordflow">else</span></div>
-<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;                i = m;</div>
-<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;        }</div>
-<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;        mp_pow_ui(res, i, p);</div>
-<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;        <span class="keywordflow">if</span> (res == n) {</div>
-<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;            respair = std::make_pair(i, p);</div>
-<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;            <span class="keywordflow">if</span> (lowest_exponent) {</div>
-<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;                <span class="keywordflow">return</span> respair;</div>
-<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;            }</div>
-<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;        }</div>
-<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;        p++;</div>
-<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;    }</div>
-<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;    <span class="keywordflow">return</span> respair;</div>
-<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01680">1680</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01681"></a><span class="lineno"> 1681</span>&#160;{</div>
+<div class="line"><a name="l01682"></a><span class="lineno"> 1682</span>&#160;    <span class="comment">// From</span></div>
+<div class="line"><a name="l01683"></a><span class="lineno"> 1683</span>&#160;    <span class="comment">// https://codegolf.stackexchange.com/questions/1935/fastest-algorithm-for-decomposing-a-perfect-power</span></div>
+<div class="line"><a name="l01684"></a><span class="lineno"> 1684</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">long</span> p = 2;</div>
+<div class="line"><a name="l01685"></a><span class="lineno"> 1685</span>&#160;    integer_class intone, i, j, m, res;</div>
+<div class="line"><a name="l01686"></a><span class="lineno"> 1686</span>&#160;    intone = 1;</div>
+<div class="line"><a name="l01687"></a><span class="lineno"> 1687</span>&#160;    std::pair&lt;integer_class, integer_class&gt; respair;</div>
+<div class="line"><a name="l01688"></a><span class="lineno"> 1688</span>&#160;    respair = std::make_pair(n, intone);</div>
+<div class="line"><a name="l01689"></a><span class="lineno"> 1689</span>&#160; </div>
+<div class="line"><a name="l01690"></a><span class="lineno"> 1690</span>&#160;    <span class="keywordflow">while</span> ((intone &lt;&lt; p) &lt;= n) {</div>
+<div class="line"><a name="l01691"></a><span class="lineno"> 1691</span>&#160;        i = 2;</div>
+<div class="line"><a name="l01692"></a><span class="lineno"> 1692</span>&#160;        j = n;</div>
+<div class="line"><a name="l01693"></a><span class="lineno"> 1693</span>&#160;        <span class="keywordflow">while</span> (j &gt; i + 1) {</div>
+<div class="line"><a name="l01694"></a><span class="lineno"> 1694</span>&#160;            m = (i + j) / 2;</div>
+<div class="line"><a name="l01695"></a><span class="lineno"> 1695</span>&#160;            mp_pow_ui(res, m, p);</div>
+<div class="line"><a name="l01696"></a><span class="lineno"> 1696</span>&#160;            <span class="keywordflow">if</span> (res &gt; n)</div>
+<div class="line"><a name="l01697"></a><span class="lineno"> 1697</span>&#160;                j = m;</div>
+<div class="line"><a name="l01698"></a><span class="lineno"> 1698</span>&#160;            <span class="keywordflow">else</span></div>
+<div class="line"><a name="l01699"></a><span class="lineno"> 1699</span>&#160;                i = m;</div>
+<div class="line"><a name="l01700"></a><span class="lineno"> 1700</span>&#160;        }</div>
+<div class="line"><a name="l01701"></a><span class="lineno"> 1701</span>&#160;        mp_pow_ui(res, i, p);</div>
+<div class="line"><a name="l01702"></a><span class="lineno"> 1702</span>&#160;        <span class="keywordflow">if</span> (res == n) {</div>
+<div class="line"><a name="l01703"></a><span class="lineno"> 1703</span>&#160;            respair = std::make_pair(i, p);</div>
+<div class="line"><a name="l01704"></a><span class="lineno"> 1704</span>&#160;            <span class="keywordflow">if</span> (lowest_exponent) {</div>
+<div class="line"><a name="l01705"></a><span class="lineno"> 1705</span>&#160;                <span class="keywordflow">return</span> respair;</div>
+<div class="line"><a name="l01706"></a><span class="lineno"> 1706</span>&#160;            }</div>
+<div class="line"><a name="l01707"></a><span class="lineno"> 1707</span>&#160;        }</div>
+<div class="line"><a name="l01708"></a><span class="lineno"> 1708</span>&#160;        p++;</div>
+<div class="line"><a name="l01709"></a><span class="lineno"> 1709</span>&#160;    }</div>
+<div class="line"><a name="l01710"></a><span class="lineno"> 1710</span>&#160;    <span class="keywordflow">return</span> respair;</div>
+<div class="line"><a name="l01711"></a><span class="lineno"> 1711</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5109,11 +5109,11 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The n:th s-gonal number</dd></dl>
 <p>A fast pure numeric calculation of the n:th s-gonal number. No bounds checking of the input is performed. See <a href="https://en.wikipedia.org/wiki/Polygonal_number">https://en.wikipedia.org/wiki/Polygonal_number</a> for source of formula. </p>
 
-<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01649">1649</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01651"></a><span class="lineno"> 1651</span>&#160;{</div>
-<div class="line"><a name="l01652"></a><span class="lineno"> 1652</span>&#160;    <span class="keyword">auto</span> res = ((s - 2) * n * n - (s - 4) * n) / 2;</div>
-<div class="line"><a name="l01653"></a><span class="lineno"> 1653</span>&#160;    <span class="keywordflow">return</span> res;</div>
-<div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01652">1652</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01654"></a><span class="lineno"> 1654</span>&#160;{</div>
+<div class="line"><a name="l01655"></a><span class="lineno"> 1655</span>&#160;    <span class="keyword">auto</span> res = ((s - 2) * n * n - (s - 4) * n) / 2;</div>
+<div class="line"><a name="l01656"></a><span class="lineno"> 1656</span>&#160;    <span class="keywordflow">return</span> res;</div>
+<div class="line"><a name="l01657"></a><span class="lineno"> 1657</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5154,14 +5154,14 @@ template&lt;class T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>The root</dd></dl>
 <p>A fast pure numeric calculation of the principal (i.e. positive) s-gonal root of x. No bounds checking of the input is performed. See <a href="https://en.wikipedia.org/wiki/Polygonal_number">https://en.wikipedia.org/wiki/Polygonal_number</a> for source of formula. </p>
 
-<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01666">1666</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01668"></a><span class="lineno"> 1668</span>&#160;{</div>
-<div class="line"><a name="l01669"></a><span class="lineno"> 1669</span>&#160;    integer_class tmp;</div>
-<div class="line"><a name="l01670"></a><span class="lineno"> 1670</span>&#160;    mp_pow_ui(tmp, s - 4, 2);</div>
-<div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;    integer_class root = mp_sqrt(8 * x * (s - 2) + tmp);</div>
-<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;    integer_class n = (root + s - 4) / (2 * (s - 2));</div>
-<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;    <span class="keywordflow">return</span> n;</div>
-<div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;}</div>
+<p class="definition">Definition at line <a class="el" href="ntheory_8cpp_source.html#l01669">1669</a> of file <a class="el" href="ntheory_8cpp_source.html">ntheory.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01671"></a><span class="lineno"> 1671</span>&#160;{</div>
+<div class="line"><a name="l01672"></a><span class="lineno"> 1672</span>&#160;    integer_class tmp;</div>
+<div class="line"><a name="l01673"></a><span class="lineno"> 1673</span>&#160;    mp_pow_ui(tmp, s - 4, 2);</div>
+<div class="line"><a name="l01674"></a><span class="lineno"> 1674</span>&#160;    integer_class root = mp_sqrt(8 * x * (s - 2) + tmp);</div>
+<div class="line"><a name="l01675"></a><span class="lineno"> 1675</span>&#160;    integer_class n = (root + s - 4) / (2 * (s - 2));</div>
+<div class="line"><a name="l01676"></a><span class="lineno"> 1676</span>&#160;    <span class="keywordflow">return</span> n;</div>
+<div class="line"><a name="l01677"></a><span class="lineno"> 1677</span>&#160;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5425,7 +5425,7 @@ template&lt;class T &gt; </div>
 <div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;    <span class="keywordflow">return</span> x;</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;}</div>
 <div class="ttc" id="aclassSymEngine_1_1Add_html_a939f8f7488fcc2688257c73240ac26a2"><div class="ttname"><a href="classSymEngine_1_1Add.html#a939f8f7488fcc2688257c73240ac26a2">SymEngine::Add::sub</a></div><div class="ttdeci">SYMENGINE_EXPORT RCP&lt; const Basic &gt; sub(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Substracts b from a.</div><div class="ttdef"><b>Definition:</b> <a href="add_8cpp_source.html#l00495">add.cpp:495</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_a457a960b01163f3ca4e3512ad291f25d"><div class="ttname"><a href="namespaceSymEngine.html#a457a960b01163f3ca4e3512ad291f25d">SymEngine::mp_polygonal_number</a></div><div class="ttdeci">integer_class mp_polygonal_number(const integer_class &amp;s, const integer_class &amp;n)</div><div class="ttdoc">Numeric calculation of the n:th s-gonal number.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l01649">ntheory.cpp:1649</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a457a960b01163f3ca4e3512ad291f25d"><div class="ttname"><a href="namespaceSymEngine.html#a457a960b01163f3ca4e3512ad291f25d">SymEngine::mp_polygonal_number</a></div><div class="ttdeci">integer_class mp_polygonal_number(const integer_class &amp;s, const integer_class &amp;n)</div><div class="ttdoc">Numeric calculation of the n:th s-gonal number.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l01652">ntheory.cpp:1652</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -5838,7 +5838,7 @@ template&lt;class T &gt; </div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;    RCP&lt;const Basic&gt; n = <a class="code" href="namespaceSymEngine.html#ab8b1e9588f2581962f704801981ad1cb">div</a>(<a class="code" href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">add</a>(root, <a class="code" href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">add</a>(s, m4)), <a class="code" href="namespaceSymEngine.html#a337eec9e6485fe5d2a868e07a478d053">mul</a>(p2, <a class="code" href="classSymEngine_1_1Add.html#a095f07c5d5725953257c91aaca35956b">add</a>(s, m2)));</div>
 <div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;    <span class="keywordflow">return</span> n;</div>
 <div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a14bb8b59d4cbe89680a4691210a4d25c"><div class="ttname"><a href="namespaceSymEngine.html#a14bb8b59d4cbe89680a4691210a4d25c">SymEngine::mp_principal_polygonal_root</a></div><div class="ttdeci">integer_class mp_principal_polygonal_root(const integer_class &amp;s, const integer_class &amp;x)</div><div class="ttdoc">Numeric calculation of the principal s-gonal root of x.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l01666">ntheory.cpp:1666</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_a14bb8b59d4cbe89680a4691210a4d25c"><div class="ttname"><a href="namespaceSymEngine.html#a14bb8b59d4cbe89680a4691210a4d25c">SymEngine::mp_principal_polygonal_root</a></div><div class="ttdeci">integer_class mp_principal_polygonal_root(const integer_class &amp;s, const integer_class &amp;x)</div><div class="ttdoc">Numeric calculation of the principal s-gonal root of x.</div><div class="ttdef"><b>Definition:</b> <a href="ntheory_8cpp_source.html#l01669">ntheory.cpp:1669</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a3fed2bc2a99f9d70b4dd04ae0320d32b"><div class="ttname"><a href="namespaceSymEngine.html#a3fed2bc2a99f9d70b4dd04ae0320d32b">SymEngine::sqrt</a></div><div class="ttdeci">SYMENGINE_EXPORT RCP&lt; const Basic &gt; sqrt(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdef"><b>Definition:</b> <a href="pow_8h_source.html#l00064">pow.h:64</a></div></div>
 </div><!-- fragment -->
 </div>
