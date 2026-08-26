@@ -1,4 +1,6 @@
 #include <symengine/logic.h>
+#include <symengine/add.h>
+#include <symengine/basic.h>
 
 namespace SymEngine
 {
@@ -655,6 +657,10 @@ RCP<const Boolean> Eq(const RCP<const Basic> &lhs, const RCP<const Basic> &rhs)
         if ((is_a_Number(*lhs) and is_a_Number(*rhs))
             or (is_a<BooleanAtom>(*lhs) and is_a<BooleanAtom>(*rhs)))
             return boolean(false);
+        RCP<const Basic> diff = expand(sub(lhs, rhs));
+        if (is_number_and_zero(*diff)) {
+            return boolean(true);
+        }
         if (lhs->__cmp__(*rhs) == 1)
             return make_rcp<const Equality>(rhs, lhs);
         return make_rcp<Equality>(lhs, rhs);

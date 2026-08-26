@@ -2,6 +2,7 @@
 #include <iostream>
 #include <symengine/logic.h>
 #include <symengine/add.h>
+#include <symengine/mul.h>
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 
@@ -23,6 +24,7 @@ using SymEngine::Le;
 using SymEngine::logical_not;
 using SymEngine::Lt;
 using SymEngine::make_rcp;
+using SymEngine::mul;
 using SymEngine::Nan;
 using SymEngine::Ne;
 using SymEngine::NegInf;
@@ -146,6 +148,12 @@ TEST_CASE("Eq", "[Relationals]")
     CHECK(eq(*Eq(a, b), *boolTrue));
     CHECK(eq(*Eq(sub(b, y), x), *boolTrue));
     CHECK(eq(*Eq(add(x, real_double(0.0)), x), *boolTrue));
+
+    CHECK(eq(*Eq(mul(mul(integer(2), x), y), mul(mul(real_double(2.0), x), y)),
+             *boolTrue));
+    CHECK(eq(*Eq(mul(x, y), mul(real_double(1.0), mul(x, y))), *boolTrue));
+    CHECK(eq(*Eq(add(add(x, y), integer(2)), add(add(x, y), real_double(2.0))),
+             *boolTrue));
 }
 
 TEST_CASE("Infinity", "[Relationals]")
