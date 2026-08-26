@@ -183,7 +183,7 @@ Similarly, `-DPKG_INCLUDE_DIR` can be used for headers.
 For packaging symengine it is recommended to use `GMP, MPFR, MPC, FLINT, LLVM` as
 dependencies if they are available and built with thread safety on.
 
-    cmake -DWITH_GMP=on -DWITH_MPFR=on -DWITH_MPC=on -DINTEGER_CLASS=flint -DWITH_LLVM=on
+    cmake -DWITH_MPFR=on -DWITH_MPC=on -DINTEGER_CLASS=flint -DWITH_LLVM=on
     -DWITH_SYMENGINE_THREAD_SAFE=on ..
 
 #### Optimized build
