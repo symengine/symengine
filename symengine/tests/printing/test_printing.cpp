@@ -1080,6 +1080,20 @@ TEST_CASE("test_unicode()", "[unicode]")
     // https://github.com/symengine/symengine/issues/2029
     s = unicode(*mul(mul(x, x), y));
     CHECK(s == U8(" 2  \nx \u22C5y"));
+
+    // https://github.com/symengine/symengine/issues/2131
+    s = unicode(*add(mul(integer(-1), parse("sin(x)")), parse("cos(x)")));
+    CHECK(s.find("- ") != std::string::npos);
+
+    s = unicode(*add(mul(integer(-1), x), integer(1)));
+    CHECK(s == U8("1 - x"));
+
+    s = unicode(*add(mul(integer(-2), x), parse("cos(x)")));
+    CHECK(s.find("- ") != std::string::npos);
+
+    s = unicode(*add(mul(integer(-1), parse("sin(x)")),
+                     mul(integer(-1), parse("cos(x)"))));
+    CHECK(s.find("- ") == 0);
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
