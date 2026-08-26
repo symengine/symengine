@@ -29,6 +29,7 @@ using SymEngine::Eq;
 using SymEngine::FiniteSet;
 using SymEngine::finiteset;
 using SymEngine::Gt;
+using SymEngine::I;
 using SymEngine::ImageSet;
 using SymEngine::imageset;
 using SymEngine::Inf;
@@ -37,6 +38,7 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::Integers;
 using SymEngine::integers;
+using SymEngine::Intersection;
 using SymEngine::Interval;
 using SymEngine::interval;
 using SymEngine::is_a;
@@ -1496,4 +1498,53 @@ TEST_CASE("interior : Basic", "[basic]")
     REQUIRE(eq(*interior(*i1), *i2));
     REQUIRE(eq(*interior(*i2), *i2));
     REQUIRE(eq(*interior(*set_union({i1, i3})), *set_union({i2, i4})));
+}
+
+TEST_CASE("Intersection : contains", "[basic]")
+{
+    auto x = symbol("x");
+
+    // Intersection(Reals, {x}) - symbolic element
+    auto s1 = set_intersection({reals(), finiteset({x})});
+    REQUIRE(is_a<Intersection>(*s1));
+    REQUIRE(eq(*s1->contains(x), *make_rcp<Contains>(x, s1)));
+    // Eq(1, x) is undecidable, so Intersection::contains returns Contains
+    REQUIRE(eq(*s1->contains(one), *make_rcp<Contains>(one, s1)));
+
+    // Intersection(Reals, {1+I, 1-I}) simplifies to EmptySet
+    auto s2
+        = set_intersection({reals(), finiteset({add(one, I), sub(one, I)})});
+    REQUIRE(eq(*s2, *emptyset()));
+    REQUIRE(eq(*s2->contains(one), *boolFalse));
+
+    // Intersection of finite sets
+    auto s3
+        = set_intersection({finiteset({one, integer(2), integer(3)}),
+                            finiteset({integer(2), integer(3), integer(4)})});
+    REQUIRE(eq(*s3->contains(one), *boolFalse));
+    REQUIRE(eq(*s3->contains(integer(2)), *boolTrue));
+    REQUIRE(eq(*s3->contains(integer(3)), *boolTrue));
+    REQUIRE(eq(*s3->contains(integer(5)), *boolFalse));
+
+    // Intersection(Reals, Integers) simplifies to Integers
+    auto s4 = set_intersection({reals(), integers()});
+    REQUIRE(eq(*s4->contains(one), *boolTrue));
+    REQUIRE(eq(*s4->contains(x), *make_rcp<Contains>(x, s4)));
+}
+
+TEST_CASE("Union : contains", "[basic]")
+{
+    auto x = symbol("x");
+
+    // Union of finite sets
+    auto u1 = set_union(
+        {finiteset({one, integer(2)}), finiteset({integer(3), integer(4)})});
+    REQUIRE(eq(*u1->contains(one), *boolTrue));
+    REQUIRE(eq(*u1->contains(integer(3)), *boolTrue));
+    REQUIRE(eq(*u1->contains(integer(5)), *boolFalse));
+
+    // Union(Reals, {x}) - x is in the finite set, not in Reals
+    auto u2 = set_union({reals(), finiteset({x})});
+    REQUIRE(eq(*u2->contains(one), *boolTrue));
+    REQUIRE(eq(*u2->contains(x), *boolTrue));
 }

@@ -1265,13 +1265,18 @@ RCP<const Set> Union::set_complement(const RCP<const Set> &o) const
 
 RCP<const Boolean> Union::contains(const RCP<const Basic> &o) const
 {
+    bool has_contains = false;
     for (auto &a : container_) {
         auto contain = a->contains(o);
         if (eq(*contain, *boolTrue)) {
             return boolean(true);
         }
-        if (is_a<Contains>(*contain))
-            throw NotImplementedError("Not implemented");
+        if (is_a<Contains>(*contain)) {
+            has_contains = true;
+        }
+    }
+    if (has_contains) {
+        return make_rcp<Contains>(o, rcp_from_this_cast<const Set>());
     }
     return boolean(false);
 }
@@ -1360,15 +1365,19 @@ RCP<const Set> Intersection::set_complement(const RCP<const Set> &o) const
 
 RCP<const Boolean> Intersection::contains(const RCP<const Basic> &o) const
 {
+    bool has_contains = false;
     for (auto &a : container_) {
         auto contain = a->contains(o);
-        if (eq(*contain, *boolTrue)) {
-            return boolean(true);
+        if (is_a<Contains>(*contain)) {
+            has_contains = true;
+        } else if (eq(*contain, *boolFalse)) {
+            return boolean(false);
         }
-        if (is_a<Contains>(*contain))
-            throw NotImplementedError("Not implemented");
     }
-    return boolean(false);
+    if (has_contains) {
+        return make_rcp<Contains>(o, rcp_from_this_cast<const Set>());
+    }
+    return boolean(true);
 }
 
 RCP<const Set> Intersection::create(const set_set &in) const
