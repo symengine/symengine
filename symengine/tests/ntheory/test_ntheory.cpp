@@ -858,6 +858,10 @@ TEST_CASE("test_is_nth_residue(): ntheory", "[ntheory]")
     REQUIRE(is_nth_residue(*i32, *i10, *zero) == false);
     REQUIRE(is_nth_residue(*i32, *i10, *i1) == true);
     REQUIRE(is_nth_residue(*i32, *i10, *im1) == true);
+
+    // Test for issue #2136: is_nth_residue returns false positives for negative
+    // values
+    REQUIRE(is_nth_residue(*im1, *i2, *i4) == false);
 }
 
 TEST_CASE("test_mobius(): ntheory", "[ntheory]")
