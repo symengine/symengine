@@ -2227,7 +2227,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(add(one, sqrt(i2)), im1);
-    r2 = div(mul(pi, i3), integer(-8));
+    r2 = div(mul(pi, i5), integer(8));
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(sub(sqrt(i2), one), i1);
@@ -2239,7 +2239,7 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(sqrt(add(i5, mul(i2, sqrt(i5)))), im1);
-    r2 = div(mul(pi, im2), i5);
+    r2 = div(mul(pi, i3), i5);
     REQUIRE(eq(*r1, *r2));
 
     r1 = atan2(y, x)->diff(x);
@@ -2270,6 +2270,16 @@ TEST_CASE("Atan2: functions", "[functions]")
     r2 = mul(div(pi, i2), minus_one);
     REQUIRE(eq(*r1, *r2));
 
+    r1 = atan2(x, x);
+    r2 = add(div(pi, integer(4)), mul(div(pi, i2), sub(sign(x), one)));
+    REQUIRE(eq(*r1, *r2));
+
+    r1 = atan2(zero, x);
+    REQUIRE(unified_eq(r1->get_args(), {zero, x}));
+
+    r1 = atan2(x, zero);
+    REQUIRE(unified_eq(r1->get_args(), {x, zero}));
+
     RCP<const ATan2> r4 = make_rcp<ATan2>(i2, i3);
     REQUIRE(not(r4->is_canonical(zero, i2)));
     REQUIRE(not(r4->is_canonical(zero, zero)));
@@ -2277,6 +2287,8 @@ TEST_CASE("Atan2: functions", "[functions]")
     REQUIRE(not(r4->is_canonical(i2, neg(i2))));
     REQUIRE(r4->is_canonical(i2, i3));
     REQUIRE(not(r4->is_canonical(one, sqrt(i3))));
+    REQUIRE(r4->is_canonical(zero, x));
+    REQUIRE(r4->is_canonical(x, zero));
 }
 
 TEST_CASE("Lambertw: functions", "[functions]")
