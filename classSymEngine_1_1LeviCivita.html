@@ -286,11 +286,11 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1MultiArgFunction.html#a0bc5ccbcaa3eb6217f7c43d862f05eb9">SymEngine::MultiArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02729">2729</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02730"></a><span class="lineno"> 2730</span>&#160;{</div>
-<div class="line"><a name="l02731"></a><span class="lineno"> 2731</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ae02b44cf70e8138fd8f4b6c97cbbeae7">levi_civita</a>(a);</div>
-<div class="line"><a name="l02732"></a><span class="lineno"> 2732</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_ae02b44cf70e8138fd8f4b6c97cbbeae7"><div class="ttname"><a href="namespaceSymEngine.html#ae02b44cf70e8138fd8f4b6c97cbbeae7">SymEngine::levi_civita</a></div><div class="ttdeci">RCP&lt; const Basic &gt; levi_civita(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize LeviCivita:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02747">functions.cpp:2747</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02727">2727</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02728"></a><span class="lineno"> 2728</span>&#160;{</div>
+<div class="line"><a name="l02729"></a><span class="lineno"> 2729</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#ae02b44cf70e8138fd8f4b6c97cbbeae7">levi_civita</a>(a);</div>
+<div class="line"><a name="l02730"></a><span class="lineno"> 2730</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_ae02b44cf70e8138fd8f4b6c97cbbeae7"><div class="ttname"><a href="namespaceSymEngine.html#ae02b44cf70e8138fd8f4b6c97cbbeae7">SymEngine::levi_civita</a></div><div class="ttdeci">RCP&lt; const Basic &gt; levi_civita(const vec_basic &amp;arg)</div><div class="ttdoc">Canonicalize LeviCivita:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l02745">functions.cpp:2745</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -311,23 +311,23 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02711">2711</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l02712"></a><span class="lineno"> 2712</span>&#160;{</div>
-<div class="line"><a name="l02713"></a><span class="lineno"> 2713</span>&#160;    <span class="keywordtype">bool</span> are_int = <span class="keyword">true</span>;</div>
-<div class="line"><a name="l02714"></a><span class="lineno"> 2714</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : arg) {</div>
-<div class="line"><a name="l02715"></a><span class="lineno"> 2715</span>&#160;        <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*p))) {</div>
-<div class="line"><a name="l02716"></a><span class="lineno"> 2716</span>&#160;            are_int = <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02717"></a><span class="lineno"> 2717</span>&#160;            <span class="keywordflow">break</span>;</div>
-<div class="line"><a name="l02718"></a><span class="lineno"> 2718</span>&#160;        }</div>
-<div class="line"><a name="l02719"></a><span class="lineno"> 2719</span>&#160;    }</div>
-<div class="line"><a name="l02720"></a><span class="lineno"> 2720</span>&#160;    <span class="keywordflow">if</span> (are_int) {</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l02709">2709</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l02710"></a><span class="lineno"> 2710</span>&#160;{</div>
+<div class="line"><a name="l02711"></a><span class="lineno"> 2711</span>&#160;    <span class="keywordtype">bool</span> are_int = <span class="keyword">true</span>;</div>
+<div class="line"><a name="l02712"></a><span class="lineno"> 2712</span>&#160;    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;p : arg) {</div>
+<div class="line"><a name="l02713"></a><span class="lineno"> 2713</span>&#160;        <span class="keywordflow">if</span> (not(<a class="code" href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">is_a_Number</a>(*p))) {</div>
+<div class="line"><a name="l02714"></a><span class="lineno"> 2714</span>&#160;            are_int = <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02715"></a><span class="lineno"> 2715</span>&#160;            <span class="keywordflow">break</span>;</div>
+<div class="line"><a name="l02716"></a><span class="lineno"> 2716</span>&#160;        }</div>
+<div class="line"><a name="l02717"></a><span class="lineno"> 2717</span>&#160;    }</div>
+<div class="line"><a name="l02718"></a><span class="lineno"> 2718</span>&#160;    <span class="keywordflow">if</span> (are_int) {</div>
+<div class="line"><a name="l02719"></a><span class="lineno"> 2719</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l02720"></a><span class="lineno"> 2720</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (has_dup(arg)) {</div>
 <div class="line"><a name="l02721"></a><span class="lineno"> 2721</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02722"></a><span class="lineno"> 2722</span>&#160;    } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (has_dup(arg)) {</div>
-<div class="line"><a name="l02723"></a><span class="lineno"> 2723</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l02724"></a><span class="lineno"> 2724</span>&#160;    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a name="l02725"></a><span class="lineno"> 2725</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l02726"></a><span class="lineno"> 2726</span>&#160;    }</div>
-<div class="line"><a name="l02727"></a><span class="lineno"> 2727</span>&#160;}</div>
+<div class="line"><a name="l02722"></a><span class="lineno"> 2722</span>&#160;    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a name="l02723"></a><span class="lineno"> 2723</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l02724"></a><span class="lineno"> 2724</span>&#160;    }</div>
+<div class="line"><a name="l02725"></a><span class="lineno"> 2725</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a002907d330f94b2da86bcc5ec1f998cd"><div class="ttname"><a href="namespaceSymEngine.html#a002907d330f94b2da86bcc5ec1f998cd">SymEngine::is_a_Number</a></div><div class="ttdeci">bool is_a_Number(const Basic &amp;b)</div><div class="ttdef"><b>Definition:</b> <a href="number_8h_source.html#l00130">number.h:130</a></div></div>
 </div><!-- fragment -->
 </div>

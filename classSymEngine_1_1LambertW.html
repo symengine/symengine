@@ -286,11 +286,11 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 
 <p>Implements <a class="el" href="classSymEngine_1_1OneArgFunction.html#a324b89e562d1f7c812a355d10f4583cc">SymEngine::OneArgFunction</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01841">1841</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;{</div>
-<div class="line"><a name="l01843"></a><span class="lineno"> 1843</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a9c5fa2d02e2a525364fdf8bae776fb91">lambertw</a>(arg);</div>
-<div class="line"><a name="l01844"></a><span class="lineno"> 1844</span>&#160;}</div>
-<div class="ttc" id="anamespaceSymEngine_html_a9c5fa2d02e2a525364fdf8bae776fb91"><div class="ttname"><a href="namespaceSymEngine.html#a9c5fa2d02e2a525364fdf8bae776fb91">SymEngine::lambertw</a></div><div class="ttdeci">RCP&lt; const Basic &gt; lambertw(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Create a new LambertW instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01846">functions.cpp:1846</a></div></div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01839">1839</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01840"></a><span class="lineno"> 1840</span>&#160;{</div>
+<div class="line"><a name="l01841"></a><span class="lineno"> 1841</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceSymEngine.html#a9c5fa2d02e2a525364fdf8bae776fb91">lambertw</a>(arg);</div>
+<div class="line"><a name="l01842"></a><span class="lineno"> 1842</span>&#160;}</div>
+<div class="ttc" id="anamespaceSymEngine_html_a9c5fa2d02e2a525364fdf8bae776fb91"><div class="ttname"><a href="namespaceSymEngine.html#a9c5fa2d02e2a525364fdf8bae776fb91">SymEngine::lambertw</a></div><div class="ttdeci">RCP&lt; const Basic &gt; lambertw(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Create a new LambertW instance:</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01844">functions.cpp:1844</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -311,22 +311,22 @@ static RCP&lt; const <a class="el" href="classSymEngine_1_1Basic.html">Basic</a>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if canonical </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01828">1828</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
-<div class="fragment"><div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;{</div>
-<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *zero))</div>
+<p class="definition">Definition at line <a class="el" href="functions_8cpp_source.html#l01826">1826</a> of file <a class="el" href="functions_8cpp_source.html">functions.cpp</a>.</p>
+<div class="fragment"><div class="line"><a name="l01827"></a><span class="lineno"> 1827</span>&#160;{</div>
+<div class="line"><a name="l01828"></a><span class="lineno"> 1828</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *zero))</div>
+<div class="line"><a name="l01829"></a><span class="lineno"> 1829</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01830"></a><span class="lineno"> 1830</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *E))</div>
 <div class="line"><a name="l01831"></a><span class="lineno"> 1831</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *E))</div>
+<div class="line"><a name="l01832"></a><span class="lineno"> 1832</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *<a class="code" href="namespaceSymEngine.html#ab8b1e9588f2581962f704801981ad1cb">div</a>(<a class="code" href="namespaceSymEngine.html#a40b4e4a87b76f5802dfd58add7a16109">neg</a>(one), E)))</div>
 <div class="line"><a name="l01833"></a><span class="lineno"> 1833</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *<a class="code" href="namespaceSymEngine.html#ab8b1e9588f2581962f704801981ad1cb">div</a>(<a class="code" href="namespaceSymEngine.html#a40b4e4a87b76f5802dfd58add7a16109">neg</a>(one), E)))</div>
+<div class="line"><a name="l01834"></a><span class="lineno"> 1834</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *<a class="code" href="namespaceSymEngine.html#ab8b1e9588f2581962f704801981ad1cb">div</a>(<a class="code" href="namespaceSymEngine.html#af652554f0a883ba419072b865e92b707">log</a>(i2), im2)))</div>
 <div class="line"><a name="l01835"></a><span class="lineno"> 1835</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;    <span class="keywordflow">if</span> (<a class="code" href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">eq</a>(*arg, *<a class="code" href="namespaceSymEngine.html#ab8b1e9588f2581962f704801981ad1cb">div</a>(<a class="code" href="namespaceSymEngine.html#af652554f0a883ba419072b865e92b707">log</a>(i2), im2)))</div>
-<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01838"></a><span class="lineno"> 1838</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01839"></a><span class="lineno"> 1839</span>&#160;}</div>
+<div class="line"><a name="l01836"></a><span class="lineno"> 1836</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01837"></a><span class="lineno"> 1837</span>&#160;}</div>
 <div class="ttc" id="anamespaceSymEngine_html_a40b4e4a87b76f5802dfd58add7a16109"><div class="ttname"><a href="namespaceSymEngine.html#a40b4e4a87b76f5802dfd58add7a16109">SymEngine::neg</a></div><div class="ttdeci">RCP&lt; const Basic &gt; neg(const RCP&lt; const Basic &gt; &amp;a)</div><div class="ttdoc">Negation.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00443">mul.cpp:443</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_a918202b85d6622197791129a91fa04a4"><div class="ttname"><a href="namespaceSymEngine.html#a918202b85d6622197791129a91fa04a4">SymEngine::eq</a></div><div class="ttdeci">bool eq(const Basic &amp;a, const Basic &amp;b)</div><div class="ttdoc">Checks equality for a and b</div><div class="ttdef"><b>Definition:</b> <a href="basic-inl_8h_source.html#l00021">basic-inl.h:21</a></div></div>
 <div class="ttc" id="anamespaceSymEngine_html_ab8b1e9588f2581962f704801981ad1cb"><div class="ttname"><a href="namespaceSymEngine.html#ab8b1e9588f2581962f704801981ad1cb">SymEngine::div</a></div><div class="ttdeci">RCP&lt; const Basic &gt; div(const RCP&lt; const Basic &gt; &amp;a, const RCP&lt; const Basic &gt; &amp;b)</div><div class="ttdoc">Division.</div><div class="ttdef"><b>Definition:</b> <a href="mul_8cpp_source.html#l00431">mul.cpp:431</a></div></div>
-<div class="ttc" id="anamespaceSymEngine_html_af652554f0a883ba419072b865e92b707"><div class="ttname"><a href="namespaceSymEngine.html#af652554f0a883ba419072b865e92b707">SymEngine::log</a></div><div class="ttdeci">RCP&lt; const Basic &gt; log(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Returns the Natural Logarithm from argument arg</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01774">functions.cpp:1774</a></div></div>
+<div class="ttc" id="anamespaceSymEngine_html_af652554f0a883ba419072b865e92b707"><div class="ttname"><a href="namespaceSymEngine.html#af652554f0a883ba419072b865e92b707">SymEngine::log</a></div><div class="ttdeci">RCP&lt; const Basic &gt; log(const RCP&lt; const Basic &gt; &amp;arg)</div><div class="ttdoc">Returns the Natural Logarithm from argument arg</div><div class="ttdef"><b>Definition:</b> <a href="functions_8cpp_source.html#l01772">functions.cpp:1772</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
