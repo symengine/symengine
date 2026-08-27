@@ -232,7 +232,7 @@ public:
             throw SymEngineException(
                 "reversion of series with zero term of degree one");
         Poly r(var);
-        r /= a;
+        r = r / a;
         for (unsigned int i = 2; i < prec; i++) {
             Poly sp = Series::subs(s, var, r, i + 1);
             r -= Series::pow(var, i, i + 1) * Series::find_cf(sp, var, i) / a;
