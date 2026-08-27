@@ -328,7 +328,7 @@ $(function() {
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160;            <span class="keywordflow">throw</span> SymEngineException(</div>
 <div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;                <span class="stringliteral">&quot;reversion of series with zero term of degree one&quot;</span>);</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;        Poly r(var);</div>
-<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        r /= a;</div>
+<div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        r = r / a;</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> i = 2; i &lt; prec; i++) {</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;            Poly sp = Series::subs(s, var, r, i + 1);</div>
 <div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;            r -= Series::pow(var, i, i + 1) * Series::find_cf(sp, var, i) / a;</div>
