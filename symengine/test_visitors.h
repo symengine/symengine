@@ -289,6 +289,11 @@ public:
     void bvisit(const ACsc &x);
     void bvisit(const ACsch &x);
     void bvisit(const Log &x);
+    void bvisit(const Log2 &x);
+    void bvisit(const Log10 &x);
+    void bvisit(const Log1p &x);
+    void bvisit(const ExpM1 &x);
+    void bvisit(const Cbrt &x);
     void bvisit(const Sign &x)
     {
         x.get_arg()->accept(*this);

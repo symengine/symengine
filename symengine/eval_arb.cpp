@@ -160,6 +160,36 @@ public:
         arb_log(result_, result_, prec_);
     }
 
+    void bvisit(const Log2 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        arb_log2(result_, result_, prec_);
+    }
+
+    void bvisit(const Log10 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        arb_log10(result_, result_, prec_);
+    }
+
+    void bvisit(const Log1p &x)
+    {
+        apply(result_, *(x.get_arg()));
+        arb_log1p(result_, result_, prec_);
+    }
+
+    void bvisit(const ExpM1 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        arb_expm1(result_, result_, prec_);
+    }
+
+    void bvisit(const Cbrt &x)
+    {
+        apply(result_, *(x.get_arg()));
+        arb_root(result_, result_, 3, prec_);
+    }
+
     void bvisit(const Derivative &)
     {
         throw NotImplementedError("Not Implemented");

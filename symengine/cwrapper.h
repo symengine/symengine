@@ -365,12 +365,20 @@ SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_gamma(basic s, const basic a);
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_loggamma(basic s, const basic a);
 //! Assigns s = sqrt(a).
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_sqrt(basic s, const basic a);
-//! Assigns s = cbrt(a).
-SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_cbrt(basic s, const basic a);
 //! Assigns s = exp(a).
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
 //! Assigns s = log(a).
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
+//! Assigns s = log2(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log2(basic s, const basic a);
+//! Assigns s = log10(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log10(basic s, const basic a);
+//! Assigns s = log1p(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log1p(basic s, const basic a);
+//! Assigns s = expm1(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_expm1(basic s, const basic a);
+//! Assigns s = cbrt(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_cbrt(basic s, const basic a);
 //! Assigns s = floor(a).
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_floor(basic s, const basic a);
 //! Assigns s = ceiling(a).

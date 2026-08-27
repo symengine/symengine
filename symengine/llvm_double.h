@@ -72,6 +72,11 @@ public:
     void bvisit(const Mul &x);
     void bvisit(const Pow &x);
     void bvisit(const Log &x);
+    void bvisit(const Log2 &x);
+    void bvisit(const Log10 &x);
+    void bvisit(const Log1p &x);
+    void bvisit(const ExpM1 &x);
+    void bvisit(const Cbrt &x);
     void bvisit(const Abs &x);
     void bvisit(const Symbol &x);
     void bvisit(const Constant &x);

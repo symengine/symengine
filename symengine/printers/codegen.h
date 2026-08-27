@@ -83,6 +83,10 @@ public:
     using CodePrinter::bvisit;
     using CodePrinter::str_;
     void bvisit(const Infty &x);
+    void bvisit(const Log2 &x);
+    void bvisit(const Log1p &x);
+    void bvisit(const ExpM1 &x);
+    void bvisit(const Cbrt &x);
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b) override;
 };
@@ -135,6 +139,9 @@ public:
     void bvisit(const Truncate &x);
     void bvisit(const Max &x);
     void bvisit(const Min &x);
+    void bvisit(const Log1p &x);
+    void bvisit(const ExpM1 &x);
+    void bvisit(const Cbrt &x);
     void _print_pow(std::ostringstream &o, const RCP<const Basic> &a,
                     const RCP<const Basic> &b) override;
 

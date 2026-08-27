@@ -221,6 +221,27 @@ public:
         x.get_arg()->accept(*this);
         p = Series::series_log(p, var, prec);
     }
+    void bvisit(const Log2 &x)
+    {
+        throw NotImplementedError("Series not implemented for log2");
+    }
+    void bvisit(const Log10 &x)
+    {
+        throw NotImplementedError("Series not implemented for log10");
+    }
+    void bvisit(const Log1p &x)
+    {
+        throw NotImplementedError("Series not implemented for log1p");
+    }
+    void bvisit(const ExpM1 &x)
+    {
+        throw NotImplementedError("Series not implemented for expm1");
+    }
+    void bvisit(const Cbrt &x)
+    {
+        x.get_arg()->accept(*this);
+        p = Series::series_nthroot(p, 3, var, prec);
+    }
     void bvisit(const ASin &x)
     {
         x.get_arg()->accept(*this);

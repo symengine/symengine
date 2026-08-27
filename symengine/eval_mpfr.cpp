@@ -155,6 +155,36 @@ public:
         mpfr_log(result_, result_, rnd_);
     }
 
+    void bvisit(const Log2 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpfr_log2(result_, result_, rnd_);
+    }
+
+    void bvisit(const Log10 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpfr_log10(result_, result_, rnd_);
+    }
+
+    void bvisit(const Log1p &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpfr_log1p(result_, result_, rnd_);
+    }
+
+    void bvisit(const ExpM1 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpfr_expm1(result_, result_, rnd_);
+    }
+
+    void bvisit(const Cbrt &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpfr_cbrt(result_, result_, rnd_);
+    }
+
     void bvisit(const Cot &x)
     {
         apply(result_, *(x.get_arg()));

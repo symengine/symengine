@@ -891,6 +891,56 @@ class EvaluateMPC : public Evaluate
                 MPFR_RNDN);
         return complex_mpc(std::move(t));
     }
+    RCP<const Basic> log2(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpc_log(t.get_mpc_t(),
+                down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t(),
+                MPFR_RNDN);
+        mpc_class log2_val(t.get_prec());
+        mpfr_const_log2(mpc_realref(log2_val.get_mpc_t()), MPFR_RNDN);
+        mpfr_set_zero(mpc_imagref(log2_val.get_mpc_t()), 1);
+        mpc_div(t.get_mpc_t(), t.get_mpc_t(), log2_val.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    RCP<const Basic> log10(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpc_log10(t.get_mpc_t(),
+                  down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t(),
+                  MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    RCP<const Basic> log1p(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class one_val(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpc_set_d(one_val.get_mpc_t(), 1.0, MPFR_RNDN);
+        mpc_class t(one_val.get_prec());
+        mpc_add(t.get_mpc_t(),
+                down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t(),
+                one_val.get_mpc_t(), MPFR_RNDN);
+        mpc_log(t.get_mpc_t(), t.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    RCP<const Basic> expm1(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<ComplexMPC>(x))
+        mpc_class t(down_cast<const ComplexMPC &>(x).as_mpc().get_prec());
+        mpc_exp(t.get_mpc_t(),
+                down_cast<const ComplexMPC &>(x).as_mpc().get_mpc_t(),
+                MPFR_RNDN);
+        mpc_class one_val(t.get_prec());
+        mpc_set_d(one_val.get_mpc_t(), 1.0, MPFR_RNDN);
+        mpc_sub(t.get_mpc_t(), t.get_mpc_t(), one_val.get_mpc_t(), MPFR_RNDN);
+        return complex_mpc(std::move(t));
+    }
+    RCP<const Basic> cbrt(const Basic &x) const override
+    {
+        throw SymEngineException("MPC does not support cbrt");
+    }
     RCP<const Basic> abs(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<ComplexMPC>(x))

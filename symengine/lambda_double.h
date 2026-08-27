@@ -214,6 +214,36 @@ public:
         result_ = [=](const T *x) { return std::log(tmp(x)); };
     };
 
+    void bvisit(const Log2 &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const T *x) { return std::log(tmp(x)) / std::log(2.0); };
+    };
+
+    void bvisit(const Log10 &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const T *x) { return std::log(tmp(x)) / std::log(10.0); };
+    };
+
+    void bvisit(const Log1p &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const T *x) { return std::log(tmp(x) + 1.0); };
+    };
+
+    void bvisit(const ExpM1 &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const T *x) { return std::exp(tmp(x)) - 1.0; };
+    };
+
+    void bvisit(const Cbrt &x)
+    {
+        fn tmp = apply(*(x.get_arg()));
+        result_ = [=](const T *x) { return std::exp(std::log(tmp(x)) / 3.0); };
+    };
+
     void bvisit(const Cot &x)
     {
         fn tmp = apply(*(x.get_arg()));

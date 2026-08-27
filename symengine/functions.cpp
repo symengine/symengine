@@ -15,10 +15,6 @@ RCP<const Basic> sqrt(RCP<const Basic> &arg)
 {
     return pow(arg, div(one, i2));
 }
-RCP<const Basic> cbrt(RCP<const Basic> &arg)
-{
-    return pow(arg, div(one, i3));
-}
 
 extern RCP<const Basic> &sq3;
 extern RCP<const Basic> &sq2;
@@ -1815,6 +1811,205 @@ RCP<const Basic> log(const RCP<const Basic> &arg)
 RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
 {
     return div(log(arg), log(base));
+}
+
+Log2::Log2(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Log2::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
+        return false;
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_one())
+        return false;
+    if (eq(*arg, *integer(2)))
+        return false;
+    if (is_a_Number(*arg) and down_cast<const Number &>(*arg).is_negative())
+        return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
+        return false;
+    return true;
+}
+
+RCP<const Basic> Log2::create(const RCP<const Basic> &a) const
+{
+    return log2(a);
+}
+
+RCP<const Basic> log2(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero))
+        return ComplexInf;
+    if (eq(*arg, *one))
+        return zero;
+    if (eq(*arg, *integer(2)))
+        return one;
+
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().log2(*_arg);
+        }
+    }
+
+    return make_rcp<const Log2>(arg);
+}
+
+Log10::Log10(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Log10::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_zero())
+        return false;
+    if (is_a<Integer>(*arg) and down_cast<const Integer &>(*arg).is_one())
+        return false;
+    if (eq(*arg, *integer(10)))
+        return false;
+    if (is_a_Number(*arg) and down_cast<const Number &>(*arg).is_negative())
+        return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
+        return false;
+    return true;
+}
+
+RCP<const Basic> Log10::create(const RCP<const Basic> &a) const
+{
+    return log10(a);
+}
+
+RCP<const Basic> log10(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero))
+        return ComplexInf;
+    if (eq(*arg, *one))
+        return zero;
+    if (eq(*arg, *integer(10)))
+        return one;
+
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().log10(*_arg);
+        }
+    }
+
+    return make_rcp<const Log10>(arg);
+}
+
+Log1p::Log1p(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Log1p::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
+        return false;
+    return true;
+}
+
+RCP<const Basic> Log1p::create(const RCP<const Basic> &a) const
+{
+    return log1p(a);
+}
+
+RCP<const Basic> log1p(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero))
+        return zero;
+
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().log1p(*_arg);
+        }
+    }
+
+    return make_rcp<const Log1p>(arg);
+}
+
+ExpM1::ExpM1(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool ExpM1::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (eq(*arg, *zero))
+        return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
+        return false;
+    return true;
+}
+
+RCP<const Basic> ExpM1::create(const RCP<const Basic> &a) const
+{
+    return expm1(a);
+}
+
+RCP<const Basic> expm1(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero))
+        return zero;
+
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().expm1(*_arg);
+        }
+    }
+
+    return make_rcp<const ExpM1>(arg);
+}
+
+Cbrt::Cbrt(const RCP<const Basic> &arg) : OneArgFunction(arg)
+{
+    SYMENGINE_ASSIGN_TYPEID()
+    SYMENGINE_ASSERT(is_canonical(arg))
+}
+
+bool Cbrt::is_canonical(const RCP<const Basic> &arg) const
+{
+    if (is_a<Integer>(*arg) and down_cast<const Number &>(*arg).is_zero())
+        return false;
+    if (is_a<Integer>(*arg) and down_cast<const Number &>(*arg).is_one())
+        return false;
+    if (is_a_Number(*arg) and not down_cast<const Number &>(*arg).is_exact())
+        return false;
+    return true;
+}
+
+RCP<const Basic> Cbrt::create(const RCP<const Basic> &a) const
+{
+    return cbrt(a);
+}
+
+RCP<const Basic> cbrt(const RCP<const Basic> &arg)
+{
+    if (eq(*arg, *zero))
+        return zero;
+    if (eq(*arg, *one))
+        return one;
+
+    if (is_a_Number(*arg)) {
+        RCP<const Number> _arg = rcp_static_cast<const Number>(arg);
+        if (not _arg->is_exact()) {
+            return _arg->get_eval().cbrt(*_arg);
+        }
+    }
+
+    return make_rcp<const Cbrt>(arg);
 }
 
 LambertW::LambertW(const RCP<const Basic> &arg) : OneArgFunction{arg}

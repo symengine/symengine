@@ -31,6 +31,11 @@ public:
     void bvisit(const Min &x);
     void bvisit(const Pow &x);
     void bvisit(const Log &x);
+    void bvisit(const Log2 &x);
+    void bvisit(const Log10 &x);
+    void bvisit(const Log1p &x);
+    void bvisit(const ExpM1 &x);
+    void bvisit(const Cbrt &x);
     void bvisit(const Interval &x);
 };
 

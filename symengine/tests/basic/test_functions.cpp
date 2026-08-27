@@ -150,11 +150,21 @@ using SymEngine::Zeta;
 #if SYMENGINE_INTEGER_CLASS != SYMENGINE_BOOSTMP
 using SymEngine::get_mpz_t;
 #endif
+using SymEngine::cbrt;
+using SymEngine::Cbrt;
 using SymEngine::ceiling;
 using SymEngine::Conjugate;
 using SymEngine::digamma;
 using SymEngine::Eq;
+using SymEngine::expm1;
+using SymEngine::ExpM1;
 using SymEngine::floor;
+using SymEngine::log10;
+using SymEngine::Log10;
+using SymEngine::log1p;
+using SymEngine::Log1p;
+using SymEngine::log2;
+using SymEngine::Log2;
 using SymEngine::mul;
 using SymEngine::NotImplementedError;
 using SymEngine::parse;
@@ -4775,4 +4785,106 @@ TEST_CASE("test UnevaluatedExpr", "[Functions]")
 
     r1 = z->subs({{x, zero}});
     REQUIRE(neq(*r1, *one));
+}
+
+TEST_CASE("Log2: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+
+    REQUIRE(eq(*log2(one), *zero));
+    REQUIRE(eq(*log2(integer(2)), *one));
+    REQUIRE(eq(*log2(zero), *ComplexInf));
+
+    RCP<const Basic> r1 = log2(x);
+    REQUIRE(is_a<Log2>(*r1));
+    REQUIRE(eq(*r1->get_args()[0], *x));
+
+    // derivative
+    r1 = log2(x)->diff(x);
+    REQUIRE(eq(*r1, *div(one, mul(x, log(integer(2))))));
+
+    // eval_double
+    r1 = log2(real_double(4.0));
+    REQUIRE(eq(*r1, *real_double(2.0)));
+}
+
+TEST_CASE("Log10: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+
+    REQUIRE(eq(*log10(one), *zero));
+    REQUIRE(eq(*log10(integer(10)), *one));
+    REQUIRE(eq(*log10(zero), *ComplexInf));
+
+    RCP<const Basic> r1 = log10(x);
+    REQUIRE(is_a<Log10>(*r1));
+    REQUIRE(eq(*r1->get_args()[0], *x));
+
+    // derivative
+    r1 = log10(x)->diff(x);
+    REQUIRE(eq(*r1, *div(one, mul(x, log(integer(10))))));
+
+    // eval_double
+    r1 = log10(real_double(100.0));
+    REQUIRE(eq(*r1, *real_double(2.0)));
+}
+
+TEST_CASE("Log1p: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+
+    REQUIRE(eq(*log1p(zero), *zero));
+
+    RCP<const Basic> r1 = log1p(x);
+    REQUIRE(is_a<Log1p>(*r1));
+    REQUIRE(eq(*r1->get_args()[0], *x));
+
+    // derivative
+    r1 = log1p(x)->diff(x);
+    REQUIRE(eq(*r1, *div(one, add(one, x))));
+
+    // eval_double
+    r1 = log1p(real_double(0.0));
+    REQUIRE(eq(*r1, *real_double(0.0)));
+}
+
+TEST_CASE("ExpM1: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+
+    REQUIRE(eq(*expm1(zero), *zero));
+
+    RCP<const Basic> r1 = expm1(x);
+    REQUIRE(is_a<ExpM1>(*r1));
+    REQUIRE(eq(*r1->get_args()[0], *x));
+
+    // derivative
+    r1 = expm1(x)->diff(x);
+    REQUIRE(eq(*r1, *exp(x)));
+
+    // eval_double
+    r1 = expm1(real_double(0.0));
+    REQUIRE(eq(*r1, *real_double(0.0)));
+}
+
+TEST_CASE("Cbrt: functions", "[functions]")
+{
+    RCP<const Symbol> x = symbol("x");
+
+    REQUIRE(eq(*cbrt(zero), *zero));
+    REQUIRE(eq(*cbrt(one), *one));
+
+    RCP<const Basic> r1 = cbrt(x);
+    REQUIRE(is_a<Cbrt>(*r1));
+    REQUIRE(eq(*r1->get_args()[0], *x));
+
+    // derivative
+    r1 = cbrt(x)->diff(x);
+    REQUIRE(
+        eq(*r1, *div(one, mul(integer(3), pow(x, div(mul(minus_one, integer(2)),
+                                                     integer(3)))))));
+
+    // eval_double
+    r1 = cbrt(real_double(8.0));
+    REQUIRE(eq(*r1, *real_double(2.0)));
 }

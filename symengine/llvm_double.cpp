@@ -701,6 +701,74 @@ void LLVMVisitor::bvisit(const Log &x)
     result_ = r;
 }
 
+void LLVMVisitor::bvisit(const Log2 &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::log2, 1, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
+void LLVMVisitor::bvisit(const Log10 &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::log10, 1, mod);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
+void LLVMVisitor::bvisit(const Log1p &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::log, 1, mod);
+    auto arg_val = apply(*x.get_arg());
+    auto one_val = llvm::ConstantFP::get(mod->getContext(), llvm::APFloat(1.0));
+    auto add_val = builder->CreateFAdd(arg_val, one_val);
+    args[0] = add_val;
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
+void LLVMVisitor::bvisit(const ExpM1 &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::exp, 1, mod);
+    auto exp_val = builder->CreateCall(fun, args);
+    auto one_val = llvm::ConstantFP::get(mod->getContext(), llvm::APFloat(1.0));
+    result_ = builder->CreateFSub(exp_val, one_val);
+}
+
+void LLVMVisitor::bvisit(const Cbrt &x)
+{
+    std::vector<llvm::Value *> args;
+    llvm::Function *fun;
+    args.push_back(apply(*x.get_arg()));
+    fun = get_float_intrinsic(get_float_type(&mod->getContext()),
+                              llvm::Intrinsic::experimental_constrained_pow, 1,
+                              mod);
+    auto three_val
+        = llvm::ConstantFP::get(mod->getContext(), llvm::APFloat(1.0 / 3.0));
+    args.push_back(three_val);
+    auto r = builder->CreateCall(fun, args);
+    r->setTailCall(true);
+    result_ = r;
+}
+
 #define SYMENGINE_LOGIC_FUNCTION(Class, method)                                \
     void LLVMVisitor::bvisit(const Class &x)                                   \
     {                                                                          \

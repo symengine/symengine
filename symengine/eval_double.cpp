@@ -105,6 +105,36 @@ public:
         result_ = std::log(tmp);
     };
 
+    void bvisit(const Log2 &x)
+    {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::log(tmp) / std::log(static_cast<T>(2));
+    };
+
+    void bvisit(const Log10 &x)
+    {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::log(tmp) / std::log(static_cast<T>(10));
+    };
+
+    void bvisit(const Log1p &x)
+    {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::log(static_cast<T>(1) + tmp);
+    };
+
+    void bvisit(const ExpM1 &x)
+    {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::exp(tmp) - static_cast<T>(1);
+    };
+
+    void bvisit(const Cbrt &x)
+    {
+        T tmp = apply(*(x.get_arg()));
+        result_ = std::exp(std::log(tmp) / static_cast<T>(3));
+    };
+
     void bvisit(const Cot &x)
     {
         T tmp = apply(*(x.get_arg()));
@@ -515,6 +545,31 @@ static inline std::vector<fn> init_eval_double()
         double tmp = eval_double_single_dispatch(
             *(down_cast<const Log &>(x)).get_arg());
         return ::log(tmp);
+    };
+    table[SYMENGINE_LOG2] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(
+            *(down_cast<const Log2 &>(x)).get_arg());
+        return ::log2(tmp);
+    };
+    table[SYMENGINE_LOG10] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(
+            *(down_cast<const Log10 &>(x)).get_arg());
+        return ::log10(tmp);
+    };
+    table[SYMENGINE_LOG1P] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(
+            *(down_cast<const Log1p &>(x)).get_arg());
+        return ::log1p(tmp);
+    };
+    table[SYMENGINE_EXPM1] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(
+            *(down_cast<const ExpM1 &>(x)).get_arg());
+        return ::expm1(tmp);
+    };
+    table[SYMENGINE_CBRT] = [](const Basic &x) {
+        double tmp = eval_double_single_dispatch(
+            *(down_cast<const Cbrt &>(x)).get_arg());
+        return ::cbrt(tmp);
     };
     table[SYMENGINE_COT] = [](const Basic &x) {
         double tmp = eval_double_single_dispatch(

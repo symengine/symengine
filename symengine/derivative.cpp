@@ -219,6 +219,40 @@ void DiffVisitor::bvisit(const Log &self)
     result_ = mul(div(one, self.get_arg()), result_);
 }
 
+void DiffVisitor::bvisit(const Log2 &self)
+{
+    apply(self.get_arg());
+    result_ = mul(div(one, mul(self.get_arg(), log(integer(2)))), result_);
+}
+
+void DiffVisitor::bvisit(const Log10 &self)
+{
+    apply(self.get_arg());
+    result_ = mul(div(one, mul(self.get_arg(), log(integer(10)))), result_);
+}
+
+void DiffVisitor::bvisit(const Log1p &self)
+{
+    apply(self.get_arg());
+    result_ = mul(div(one, add(one, self.get_arg())), result_);
+}
+
+void DiffVisitor::bvisit(const ExpM1 &self)
+{
+    apply(self.get_arg());
+    result_ = mul(exp(self.get_arg()), result_);
+}
+
+void DiffVisitor::bvisit(const Cbrt &self)
+{
+    apply(self.get_arg());
+    result_
+        = mul(div(one, mul(integer(3),
+                           pow(self.get_arg(),
+                               div(mul(minus_one, integer(2)), integer(3))))),
+              result_);
+}
+
 void DiffVisitor::bvisit(const Abs &self)
 {
     apply(self.get_arg());

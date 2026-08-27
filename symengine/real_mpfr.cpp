@@ -1005,6 +1005,46 @@ class EvaluateMPFR : public Evaluate
             "Result is complex. Recompile with MPC support.");
 #endif
     }
+    RCP<const Basic> log2(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_log2(t.get_mpfr_t(), x_, MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    RCP<const Basic> log10(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_log10(t.get_mpfr_t(), x_, MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    RCP<const Basic> log1p(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_log1p(t.get_mpfr_t(), x_, MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    RCP<const Basic> expm1(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_expm1(t.get_mpfr_t(), x_, MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
+    RCP<const Basic> cbrt(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<RealMPFR>(x))
+        mpfr_srcptr x_ = down_cast<const RealMPFR &>(x).i.get_mpfr_t();
+        mpfr_class t(mpfr_get_prec(x_));
+        mpfr_cbrt(t.get_mpfr_t(), x_, MPFR_RNDN);
+        return real_mpfr(std::move(t));
+    }
     RCP<const Basic> abs(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<RealMPFR>(x))

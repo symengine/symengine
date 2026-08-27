@@ -190,7 +190,37 @@ void RefineVisitor::bvisit(const Log &x)
             return;
         }
     }
-    result_ = log(newarg);
+    result_ = x.rcp_from_this();
+}
+
+void RefineVisitor::bvisit(const Log2 &x)
+{
+    auto newarg = apply(x.get_arg());
+    result_ = log2(newarg);
+}
+
+void RefineVisitor::bvisit(const Log10 &x)
+{
+    auto newarg = apply(x.get_arg());
+    result_ = log10(newarg);
+}
+
+void RefineVisitor::bvisit(const Log1p &x)
+{
+    auto newarg = apply(x.get_arg());
+    result_ = log1p(newarg);
+}
+
+void RefineVisitor::bvisit(const ExpM1 &x)
+{
+    auto newarg = apply(x.get_arg());
+    result_ = expm1(newarg);
+}
+
+void RefineVisitor::bvisit(const Cbrt &x)
+{
+    auto newarg = apply(x.get_arg());
+    result_ = cbrt(newarg);
 }
 
 void RefineVisitor::bvisit(const Interval &x)

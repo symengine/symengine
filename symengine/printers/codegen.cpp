@@ -424,6 +424,38 @@ void C89CodePrinter::_print_pow(std::ostringstream &o,
     }
 }
 
+void C89CodePrinter::bvisit(const Log2 &x)
+{
+    std::ostringstream o;
+    o << print_math_function("log") << "(" << apply(*x.get_arg()) << ") / "
+      << print_math_function("log") << "(" << print_scalar_literal(2.0) << ")";
+    str_ = o.str();
+}
+
+void C89CodePrinter::bvisit(const Log1p &x)
+{
+    std::ostringstream o;
+    o << print_math_function("log") << "(" << print_scalar_literal(1.0) << " + "
+      << apply(*x.get_arg()) << ")";
+    str_ = o.str();
+}
+
+void C89CodePrinter::bvisit(const ExpM1 &x)
+{
+    std::ostringstream o;
+    o << print_math_function("exp") << "(" << apply(*x.get_arg()) << ") - "
+      << print_scalar_literal(1.0);
+    str_ = o.str();
+}
+
+void C89CodePrinter::bvisit(const Cbrt &x)
+{
+    std::ostringstream o;
+    o << print_math_function("pow") << "(" << apply(*x.get_arg()) << ", "
+      << print_scalar_literal(1.0 / 3.0) << ")";
+    str_ = o.str();
+}
+
 C99CodePrinter::C99CodePrinter(CodePrinterPrecision precision)
     : RewriteTrigVisitor<C99CodePrinter, C89CodePrinter>(precision)
 {
@@ -582,6 +614,29 @@ void MetalCodePrinter::bvisit(const Max &x)
 void MetalCodePrinter::bvisit(const Min &x)
 {
     str_ = print_binary_reduction(x.get_args(), "fmin");
+}
+
+void MetalCodePrinter::bvisit(const Log1p &x)
+{
+    std::ostringstream o;
+    o << "log(" << print_scalar_literal(1.0) << " + " << apply(*x.get_arg())
+      << ")";
+    str_ = o.str();
+}
+
+void MetalCodePrinter::bvisit(const ExpM1 &x)
+{
+    std::ostringstream o;
+    o << "exp(" << apply(*x.get_arg()) << ") - " << print_scalar_literal(1.0);
+    str_ = o.str();
+}
+
+void MetalCodePrinter::bvisit(const Cbrt &x)
+{
+    std::ostringstream o;
+    o << "pow(" << apply(*x.get_arg()) << ", "
+      << print_scalar_literal(1.0 / 3.0) << ")";
+    str_ = o.str();
 }
 
 std::string

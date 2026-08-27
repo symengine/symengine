@@ -188,6 +188,31 @@ class EvaluateNaN : public Evaluate
         SYMENGINE_ASSERT(is_a<NaN>(x))
         return Nan;
     }
+    RCP<const Basic> log2(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    RCP<const Basic> log10(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    RCP<const Basic> log1p(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    RCP<const Basic> expm1(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
+    RCP<const Basic> cbrt(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<NaN>(x))
+        return Nan;
+    }
     RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<NaN>(x))

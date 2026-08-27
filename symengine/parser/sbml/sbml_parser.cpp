@@ -63,7 +63,7 @@ static RCP<const Basic> sbml_log(const RCP<const Basic> &b,
     return log(x, b);
 }
 
-static RCP<const Basic> log10(const RCP<const Basic> &x)
+static RCP<const Basic> sbml_log10(const RCP<const Basic> &x)
 {
     return log(x, integer(10));
 }
@@ -134,8 +134,8 @@ init_sbml_parser_single_arg_functions()
                      {"ceiling", ceiling},
                      {"truncate", truncate},
                      {"ln", (single_arg_func)log},
-                     {"log", log10},
-                     {"log10", log10},
+                     {"log", sbml_log10},
+                     {"log10", sbml_log10},
                      {"factorial", fact},
                      {"root", sqrt},
                      {"sqr", sqr}};

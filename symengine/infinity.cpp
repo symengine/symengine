@@ -444,6 +444,26 @@ class EvaluateInfty : public Evaluate
             return ComplexInf;
         }
     }
+    RCP<const Basic> log2(const Basic &) const override
+    {
+        return Inf;
+    }
+    RCP<const Basic> log10(const Basic &) const override
+    {
+        return Inf;
+    }
+    RCP<const Basic> log1p(const Basic &) const override
+    {
+        return Inf;
+    }
+    RCP<const Basic> expm1(const Basic &) const override
+    {
+        return Inf;
+    }
+    RCP<const Basic> cbrt(const Basic &) const override
+    {
+        return Inf;
+    }
     RCP<const Basic> gamma(const Basic &x) const override
     {
         SYMENGINE_ASSERT(is_a<Infty>(x))

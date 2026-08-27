@@ -512,6 +512,11 @@ std::vector<std::string> init_latex_printer_names()
     names[SYMENGINE_TANH] = "\\tanh";
     names[SYMENGINE_COTH] = "\\coth";
     names[SYMENGINE_LOG] = "\\log";
+    names[SYMENGINE_LOG2] = "\\log_2";
+    names[SYMENGINE_LOG10] = "\\log_{10}";
+    names[SYMENGINE_LOG1P] = "\\log1p";
+    names[SYMENGINE_EXPM1] = "\\expm1";
+    names[SYMENGINE_CBRT] = "\\sqrt[3]";
     names[SYMENGINE_ZETA] = "\\zeta";
     names[SYMENGINE_LAMBERTW] = "\\operatorname{W}";
     names[SYMENGINE_DIRICHLET_ETA] = "\\eta";

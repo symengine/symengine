@@ -132,6 +132,58 @@ public:
         mpc_log(result_, result_, rnd_);
     }
 
+    void bvisit(const Log2 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpc_log(result_, result_, rnd_);
+        mpc_t log2_val;
+        mpc_init2(log2_val, mpc_get_prec(result_));
+        mpfr_log2(mpc_realref(log2_val), mpc_realref(result_), rnd_);
+        mpfr_set_zero(mpc_imagref(log2_val), 1);
+        mpc_div(result_, result_, log2_val, rnd_);
+        mpc_clear(log2_val);
+    }
+
+    void bvisit(const Log10 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpc_log10(result_, result_, rnd_);
+    }
+
+    void bvisit(const Log1p &x)
+    {
+        mpc_t one_val;
+        mpc_init2(one_val, mpc_get_prec(result_));
+        mpc_set_d(one_val, 1.0, MPFR_RNDN);
+        apply(result_, *(x.get_arg()));
+        mpc_add(result_, result_, one_val, MPFR_RNDN);
+        mpc_log(result_, result_, rnd_);
+        mpc_clear(one_val);
+    }
+
+    void bvisit(const ExpM1 &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpc_exp(result_, result_, rnd_);
+        mpc_t one_val;
+        mpc_init2(one_val, mpc_get_prec(result_));
+        mpc_set_d(one_val, 1.0, MPFR_RNDN);
+        mpc_sub(result_, result_, one_val, MPFR_RNDN);
+        mpc_clear(one_val);
+    }
+
+    void bvisit(const Cbrt &x)
+    {
+        apply(result_, *(x.get_arg()));
+        mpc_log(result_, result_, rnd_);
+        mpc_t three_val;
+        mpc_init2(three_val, mpc_get_prec(result_));
+        mpc_set_d(three_val, 3.0, MPFR_RNDN);
+        mpc_div(result_, result_, three_val, MPFR_RNDN);
+        mpc_exp(result_, result_, rnd_);
+        mpc_clear(three_val);
+    }
+
     void bvisit(const Cot &x)
     {
         apply(result_, *(x.get_arg()));

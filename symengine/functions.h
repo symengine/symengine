@@ -311,9 +311,6 @@ bool trig_simplify(const RCP<const Basic> &arg, unsigned period, bool odd,
 //! \return `sqrt` of the `arg`
 SYMENGINE_EXPORT RCP<const Basic> sqrt(const RCP<const Basic> &arg);
 
-//! \return `cbrt` of the `arg`
-SYMENGINE_EXPORT RCP<const Basic> cbrt(const RCP<const Basic> &arg);
-
 class SYMENGINE_EXPORT Sin : public TrigFunction
 {
 
@@ -550,6 +547,66 @@ SYMENGINE_EXPORT RCP<const Basic> log(const RCP<const Basic> &arg);
 //! \return Log from argument `arg` wrt base `b`
 SYMENGINE_EXPORT RCP<const Basic> log(const RCP<const Basic> &arg,
                                       const RCP<const Basic> &b);
+
+class SYMENGINE_EXPORT Log2 : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_LOG2)
+    Log2(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
+};
+
+//! Returns the Logarithm base 2 from argument `arg`
+SYMENGINE_EXPORT RCP<const Basic> log2(const RCP<const Basic> &arg);
+
+class SYMENGINE_EXPORT Log10 : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_LOG10)
+    Log10(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
+};
+
+//! Returns the Logarithm base 10 from argument `arg`
+SYMENGINE_EXPORT RCP<const Basic> log10(const RCP<const Basic> &arg);
+
+class SYMENGINE_EXPORT Log1p : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_LOG1P)
+    Log1p(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
+};
+
+//! Returns `log(1 + arg)`
+SYMENGINE_EXPORT RCP<const Basic> log1p(const RCP<const Basic> &arg);
+
+class SYMENGINE_EXPORT ExpM1 : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_EXPM1)
+    ExpM1(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
+};
+
+//! Returns `exp(arg) - 1`
+SYMENGINE_EXPORT RCP<const Basic> expm1(const RCP<const Basic> &arg);
+
+class SYMENGINE_EXPORT Cbrt : public OneArgFunction
+{
+public:
+    IMPLEMENT_TYPEID(SYMENGINE_CBRT)
+    Cbrt(const RCP<const Basic> &arg);
+    bool is_canonical(const RCP<const Basic> &arg) const;
+    RCP<const Basic> create(const RCP<const Basic> &arg) const override;
+};
+
+//! Returns the cube root of `arg`
+SYMENGINE_EXPORT RCP<const Basic> cbrt(const RCP<const Basic> &arg);
 
 class SYMENGINE_EXPORT LambertW : public OneArgFunction
 {

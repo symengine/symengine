@@ -53,6 +53,11 @@ public:
     void bvisit(const Constant &self);
     void bvisit(const Symbol &self);
     void bvisit(const Log &self);
+    void bvisit(const Log2 &self);
+    void bvisit(const Log10 &self);
+    void bvisit(const Log1p &self);
+    void bvisit(const ExpM1 &self);
+    void bvisit(const Cbrt &self);
     void bvisit(const Abs &self);
     void bvisit(const ASech &self);
     void bvisit(const ACoth &self);

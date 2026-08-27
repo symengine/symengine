@@ -1106,6 +1106,11 @@ std::vector<std::string> init_str_printer_names()
     names[SYMENGINE_ACOTH] = "acoth";
     names[SYMENGINE_ASECH] = "asech";
     names[SYMENGINE_LOG] = "log";
+    names[SYMENGINE_LOG2] = "log2";
+    names[SYMENGINE_LOG10] = "log10";
+    names[SYMENGINE_LOG1P] = "log1p";
+    names[SYMENGINE_EXPM1] = "expm1";
+    names[SYMENGINE_CBRT] = "cbrt";
     names[SYMENGINE_LAMBERTW] = "lambertw";
     names[SYMENGINE_ZETA] = "zeta";
     names[SYMENGINE_DIRICHLET_ETA] = "dirichlet_eta";
@@ -1121,6 +1126,11 @@ std::vector<std::string> init_str_printer_names()
     names[SYMENGINE_BETA] = "beta";
     names[SYMENGINE_LOGGAMMA] = "loggamma";
     names[SYMENGINE_LOG] = "log";
+    names[SYMENGINE_LOG2] = "log2";
+    names[SYMENGINE_LOG10] = "log10";
+    names[SYMENGINE_LOG1P] = "log1p";
+    names[SYMENGINE_EXPM1] = "expm1";
+    names[SYMENGINE_CBRT] = "cbrt";
     names[SYMENGINE_POLYGAMMA] = "polygamma";
     names[SYMENGINE_GAMMA] = "gamma";
     names[SYMENGINE_ABS] = "abs";

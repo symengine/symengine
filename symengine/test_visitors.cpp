@@ -613,6 +613,31 @@ void ComplexVisitor::bvisit(const Log &x)
     complex_arg_not_zero(x, *x.get_arg());
 }
 
+void ComplexVisitor::bvisit(const Log2 &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+void ComplexVisitor::bvisit(const Log10 &x)
+{
+    complex_arg_not_zero(x, *x.get_arg());
+}
+
+void ComplexVisitor::bvisit(const Log1p &x)
+{
+    complex_arg_not_zero(x, *add(one, x.get_arg()));
+}
+
+void ComplexVisitor::bvisit(const ExpM1 &x)
+{
+    x.get_arg()->accept(*this);
+}
+
+void ComplexVisitor::bvisit(const Cbrt &x)
+{
+    x.get_arg()->accept(*this);
+}
+
 void ComplexVisitor::bvisit(const Tan &x)
 {
     complex_arg_not_zero(x, *cos(x.get_arg()));

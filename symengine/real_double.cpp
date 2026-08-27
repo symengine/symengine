@@ -149,6 +149,36 @@ class EvaluateDouble : public Evaluate
         SYMENGINE_ASSERT(is_a<T>(x))
         return number(std::exp(down_cast<const T &>(x).i));
     }
+    RCP<const Basic> log2(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        auto val = down_cast<const T &>(x).i;
+        return number(std::log(val) / std::log(2.0));
+    }
+    RCP<const Basic> log10(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        auto val = down_cast<const T &>(x).i;
+        return number(std::log(val) / std::log(10.0));
+    }
+    RCP<const Basic> log1p(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        auto val = down_cast<const T &>(x).i;
+        return number(std::log(val + 1.0));
+    }
+    RCP<const Basic> expm1(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        auto val = down_cast<const T &>(x).i;
+        return number(std::exp(val) - 1.0);
+    }
+    RCP<const Basic> cbrt(const Basic &x) const override
+    {
+        SYMENGINE_ASSERT(is_a<T>(x))
+        auto val = down_cast<const T &>(x).i;
+        return number(std::exp(std::log(val) / 3.0));
+    }
 };
 
 class EvaluateRealDouble : public EvaluateDouble<RealDouble>
