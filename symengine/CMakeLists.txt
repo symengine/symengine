@@ -37,6 +37,7 @@ add_subdirectory(utilities/matchpycpp)
 set(SRC
     add.cpp
     basic.cpp
+    calculate.cpp
     complex.cpp
     complex_double.cpp
     constants.cpp
@@ -246,6 +247,7 @@ set(HEADERS
     test_visitors.h
     assumptions.h
     refine.h
+    calculate.h
     simplify.h
     utilities/stream_fmt.h
     tuple.h
