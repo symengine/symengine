@@ -175,6 +175,9 @@ fi
 if [[ "${NO_RTTI}" == "yes" ]]; then
     cmake_line="$cmake_line -DHAVE_SYMENGINE_RTTI=no"
 fi
+if [[ "${CC}" == "cl" ]]; then
+    cmake_line="$cmake_line -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
+fi
 
 echo "=== Generating build scripts for SymEngine using cmake"
 echo "CMAKE_GENERATOR = ${CMAKE_GENERATOR}"
@@ -201,7 +204,7 @@ fi
 
 echo "=== Running tests in build directory:"
 # C++
-ctest --output-on-failure
+ctest ${BUILD_TYPE:+-C "${BUILD_TYPE}"} --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"

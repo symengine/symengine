@@ -37,7 +37,12 @@ if [[ "${CXX}" == "" ]]; then
         export CXX=g++
     elif [[ "$CC" == clang ]]; then
         export CXX=clang++
+    elif [[ "$CC" == cl ]]; then
+        export CXX=cl
     fi
+fi
+if [[ "${CC}" == "cl" ]]; then
+    export CMAKE_GENERATOR="Ninja"
 fi
 export GCOV_EXECUTABLE=gcov
 
@@ -65,14 +70,17 @@ if [[ "${MSYS_ENV}" != "" ]]; then
 else
   export our_install_dir="${CONDA_PREFIX}"
   if [[ "$MSYSTEM" != "" ]]; then
-    # If we are using git bash on Windows, ensure the path is in Unix format:
-    our_install_dir=$(cygpath -u "${CONDA_PREFIX}")/Library
+    # If we are using git bash on Windows, ensure the path is in mixed format:
+    our_install_dir=$(cygpath -m "${CONDA_PREFIX}")/Library
   fi
 
   # Useful for debugging any issues with conda
   conda info -a
 
   conda_pkgs="$conda_pkgs ccache"
+  if [[ "${CC}" == "cl" ]]; then
+      conda_pkgs="$conda_pkgs ninja"
+  fi
   if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
       conda_pkgs="$conda_pkgs boost>=1.80.0"
       if [[ "$MSYSTEM" == "" ]]; then
@@ -152,8 +160,11 @@ if [[ "${RUNNER_OS}" == "macOS" ]] && [[ "${BUILD_METAL_TESTS}" == "yes" ]]; the
   unzip -q "${METALCPP_ARCHIVE_PATH}" -d /tmp
 fi
 
-export CXX="ccache ${CXX}"
-export CC="ccache ${CC}"
+if [[ "${CC}" != "cl" ]]; then
+    export CXX="ccache ${CXX}"
+    export CC="ccache ${CC}"
+fi
+export PATH="$our_install_dir/bin:$PATH"
 export CCACHE_SLOPPINESS="pch_defines,time_macros"
 ccache -M 100M
 ccache --version

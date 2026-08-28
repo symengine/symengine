@@ -238,6 +238,7 @@ jobs:
 
           - ARCH: x64
             OS: windows-latest
+            CC: cl
             BUILD_TYPE: Release
             WITH_MPC: yes
             WITH_MPFR: yes
@@ -245,6 +246,7 @@ jobs:
 
           - ARCH: x64
             OS: windows-latest
+            CC: cl
             BUILD_TYPE: Release
             WITH_MPC: yes
             WITH_MPFR: yes
@@ -257,6 +259,7 @@ jobs:
 
           - ARCH: x64
             OS: windows-latest
+            CC: cl
             BUILD_TYPE: Debug
 
     env:
@@ -315,6 +318,11 @@ jobs:
         architecture: ${{ matrix.ARCH }}
         channels: conda-forge
         conda-remove-defaults: "true"
+
+    - uses: ilammy/msvc-dev-cmd@v1
+      if: matrix.CC == 'cl'
+      with:
+        arch: ${{ matrix.ARCH }}
 
     - name: Cache ccache
       uses: actions/cache@v5
