@@ -56,7 +56,7 @@ public:
     template <typename... Args,
               typename
               = enable_if_t<std::is_constructible<Base, Args...>::value>>
-    BaseVisitor(Args &&...args) : Base(std::forward<Args>(args)...)
+    BaseVisitor(Args &&... args) : Base(std::forward<Args>(args)...)
     {
     }
 
