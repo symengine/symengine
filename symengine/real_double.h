@@ -390,6 +390,11 @@ public:
     RCP<const Number> powreal(const Rational &other) const
     {
         if (i < 0) {
+            if (!other.get_den().get()->is_even()) {
+                double k = other.get_num().get()->is_even() ? 1.0 : -1.0;
+                return make_rcp<const RealDouble>(
+                    k * std::pow(-i, mp_get_d(other.as_rational_class())));
+            }
             return number(std::pow(std::complex<double>(i),
                                    mp_get_d(other.as_rational_class())));
         }
