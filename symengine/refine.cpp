@@ -1,4 +1,6 @@
 #include <symengine/refine.h>
+#include <symengine/mul.h>
+#include <symengine/add.h>
 
 namespace SymEngine
 {
@@ -201,6 +203,71 @@ void RefineVisitor::bvisit(const Interval &x)
         return;
     }
     result_ = x.rcp_from_this();
+}
+
+void RefineVisitor::bvisit(const Mul &x)
+{
+    // Apply to children first
+    vec_basic newargs;
+    for (const auto &a : x.get_args()) {
+        newargs.push_back(apply(a));
+    }
+    RCP<const Basic> expr = mul(newargs);
+
+    // Normalize sign: if Mul has coef=-1 and an Add factor with odd integer
+    // exponent, absorb -1 into that Add (negating it).  This allows
+    // recognizing e.g. -x/(1-(y-z)) == x/((y-z)-1).
+    if (is_a<Mul>(*expr)) {
+        const Mul &m = down_cast<const Mul &>(*expr);
+        if (m.get_coef()->is_minus_one()) {
+            const auto &d = m.get_dict();
+            for (auto it = d.begin(); it != d.end(); ++it) {
+                if (is_a<Integer>(*(it->second))
+                    && is_true(is_odd(*(it->second)))
+                    && is_a<Add>(*(it->first))) {
+                    RCP<const Basic> old_key = expand(it->first);
+                    if (!is_a<Add>(*old_key))
+                        continue;
+                    RCP<const Basic> exp = it->second;
+                    const Add &a = down_cast<const Add &>(*old_key);
+                    umap_basic_num neg_dict;
+                    for (const auto &p : a.get_dict()) {
+                        neg_dict[p.first] = mulnum(minus_one, p.second);
+                    }
+                    RCP<const Basic> neg_key = Add::from_dict(
+                        mulnum(minus_one, a.get_coef()), std::move(neg_dict));
+                    map_basic_basic new_d = d;
+                    new_d.erase(it->first);
+                    new_d[neg_key] = exp;
+                    result_ = Mul::from_dict(one, std::move(new_d));
+                    return;
+                }
+            }
+        }
+    }
+    result_ = expr;
+}
+
+void RefineVisitor::bvisit(const Add &x)
+{
+    // Expand and check if the result is a number (e.g. sub(2*x*y, 2.0*x*y)
+    // expands to 0).  This is the refine counterpart of the
+    // expand(sub(lhs,rhs)) numeric-zero check that was in Eq().
+    vec_basic newargs;
+    for (const auto &a : x.get_args()) {
+        newargs.push_back(apply(a));
+    }
+    RCP<const Basic> expr = add(newargs);
+    RCP<const Basic> expanded = expand(expr);
+    if (is_a_Number(*expanded)) {
+        if (down_cast<const Number &>(*expanded).is_zero()) {
+            result_ = zero;
+        } else {
+            result_ = expanded;
+        }
+        return;
+    }
+    result_ = expanded;
 }
 
 RCP<const Basic> refine(const RCP<const Basic> &x,
