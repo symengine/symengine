@@ -95,12 +95,37 @@ void RefineVisitor::bvisit(const Max &x)
             keep.push_back(newarg);
         }
     }
-    if (not have_positive and not nonpositive.empty()) {
+    if (not have_positive and not have_nonnegative
+        and not nonpositive.empty()) {
         std::copy(nonpositive.begin(), nonpositive.end(),
                   std::back_inserter(keep));
     }
     if (not have_nonnegative and not have_positive and not negative.empty()) {
         std::copy(negative.begin(), negative.end(), std::back_inserter(keep));
+    }
+
+    // Pairwise elimination: for max(a, b), if a is a nonpositive number
+    // and b is nonnegative, then b >= 0 >= a so a is dominated.
+    if (keep.size() > 1) {
+        vec_basic result_keep;
+        for (size_t i = 0; i < keep.size(); ++i) {
+            bool dominated = false;
+            if (is_true(is_nonpositive(*keep[i], assumptions_))) {
+                for (size_t j = 0; j < keep.size(); ++j) {
+                    if (i == j)
+                        continue;
+                    if (not eq(*keep[i], *keep[j])
+                        and is_true(is_nonnegative(*keep[j], assumptions_))) {
+                        dominated = true;
+                        break;
+                    }
+                }
+            }
+            if (not dominated) {
+                result_keep.push_back(keep[i]);
+            }
+        }
+        keep = std::move(result_keep);
     }
 
     result_ = max(keep);
@@ -131,12 +156,37 @@ void RefineVisitor::bvisit(const Min &x)
             keep.push_back(newarg);
         }
     }
-    if (not have_negative and not nonnegative.empty()) {
+    if (not have_negative and not have_nonpositive
+        and not nonnegative.empty()) {
         std::copy(nonnegative.begin(), nonnegative.end(),
                   std::back_inserter(keep));
     }
     if (not have_nonpositive and not have_negative and not positive.empty()) {
         std::copy(positive.begin(), positive.end(), std::back_inserter(keep));
+    }
+
+    // Pairwise elimination: for min(a, b), if a is a nonnegative number
+    // and b is nonpositive, then b <= 0 <= a so a is dominated.
+    if (keep.size() > 1) {
+        vec_basic result_keep;
+        for (size_t i = 0; i < keep.size(); ++i) {
+            bool dominated = false;
+            if (is_true(is_nonnegative(*keep[i], assumptions_))) {
+                for (size_t j = 0; j < keep.size(); ++j) {
+                    if (i == j)
+                        continue;
+                    if (not eq(*keep[i], *keep[j])
+                        and is_true(is_nonpositive(*keep[j], assumptions_))) {
+                        dominated = true;
+                        break;
+                    }
+                }
+            }
+            if (not dominated) {
+                result_keep.push_back(keep[i]);
+            }
+        }
+        keep = std::move(result_keep);
     }
 
     result_ = min(keep);

@@ -141,6 +141,24 @@ TEST_CASE("Test refine", "[refine]")
     a = Assumptions({Le(x, integer(0))});
     REQUIRE(eq(*refine(expr, &a), *expr));
 
+    // #2135: pairwise elimination of dominated args in max/min
+    // max(0, b) with b >= 0 -> b
+    expr = max({integer(0), x});
+    a = Assumptions({Ge(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+    // max(0, b) with b <= 0 -> 0
+    expr = max({integer(0), x});
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(0)));
+    // min(0, b) with b >= 0 -> 0
+    expr = min({integer(0), x});
+    a = Assumptions({Ge(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *integer(0)));
+    // min(0, b) with b <= 0 -> b
+    expr = min({integer(0), x});
+    a = Assumptions({Le(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
     expr = conjugate(x);
     auto a16 = Assumptions({});
     REQUIRE(eq(*refine(expr, &a16), *expr));
