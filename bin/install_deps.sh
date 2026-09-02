@@ -110,7 +110,7 @@ else
       conda_pkgs="$conda_pkgs mpc=1.3.1"
   fi
 
-  if [[ "${WITH_FLINT}" == "yes" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
+  if [[ "${WITH_FLINT}" == "yes" || "${INTEGER_CLASS}" == "flint" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
       conda_pkgs="$conda_pkgs libflint=3.2.2"
   fi
 
@@ -125,6 +125,9 @@ else
   if [[ ! -z "${WITH_LLVM}" ]]; then
       if [[ "${EXTRA_APT_PACKAGES}" == *"llvm"* ]]; then
           export LLVM_DIR="/usr/lib/llvm-${WITH_LLVM}/share/llvm/"
+      elif [[ "${WITH_LLVM}" == "yes" ]]; then
+          conda_pkgs="$conda_pkgs llvmdev cmake=3.24.3"
+          export LLVM_DIR=$our_install_dir/share/llvm/
       else
           conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
           export LLVM_DIR=$our_install_dir/share/llvm/
