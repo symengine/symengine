@@ -126,10 +126,10 @@ else
       if [[ "${EXTRA_APT_PACKAGES}" == *"llvm"* ]]; then
           export LLVM_DIR="/usr/lib/llvm-${WITH_LLVM}/share/llvm/"
       elif [[ "${WITH_LLVM}" == "yes" ]]; then
-          conda_pkgs="$conda_pkgs llvmdev cmake=3.24.3"
+          conda_pkgs="$conda_pkgs llvmdev zlib"
           export LLVM_DIR=$our_install_dir/share/llvm/
       else
-          conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
+          conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} zlib"
           export LLVM_DIR=$our_install_dir/share/llvm/
       fi
   fi
