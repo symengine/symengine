@@ -40,7 +40,8 @@ public:
 
     RCP<const Basic> parse(const std::string &input, bool convert_xor = true);
 
-    RCP<const Basic> functionify(const std::string &name, vec_basic &params);
+    virtual RCP<const Basic> functionify(const std::string &name,
+                                         vec_basic &params);
     RCP<const Basic> parse_numeric(const std::string &expr);
     RCP<const Basic> parse_identifier(const std::string &expr);
     std::tuple<RCP<const Basic>, RCP<const Basic>>
