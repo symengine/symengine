@@ -315,12 +315,12 @@ TEST_CASE("Expression series expansion: roots", "[Expansion of root(ex)]")
     auto ex5 = pow(cos(x), qm23);
     auto ex6 = sqrt(cos(x));
 
-    REQUIRE(series_coeff(ex1, x, 8, 6)->__eq__(*rational(-21, 2097152)));
-    REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(1621477, 4782969)));
-    REQUIRE(series_coeff(ex3, x, 12, 10)->__eq__(*rational(-2431, 262144)));
-    REQUIRE(series_coeff(ex4, x, 10, 8)->__eq__(*rational(-559, 645120)));
-    REQUIRE(series_coeff(ex5, x, 20, 10)->__eq__(*rational(701, 127575)));
-    REQUIRE(series_coeff(ex6, x, 10, 8)->__eq__(*rational(-559, 645120)));
+    REQUIRE(series_coeff(ex1, x, 7, 6)->__eq__(*rational(-21, 2097152)));
+    REQUIRE(series_coeff(ex2, x, 11, 10)->__eq__(*rational(1621477, 4782969)));
+    REQUIRE(series_coeff(ex3, x, 11, 10)->__eq__(*rational(-2431, 262144)));
+    REQUIRE(series_coeff(ex4, x, 9, 8)->__eq__(*rational(-559, 645120)));
+    REQUIRE(series_coeff(ex5, x, 11, 10)->__eq__(*rational(701, 127575)));
+    REQUIRE(series_coeff(ex6, x, 9, 8)->__eq__(*rational(-559, 645120)));
 }
 
 TEST_CASE("Expression series expansion: log, exp ", "[Expansion of log, exp]")
@@ -396,7 +396,7 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
 
     auto s = UnivariateSeries::series(ex8, "x", 10);
 
-    REQUIRE(series_coeff(ex1, x, 10, 7)->__eq__(*rational(-1, 7)));
+    REQUIRE(series_coeff(ex1, x, 8, 7)->__eq__(*rational(-1, 7)));
     REQUIRE(series_coeff(ex2, x, 11, 10)->__eq__(*rational(16, 5)));
     REQUIRE(series_coeff(ex3, x, 10, 9)->__eq__(*rational(62, 2835)));
     REQUIRE(series_coeff(ex4, x, 8, 7)->__eq__(*rational(2537, 315)));
@@ -408,7 +408,7 @@ TEST_CASE("Expression series expansion: atan, tan, asin, cot, sec, csc",
                               mul(I, sqrt(integer(24))))));
     REQUIRE(expand_check_pairs(ex7, x, 5, res1));
     REQUIRE(expand_check_pairs(ex8, x, 10, res2));
-    REQUIRE(series_coeff(ex9, x, 10, 8)->__eq__(*rational(277, 8064)));
+    REQUIRE(series_coeff(ex9, x, 9, 8)->__eq__(*rational(277, 8064)));
     REQUIRE(series_coeff(ex10, x, 10, 7)->__eq__(*rational(127, 604800)));
 }
 
@@ -454,8 +454,8 @@ TEST_CASE("Expression series expansion: lambertw ", "[Expansion of lambertw]")
     auto ex1 = lambertw(x);
     auto ex2 = lambertw(sin(x));
 
-    REQUIRE(series_coeff(ex1, x, 10, 7)->__eq__(*rational(16807, 720)));
-    REQUIRE(series_coeff(ex2, x, 12, 10)->__eq__(*rational(-2993294, 14175)));
+    REQUIRE(series_coeff(ex1, x, 8, 7)->__eq__(*rational(16807, 720)));
+    REQUIRE(series_coeff(ex2, x, 11, 10)->__eq__(*rational(-2993294, 14175)));
 }
 
 TEST_CASE("Expression series expansion: gamma ", "[Expansion of gamma]")
@@ -463,6 +463,6 @@ TEST_CASE("Expression series expansion: gamma ", "[Expansion of gamma]")
     RCP<const Symbol> x = symbol("x");
     auto ex1 = gamma(x);
 
-    REQUIRE(series_coeff(ex1, x, 10, -1)->__eq__(*one));
-    REQUIRE(series_coeff(ex1, x, 10, 0)->__eq__(*neg(EulerGamma)));
+    REQUIRE(series_coeff(ex1, x, 4, -1)->__eq__(*one));
+    REQUIRE(series_coeff(ex1, x, 4, 0)->__eq__(*neg(EulerGamma)));
 }
