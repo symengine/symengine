@@ -109,6 +109,9 @@ fi
 if [[ "${WITH_SYMENGINE_RCP}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_SYMENGINE_RCP=${WITH_SYMENGINE_RCP}"
 fi
+if [[ "${SYMENGINE_RCP_BACKEND}" != "" ]]; then
+    cmake_line="$cmake_line -DSYMENGINE_RCP_BACKEND=${SYMENGINE_RCP_BACKEND}"
+fi
 if [[ "${WITH_SYMENGINE_THREAD_SAFE}" != "" ]]; then
     cmake_line="$cmake_line -DWITH_SYMENGINE_THREAD_SAFE=${WITH_SYMENGINE_THREAD_SAFE}"
 fi
