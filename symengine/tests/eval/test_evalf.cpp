@@ -33,6 +33,9 @@ using SymEngine::Complex;
 using SymEngine::complex_double;
 using SymEngine::ComplexDouble;
 using SymEngine::constant;
+using SymEngine::FunctionWrapper;
+using SymEngine::NotImplementedError;
+using SymEngine::Number;
 using SymEngine::real_double;
 using SymEngine::RealDouble;
 using SymEngine::SymEngineException;
@@ -70,6 +73,7 @@ using SymEngine::integer_class;
 using SymEngine::levi_civita;
 using SymEngine::log;
 using SymEngine::loggamma;
+using SymEngine::make_rcp;
 using SymEngine::max;
 using SymEngine::min;
 using SymEngine::one;
@@ -85,6 +89,7 @@ using SymEngine::sin;
 using SymEngine::sinh;
 using SymEngine::sub;
 using SymEngine::symbol;
+using SymEngine::Symbol;
 using SymEngine::tan;
 using SymEngine::tanh;
 using SymEngine::vec_basic;
@@ -117,6 +122,42 @@ TEST_CASE("evalf: symbols", "[evalf]")
     d1 = fabs(d1 - d2);
     d2 = 0.000001;
     REQUIRE(d1 < d2);
+}
+
+class UnevaluableFunction : public FunctionWrapper
+{
+public:
+    explicit UnevaluableFunction(const RCP<const Basic> &arg)
+        : FunctionWrapper("UnevaluableFunction", arg)
+    {
+    }
+
+    RCP<const Number> eval(long bits) const
+    {
+        throw NotImplementedError("UnevaluableFunction cannot be evaluated.");
+    }
+
+    RCP<const Basic> create(const vec_basic &v) const
+    {
+        return make_rcp<UnevaluableFunction>(v[0]);
+    }
+
+    RCP<const Basic> diff_impl(const RCP<const Symbol> &x) const
+    {
+        return mul(make_rcp<UnevaluableFunction>(get_vec()[0]),
+                   get_vec()[0]->diff(x));
+    }
+};
+
+TEST_CASE("evalf: unevaluable function wrapper", "[evalf]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Basic> f = make_rcp<UnevaluableFunction>(x);
+
+    RCP<const Basic> r = evalf(*f, 53, EvalfDomain::Symbolic);
+    REQUIRE(eq(*r, *f));
+
+    REQUIRE_THROWS_AS(evalf(*f, 53, EvalfDomain::Real), NotImplementedError);
 }
 
 #ifdef HAVE_SYMENGINE_MPFR
