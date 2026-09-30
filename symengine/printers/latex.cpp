@@ -35,7 +35,7 @@ std::string LatexPrinter::_print_symbol(const std::string &name)
         return _print_symbol(name.substr(1, name.size() - 1));
     }
     std::vector<std::string> greeks
-        = {"alpha",  "beta",  "gamma", "Gamma", "delta",   "Delta",   "epsilon",
+        = {"alpha", "varepsilon", "beta",  "gamma", "Gamma", "delta",   "Delta",   "epsilon",
            "zeta",   "eta",   "theta", "Theta", "iota",    "kappa",   "lambda",
            "Lambda", "mu",    "nu",    "xi",    "omicron", "pi",      "Pi",
            "rho",    "sigma", "Sigma", "tau",   "upsilon", "Upsilon", "phi",

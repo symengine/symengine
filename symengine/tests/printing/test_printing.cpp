@@ -685,6 +685,7 @@ TEST_CASE("test_julia(): printing", "[printing]")
 
 TEST_CASE("test_latex_printing()", "[latex]")
 {
+
     RCP<const Basic> l1 = parse("3/2");
     RCP<const Basic> l2 = parse("3/2 + 4*I/2");
     RCP<const Basic> l3 = parse("1.123123123123 + 1.123123123123*I");
@@ -720,7 +721,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l28 = complexes();
     RCP<const Basic> l29 = parse(
         "sqrt(1.0 - 1.3856406460551*abs(tau_tEd)*gamma_M0/f_y)*V_plv_Rd");
-
+    CHECK(latex(*symbol("varepsilon")) == "\\varepsilon");
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
     CHECK(latex(*l3) == "1.123123123123 + 1.123123123123j");
