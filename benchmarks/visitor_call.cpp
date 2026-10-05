@@ -33,6 +33,8 @@ void init(CompiledExpr1 &v, const vec_basic &args, const vec_basic &expr,
 void init(CompiledExpr2 &v, const vec_basic &args, const vec_basic &expr,
           bool cse, unsigned opt_level){};
 
+constexpr std::size_t n_samples{64};
+
 template <typename Visitor, typename Expr, typename Real>
 static void Call(benchmark::State &state)
 {
@@ -40,26 +42,26 @@ static void Call(benchmark::State &state)
     vec_basic inputs{e.vec};
     vec_basic outputs{e.expr()};
     const std::size_t n_inputs{inputs.size()};
-    const std::size_t n_outputs{outputs.size()};
-    std::vector<Real> s(n_outputs, 0.0);
-    std::vector<Real> d(n_outputs, 0.0);
-    std::vector<Real> x(n_inputs, 0.0);
-    for (std::size_t i = 0; i < n_inputs; ++i) {
-        x[i] = static_cast<Real>(1.732 * i);
+    std::vector<Real> d(outputs.size(), 0.0);
+    std::vector<Real> x(n_samples * n_inputs, 0.0);
+    for (std::size_t s = 0; s < n_samples; ++s) {
+        for (std::size_t i = 0; i < n_inputs; ++i) {
+            x[s * n_inputs + i] = static_cast<Real>(
+                i + 0.05 + 0.2 * (s + 0.5) / static_cast<double>(n_samples));
+        }
     }
     Visitor v;
     bool cse{static_cast<bool>(state.range(0))};
     unsigned opt_level{static_cast<unsigned>(state.range(1))};
     init(v, inputs, outputs, cse, opt_level);
+    benchmark::DoNotOptimize(x.data());
+    benchmark::DoNotOptimize(d.data());
+    std::size_t sample{0};
     for (auto _ : state) {
-        for (std::size_t i = 0; i < n_inputs; ++i) {
-            x[i] += static_cast<Real>(0.1);
-        }
-        v.call(d.data(), x.data());
         benchmark::ClobberMemory();
-        for (std::size_t i = 0; i < n_outputs; ++i) {
-            s[i] += d[i];
-        }
+        v.call(d.data(), x.data() + sample * n_inputs);
+        benchmark::ClobberMemory();
+        sample = (sample + 1) % n_samples;
     }
     state.SetLabel(to_label(cse, opt_level));
 }
