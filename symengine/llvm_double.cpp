@@ -4,6 +4,8 @@
 #include "llvm/ExecutionEngine/Orc/JITTargetMachineBuilder.h"
 #include "llvm/ExecutionEngine/Orc/LLJIT.h"
 #include "llvm/Passes/PassBuilder.h"
+#include "llvm/Transforms/InstCombine/InstCombine.h"
+#include "llvm/Transforms/Vectorize/SLPVectorizer.h"
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/Attributes.h"
 #include "llvm/IR/BasicBlock.h"
@@ -282,6 +284,10 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
         FPM = PB.buildFunctionSimplificationPipeline(
             pb_opt_level, llvm::ThinOrFullLTOPhase::None);
 #endif
+        if (opt_level > 2) {
+            FPM.addPass(llvm::SLPVectorizerPass());
+            FPM.addPass(llvm::InstCombinePass());
+        }
         FPM.run(*F, FAM);
     }
 
