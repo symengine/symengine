@@ -1,7 +1,8 @@
 #include "llvm/ADT/STLExtras.h"
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-#include "llvm/ExecutionEngine/GenericValue.h"
-#include "llvm/ExecutionEngine/MCJIT.h"
+#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
+#include "llvm/ExecutionEngine/Orc/ExecutionUtils.h"
+#include "llvm/ExecutionEngine/Orc/JITTargetMachineBuilder.h"
+#include "llvm/ExecutionEngine/Orc/LLJIT.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/IR/Argument.h"
 #include "llvm/IR/Attributes.h"
@@ -17,6 +18,7 @@
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Type.h"
 #include "llvm/Support/Casting.h"
+#include "llvm/Support/Error.h"
 #include "llvm/Support/ManagedStatic.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Support/raw_ostream.h"
@@ -25,8 +27,8 @@
 #include "llvm/IR/Verifier.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetMachine.h"
-#include "llvm/ExecutionEngine/ObjectCache.h"
 #include "llvm/Support/FileSystem.h"
+#include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/Path.h"
 #include <algorithm>
 #include <cassert>
@@ -72,6 +74,23 @@ class IRBuilder : public llvm::IRBuilder<>
 {
 };
 
+namespace
+{
+void throw_if_error(llvm::Error err)
+{
+    if (err) {
+        throw SymEngineException(llvm::toString(std::move(err)));
+    }
+}
+
+template <typename T>
+T get_or_throw(llvm::Expected<T> expected)
+{
+    throw_if_error(expected.takeError());
+    return std::move(*expected);
+}
+} // namespace
+
 LLVMVisitor::LLVMVisitor() = default;
 LLVMVisitor::~LLVMVisitor() = default;
 
@@ -100,7 +119,7 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
     llvm::FunctionType *function_type = llvm::FunctionType::get(
         llvm::Type::getVoidTy(*context), inp, /*isVarArgs=*/false);
     auto F = llvm::Function::Create(
-        function_type, llvm::Function::InternalLinkage, "symengine_func", mod);
+        function_type, llvm::Function::ExternalLinkage, "symengine_func", mod);
     F->setCallingConv(llvm::CallingConv::C);
     F->addParamAttr(0, llvm::Attribute::ReadOnly);
 #if (LLVM_VERSION_MAJOR >= 21)
@@ -125,17 +144,30 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                        const bool symbolic_cse, unsigned opt_level)
 {
-    executionengine.reset();
+    jit.reset();
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
     context = make_unique<llvm::LLVMContext>();
     symbols = inputs;
 
+    auto jtmb = get_or_throw(llvm::orc::JITTargetMachineBuilder::detectHost());
+    jtmb.setCodeGenOptLevel(static_cast<CodeGenOptLevel>(opt_level));
+    auto target_machine = get_or_throw(jtmb.createTargetMachine());
+#if (LLVM_VERSION_MAJOR == 9)
+    // AArch64 GlobalISel doesn't support MachO's large code model
+    // https://github.com/llvm/llvm-project/commit/366ab0d086a457b085e3c9ba1c987d5499079cd6)
+    if (target_machine->getTargetTriple().getArch() == llvm::Triple::aarch64
+        && target_machine->getCodeModel() == llvm::CodeModel::Large
+        && target_machine->getTargetTriple().isOSBinFormatMachO()) {
+        target_machine->setGlobalISel(false);
+    }
+#endif
+
     // Create some module to put our function into it.
     std::unique_ptr<llvm::Module> module
         = make_unique<llvm::Module>("SymEngine", *context.get());
-    module->setDataLayout("");
+    module->setDataLayout(target_machine->createDataLayout());
     mod = module.get();
 
     auto F = get_function_type(context.get());
@@ -218,7 +250,11 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 #else
     using OptimizationLevel = llvm::OptimizationLevel;
 #endif
-    llvm::PassBuilder PB;
+#if (LLVM_VERSION_MAJOR == 12)
+    llvm::PassBuilder PB(false, target_machine.get());
+#else
+    llvm::PassBuilder PB(target_machine.get());
+#endif
     llvm::ModuleAnalysisManager MAM;
     llvm::CGSCCAnalysisManager CGAM;
     llvm::FunctionAnalysisManager FAM;
@@ -239,9 +275,7 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     }
 
     if (opt_level != 0) {
-#if (LLVM_VERSION_MAJOR < 6)
-        FPM = PB.buildFunctionSimplificationPipeline(pb_opt_level);
-#elif (LLVM_VERSION_MAJOR < 12)
+#if (LLVM_VERSION_MAJOR < 12)
         FPM = PB.buildFunctionSimplificationPipeline(
             pb_opt_level, llvm::PassBuilder::ThinLTOPhase::None);
 #else
@@ -254,48 +288,16 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     // std::cout << "Optimized LLVM IR" << std::endl;
     // module->print(llvm::errs(), nullptr);
 
-    // Now we create the JIT.
-    std::string error;
-    executionengine = std::unique_ptr<llvm::ExecutionEngine>(
-        llvm::EngineBuilder(std::move(module))
-            .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(static_cast<CodeGenOptLevel>(opt_level))
-            .setErrorStr(&error)
-            .create());
+    // Compile the module to object code, which is kept in membuffer
+    llvm::orc::SimpleCompiler compiler(*target_machine);
+#if (LLVM_VERSION_MAJOR < 10)
+    auto obj = compiler(*module);
+#else
+    auto obj = get_or_throw(compiler(*module));
+#endif
+    membuffer.assign(obj->getBufferStart(), obj->getBufferSize());
 
-    // Customization point for subclasses: (may e.g. register custom symbol
-    // resolver)
-    modify_execution_engine(executionengine.get());
-
-    // This is a hack to get the MemoryBuffer of a compiled object.
-    class MemoryBufferRefCallback : public llvm::ObjectCache
-    {
-    public:
-        std::string &ss_;
-        explicit MemoryBufferRefCallback(std::string &ss) : ss_(ss) {}
-
-        void notifyObjectCompiled(const llvm::Module *M,
-                                  llvm::MemoryBufferRef obj) override
-        {
-            const char *c = obj.getBufferStart();
-            // Saving the object code in a std::string
-            ss_.assign(c, obj.getBufferSize());
-        }
-
-        std::unique_ptr<llvm::MemoryBuffer>
-        getObject(const llvm::Module *M) override
-        {
-            return nullptr;
-        }
-    };
-
-    MemoryBufferRefCallback callback(membuffer);
-    executionengine->setObjectCache(&callback);
-    // std::cout << error << std::endl;
-    executionengine->finalizeObject();
-
-    // Get the symbol's address
-    func = (intptr_t)executionengine->getPointerToFunction(F);
+    link_membuffer();
     symbol_ptrs.clear();
     replacement_symbol_ptrs.clear();
     symbols.clear();
@@ -932,57 +934,40 @@ void LLVMVisitor::loads(const std::string &s)
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
-    context = make_unique<llvm::LLVMContext>();
+    link_membuffer();
+}
 
-    // Create some module to put our function into it.
-    std::unique_ptr<llvm::Module> module
-        = make_unique<llvm::Module>("SymEngine", *context);
-    module->setDataLayout("");
-    mod = module.get();
+void LLVMVisitor::link_membuffer()
+{
+    jit = get_or_throw(llvm::orc::LLJITBuilder().create());
 
-    // Only defining the prototype for the function here.
-    // Since we know where the function is stored that's enough
-    // llvm::ObjectCache is designed for caching objects, but it
-    // is used here for loading one specific object.
-    auto F = get_function_type(context.get());
-
-    std::string error;
-    executionengine = std::unique_ptr<llvm::ExecutionEngine>(
-        llvm::EngineBuilder(std::move(module))
-            .setEngineKind(llvm::EngineKind::Kind::JIT)
-            .setOptLevel(CodeGenOptLevel::Aggressive)
-            .setErrorStr(&error)
-            .create());
+#if (LLVM_VERSION_MAJOR < 17)
+    // Resolve external functions (e.g. from libm) using the symbols of the
+    // current process. Since LLVM 17 LLJIT does this by default.
+    auto generator = get_or_throw(
+        llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
+            jit->getDataLayout().getGlobalPrefix()));
+#if (LLVM_VERSION_MAJOR < 10)
+    jit->getMainJITDylib().setGenerator(std::move(generator));
+#else
+    jit->getMainJITDylib().addGenerator(std::move(generator));
+#endif
+#endif
 
     // Customization point for subclasses: (may e.g. register custom symbol
     // resolver)
-    modify_execution_engine(executionengine.get());
+    modify_jit(jit.get());
 
-    class MCJITObjectLoader : public llvm::ObjectCache
-    {
-        const std::string &s_;
+    throw_if_error(
+        jit->addObjectFile(llvm::MemoryBuffer::getMemBufferCopy(membuffer)));
 
-    public:
-        MCJITObjectLoader(const std::string &s) : s_(s) {}
-        void notifyObjectCompiled(const llvm::Module *M,
-                                  llvm::MemoryBufferRef obj) override
-        {
-        }
-
-        // No need to check M because there is only one function
-        // Return it after reading from the file.
-        std::unique_ptr<llvm::MemoryBuffer>
-        getObject(const llvm::Module *M) override
-        {
-            return llvm::MemoryBuffer::getMemBufferCopy(llvm::StringRef(s_));
-        }
-    };
-
-    MCJITObjectLoader loader(s);
-    executionengine->setObjectCache(&loader);
-    executionengine->finalizeObject();
-    // Set func to compiled function pointer
-    func = (intptr_t)executionengine->getPointerToFunction(F);
+    // Get the symbol's address
+    auto symbol = get_or_throw(jit->lookup("symengine_func"));
+#if (LLVM_VERSION_MAJOR < 15)
+    func = (intptr_t)symbol.getAddress();
+#else
+    func = (intptr_t)symbol.getValue();
+#endif
 }
 
 void LLVMVisitor::bvisit(const Floor &x)

@@ -14,9 +14,12 @@ class Module;
 class Value;
 class Type;
 class Function;
-class ExecutionEngine;
 class MemoryBufferRef;
 class LLVMContext;
+namespace orc
+{
+class LLJIT;
+} // namespace orc
 } // namespace llvm
 
 namespace SymEngine
@@ -33,7 +36,7 @@ protected:
         replacement_symbol_ptrs;
     llvm::Value *result_;
     std::unique_ptr<llvm::LLVMContext> context;
-    std::unique_ptr<llvm::ExecutionEngine> executionengine;
+    std::unique_ptr<llvm::orc::LLJIT> jit;
 
     intptr_t func;
 
@@ -43,9 +46,11 @@ protected:
     std::string membuffer;
     llvm::Function *get_function_type(llvm::LLVMContext *);
     virtual llvm::Type *get_float_type(llvm::LLVMContext *) = 0;
-    // Subclasses might want to call e.g.
-    // llvm::ExecutionEngine::InstallLazyFunctionCreator
-    virtual void modify_execution_engine(llvm::ExecutionEngine *) {}
+    // Link the object code in membuffer into a new JIT and set func
+    void link_membuffer();
+    // Subclasses might want to e.g. define or resolve additional symbols
+    // in the main JITDylib of the JIT before the object code is linked
+    virtual void modify_jit(llvm::orc::LLJIT *) {}
 
 public:
     LLVMVisitor();
