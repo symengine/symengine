@@ -64,7 +64,8 @@ std::string to_label(bool cse, unsigned opt_level)
     SYMENGINE_BENCHMARK_VISITORS_EXPR(func, Expr2);                            \
     SYMENGINE_BENCHMARK_VISITORS_EXPR(func, Expr3);                            \
     SYMENGINE_BENCHMARK_VISITORS_EXPR(func, Expr4);                            \
-    SYMENGINE_BENCHMARK_VISITORS_EXPR(func, Expr5)
+    SYMENGINE_BENCHMARK_VISITORS_EXPR(func, Expr5);                            \
+    SYMENGINE_BENCHMARK_VISITORS_EXPR(func, Expr6)
 
 void init(LLVMFloatVisitor &v, const vec_basic &args, const vec_basic &expr,
           bool cse, unsigned opt_level)
@@ -161,8 +162,9 @@ struct Expr4 {
         RCP<const Basic> e = integer(23);
         const std::size_t n{vec.size()};
         for (std::size_t i = 0; i < n; ++i) {
-            e = pow(e,
-                    add(cos(sqrt(log(sin(pow(vec[n - i - 1], vec[i]))))), e));
+            e = pow(e, add(cos(sqrt(log(add(
+                               integer(3), sin(pow(vec[n - i - 1], vec[i])))))),
+                           div(integer(1), e)));
         }
         e = expand(e);
         DenseMatrix M(1, 1, {e});
@@ -187,7 +189,8 @@ struct Expr5 {
         RCP<const Basic> e = integer(23);
         const std::size_t n{vec.size()};
         for (std::size_t i = 0; i < n; ++i) {
-            e = pow(e, cos(sqrt(log(sin(pow(vec[n - i - 1], vec[i]))))));
+            e = pow(e, cos(sqrt(log(add(integer(3),
+                                        sin(pow(vec[n - i - 1], vec[i])))))));
         }
         e = expand(e);
         DenseMatrix M(1, 1, {e});
@@ -197,6 +200,32 @@ struct Expr5 {
         vec_basic expression;
         for (std::size_t i = 0; i < n; ++i) {
             expression.push_back(J.get(0, i));
+        }
+        return expression;
+    }
+};
+
+struct Expr6 {
+    vec_basic vec{[] {
+        vec_basic v;
+        for (int i = 0; i < 16; ++i) {
+            v.push_back(symbol("u" + std::to_string(i)));
+        }
+        return v;
+    }()};
+    vec_basic expr()
+    {
+        const std::size_t n{vec.size()};
+        vec_basic expression;
+        for (std::size_t i = 0; i < n; ++i) {
+            auto &u = vec[i];
+            auto &u_left = vec[(i + n - 1) % n];
+            auto &u_right = vec[(i + 1) % n];
+            auto diffusion
+                = mul(integer(3), add({u_left, mul(integer(-2), u), u_right}));
+            auto reaction
+                = mul(u, add(integer(1), mul(integer(-1), pow(u, integer(2)))));
+            expression.push_back(add(diffusion, reaction));
         }
         return expression;
     }
