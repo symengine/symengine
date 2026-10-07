@@ -685,7 +685,6 @@ TEST_CASE("test_julia(): printing", "[printing]")
 
 TEST_CASE("test_latex_printing()", "[latex]")
 {
-
     RCP<const Basic> l1 = parse("3/2");
     RCP<const Basic> l2 = parse("3/2 + 4*I/2");
     RCP<const Basic> l3 = parse("1.123123123123 + 1.123123123123*I");
