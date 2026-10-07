@@ -4,6 +4,7 @@
 #include <symengine/real_double.h>
 #include <symengine/complex_double.h>
 #include <symengine/symengine_rcp.h>
+#include <symengine/symengine_exception.h>
 #include <symengine/visitor.h>
 #ifdef HAVE_SYMENGINE_MPFR
 #include <mpfr.h>
@@ -78,7 +79,13 @@ public:
     }
     void bvisit(const FunctionWrapper &x)
     {
-        result_ = x.eval(bits)->rcp_from_this();
+        try {
+            result_ = x.eval(bits)->rcp_from_this();
+        } catch (const NotImplementedError &) {
+            // The wrapper has no numerical value (e.g. it contains free
+            // symbols). Leave it unevaluated.
+            result_ = x.rcp_from_this();
+        }
     }
 };
 
