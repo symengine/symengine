@@ -37,7 +37,12 @@ if [[ "${CXX}" == "" ]]; then
         export CXX=g++
     elif [[ "$CC" == clang ]]; then
         export CXX=clang++
+    elif [[ "$CC" == cl ]]; then
+        export CXX=cl
     fi
+fi
+if [[ "${CC}" == "cl" ]]; then
+    export CMAKE_GENERATOR="Ninja"
 fi
 export GCOV_EXECUTABLE=gcov
 
@@ -65,14 +70,17 @@ if [[ "${MSYS_ENV}" != "" ]]; then
 else
   export our_install_dir="${CONDA_PREFIX}"
   if [[ "$MSYSTEM" != "" ]]; then
-    # If we are using git bash on Windows, ensure the path is in Unix format:
-    our_install_dir=$(cygpath -u "${CONDA_PREFIX}")/Library
+    # If we are using git bash on Windows, ensure the path is in mixed format:
+    our_install_dir=$(cygpath -m "${CONDA_PREFIX}")/Library
   fi
 
   # Useful for debugging any issues with conda
   conda info -a
 
   conda_pkgs="$conda_pkgs ccache"
+  if [[ "${CC}" == "cl" ]]; then
+      conda_pkgs="$conda_pkgs ninja"
+  fi
   if [[ "${INTEGER_CLASS}" == "boostmp" ]]; then
       conda_pkgs="$conda_pkgs boost>=1.80.0"
       if [[ "$MSYSTEM" == "" ]]; then
@@ -102,7 +110,7 @@ else
       conda_pkgs="$conda_pkgs mpc=1.3.1"
   fi
 
-  if [[ "${WITH_FLINT}" == "yes" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
+  if [[ "${WITH_FLINT}" == "yes" || "${INTEGER_CLASS}" == "flint" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
       conda_pkgs="$conda_pkgs libflint=3.2.2"
   fi
 
@@ -117,8 +125,11 @@ else
   if [[ ! -z "${WITH_LLVM}" ]]; then
       if [[ "${EXTRA_APT_PACKAGES}" == *"llvm"* ]]; then
           export LLVM_DIR="/usr/lib/llvm-${WITH_LLVM}/share/llvm/"
+      elif [[ "${WITH_LLVM}" == "yes" ]]; then
+          conda_pkgs="$conda_pkgs llvmdev zlib"
+          export LLVM_DIR=$our_install_dir/share/llvm/
       else
-          conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} cmake=3.24.3"
+          conda_pkgs="$conda_pkgs llvmdev=${WITH_LLVM} zlib"
           export LLVM_DIR=$our_install_dir/share/llvm/
       fi
   fi
@@ -152,8 +163,11 @@ if [[ "${RUNNER_OS}" == "macOS" ]] && [[ "${BUILD_METAL_TESTS}" == "yes" ]]; the
   unzip -q "${METALCPP_ARCHIVE_PATH}" -d /tmp
 fi
 
-export CXX="ccache ${CXX}"
-export CC="ccache ${CC}"
+if [[ "${CC}" != "cl" ]]; then
+    export CXX="ccache ${CXX}"
+    export CC="ccache ${CC}"
+fi
+export PATH="$our_install_dir/bin:$PATH"
 export CCACHE_SLOPPINESS="pch_defines,time_macros"
 ccache -M 100M
 ccache --version
