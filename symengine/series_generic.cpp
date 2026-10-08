@@ -58,7 +58,7 @@ RCP<const Basic> UnivariateSeries::get_coeff(int deg) const
     if (p_.get_dict().count(deg) == 0)
         return zero;
     else
-        return p_.get_dict().at(deg).get_basic();
+        return calculate(p_.get_dict().at(deg).get_basic());
 }
 
 UExprDict UnivariateSeries::var(const std::string &s)
