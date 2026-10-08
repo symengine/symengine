@@ -15,6 +15,9 @@
 /* Define if you want to enable SYMENGINE_RCP support in SymEngine */
 #cmakedefine WITH_SYMENGINE_RCP
 
+/* Define to use the foreign-runtime cooperative intrusive RCP backend */
+#cmakedefine WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP
+
 /* Define if you want to enable TEUCHOS support in SymEngine */
 #cmakedefine WITH_SYMENGINE_TEUCHOS
 

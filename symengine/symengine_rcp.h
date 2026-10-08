@@ -14,7 +14,11 @@
 #include <symengine/symengine_config.h>
 #include <symengine/symengine_assert.h>
 
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+
+#include <cstdint>
+
+#elif defined(WITH_SYMENGINE_RCP)
 
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
 #include <atomic>
@@ -31,7 +35,64 @@
 namespace SymEngine
 {
 
-#if defined(WITH_SYMENGINE_RCP)
+// ---------------------------------------------------------------------------
+// noexcept is part of a function-pointer type only since C++17. Keep the
+// public hook types usable by the C++11/C++14 configurations that SymEngine
+// supports; a noexcept callback still converts to either pointer type.
+#if __cplusplus >= 201703L
+using cooperative_incref_hook = void (*)(void *) noexcept;
+using cooperative_decref_hook = void (*)(void *) noexcept;
+#else
+using cooperative_incref_hook = void (*)(void *);
+using cooperative_decref_hook = void (*)(void *);
+#endif
+
+void cooperative_intrusive_init(cooperative_incref_hook incref,
+                                cooperative_decref_hook decref) noexcept;
+
+// Counter wrapper for the cooperative_intrusive backend (declaration only;
+// definitions live in symengine_rcp_cooperative.cpp).
+// ---------------------------------------------------------------------------
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+//! Counter wrapper for the cooperative_intrusive backend.
+//! In external-owned mode, use_count() returns 0 because the foreign runtime
+//! holds the live references. Use is_uniquely_owned_by_cpp() for ownership-
+//! gated optimizations.
+class symengine_cooperative_intrusive_counter
+{
+public:
+    symengine_cooperative_intrusive_counter() noexcept : m_state(1) {}
+    void inc_ref() const noexcept;
+    bool dec_ref() const noexcept;
+    void set_self_external(void *o) noexcept;
+    void *self_external() const noexcept;
+    unsigned int use_count() const noexcept;
+    bool is_external_owned() const noexcept;
+    bool is_uniquely_owned_by_cpp() const noexcept;
+
+    // Detach the foreign wrapper: atomically reset to C++-owned (refcount 0)
+    // and return the previous runtime object pointer so the caller can
+    // release it in the foreign runtime. This is used during runtime shutdown.
+    // The CAS prevents a stale state snapshot from overwriting a concurrent
+    // mode transition; callers must still synchronize shutdown with hook calls.
+    // Returns nullptr if already C++-owned.
+    void *detach_external() const noexcept;
+
+private:
+    mutable uintptr_t m_state;
+};
+static_assert(
+    sizeof(symengine_cooperative_intrusive_counter) == sizeof(void *),
+    "cooperative-intrusive counter must stay pointer-sized for the C ABI");
+#endif
+
+// ---------------------------------------------------------------------------
+// Shared between both intrusive backends (cooperative_intrusive and symengine):
+// Ptr<T>, ENull, rcp(), rcp_*_cast, outArg, ptrFromRef, typeName,
+// print_stack_on_segfault.
+// ---------------------------------------------------------------------------
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
 
 /* Ptr */
 
@@ -105,6 +166,114 @@ inline Ptr<T> ptrFromRef(T &arg)
 enum ENull { null };
 
 // RCP can be null. Functionally it should be equivalent to Teuchos::RCP.
+
+// ---------------------------------------------------------------------------
+// cooperative_intrusive RCP<T>: uses inc_ref()/dec_ref() methods instead of
+// direct field access.  Counter lives inside the object (via
+// EnableRCPFromThis<T>).
+// ---------------------------------------------------------------------------
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+
+template <class T>
+class RCP
+{
+public:
+    RCP(ENull null_arg = null) : ptr_(nullptr) {}
+    explicit RCP(T *p) : ptr_(p)
+    {
+        SYMENGINE_ASSERT(ptr_ != nullptr)
+        ptr_->inc_ref();
+    }
+    RCP(const RCP<T> &rp) : ptr_(rp.ptr_)
+    {
+        if (not is_null())
+            ptr_->inc_ref();
+    }
+    template <class T2>
+    RCP(const RCP<T2> &r_ptr) : ptr_(r_ptr.get())
+    {
+        if (not is_null())
+            ptr_->inc_ref();
+    }
+    RCP(RCP<T> &&rp) SYMENGINE_NOEXCEPT : ptr_(rp.ptr_)
+    {
+        rp.ptr_ = nullptr;
+    }
+    template <class T2>
+    RCP(RCP<T2> &&r_ptr)
+    SYMENGINE_NOEXCEPT : ptr_(r_ptr.get())
+    {
+        r_ptr._set_null();
+    }
+    ~RCP() SYMENGINE_NOEXCEPT
+    {
+        if (ptr_ != nullptr and ptr_->dec_ref())
+            delete ptr_;
+    }
+    T *operator->() const
+    {
+        SYMENGINE_ASSERT(ptr_ != nullptr)
+        return ptr_;
+    }
+    T &operator*() const
+    {
+        SYMENGINE_ASSERT(ptr_ != nullptr)
+        return *ptr_;
+    }
+    T *get() const
+    {
+        return ptr_;
+    }
+    Ptr<T> ptr() const
+    {
+        return Ptr<T>(get());
+    }
+    bool is_null() const
+    {
+        return ptr_ == nullptr;
+    }
+    template <class T2>
+    bool operator==(const RCP<T2> &p2) const
+    {
+        return ptr_ == p2.ptr_;
+    }
+    template <class T2>
+    bool operator!=(const RCP<T2> &p2) const
+    {
+        return ptr_ != p2.ptr_;
+    }
+    RCP<T> &operator=(const RCP<T> &r_ptr)
+    {
+        T *r = r_ptr.ptr_;
+        if (r != nullptr)
+            r->inc_ref();
+        if (ptr_ != nullptr and ptr_->dec_ref())
+            delete ptr_;
+        ptr_ = r;
+        return *this;
+    }
+    RCP<T> &operator=(RCP<T> &&r_ptr)
+    {
+        std::swap(ptr_, r_ptr.ptr_);
+        return *this;
+    }
+    void reset()
+    {
+        if (ptr_ != nullptr and ptr_->dec_ref())
+            delete ptr_;
+        ptr_ = nullptr;
+    }
+    // Don't use this function directly:
+    void _set_null()
+    {
+        ptr_ = nullptr;
+    }
+
+private:
+    T *ptr_;
+};
+
+#else // WITH_SYMENGINE_RCP (original intrusive backend)
 
 template <class T>
 class RCP
@@ -211,6 +380,8 @@ private:
     T *ptr_;
 };
 
+#endif // WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP / WITH_SYMENGINE_RCP RCP<T>
+
 template <class T>
 inline RCP<T> rcp(T *p)
 {
@@ -261,7 +432,13 @@ std::string typeName(const T &t)
 
 SYMENGINE_EXPORT void print_stack_on_segfault();
 
-#else
+#endif // shared intrusive block
+
+// ---------------------------------------------------------------------------
+// Teuchos backend aliases
+// ---------------------------------------------------------------------------
+#if !defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                         \
+    && !defined(WITH_SYMENGINE_RCP)
 
 using Teuchos::null;
 using Teuchos::outArg;
@@ -285,7 +462,8 @@ public:
     //! Get RCP<T> pointer to self (it will cast the pointer to T)
     inline RCP<T> rcp_from_this()
     {
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<T *>(this));
 #else
         return rcp_static_cast<T>(weak_self_ptr_.create_strong());
@@ -295,7 +473,8 @@ public:
     //! Get RCP<const T> pointer to self (it will cast the pointer to const T)
     inline RCP<const T> rcp_from_this() const
     {
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T *>(this));
 #else
         return rcp_static_cast<const T>(weak_self_ptr_.create_strong());
@@ -306,26 +485,99 @@ public:
     template <class T2>
     inline RCP<const T2> rcp_from_this_cast() const
     {
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
         return rcp(static_cast<const T2 *>(this));
 #else
         return rcp_static_cast<const T2>(weak_self_ptr_.create_strong());
 #endif
     }
 
+    //! In the cooperative_intrusive backend, use_count() returns 0 for
+    //! external-owned objects, so it is NOT a total reference count in that
+    //! mode. In every backend the value is advisory while references can be
+    //! changed concurrently; use is_uniquely_owned() for ownership-gated
+    //! optimizations.
     unsigned int use_count() const
     {
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+        return refcount_.use_count();
+#elif defined(WITH_SYMENGINE_RCP)
         return refcount_;
 #else
         return weak_self_ptr_.strong_count();
 #endif
     }
 
-    // Everything below is private interface
-private:
-#if defined(WITH_SYMENGINE_RCP)
+    //! Whether this object can be safely treated as uniquely C++-owned for
+    //! move-out optimizations. Externally-owned cooperative objects are never
+    //! unique: a foreign runtime can still reach their wrapper.
+    bool is_uniquely_owned() const noexcept
+    {
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+        return refcount_.is_uniquely_owned_by_cpp();
+#elif defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_THREAD_SAFE)
+        // Keep the historical no-steal behavior in thread-safe builds. A
+        // relaxed load could be considered in a future, separately reviewed
+        // optimization, but it is intentionally not enabled here.
+        return false;
+#else
+        return refcount_ == 1;
+#endif
+#else
+        return weak_self_ptr_.strong_count() == 1;
+#endif
+    }
 
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)
+
+    // Everything below is private interface for cooperative_intrusive
+private:
+    mutable symengine_cooperative_intrusive_counter refcount_;
+
+public:
+    EnableRCPFromThis() = default;
+
+    void inc_ref() const noexcept
+    {
+        refcount_.inc_ref();
+    }
+    bool dec_ref() const noexcept
+    {
+        return refcount_.dec_ref();
+    }
+    void set_self_external(void *o) const noexcept
+    {
+        refcount_.set_self_external(o);
+    }
+    void *self_external() const noexcept
+    {
+        return refcount_.self_external();
+    }
+
+    bool is_external_owned() const noexcept
+    {
+        return refcount_.is_external_owned();
+    }
+    bool is_uniquely_owned_by_cpp() const noexcept
+    {
+        return refcount_.is_uniquely_owned_by_cpp();
+    }
+
+    // Detach the foreign wrapper: atomically reset to C++-owned (refcount 0)
+    // and return the previous runtime object pointer so the caller can release
+    // it in the foreign runtime. Used by runtime-specific shutdown cleanup.
+    void *detach_external() const noexcept
+    {
+        return refcount_.detach_external();
+    }
+
+private:
+#elif defined(WITH_SYMENGINE_RCP)
+
+    // Everything below is private interface for symengine RCP
+private:
 //! Public variables if defined with SYMENGINE_RCP
 // The reference counter is defined either as "unsigned int" (faster, but
 // not thread safe) or as std::atomic<unsigned int> (slower, but thread
@@ -345,6 +597,9 @@ public:
 
 private:
 #else
+
+    // Everything below is private interface for Teuchos
+private:
     mutable RCP<T> weak_self_ptr_;
 
     void set_weak_self_ptr(const RCP<T> &w)
@@ -356,9 +611,10 @@ private:
     {
         weak_self_ptr_ = rcp_const_cast<T>(w);
     }
-#endif // WITH_SYMENGINE_RCP
+#endif // WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP / WITH_SYMENGINE_RCP
 
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
     template <class T_>
     friend class RCP;
 #endif
@@ -370,7 +626,8 @@ private:
 template <typename T, typename... Args>
 inline RCP<T> make_rcp(Args &&...args)
 {
-#if defined(WITH_SYMENGINE_RCP)
+#if defined(WITH_SYMENGINE_COOPERATIVE_INTRUSIVE_RCP)                          \
+    || defined(WITH_SYMENGINE_RCP)
     return rcp(new T(std::forward<Args>(args)...));
 #else
     RCP<T> p = rcp(new T(std::forward<Args>(args)...));
