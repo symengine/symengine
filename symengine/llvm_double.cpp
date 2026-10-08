@@ -185,8 +185,12 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     llvm::IRBuilder<> _builder(BB);
     builder = reinterpret_cast<IRBuilder *>(&_builder);
     builder->SetInsertPoint(BB);
+    // Allow reassociation and FMA contraction, but keep NaN/Inf semantics,
+    // exact division and exact math functions
     auto fmf = llvm::FastMathFlags();
-    // fmf.setUnsafeAlgebra();
+    fmf.setAllowReassoc();
+    fmf.setNoSignedZeros();
+    fmf.setAllowContract();
     builder->setFastMathFlags(fmf);
 
     // Load all the symbols and create references
