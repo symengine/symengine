@@ -165,13 +165,13 @@ jobs:
             OS: ubuntu-22.04
 
           - BUILD_TYPE: Debug
-            WITH_LLVM: 5.0
+            WITH_LLVM: 9
             BUILD_METAL_TESTS: yes
             OS: macos-14
             CC: clang
 
           - BUILD_TYPE: Release
-            WITH_LLVM: 5.0
+            WITH_LLVM: 9
             BUILD_METAL_TESTS: yes
             OS: macos-14
             CC: clang
