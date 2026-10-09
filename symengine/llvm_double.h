@@ -117,8 +117,16 @@ public:
 
     LLVMDoubleVisitor();
     ~LLVMDoubleVisitor() override;
-    double call(const std::vector<double> &vec) const;
-    void call(double *outs, const double *inps) const;
+    double call(const std::vector<double> &vec) const
+    {
+        double ret;
+        ((double (*)(const double *, double *))func)(vec.data(), &ret);
+        return ret;
+    }
+    void call(double *outs, const double *inps) const
+    {
+        ((double (*)(const double *, double *))func)(inps, outs);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -144,8 +152,16 @@ public:
 
     LLVMFloatVisitor();
     ~LLVMFloatVisitor() override;
-    float call(const std::vector<float> &vec) const;
-    void call(float *outs, const float *inps) const;
+    float call(const std::vector<float> &vec) const
+    {
+        float ret;
+        ((float (*)(const float *, float *))func)(vec.data(), &ret);
+        return ret;
+    }
+    void call(float *outs, const float *inps) const
+    {
+        ((float (*)(const float *, float *))func)(inps, outs);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -173,8 +189,17 @@ public:
 
     LLVMLongDoubleVisitor();
     ~LLVMLongDoubleVisitor() override;
-    long double call(const std::vector<long double> &vec) const;
-    void call(long double *outs, const long double *inps) const;
+    long double call(const std::vector<long double> &vec) const
+    {
+        long double ret;
+        ((long double (*)(const long double *, long double *))func)(vec.data(),
+                                                                    &ret);
+        return ret;
+    }
+    void call(long double *outs, const long double *inps) const
+    {
+        ((long double (*)(const long double *, long double *))func)(inps, outs);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
