@@ -1,16 +1,30 @@
 #include "catch.hpp"
 #include <symengine/refine.h>
+#include <symengine/add.h>
+#include <symengine/mul.h>
+#include <symengine/logic.h>
+#include <symengine/real_double.h>
 
+using SymEngine::add;
 using SymEngine::Assumptions;
+using SymEngine::boolTrue;
+using SymEngine::div;
+using SymEngine::Eq;
+using SymEngine::expand;
 using SymEngine::infty;
 using SymEngine::integer;
 using SymEngine::integers;
 using SymEngine::max;
 using SymEngine::min;
+using SymEngine::mul;
+using SymEngine::one;
 using SymEngine::pi;
 using SymEngine::Rational;
+using SymEngine::real_double;
 using SymEngine::reals;
+using SymEngine::sub;
 using SymEngine::symbol;
+using SymEngine::zero;
 
 TEST_CASE("Test refine", "[refine]")
 {
@@ -200,4 +214,22 @@ TEST_CASE("Test refine", "[refine]")
     REQUIRE(eq(*refine(expr, &a), *reals()));
     expr = interval(integer(1), integer(2));
     REQUIRE(eq(*refine(expr, &a), *expr));
+
+    // #2044: normalize sign of Mul with coef=-1 and Add factor with odd
+    // exponent
+    expr = div(mul(SymEngine::minus_one, x), sub(one, sub(y, z)));
+    auto normalized = refine(expr, nullptr);
+    REQUIRE(eq(*Eq(normalized, div(x, sub(sub(y, z), one))), *boolTrue));
+
+    // #1340: numeric equality of int/float expressions via refine
+    // refine of sub(x+y+2, x+y+2.0) should simplify to 0
+    REQUIRE(eq(*refine(sub(add(add(x, y), integer(2)),
+                           add(add(x, y), real_double(2.0))),
+                       nullptr),
+               *zero));
+
+    // Refine Mul: abs(x)*abs(y) with x>0, y>0 should simplify to x*y
+    expr = mul(abs(x), abs(y));
+    a = Assumptions({Gt(x, integer(0)), Gt(y, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *mul(x, y)));
 }

@@ -32,6 +32,8 @@ public:
     void bvisit(const Pow &x);
     void bvisit(const Log &x);
     void bvisit(const Interval &x);
+    void bvisit(const Mul &x);
+    void bvisit(const Add &x);
 };
 
 SYMENGINE_EXPORT
