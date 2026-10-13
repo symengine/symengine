@@ -284,6 +284,17 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
                     d.erase(it);
                     m->power_num(outArg(*coef), d, exp_);
                 }
+            } else if (is_a<Pow>(*it->first) and is_a<Integer>(*it->second)) {
+                // (x**a)**n with an Integer n is x**(a*n); a Pow key with an
+                // Integer exponent is not canonical. This arises when the
+                // exponents of two (x**2)**(1/2) factors are added up.
+                RCP<const Basic> base
+                    = down_cast<const Pow &>(*it->first).get_base();
+                RCP<const Basic> exp_
+                    = mul(down_cast<const Pow &>(*it->first).get_exp(),
+                          it->second);
+                d.erase(it);
+                Mul::dict_add_term_new(coef, d, exp_, base);
             } else if (eq(*it->first, *E)) {
                 RCP<const Number> p = rcp_static_cast<const Number>(it->second);
                 if (not p->is_exact()) {
