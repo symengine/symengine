@@ -35,7 +35,7 @@ protected:
     std::unique_ptr<llvm::LLVMContext> context;
     std::unique_ptr<llvm::ExecutionEngine> executionengine;
 
-    intptr_t func;
+    intptr_t func = 0;
 
     // Following are invalid after the init call.
     IRBuilder *builder;
@@ -102,6 +102,14 @@ public:
     const std::string &dumps() const;
     // Load a previously compiled function from a string
     void loads(const std::string &s);
+    // Address of the compiled function, of C type
+    // `void (*)(const T *inps, T *outs)` where T is the visitor's floating
+    // point type, or 0 before `init` / `loads`. It is valid as long as this
+    // visitor is alive.
+    intptr_t get_function_pointer() const
+    {
+        return func;
+    }
     void bvisit(const UnevaluatedExpr &x);
 };
 

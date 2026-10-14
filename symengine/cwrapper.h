@@ -881,55 +881,108 @@ SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1,
                                                              const basic s);
 
 //! Wrapper for LambdaRealDoubleVisitor
+//! Compiles `exprs` into a function of `args` (a vector of symbols) that is
+//! evaluated with `*_call(self, outs, inps)`, where `inps` has
+//! `*_get_num_inputs(self)` entries and `outs` has `*_get_num_outputs(self)`
+//! entries. `*_call_batch` evaluates `npts` points stored contiguously, point
+//! after point, i.e. `inps[i * num_inputs + j]` and `outs[i * num_outputs + k]`
+//! (an array of shape (num_inputs, npts) in Fortran).
+//! A LambdaRealDoubleVisitor uses internal scratch space when evaluating, so
+//! use one visitor per thread.
 typedef struct CLambdaRealDoubleVisitor CLambdaRealDoubleVisitor;
 SYMENGINE_EXPORT CLambdaRealDoubleVisitor *lambda_real_double_visitor_new(void);
-SYMENGINE_EXPORT void
-lambda_real_double_visitor_init(CLambdaRealDoubleVisitor *self,
-                                const CVecBasic *args, const CVecBasic *exprs,
-                                int perform_cse);
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE lambda_real_double_visitor_init(
+    CLambdaRealDoubleVisitor *self, const CVecBasic *args,
+    const CVecBasic *exprs, int perform_cse);
+SYMENGINE_EXPORT size_t
+lambda_real_double_visitor_get_num_inputs(const CLambdaRealDoubleVisitor *self);
+SYMENGINE_EXPORT size_t lambda_real_double_visitor_get_num_outputs(
+    const CLambdaRealDoubleVisitor *self);
 SYMENGINE_EXPORT void
 lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
                                 double *const outs, const double *const inps);
 SYMENGINE_EXPORT void
+lambda_real_double_visitor_call_batch(CLambdaRealDoubleVisitor *self,
+                                      double *const outs,
+                                      const double *const inps, size_t npts);
+SYMENGINE_EXPORT void
 lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 
-//! Wrapper for LambdaRealDoubleVisitor
+//! Wrappers for LLVMDoubleVisitor, LLVMFloatVisitor and LLVMLongDoubleVisitor
+//! Same interface as CLambdaRealDoubleVisitor. In addition,
+//! `llvm_*_visitor_get_function` returns the JIT compiled function itself,
+//! which takes its arguments in the order (inps, outs), or NULL if the visitor
+//! has not been successfully initialized. The function pointer is valid as
+//! long as the visitor is alive and can be called concurrently from several
+//! threads.
 #ifdef HAVE_SYMENGINE_LLVM
 // double
+typedef void (*symengine_llvm_double_function)(const double *inps,
+                                               double *outs);
 typedef struct CLLVMDoubleVisitor CLLVMDoubleVisitor;
 SYMENGINE_EXPORT CLLVMDoubleVisitor *llvm_double_visitor_new(void);
-SYMENGINE_EXPORT void llvm_double_visitor_init(CLLVMDoubleVisitor *self,
-                                               const CVecBasic *args,
-                                               const CVecBasic *exprs,
-                                               int perform_cse, int opt_level);
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE llvm_double_visitor_init(
+    CLLVMDoubleVisitor *self, const CVecBasic *args, const CVecBasic *exprs,
+    int perform_cse, int opt_level);
+SYMENGINE_EXPORT size_t
+llvm_double_visitor_get_num_inputs(const CLLVMDoubleVisitor *self);
+SYMENGINE_EXPORT size_t
+llvm_double_visitor_get_num_outputs(const CLLVMDoubleVisitor *self);
 SYMENGINE_EXPORT void llvm_double_visitor_call(CLLVMDoubleVisitor *self,
                                                double *const outs,
                                                const double *const inps);
+SYMENGINE_EXPORT void llvm_double_visitor_call_batch(CLLVMDoubleVisitor *self,
+                                                     double *const outs,
+                                                     const double *const inps,
+                                                     size_t npts);
+SYMENGINE_EXPORT symengine_llvm_double_function
+llvm_double_visitor_get_function(const CLLVMDoubleVisitor *self);
 SYMENGINE_EXPORT void llvm_double_visitor_free(CLLVMDoubleVisitor *self);
 // float
+typedef void (*symengine_llvm_float_function)(const float *inps, float *outs);
 typedef struct CLLVMFloatVisitor CLLVMFloatVisitor;
 SYMENGINE_EXPORT CLLVMFloatVisitor *llvm_float_visitor_new(void);
-SYMENGINE_EXPORT void llvm_float_visitor_init(CLLVMFloatVisitor *self,
-                                              const CVecBasic *args,
-                                              const CVecBasic *exprs,
-                                              int perform_cse, int opt_level);
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE
+llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
+                        const CVecBasic *exprs, int perform_cse, int opt_level);
+SYMENGINE_EXPORT size_t
+llvm_float_visitor_get_num_inputs(const CLLVMFloatVisitor *self);
+SYMENGINE_EXPORT size_t
+llvm_float_visitor_get_num_outputs(const CLLVMFloatVisitor *self);
 SYMENGINE_EXPORT void llvm_float_visitor_call(CLLVMFloatVisitor *self,
                                               float *const outs,
                                               const float *const inps);
+SYMENGINE_EXPORT void llvm_float_visitor_call_batch(CLLVMFloatVisitor *self,
+                                                    float *const outs,
+                                                    const float *const inps,
+                                                    size_t npts);
+SYMENGINE_EXPORT symengine_llvm_float_function
+llvm_float_visitor_get_function(const CLLVMFloatVisitor *self);
 SYMENGINE_EXPORT void llvm_float_visitor_free(CLLVMFloatVisitor *self);
 
 #ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
 // long double
+typedef void (*symengine_llvm_long_double_function)(const long double *inps,
+                                                    long double *outs);
 typedef struct CLLVMLongDoubleVisitor CLLVMLongDoubleVisitor;
 SYMENGINE_EXPORT CLLVMLongDoubleVisitor *llvm_long_double_visitor_new(void);
-SYMENGINE_EXPORT void
-llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
-                              const CVecBasic *args, const CVecBasic *exprs,
-                              int perform_cse, int opt_level);
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE llvm_long_double_visitor_init(
+    CLLVMLongDoubleVisitor *self, const CVecBasic *args, const CVecBasic *exprs,
+    int perform_cse, int opt_level);
+SYMENGINE_EXPORT size_t
+llvm_long_double_visitor_get_num_inputs(const CLLVMLongDoubleVisitor *self);
+SYMENGINE_EXPORT size_t
+llvm_long_double_visitor_get_num_outputs(const CLLVMLongDoubleVisitor *self);
 SYMENGINE_EXPORT void
 llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
                               long double *const outs,
                               const long double *const inps);
+SYMENGINE_EXPORT void
+llvm_long_double_visitor_call_batch(CLLVMLongDoubleVisitor *self,
+                                    long double *const outs,
+                                    const long double *const inps, size_t npts);
+SYMENGINE_EXPORT symengine_llvm_long_double_function
+llvm_long_double_visitor_get_function(const CLLVMLongDoubleVisitor *self);
 SYMENGINE_EXPORT void
 llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self);
 #endif
