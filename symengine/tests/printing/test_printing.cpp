@@ -1090,10 +1090,18 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     s = unicode(*add(mul(integer(-2), x), parse("cos(x)")));
     CHECK(s.find("- ") != std::string::npos);
+    CHECK(s.find("- -") == std::string::npos);
+
+    s = unicode(*add(mul(integer(-2), x), integer(-3)));
+    CHECK(s == U8("-3 - 2\u22C5x"));
+
+    s = unicode(*add(y, mul(integer(-2), x)));
+    CHECK(s.find("- -") == std::string::npos);
 
     s = unicode(*add(mul(integer(-1), parse("sin(x)")),
                      mul(integer(-1), parse("cos(x)"))));
     CHECK(s.find("- ") == 0);
+    CHECK(s.find("- -") == std::string::npos);
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
