@@ -3557,7 +3557,7 @@ RCP<const Basic> max(const vec_basic &arg)
     set_basic new_args;
 
     for (const auto &p : arg) {
-        if (is_a<Complex>(*p))
+        if (is_a_Complex(*p))
             throw SymEngineException("Complex can't be passed to max!");
 
         if (is_a_Number(*p)) {
@@ -3661,7 +3661,7 @@ RCP<const Basic> min(const vec_basic &arg)
     set_basic new_args;
 
     for (const auto &p : arg) {
-        if (is_a<Complex>(*p))
+        if (is_a_Complex(*p))
             throw SymEngineException("Complex can't be passed to min!");
 
         if (is_a_Number(*p)) {

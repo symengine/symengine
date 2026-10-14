@@ -3,7 +3,9 @@
 #include <symengine/sets.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/nan.h>
 #include <symengine/real_double.h>
+#include <symengine/complex_double.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/add.h>
 #include <symengine/pow.h>
@@ -18,6 +20,7 @@ using SymEngine::Complement;
 using SymEngine::Complex;
 using SymEngine::Complexes;
 using SymEngine::complexes;
+using SymEngine::complex_double;
 using SymEngine::ConditionSet;
 using SymEngine::conditionset;
 using SymEngine::Contains;
@@ -52,6 +55,7 @@ using SymEngine::Naturals;
 using SymEngine::naturals;
 using SymEngine::Naturals0;
 using SymEngine::naturals0;
+using SymEngine::Nan;
 using SymEngine::NegInf;
 using SymEngine::Not;
 using SymEngine::NotImplementedError;
@@ -306,6 +310,9 @@ TEST_CASE("Complexes : Basic", "[basic]")
     REQUIRE(r0->compare(*complexes()) == 0);
     REQUIRE(eq(*r0->contains(zero), *boolTrue));
     REQUIRE(eq(*r0->contains(c1), *boolTrue));
+    REQUIRE(eq(*r0->contains(Nan), *boolFalse));
+    REQUIRE(eq(*r0->contains(Inf), *boolFalse));
+    REQUIRE(eq(*r0->contains(NegInf), *boolFalse));
     REQUIRE(eq(*r0->contains(r0), *boolFalse));
     REQUIRE(eq(*r0->contains(x), *make_rcp<Contains>(x, r0)));
     REQUIRE(r0->get_args().empty());
@@ -376,6 +383,11 @@ TEST_CASE("Reals : Basic", "[basic]")
     REQUIRE(r1->compare(*reals()) == 0);
     REQUIRE(eq(*r1->contains(zero), *boolTrue));
     REQUIRE(eq(*r1->contains(c1), *boolFalse));
+    REQUIRE(eq(*r1->contains(complex_double(std::complex<double>(0.5, 1.0))),
+               *boolFalse));
+    REQUIRE(eq(*r1->contains(Nan), *boolFalse));
+    REQUIRE(eq(*r1->contains(Inf), *boolFalse));
+    REQUIRE(eq(*r1->contains(NegInf), *boolFalse));
     REQUIRE(eq(*r1->contains(r1), *boolFalse));
     REQUIRE(eq(*r1->contains(zero), *boolTrue));
     REQUIRE(eq(*r1->contains(x), *make_rcp<Contains>(x, r1)));
