@@ -3,6 +3,7 @@
 #include <symengine/sets.h>
 #include <symengine/logic.h>
 #include <symengine/infinity.h>
+#include <symengine/nan.h>
 #include <symengine/real_double.h>
 #include <symengine/symengine_exception.h>
 #include <symengine/add.h>
@@ -52,6 +53,7 @@ using SymEngine::Naturals;
 using SymEngine::naturals;
 using SymEngine::Naturals0;
 using SymEngine::naturals0;
+using SymEngine::Nan;
 using SymEngine::NegInf;
 using SymEngine::Not;
 using SymEngine::NotImplementedError;
@@ -102,6 +104,9 @@ TEST_CASE("Interval : Basic", "[basic]")
 
     r3 = r1->set_intersection(r2); // [0, 2]
     REQUIRE(eq(*r1->contains(one), *boolTrue));
+    REQUIRE(eq(*r1->contains(Complex::from_two_nums(*integer(0), *integer(1))),
+               *boolFalse));
+    REQUIRE(eq(*r1->contains(Nan), *boolFalse));
     r4 = interval(zero, i2); // [0, 2]
     REQUIRE(eq(*r3, *r4));
 
