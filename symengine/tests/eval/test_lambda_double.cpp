@@ -687,7 +687,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         // Check for 12 digits with doubles
         REQUIRE(::fabs((d - d2) / d) < 1e-12);
     }
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
     SymEngine::LLVMLongDoubleVisitor v3;
 #endif
     LLVMFloatVisitor v4;
@@ -698,7 +698,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         d4 = v4.call({0.4f, 2.0f, 3.0f});
         // Check only for 6 digits with floats
         REQUIRE(::fabs((d - d4) / d) < 1e-6);
-#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
+#if defined(HAVE_SYMENGINE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
         long double d3, mpfr_d;
         v3.init({x, y, z}, *arg);
         d3 = v3.call({0.4l, 2.0l, 3.0l});

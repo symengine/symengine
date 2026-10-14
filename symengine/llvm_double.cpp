@@ -316,7 +316,7 @@ void LLVMDoubleVisitor::call(double *outs, const double *inps) const
     ((double (*)(const double *, double *))func)(inps, outs);
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 long double
 LLVMLongDoubleVisitor::call(const std::vector<long double> &vec) const
 {
@@ -359,7 +359,7 @@ void LLVMVisitor::bvisit(const Integer &x)
                                     mp_get_d(x.as_integer_class()));
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 
 LLVMLongDoubleVisitor::LLVMLongDoubleVisitor() = default;
 LLVMLongDoubleVisitor::~LLVMLongDoubleVisitor() = default;
@@ -387,7 +387,7 @@ void LLVMVisitor::bvisit(const Rational &x)
     set_double(mp_get_d(x.as_rational_class()));
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const Rational &x)
 {
     convert_from_mpfr(x);
@@ -404,7 +404,7 @@ void LLVMVisitor::bvisit(const RealMPFR &x)
 {
     set_double(mpfr_get_d(x.i.get_mpfr_t(), MPFR_RNDN));
 }
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const RealMPFR &x)
 {
     convert_from_mpfr(x);
@@ -775,7 +775,7 @@ SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
         result_ = r;                                                           \
     }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 #define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
     _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                             \
     void LLVMLongDoubleVisitor::visit(const Class &x)                          \
@@ -909,7 +909,7 @@ void LLVMVisitor::bvisit(const Constant &x)
     set_double(eval_double(x));
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const Constant &x)
 {
     convert_from_mpfr(x);
@@ -1036,7 +1036,7 @@ llvm::Type *LLVMFloatVisitor::get_float_type(llvm::LLVMContext *context)
     return llvm::Type::getFloatTy(*context);
 }
 
-#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE)
+#if defined(HAVE_SYMENGINE_LLVM_LONG_DOUBLE)
 llvm::Type *LLVMLongDoubleVisitor::get_float_type(llvm::LLVMContext *context)
 {
     return llvm::Type::getX86_FP80Ty(*context);

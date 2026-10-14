@@ -2162,7 +2162,7 @@ void llvm_float_visitor_free(CLLVMFloatVisitor *self)
     delete self;
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 // long double
 struct CLLVMLongDoubleVisitor {
     SymEngine::LLVMLongDoubleVisitor m;

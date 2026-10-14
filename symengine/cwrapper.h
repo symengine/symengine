@@ -960,7 +960,7 @@ SYMENGINE_EXPORT symengine_llvm_float_function
 llvm_float_visitor_get_function(const CLLVMFloatVisitor *self);
 SYMENGINE_EXPORT void llvm_float_visitor_free(CLLVMFloatVisitor *self);
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 // long double
 typedef void (*symengine_llvm_long_double_function)(const long double *inps,
                                                     long double *outs);

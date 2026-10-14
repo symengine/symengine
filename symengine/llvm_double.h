@@ -167,7 +167,8 @@ public:
     void visit(const Erfc &x) override;
 };
 
-#if SYMENGINE_SIZEOF_LONG_DOUBLE > 8 && defined(__x86_64__) || defined(__i386__)
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+// Kept for backward compatibility, use HAVE_SYMENGINE_LLVM_LONG_DOUBLE instead
 #define SYMENGINE_HAVE_LLVM_LONG_DOUBLE 1
 class SYMENGINE_EXPORT LLVMLongDoubleVisitor : public LLVMVisitor
 {

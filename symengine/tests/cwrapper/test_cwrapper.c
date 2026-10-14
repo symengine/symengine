@@ -2344,8 +2344,8 @@ void test_lambda_double()
                                       opt_level);
         llvm_long_double_visitor_call(vis2l, outs_l, inps_l);
         llvm_long_double_visitor_free(vis2l);
-        SYMENGINE_C_ASSERT(fabs(outs_l[0] - 43.5L) < 1e-6L);
-        SYMENGINE_C_ASSERT(fabs(outs_l[1] - 45.0L) < 1e-6L);
+        SYMENGINE_C_ASSERT(fabsl(outs_l[0] - 43.5L) < 1e-6L);
+        SYMENGINE_C_ASSERT(fabsl(outs_l[1] - 45.0L) < 1e-6L);
 #endif
 #endif
     }
