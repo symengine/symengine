@@ -96,3 +96,9 @@ target_link_libraries(parsing symengine)
 
 add_executable(diff_cache diff_cache.cpp)
 target_link_libraries(diff_cache symengine)
+
+if (WITH_LLVM)
+    add_executable(llvm_diff_cache llvm_diff_cache.cpp)
+    target_link_libraries(llvm_diff_cache symengine)
+endif()
+
