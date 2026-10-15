@@ -164,6 +164,9 @@ void RefineVisitor::bvisit(const Pow &x)
             } else if (is_true(is_even(*inner_exp, assumptions_))) {
                 result_ = pow(abs(inner_base), mul(newexp, inner_exp));
                 return;
+            } else if (is_true(is_odd(*inner_exp, assumptions_))) {
+                result_ = pow(inner_base, mul(newexp, inner_exp));
+                return;
             }
         }
     }
