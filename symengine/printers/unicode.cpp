@@ -414,11 +414,12 @@ void UnicodePrinter::bvisit(const Add &x)
             minus = true;
             t = parenthesizeLT(p.first, PrecedenceEnum::Mul);
         } else {
+            RCP<const Basic> coef = p.second;
             if (down_cast<const Number &>(*p.second).is_negative()) {
                 minus = true;
+                coef = neg(p.second);
             }
-            // FIXME: Double minus here
-            t = parenthesizeLT(p.second, PrecedenceEnum::Mul);
+            t = parenthesizeLT(coef, PrecedenceEnum::Mul);
             auto op = print_mul();
             t.add_right(op);
             auto rhs = parenthesizeLT(p.first, PrecedenceEnum::Mul);
