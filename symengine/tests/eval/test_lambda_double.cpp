@@ -560,6 +560,7 @@ TEST_CASE("Check llvm with opt_level 0-3 is equal to llvm without opt_level",
         v.init({x, y, z}, *expr, symbolic_cse);
 
         for (int opt_level = 0; opt_level < 4; ++opt_level) {
+            INFO("expr=" << *expr << ", opt_level=" << opt_level);
             LLVMDoubleVisitor v2;
             v2.init({x, y, z}, *expr, symbolic_cse, opt_level);
 

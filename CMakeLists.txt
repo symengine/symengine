@@ -360,10 +360,10 @@ set(WITH_LLVM no
     CACHE BOOL "Build with LLVM")
 
 if (WITH_LLVM)
-    set(SYMENGINE_LLVM_COMPONENTS asmparser core executionengine instcombine mcjit native nativecodegen scalaropts vectorize support transformutils passes)
+    set(SYMENGINE_LLVM_COMPONENTS asmparser core executionengine instcombine orcjit native nativecodegen scalaropts vectorize support transformutils passes)
     find_package(LLVM REQUIRED ${SYMENGINE_LLVM_COMPONENTS})
-    set(LLVM_MINIMUM_REQUIRED_VERSION "5.0")
-    if (LLVM_PACKAGE_VERSION LESS ${LLVM_MINIMUM_REQUIRED_VERSION})
+    set(LLVM_MINIMUM_REQUIRED_VERSION "9.0")
+    if (LLVM_PACKAGE_VERSION VERSION_LESS ${LLVM_MINIMUM_REQUIRED_VERSION})
 	    message(FATAL_ERROR "LLVM version found ${LLVM_PACKAGE_VERSION} is too old.
                              Require at least ${LLVM_MINIMUM_REQUIRED_VERSION}")
     endif()
