@@ -1002,6 +1002,11 @@ void StrPrinter::bvisit(const MExprPoly &x)
             }
             i++;
         }
+        
+        if (first && c == -1) {
+            s << "-";
+        }
+
         if (c != 1 && c != -1) {
             s << t;
             if (!expr.str().empty()) {
