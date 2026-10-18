@@ -236,6 +236,7 @@ TEST_CASE("eval_complex_double: eval_double", "[eval_double]")
         REQUIRE(std::abs(val.real() - vec[i].second.real()) < 1e-12);
     }
 }
+
 TEST_CASE("test_eval_double_symbols()", "[eval_double]")
 {
     RCP<const Basic> x = symbol("x");

@@ -19,7 +19,7 @@ protected:
     T result_;
 
 public:
-std:: unordered_map<std::string,double>mpp;
+    std::unordered_map<std::string, double> mpp;
     T apply(const Basic &b)
     {
         b.accept(*down_cast<C *>(this));

@@ -6,7 +6,8 @@
 #define SYMENGINE_EVAL_DOUBLE_H
 
 #include <symengine/basic.h>
-
+#include <string>
+#include <unordered_map>
 namespace SymEngine
 {
 
@@ -18,8 +19,7 @@ namespace SymEngine
 SYMENGINE_EXPORT double eval_double(const Basic &b);
 
 SYMENGINE_EXPORT double eval_double_single_dispatch(const Basic &b);
-#include <unordered_map>
-#include <string>
+
 
 SYMENGINE_EXPORT double eval_double(const Basic &b, const std::unordered_map<std::string, double> &mpp);
 
