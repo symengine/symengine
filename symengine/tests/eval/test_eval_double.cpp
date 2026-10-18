@@ -236,3 +236,14 @@ TEST_CASE("eval_complex_double: eval_double", "[eval_double]")
         REQUIRE(std::abs(val.real() - vec[i].second.real()) < 1e-12);
     }
 }
+TEST_CASE("test_eval_double_symbols()", "[eval_double]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    RCP<const Basic> e = SymEngine::add(sin(x), cos(y));
+
+    std::unordered_map<std::string, double> mpp = {{"x", 1.0}, {"y", 2.0}};
+    double val = eval_double(*e, mpp);
+    CHECK(std::abs(val - (std::sin(1.0) + std::cos(2.0))) < 1e-12);
+}
+  

@@ -19,6 +19,7 @@ protected:
     T result_;
 
 public:
+std:: unordered_map<std::string,double>mpp;
     T apply(const Basic &b)
     {
         b.accept(*down_cast<C *>(this));
@@ -94,10 +95,14 @@ public:
         result_ = std::tan(tmp);
     }
 
-    void bvisit(const Symbol &)
+    void bvisit(const Symbol &x)
     {
-        throw SymEngineException("Symbol cannot be evaluated.");
-    };
+        if (mpp.count(x.get_name())) {
+            result_ = mpp.at(x.get_name());
+        } else {
+            throw SymEngineException("Symbol cannot be evaluated.");
+        }
+    }
 
     void bvisit(const Log &x)
     {
@@ -725,6 +730,13 @@ static inline std::vector<fn> init_eval_double()
 double eval_double(const Basic &b)
 {
     EvalRealDoubleVisitorFinal v;
+    return v.apply(b);
+}
+
+double eval_double(const Basic &b, const std::unordered_map<std::string, double> &mpp)
+{
+    EvalRealDoubleVisitorFinal v;
+    v.mpp = mpp;
     return v.apply(b);
 }
 
