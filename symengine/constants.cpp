@@ -54,6 +54,7 @@ static int nifty_counter;
     DEFINE_CONSTANT(Integer, one, integer(1));                                 \
     DEFINE_CONSTANT(Integer, minus_one, integer(-1));                          \
     DEFINE_CONSTANT(Integer, two, integer(2));                                 \
+    DEFINE_CONSTANT(Integer, ten, integer(10));                                \
     DEFINE_CONSTANT(Number, I, Complex::from_two_nums(*zero, *one));           \
     DEFINE_CONSTANT(Constant, pi, constant("pi"));                             \
     DEFINE_CONSTANT(Constant, E, constant("E"));                               \
