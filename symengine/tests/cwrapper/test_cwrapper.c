@@ -1558,6 +1558,50 @@ void test_functions()
     vecbasic_free(vec);
 }
 
+void test_log10()
+{
+    basic x, y, z;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+
+    integer_set_si(x, 10);
+    basic_log10(y, x);
+    basic_const_one(z);
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
+    integer_set_si(x, 1);
+    basic_log10(y, x);
+    basic_const_zero(z);
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
+void test_log2()
+{
+    basic x, y, z;
+    basic_new_stack(x);
+    basic_new_stack(y);
+    basic_new_stack(z);
+
+    integer_set_si(x, 2);
+    basic_log2(y, x);
+    basic_const_one(z);
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
+    integer_set_si(x, 1);
+    basic_log2(y, x);
+    basic_const_zero(z);
+    SYMENGINE_C_ASSERT(basic_eq(y, z));
+
+    basic_free_stack(x);
+    basic_free_stack(y);
+    basic_free_stack(z);
+}
+
 void test_ntheory()
 {
     int ret_val;
@@ -2560,6 +2604,8 @@ int main(int argc, char *argv[])
     test_nan();
     test_ascii_art();
     test_functions();
+    test_log10();
+    test_log2();
     test_ntheory();
     test_real_double();
     test_eval();

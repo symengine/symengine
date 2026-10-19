@@ -1083,17 +1083,23 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     // https://github.com/symengine/symengine/issues/2131
     s = unicode(*add(mul(integer(-1), parse("sin(x)")), parse("cos(x)")));
-    CHECK(s.find("- ") != std::string::npos);
+    CHECK(s == U8("- sin(x) + cos(x)"));
 
     s = unicode(*add(mul(integer(-1), x), integer(1)));
     CHECK(s == U8("1 - x"));
 
     s = unicode(*add(mul(integer(-2), x), parse("cos(x)")));
-    CHECK(s.find("- ") != std::string::npos);
+    CHECK(s == U8("- 2\u22C5x + cos(x)"));
+
+    s = unicode(*add(mul(integer(-2), x), integer(-3)));
+    CHECK(s == U8("-3 - 2\u22C5x"));
+
+    s = unicode(*add(y, mul(integer(-2), x)));
+    CHECK(s == U8("- 2\u22C5x + y"));
 
     s = unicode(*add(mul(integer(-1), parse("sin(x)")),
                      mul(integer(-1), parse("cos(x)"))));
-    CHECK(s.find("- ") == 0);
+    CHECK(s == U8("- sin(x) - cos(x)"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")
