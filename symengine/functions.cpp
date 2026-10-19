@@ -1817,6 +1817,16 @@ RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
     return div(log(arg), log(base));
 }
 
+RCP<const Basic> log10(const RCP<const Basic> &arg)
+{
+    return log(arg, ten);
+}
+
+RCP<const Basic> log2(const RCP<const Basic> &arg)
+{
+    return log(arg, two);
+}
+
 LambertW::LambertW(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
     SYMENGINE_ASSIGN_TYPEID()

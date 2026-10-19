@@ -95,6 +95,8 @@ using SymEngine::lambertw;
 using SymEngine::levi_civita;
 using SymEngine::LeviCivita;
 using SymEngine::log;
+using SymEngine::log10;
+using SymEngine::log2;
 using SymEngine::loggamma;
 using SymEngine::LogGamma;
 using SymEngine::lowergamma;
@@ -4775,4 +4777,12 @@ TEST_CASE("test UnevaluatedExpr", "[Functions]")
 
     r1 = z->subs({{x, zero}});
     REQUIRE(neq(*r1, *one));
+}
+
+TEST_CASE("Log10 and Log2: Basic", "[functions]")
+{
+    REQUIRE(eq(*log10(integer(10)), *one));
+    REQUIRE(eq(*log10(one), *zero));
+    REQUIRE(eq(*log2(integer(2)), *one));
+    REQUIRE(eq(*log2(one), *zero));
 }
