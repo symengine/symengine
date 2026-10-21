@@ -2089,11 +2089,7 @@ void llvm_double_visitor_call_batch(CLLVMDoubleVisitor *self,
 symengine_llvm_double_function
 llvm_double_visitor_get_function(const CLLVMDoubleVisitor *self)
 {
-    if (self->nout == 0) {
-        return nullptr;
-    }
-    return reinterpret_cast<symengine_llvm_double_function>(
-        self->m.get_function_pointer());
+    return self->m.get_function_pointer();
 }
 
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
@@ -2152,11 +2148,7 @@ void llvm_float_visitor_call_batch(CLLVMFloatVisitor *self, float *const outs,
 symengine_llvm_float_function
 llvm_float_visitor_get_function(const CLLVMFloatVisitor *self)
 {
-    if (self->nout == 0) {
-        return nullptr;
-    }
-    return reinterpret_cast<symengine_llvm_float_function>(
-        self->m.get_function_pointer());
+    return self->m.get_function_pointer();
 }
 
 void llvm_float_visitor_free(CLLVMFloatVisitor *self)
@@ -2222,11 +2214,7 @@ void llvm_long_double_visitor_call_batch(CLLVMLongDoubleVisitor *self,
 symengine_llvm_long_double_function
 llvm_long_double_visitor_get_function(const CLLVMLongDoubleVisitor *self)
 {
-    if (self->nout == 0) {
-        return nullptr;
-    }
-    return reinterpret_cast<symengine_llvm_long_double_function>(
-        self->m.get_function_pointer());
+    return self->m.get_function_pointer();
 }
 
 void llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self)

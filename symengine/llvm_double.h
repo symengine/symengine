@@ -102,14 +102,6 @@ public:
     const std::string &dumps() const;
     // Load a previously compiled function from a string
     void loads(const std::string &s);
-    // Address of the compiled function, of C type
-    // `void (*)(const T *inps, T *outs)` where T is the visitor's floating
-    // point type, or 0 before `init` / `loads`. It is valid as long as this
-    // visitor is alive.
-    intptr_t get_function_pointer() const
-    {
-        return func;
-    }
     void bvisit(const UnevaluatedExpr &x);
 };
 
@@ -122,6 +114,14 @@ public:
     ~LLVMDoubleVisitor() override;
     double call(const std::vector<double> &vec) const;
     void call(double *outs, const double *inps) const;
+    using function_pointer_type = void (*)(const double *inps, double *outs);
+    function_pointer_type get_function_pointer() const
+    {
+        if (func == 0) {
+            return nullptr;
+        }
+        return reinterpret_cast<function_pointer_type>(func);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -149,6 +149,14 @@ public:
     ~LLVMFloatVisitor() override;
     float call(const std::vector<float> &vec) const;
     void call(float *outs, const float *inps) const;
+    using function_pointer_type = void (*)(const float *inps, float *outs);
+    function_pointer_type get_function_pointer() const
+    {
+        if (func == 0) {
+            return nullptr;
+        }
+        return reinterpret_cast<function_pointer_type>(func);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -179,6 +187,15 @@ public:
     ~LLVMLongDoubleVisitor() override;
     long double call(const std::vector<long double> &vec) const;
     void call(long double *outs, const long double *inps) const;
+    using function_pointer_type
+        = void (*)(const long double *inps, long double *outs);
+    function_pointer_type get_function_pointer() const
+    {
+        if (func == 0) {
+            return nullptr;
+        }
+        return reinterpret_cast<function_pointer_type>(func);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
