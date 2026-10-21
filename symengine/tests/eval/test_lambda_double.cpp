@@ -269,6 +269,40 @@ TEST_CASE("LambdaRealDoubleVisitor with cse can be moved",
     REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
 }
 
+TEST_CASE("LambdaRealDoubleVisitor is empty after a failed init",
+          "[lambda_double]")
+{
+    RCP<const Basic> x, y, z, w, r, s;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    w = symbol("w");
+
+    r = add(x, add(mul(y, z), pow(mul(y, z), integer(2))));
+    s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
+
+    double d[3];
+    double inps[] = {1.5, 2.0, 3.0};
+    for (bool cse : {false, true}) {
+        LambdaRealDoubleVisitor v;
+        v.init({x, y, z}, {r, s}, cse);
+        // w is not an input: fails after r and s have been compiled
+        CHECK_THROWS_AS(v.init({x, y, z}, {r, s, w}, cse), SymEngineException);
+        // call writes nothing
+        d[0] = d[1] = d[2] = -1.0;
+        v.call(d, inps);
+        REQUIRE(d[0] == -1.0);
+        REQUIRE(d[1] == -1.0);
+        REQUIRE(d[2] == -1.0);
+        // the visitor can be initialized again
+        v.init({x, y, z}, {r, s}, cse);
+        v.call(d, inps);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+        REQUIRE(d[2] == -1.0);
+    }
+}
+
 TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
 {
     RCP<const Basic> x, y, z, r;

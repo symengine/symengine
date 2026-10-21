@@ -2398,19 +2398,42 @@ void test_lambda_double()
     basic w;
     basic_new_stack(w);
     symbol_set(w, "w");
-    vecbasic_push_back(exprs, w);
-    CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
-    SYMENGINE_C_ASSERT(lambda_real_double_visitor_init(vis, args, exprs, 0)
-                       != SYMENGINE_NO_EXCEPTION);
-    SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_outputs(vis) == 0);
-    lambda_real_double_visitor_free(vis);
+    CVecBasic *bad_exprs = vecbasic_new();
+    vecbasic_push_back(bad_exprs, r);
+    vecbasic_push_back(bad_exprs, s);
+    vecbasic_push_back(bad_exprs, w);
+    // A failed init of a previously initialized visitor leaves it with no
+    // outputs, so call_batch writes nothing, and it can be initialized again
+    for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
+        CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, exprs, perform_cse)
+            == SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, bad_exprs, perform_cse)
+            != SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_inputs(vis) == 0);
+        SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_outputs(vis)
+                           == 0);
+        outs_batch[0] = -1.0;
+        lambda_real_double_visitor_call_batch(vis, outs_batch, inps_batch, 2);
+        SYMENGINE_C_ASSERT(outs_batch[0] == -1.0);
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, exprs, perform_cse)
+            == SYMENGINE_NO_EXCEPTION);
+        lambda_real_double_visitor_call(vis, outs, inps);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+        lambda_real_double_visitor_free(vis);
+    }
 #ifdef HAVE_SYMENGINE_LLVM
     CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
-    SYMENGINE_C_ASSERT(llvm_double_visitor_init(vis2, args, exprs, 0, 2)
+    SYMENGINE_C_ASSERT(llvm_double_visitor_init(vis2, args, bad_exprs, 0, 2)
                        != SYMENGINE_NO_EXCEPTION);
     SYMENGINE_C_ASSERT(llvm_double_visitor_get_function(vis2) == NULL);
     llvm_double_visitor_free(vis2);
 #endif
+    vecbasic_free(bad_exprs);
     basic_free_stack(w);
 
     basic_free_stack(two);
