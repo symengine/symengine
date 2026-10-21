@@ -674,6 +674,43 @@ TEST_CASE("LLVMDoubleVisitor Exceptions", "[llvm_double]")
     CHECK_THROWS_WITH(v.init({x}, *r), "Symbol y not in the symbols vector.");
 }
 
+TEST_CASE("LLVMDoubleVisitor is uninitialized after a failed init",
+          "[llvm_double]")
+{
+    RCP<const Basic> x, y, z, w, r, s;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    w = symbol("w");
+
+    r = add(x, add(mul(y, z), pow(mul(y, z), integer(2))));
+    s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
+
+    double d[2];
+    double inps[] = {1.5, 2.0, 3.0};
+    for (bool cse : {false, true}) {
+        LLVMDoubleVisitor v;
+        v.init({x, y, z}, {r, s}, cse);
+        REQUIRE(v.get_function_pointer() != nullptr);
+        // w is not an input: fails after r and s have been compiled
+        CHECK_THROWS_AS(v.init({x, y, z}, {r, s, w}, cse), SymEngineException);
+        REQUIRE(v.get_function_pointer() == nullptr);
+        REQUIRE(v.dumps().empty());
+        // the visitor can be initialized again
+        v.init({x, y, z}, {r, s}, cse);
+        REQUIRE(v.get_function_pointer() != nullptr);
+        v.call(d, inps);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+        // the compiled function can also be called directly
+        LLVMDoubleVisitor::function_pointer_type f = v.get_function_pointer();
+        d[0] = d[1] = 0.0;
+        f(inps, d);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+    }
+}
+
 TEST_CASE("Check that our default LLVM passes give correct results",
           "[llvm_double]")
 {

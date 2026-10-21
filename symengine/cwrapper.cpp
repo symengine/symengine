@@ -120,6 +120,9 @@ template <typename Visitor, typename T>
 void visitor_call_batch(Visitor &v, size_t nin, size_t nout, T *const outs,
                         const T *const inps, size_t npts)
 {
+    if (nout == 0) {
+        return;
+    }
     for (size_t i = 0; i < npts; ++i) {
         v.call(outs + i * nout, inps + i * nin);
     }

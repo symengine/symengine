@@ -125,7 +125,20 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                        const bool symbolic_cse, unsigned opt_level)
 {
+    func = 0;
+    membuffer.clear();
     executionengine.reset();
+    // clear temp state on exit from this function, including when an exception
+    // is thrown
+    struct ClearTemporaries {
+        LLVMVisitor &v;
+        ~ClearTemporaries()
+        {
+            v.symbol_ptrs.clear();
+            v.replacement_symbol_ptrs.clear();
+            v.symbols.clear();
+        }
+    } clear_temporaries{*this};
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
@@ -296,9 +309,6 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
 
     // Get the symbol's address
     func = (intptr_t)executionengine->getPointerToFunction(F);
-    symbol_ptrs.clear();
-    replacement_symbol_ptrs.clear();
-    symbols.clear();
 }
 
 LLVMDoubleVisitor::LLVMDoubleVisitor() = default;
