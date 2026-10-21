@@ -885,14 +885,7 @@ SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1,
                                                              const basic s);
 
 //! Wrapper for LambdaRealDoubleVisitor
-//! Compiles `exprs` into a function of `args` (a vector of symbols) that is
-//! evaluated with `*_call(self, outs, inps)`, where `inps` has
-//! `*_get_num_inputs(self)` entries and `outs` has `*_get_num_outputs(self)`
-//! entries. `*_call_batch` evaluates `npts` points stored contiguously, point
-//! after point, i.e. `inps[i * num_inputs + j]` and `outs[i * num_outputs + k]`
-//! (an array of shape (num_inputs, npts) in Fortran).
-//! A LambdaRealDoubleVisitor uses internal scratch space when evaluating, so
-//! use one visitor per thread.
+//! Not thread safe, use one visitor per thread
 typedef struct CLambdaRealDoubleVisitor CLambdaRealDoubleVisitor;
 SYMENGINE_EXPORT CLambdaRealDoubleVisitor *lambda_real_double_visitor_new(void);
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE lambda_real_double_visitor_init(
@@ -913,12 +906,6 @@ SYMENGINE_EXPORT void
 lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self);
 
 //! Wrappers for LLVMDoubleVisitor, LLVMFloatVisitor and LLVMLongDoubleVisitor
-//! Same interface as CLambdaRealDoubleVisitor. In addition,
-//! `llvm_*_visitor_get_function` returns the JIT compiled function itself,
-//! which takes its arguments in the order (inps, outs), or NULL if the visitor
-//! has not been successfully initialized. The function pointer is valid as
-//! long as the visitor is alive and can be called concurrently from several
-//! threads.
 #ifdef HAVE_SYMENGINE_LLVM
 // double
 typedef void (*symengine_llvm_double_function)(const double *inps,

@@ -115,7 +115,6 @@ to_code_printer_precision(const BasicCodePrinterSettings *settings)
     return settings->precision;
 }
 
-// Evaluates a lambdified function at npts points stored contiguously
 template <typename Visitor, typename T>
 void visitor_call_batch(Visitor &v, size_t nin, size_t nout, T *const outs,
                         const T *const inps, size_t npts)

@@ -85,8 +85,6 @@
 
 #define SYMENGINE_SIZEOF_LONG_DOUBLE ${SYMENGINE_SIZEOF_LONG_DOUBLE}
 
-/* Defined if LLVM support for long double (LLVMLongDoubleVisitor) is
-   available, i.e. on x86 where long double is the 80 bit extended type */
 #if defined(HAVE_SYMENGINE_LLVM) && SYMENGINE_SIZEOF_LONG_DOUBLE > 8           \
     && (defined(__x86_64__) || defined(__i386__))
 #define HAVE_SYMENGINE_LLVM_LONG_DOUBLE

@@ -56,7 +56,6 @@ public:
         init(x, outputs, cse);
     }
 
-    // If this throws, the visitor is left empty, i.e. `call` writes nothing
     void init(const vec_basic &inputs, const vec_basic &outputs,
               bool cse = false)
     {

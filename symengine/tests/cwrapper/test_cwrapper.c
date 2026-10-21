@@ -2402,8 +2402,7 @@ void test_lambda_double()
     vecbasic_push_back(bad_exprs, r);
     vecbasic_push_back(bad_exprs, s);
     vecbasic_push_back(bad_exprs, w);
-    // A failed init of a previously initialized visitor leaves it with no
-    // outputs, so call_batch writes nothing, and it can be initialized again
+    // A failed init leaves the visitor empty
     for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
         CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
         SYMENGINE_C_ASSERT(
