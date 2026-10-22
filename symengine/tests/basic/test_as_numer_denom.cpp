@@ -6,18 +6,17 @@
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Add;
-using SymEngine::map_basic_basic;
-using SymEngine::sqrt;
-using SymEngine::div;
-using SymEngine::mul;
 using SymEngine::add;
 using SymEngine::as_numer_denom;
 using SymEngine::Basic;
 using SymEngine::Complex;
+using SymEngine::div;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::make_rcp;
+using SymEngine::map_basic_basic;
+using SymEngine::mul;
 using SymEngine::Mul;
 using SymEngine::neg;
 using SymEngine::Number;
@@ -25,6 +24,7 @@ using SymEngine::one;
 using SymEngine::pow;
 using SymEngine::Rational;
 using SymEngine::RCP;
+using SymEngine::sqrt;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;

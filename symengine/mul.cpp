@@ -290,9 +290,8 @@ void Mul::dict_add_term_new(const Ptr<RCP<const Number>> &coef,
                 // exponents of two (x**2)**(1/2) factors are added up.
                 RCP<const Basic> base
                     = down_cast<const Pow &>(*it->first).get_base();
-                RCP<const Basic> exp_
-                    = mul(down_cast<const Pow &>(*it->first).get_exp(),
-                          it->second);
+                RCP<const Basic> exp_ = mul(
+                    down_cast<const Pow &>(*it->first).get_exp(), it->second);
                 d.erase(it);
                 Mul::dict_add_term_new(coef, d, exp_, base);
             } else if (eq(*it->first, *E)) {
