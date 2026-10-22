@@ -172,10 +172,39 @@ TEST_CASE("Test refine", "[refine]")
     expr = pow(pow(x, integer(3)),
                Rational::from_two_ints(*integer(1), *integer(3)));
     a = Assumptions({reals()->contains(x)});
-    REQUIRE(eq(*refine(expr, &a), *x));
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    // (x**3)**(1/3) != x for negative x, e.g. ((-2)**3)**(1/3) = 1 + sqrt(3)*I
+    a = Assumptions({Lt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *expr));
 
     a = Assumptions({Gt(x, integer(0))});
     REQUIRE(eq(*refine(expr, &a), *x));
+
+    // (x**k)**n = x**(k*n) for real x and odd k iff n*(k - 1) is even
+    a = Assumptions({reals()->contains(x)});
+    expr = pow(pow(x, integer(3)),
+               Rational::from_two_ints(*integer(2), *integer(3)));
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = pow(pow(x, integer(3)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    REQUIRE(eq(*refine(expr, &a), *expr));
+
+    expr = pow(pow(x, integer(5)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    REQUIRE(eq(*refine(expr, &a),
+               *pow(x, Rational::from_two_ints(*integer(5), *integer(2)))));
+
+    expr = pow(pow(x, integer(-3)),
+               Rational::from_two_ints(*integer(1), *integer(2)));
+    REQUIRE(eq(*refine(expr, &a),
+               *pow(x, Rational::from_two_ints(*integer(-3), *integer(2)))));
+
+    expr = pow(pow(x, integer(7)),
+               Rational::from_two_ints(*integer(1), *integer(3)));
+    REQUIRE(eq(*refine(expr, &a),
+               *pow(x, Rational::from_two_ints(*integer(7), *integer(3)))));
 
     expr = log(pow(x, y));
     a = Assumptions({});

@@ -164,7 +164,13 @@ void RefineVisitor::bvisit(const Pow &x)
             } else if (is_true(is_even(*inner_exp, assumptions_))) {
                 result_ = pow(abs(inner_base), mul(newexp, inner_exp));
                 return;
-            } else if (is_true(is_odd(*inner_exp, assumptions_))) {
+            } else if (is_true(is_odd(*inner_exp, assumptions_))
+                       and is_true(
+                           is_even(*mul(newexp, sub(inner_exp, integer(1))),
+                                   assumptions_))) {
+                // For x < 0 and odd k: (x**k)**n = |x|**(k*n) * exp(I*pi*n)
+                // and x**(k*n) = |x|**(k*n) * exp(I*pi*k*n), which are equal
+                // iff n*(k - 1) is an even integer
                 result_ = pow(inner_base, mul(newexp, inner_exp));
                 return;
             }
