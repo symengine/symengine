@@ -10,10 +10,11 @@
 
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
 #include <boost/multiprecision/cpp_int.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
+#include <boost/version.hpp>
 #include <symengine/symengine_rcp.h>
+#include <cstdint>
 #include <ios>
+#include <random>
 #elif SYMENGINE_INTEGER_CLASS == SYMENGINE_PIRANHA
 #include <piranha/mp_integer.hpp>
 #include <piranha/mp_rational.hpp>
@@ -1070,8 +1071,24 @@ public:
     // inclusive
     void urandomint(integer_class &res, const integer_class &a)
     {
-        boost::random::uniform_int_distribution<integer_class> ui(0, a);
-        res = ui(_twister);
+        // Rejection sampling: draw msb(a)+1 random bits until the result is
+        // less than a. Each draw succeeds with probability > 1/2.
+        if (a <= 0) {
+            res = 0;
+            return;
+        }
+        const unsigned nbits
+            = numeric_cast<unsigned>(boost::multiprecision::msb(a)) + 1;
+        const unsigned nwords = (nbits + 31) / 32;
+        const integer_class mask = (integer_class(1) << nbits) - 1;
+        do {
+            res = 0;
+            for (unsigned i = 0; i < nwords; ++i) {
+                res <<= 32;
+                res |= static_cast<uint32_t>(_twister());
+            }
+            res &= mask;
+        } while (res >= a);
     }
 
     void seed(const uint32_t &i)
@@ -1080,7 +1097,7 @@ public:
     }
 
 private:
-    boost::random::mt19937 _twister;
+    std::mt19937 _twister;
 };
 
 #endif // SYMENGINE_INTEGER_CLASS == SYMENGINE_BOOSTMP
