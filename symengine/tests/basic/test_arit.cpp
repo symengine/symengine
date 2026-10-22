@@ -1492,9 +1492,9 @@ TEST_CASE("Expand: power of a sum whose base collapses", "[arit]")
     // 4*z**2 as a canonical Add term (coefficient split off), not as a Mul
     // with a coefficient used as the Add key.
     RCP<const Basic> r = symbol("r"), z = symbol("z");
-    RCP<const Basic> a = add(mul(integer(-2), mul(pow(r, integer(2)), z)),
-                             mul(integer(2),
-                                 mul(z, add(integer(1), pow(r, integer(2))))));
+    RCP<const Basic> a
+        = add(mul(integer(-2), mul(pow(r, integer(2)), z)),
+              mul(integer(2), mul(z, add(integer(1), pow(r, integer(2))))));
     RCP<const Basic> e = add(mul(integer(-2), a), neg(pow(a, integer(2))));
     RCP<const Basic> expected
         = add(mul(integer(-4), z), mul(integer(-4), pow(z, integer(2))));
