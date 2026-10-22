@@ -24,7 +24,8 @@ public:
     RCP<const Basic> modulo(const RCP<const Basic> &a,
                             const RCP<const Basic> &b);
     RCP<const Basic> functionify(const std::string &name);
-    RCP<const Basic> functionify(const std::string &name, vec_basic &params);
+    RCP<const Basic> functionify(const std::string &name,
+                                 vec_basic &params) override;
     RCP<const Basic> parse_identifier(const std::string &expr);
     explicit SbmlParser(const std::map<const std::string,
                                        const RCP<const Basic>> &parser_constants

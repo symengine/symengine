@@ -720,7 +720,7 @@ TEST_CASE("test_latex_printing()", "[latex]")
     RCP<const Basic> l28 = complexes();
     RCP<const Basic> l29 = parse(
         "sqrt(1.0 - 1.3856406460551*abs(tau_tEd)*gamma_M0/f_y)*V_plv_Rd");
-
+    CHECK(latex(*symbol("epsilon")) == "\\varepsilon");
     CHECK(latex(*l1) == "\\frac{3}{2}");
     CHECK(latex(*l2) == "\\frac{3}{2} + 2j");
     CHECK(latex(*l3) == "1.123123123123 + 1.123123123123j");
@@ -1083,17 +1083,23 @@ TEST_CASE("test_unicode()", "[unicode]")
 
     // https://github.com/symengine/symengine/issues/2131
     s = unicode(*add(mul(integer(-1), parse("sin(x)")), parse("cos(x)")));
-    CHECK(s.find("- ") != std::string::npos);
+    CHECK(s == U8("- sin(x) + cos(x)"));
 
     s = unicode(*add(mul(integer(-1), x), integer(1)));
     CHECK(s == U8("1 - x"));
 
     s = unicode(*add(mul(integer(-2), x), parse("cos(x)")));
-    CHECK(s.find("- ") != std::string::npos);
+    CHECK(s == U8("- 2\u22C5x + cos(x)"));
+
+    s = unicode(*add(mul(integer(-2), x), integer(-3)));
+    CHECK(s == U8("-3 - 2\u22C5x"));
+
+    s = unicode(*add(y, mul(integer(-2), x)));
+    CHECK(s == U8("- 2\u22C5x + y"));
 
     s = unicode(*add(mul(integer(-1), parse("sin(x)")),
                      mul(integer(-1), parse("cos(x)"))));
-    CHECK(s.find("- ") == 0);
+    CHECK(s == U8("- sin(x) - cos(x)"));
 }
 
 TEST_CASE("test_stringbox()", "[stringbox]")

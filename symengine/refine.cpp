@@ -1,4 +1,5 @@
 #include <symengine/refine.h>
+#include <symengine/number.h>
 
 namespace SymEngine
 {
@@ -159,10 +160,14 @@ void RefineVisitor::bvisit(const Pow &x)
             and not down_cast<const Number &>(*newexp).is_complex()) {
             if (is_true(is_positive(*inner_base, assumptions_))) {
                 result_ = pow(inner_base, mul(newexp, inner_exp));
-            } else {
+                return;
+            } else if (is_true(is_even(*inner_exp, assumptions_))) {
                 result_ = pow(abs(inner_base), mul(newexp, inner_exp));
+                return;
+            } else if (is_true(is_odd(*inner_exp, assumptions_))) {
+                result_ = pow(inner_base, mul(newexp, inner_exp));
+                return;
             }
-            return;
         }
     }
     result_ = pow(newbase, newexp);

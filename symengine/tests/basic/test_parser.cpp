@@ -13,6 +13,7 @@ using SymEngine::boolFalse;
 using SymEngine::boolTrue;
 using SymEngine::Complex;
 using SymEngine::ComplexInf;
+using SymEngine::div;
 using SymEngine::down_cast;
 using SymEngine::E;
 using SymEngine::Eq;
@@ -30,6 +31,7 @@ using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::Le;
+using SymEngine::log;
 using SymEngine::loggamma;
 using SymEngine::logical_and;
 using SymEngine::logical_nand;
@@ -51,6 +53,7 @@ using SymEngine::one;
 using SymEngine::parse;
 using SymEngine::parse_old;
 using SymEngine::ParseError;
+using SymEngine::Parser;
 using SymEngine::pi;
 using SymEngine::piecewise;
 using SymEngine::pow;
@@ -63,6 +66,7 @@ using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::truncate;
 using SymEngine::UIntPoly;
+using SymEngine::vec_basic;
 using SymEngine::zero;
 
 using namespace SymEngine::literals;
@@ -1014,4 +1018,32 @@ TEST_CASE("Parsing: bison stack reallocation", "[parser]")
         s.append(")");
     }
     REQUIRE(eq(*parse(s), *integer(0)));
+}
+
+class CustomParser : public Parser
+{
+public:
+    using Parser::Parser;
+
+    RCP<const Basic> functionify(const std::string &name,
+                                 vec_basic &params) override
+    {
+        if (name == "log2" && params.size() == 1) {
+            return div(log(params[0]), log(integer(2)));
+        }
+        return Parser::functionify(name, params);
+    }
+};
+
+TEST_CASE("Parsing: custom functionify override", "[parser]")
+{
+    const RCP<const Symbol> x = symbol("x");
+
+    CustomParser p;
+    auto res = p.parse("7*log2(3*x)");
+    REQUIRE(eq(
+        *res, *mul(integer(7), div(log(mul(integer(3), x)), log(integer(2))))));
+
+    auto deriv = res->diff(x);
+    REQUIRE(eq(*deriv, *div(integer(7), mul(x, log(integer(2))))));
 }

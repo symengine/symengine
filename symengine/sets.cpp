@@ -1,4 +1,5 @@
 #include <symengine/add.h>
+#include <symengine/complex.h>
 #include <symengine/logic.h>
 #include <symengine/functions.h>
 #include <symengine/symengine_casts.h>
@@ -326,6 +327,9 @@ RCP<const Boolean> Complexes::contains(const RCP<const Basic> &a) const
             return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
         }
     }
+    if (is_a<Infty>(*a) or is_a<NaN>(*a)) {
+        return boolean(false);
+    }
     return boolean(true);
 }
 
@@ -403,7 +407,7 @@ RCP<const Boolean> Reals::contains(const RCP<const Basic> &a) const
             return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
         }
     }
-    if (is_a<Complex>(*a)) {
+    if (is_a_Complex(*a) or is_a<Infty>(*a) or is_a<NaN>(*a)) {
         return boolean(false);
     }
     return boolean(true);
@@ -481,7 +485,7 @@ RCP<const Boolean> Rationals::contains(const RCP<const Basic> &a) const
             return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
         }
     }
-    if (is_a<Complex>(*a) or not down_cast<const Number &>(*a).is_exact()) {
+    if (is_a_Complex(*a) or not down_cast<const Number &>(*a).is_exact()) {
         return boolean(false);
     }
     return boolean(true);

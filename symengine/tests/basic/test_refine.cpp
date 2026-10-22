@@ -169,6 +169,14 @@ TEST_CASE("Test refine", "[refine]")
     a = Assumptions({reals()->contains(x)});
     REQUIRE(eq(*refine(expr, &a), *pow(abs(x), integer(3))));
 
+    expr = pow(pow(x, integer(3)),
+               Rational::from_two_ints(*integer(1), *integer(3)));
+    a = Assumptions({reals()->contains(x)});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
+    a = Assumptions({Gt(x, integer(0))});
+    REQUIRE(eq(*refine(expr, &a), *x));
+
     expr = log(pow(x, y));
     a = Assumptions({});
     REQUIRE(eq(*refine(expr, &a), *expr));
