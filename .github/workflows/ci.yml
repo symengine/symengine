@@ -1,6 +1,13 @@
 name: Build and test symengine
 on: [push, pull_request]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name == github.event.repository.default_branch && github.sha || github.ref }}
+  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
+
 jobs:
   build:
     runs-on: ${{ matrix.OS }}
