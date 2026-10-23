@@ -17,9 +17,13 @@ protected:
        recursively.
     */
     T result_;
+    const umap_basic_double *mpp_ = nullptr;
 
 public:
-    std::unordered_map<std::string, double> mpp;
+    void init_map(const umap_basic_double *mpp)
+    {
+        mpp_ = mpp;
+    }
     T apply(const Basic &b)
     {
         b.accept(*down_cast<C *>(this));
@@ -97,11 +101,14 @@ public:
 
     void bvisit(const Symbol &x)
     {
-        if (mpp.count(x.get_name())) {
-            result_ = mpp.at(x.get_name());
-        } else {
-            throw SymEngineException("Symbol cannot be evaluated.");
+        if (mpp_ != nullptr) {
+            auto it = mpp_->find(x.rcp_from_this());
+            if (it != mpp_->end()) {
+                result_ = it->second;
+                return;
+            }
         }
+        throw SymEngineException("Symbol cannot be evaluated.");
     }
 
     void bvisit(const Log &x)
@@ -733,10 +740,10 @@ double eval_double(const Basic &b)
     return v.apply(b);
 }
 
-double eval_double(const Basic &b, const std::unordered_map<std::string, double> &mpp)
+double eval_double(const Basic &b, const umap_basic_double &mpp)
 {
     EvalRealDoubleVisitorFinal v;
-    v.mpp = mpp;
+    v.init_map(&mpp);
     return v.apply(b);
 }
 
