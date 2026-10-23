@@ -248,4 +248,4 @@ TEST_CASE("test_eval_double_symbols()", "[eval_double]")
     double val = eval_double(*e, mpp);
     CHECK(std::abs(val - (std::sin(1.0) + std::cos(2.0))) < 1e-12);
     CHECK_THROWS_AS(eval_double(*symbol("z"), mpp), SymEngineException);
-}
+}
