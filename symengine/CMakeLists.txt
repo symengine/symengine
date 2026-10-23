@@ -97,6 +97,7 @@ set(SRC
     sparse_matrix.cpp
     symbol.cpp
     symengine_rcp.cpp
+    symengine_rcp_cooperative.cpp
     visitor.cpp
     test_visitors.cpp
     assumptions.cpp
