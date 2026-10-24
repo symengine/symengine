@@ -33,6 +33,10 @@ bool Pow::is_canonical(const Basic &base, const Basic &exp) const
     // e.g. x**1
     if (is_a<Integer>(exp) and down_cast<const Integer &>(exp).is_one())
         return false;
+    // e.g. E**log(3)
+    if (eq(base, *E) and is_a<Log>(exp))
+        return false;
+
     // e.g. 2**3, (2/3)**4
     if ((is_a<Integer>(base) or is_a<Rational>(base)) and is_a<Integer>(exp))
         return false;
@@ -97,6 +101,10 @@ RCP<const Basic> pow(const RCP<const Basic> &a, const RCP<const Basic> &b)
     }
     if (eq(*b, *one))
         return a;
+
+    if (eq(*a, *E) and (is_a<Log>(*b))) {
+        return down_cast<const Log &>(*b).get_arg();
+    }
 
     if (eq(*a, *zero)) {
         if (is_a_Number(*b)
