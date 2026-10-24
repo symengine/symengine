@@ -766,3 +766,28 @@ TEST_CASE("MExprPoly from_poly", "[MExprPoly]")
 
     REQUIRE(eq(*MExprPoly::from_poly(*upoly), *mpoly));
 }
+
+TEST_CASE("MExprPoly printing keeps sign of leading -1 coefficient",
+          "[MExprPoly]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+
+    RCP<const MExprPoly> p1
+        = MExprPoly::from_dict({x}, {{{1}, Expression(-1)}});
+    REQUIRE(p1->__str__() == "-x");
+
+    RCP<const MExprPoly> p2
+        = MExprPoly::from_dict({x, y}, {{{1, 1}, Expression(-1)}});
+    REQUIRE(p2->__str__() == "-x*y");
+
+    RCP<const MExprPoly> p3
+        = MExprPoly::from_dict({x}, {{{0}, Expression(-1)}});
+    REQUIRE(p3->__str__() == "-1");
+
+    RCP<const MExprPoly> p4
+        = MExprPoly::from_dict({x}, {{{1}, Expression(-2)}});
+    REQUIRE(p4->__str__() == "-2*x");
+    RCP<const MExprPoly> p5 = MExprPoly::from_dict({x}, {{{1}, Expression(1)}});
+    REQUIRE(p5->__str__() == "x");
+}
