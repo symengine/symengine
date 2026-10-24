@@ -309,7 +309,10 @@ public:
 
         if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
             if (neq(*_base, *self.get_base())) {
-                Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
+                // pow(_base, exp) may be a Mul with a numeric coefficient or
+                // a number (e.g. _base expanded from a sum to 2*z), which
+                // must not become an Add key as it is.
+                _coef_dict_add_term(multiply, pow(_base, self.get_exp()));
             } else {
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
             }
