@@ -152,22 +152,18 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
                 return p->first; // Integer
             }
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
-                if (down_cast<const Mul &>(*(p->first)).use_count() == 1) {
+                if (down_cast<const Mul &>(*(p->first)).is_uniquely_owned()) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
                     // 'p->first' will be destroyed when 'd' is at the end of
                     // this function, so we "steal" its dict_ to avoid an
-                    // unnecessary copy. We know the refcount_ is one, so
-                    // nobody else is using the Mul except us.
+                    // unnecessary copy. is_uniquely_owned() guarantees that
+                    // no other C++ or foreign-runtime owner can use the Mul.
                     const map_basic_basic &d2
                         = down_cast<const Mul &>(*(p->first)).get_dict();
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
-#else
-                {
-#endif
                     // We need to copy the dictionary:
                     map_basic_basic d2
                         = down_cast<const Mul &>(*(p->first)).get_dict();
@@ -189,22 +185,18 @@ RCP<const Basic> Add::from_dict(const RCP<const Number> &coef,
         map_basic_basic m;
         if (is_a_Number(*p->second)) {
             if (is_a<Mul>(*(p->first))) {
-#if !defined(WITH_SYMENGINE_THREAD_SAFE) && defined(WITH_SYMENGINE_RCP)
-                if (down_cast<const Mul &>(*(p->first)).use_count() == 1) {
+                if (down_cast<const Mul &>(*(p->first)).is_uniquely_owned()) {
                     // We can steal the dictionary:
                     // Cast away const'ness, so that we can move 'dict_', since
                     // 'p->first' will be destroyed when 'd' is at the end of
                     // this function, so we "steal" its dict_ to avoid an
-                    // unnecessary copy. We know the refcount_ is one, so
-                    // nobody else is using the Mul except us.
+                    // unnecessary copy. is_uniquely_owned() guarantees that
+                    // no other C++ or foreign-runtime owner can use the Mul.
                     const map_basic_basic &d2
                         = down_cast<const Mul &>(*(p->first)).get_dict();
                     map_basic_basic &d3 = const_cast<map_basic_basic &>(d2);
                     return Mul::from_dict(p->second, std::move(d3));
                 } else {
-#else
-                {
-#endif
                     // We need to copy the dictionary:
                     map_basic_basic d2
                         = down_cast<const Mul &>(*(p->first)).get_dict();
