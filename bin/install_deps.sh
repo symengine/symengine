@@ -110,12 +110,10 @@ else
       conda_pkgs="$conda_pkgs mpc=1.3.1"
   fi
 
-  if [[ "${WITH_FLINT}" == "yes" || "${INTEGER_CLASS}" == "flint" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
-      conda_pkgs="$conda_pkgs libflint=3.2.2"
-  fi
-
   if [[ "${WITH_ARB}" == "yes" ]]; then
-      conda_pkgs="$conda_pkgs arb=2.23.0"
+      conda_pkgs="$conda_pkgs arb=2.23.0 libflint=2.9.0"
+  elif [[ "${WITH_FLINT}" == "yes" || "${INTEGER_CLASS}" == "flint" ]] && [[ "${WITH_FLINT_DEV}" != "yes" ]]; then
+      conda_pkgs="$conda_pkgs libflint=3.2.2"
   fi
 
   if [[ "${WITH_LLVM}" == "LATEST" ]]; then
