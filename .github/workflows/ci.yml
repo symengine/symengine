@@ -329,7 +329,7 @@ jobs:
         channels: conda-forge
         conda-remove-defaults: "true"
 
-    - uses: ilammy/msvc-dev-cmd@v1
+    - uses: TheMrMilchmann/setup-msvc-dev@v4
       if: matrix.CC == 'cl'
       with:
         arch: ${{ matrix.ARCH }}
