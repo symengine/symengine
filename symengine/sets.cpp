@@ -21,7 +21,7 @@ bool Interval::is_canonical(const RCP<const Number> &s,
                             const RCP<const Number> &e, bool left_open,
                             bool right_open)
 {
-    if (is_a<Complex>(*s) or is_a<Complex>(*e))
+    if (is_a_Complex(*s) or is_a_Complex(*e))
         throw NotImplementedError("Complex set not implemented");
     if (eq(*e, *s)) {
         return false;
@@ -103,6 +103,9 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
         } else {
             return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
         }
+    }
+    if (is_a_Complex(*a) or is_a<NaN>(*a)) {
+        return boolean(false);
     }
     if (eq(*start_, *a))
         return boolean(not left_open_);

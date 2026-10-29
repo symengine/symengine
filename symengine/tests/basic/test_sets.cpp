@@ -56,6 +56,7 @@ using SymEngine::Naturals;
 using SymEngine::naturals;
 using SymEngine::Naturals0;
 using SymEngine::naturals0;
+using SymEngine::Nan;
 using SymEngine::NegInf;
 using SymEngine::Not;
 using SymEngine::NotImplementedError;
@@ -106,6 +107,9 @@ TEST_CASE("Interval : Basic", "[basic]")
 
     r3 = r1->set_intersection(r2); // [0, 2]
     REQUIRE(eq(*r1->contains(one), *boolTrue));
+    REQUIRE(eq(*r1->contains(Complex::from_two_nums(*integer(0), *integer(1))),
+               *boolFalse));
+    REQUIRE(eq(*r1->contains(Nan), *boolFalse));
     r4 = interval(zero, i2); // [0, 2]
     REQUIRE(eq(*r3, *r4));
 
