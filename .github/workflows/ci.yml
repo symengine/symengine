@@ -243,6 +243,8 @@ jobs:
             WITH_MPC: yes
             WITH_MPFR: yes
             BUILD_SHARED_LIBS: yes
+            WITH_LLVM: yes
+            MSVC_USE_MT: no
 
           - ARCH: x64
             OS: windows-latest
