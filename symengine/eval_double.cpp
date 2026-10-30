@@ -17,8 +17,13 @@ protected:
        recursively.
     */
     T result_;
+    const umap_basic_double *mpp_ = nullptr;
 
 public:
+    void init_map(const umap_basic_double *mpp)
+    {
+        mpp_ = mpp;
+    }
     T apply(const Basic &b)
     {
         b.accept(*down_cast<C *>(this));
@@ -94,10 +99,17 @@ public:
         result_ = std::tan(tmp);
     }
 
-    void bvisit(const Symbol &)
+    void bvisit(const Symbol &x)
     {
+        if (mpp_ != nullptr) {
+            auto it = mpp_->find(x.rcp_from_this());
+            if (it != mpp_->end()) {
+                result_ = it->second;
+                return;
+            }
+        }
         throw SymEngineException("Symbol cannot be evaluated.");
-    };
+    }
 
     void bvisit(const Log &x)
     {
@@ -725,6 +737,13 @@ static inline std::vector<fn> init_eval_double()
 double eval_double(const Basic &b)
 {
     EvalRealDoubleVisitorFinal v;
+    return v.apply(b);
+}
+
+double eval_double(const Basic &b, const umap_basic_double &mpp)
+{
+    EvalRealDoubleVisitorFinal v;
+    v.init_map(&mpp);
     return v.apply(b);
 }
 
