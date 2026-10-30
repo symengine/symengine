@@ -164,16 +164,30 @@ if [[ "${WITH_UNITY_BUILD}" != "" ]]; then
     cmake_line="$cmake_line -DCMAKE_UNITY_BUILD=${WITH_UNITY_BUILD}"
 fi
 if [[ "${WITH_LLVM}" != "" ]] ; then
-    cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON -DLLVM_DIR=${LLVM_DIR}"
+    cmake_line="$cmake_line -DWITH_LLVM:BOOL=ON"
+    if [[ -d "${LLVM_DIR}" ]]; then
+        cmake_line="$cmake_line -DLLVM_DIR=${LLVM_DIR}"
+    fi
+fi
+if [[ "${WITH_LLVM_DYLIB}" != "" ]]; then
+    cmake_line="$cmake_line -DWITH_LLVM_DYLIB=${WITH_LLVM_DYLIB}"
 fi
 if [[ "${BUILD_DOXYGEN}" != "" ]]; then
     cmake_line="$cmake_line -DBUILD_DOXYGEN=${BUILD_DOXYGEN}"
 fi
-if [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
+if [[ "${BUILD_FOR_DISTRIBUTION}" != "" ]]; then
+    cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=${BUILD_FOR_DISTRIBUTION}"
+elif [[ "${CC}" == *"gcc"* ]] && [[ "$(uname)" == "Darwin" ]]; then
     cmake_line="$cmake_line -DBUILD_FOR_DISTRIBUTION=yes"
 fi
 if [[ "${NO_RTTI}" == "yes" ]]; then
     cmake_line="$cmake_line -DHAVE_SYMENGINE_RTTI=no"
+fi
+if [[ "${MSVC_USE_MT}" != "" ]]; then
+    cmake_line="$cmake_line -DMSVC_USE_MT=${MSVC_USE_MT}"
+fi
+if [[ "${CC}" == "cl" ]]; then
+    cmake_line="$cmake_line -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache"
 fi
 
 echo "=== Generating build scripts for SymEngine using cmake"
@@ -201,7 +215,7 @@ fi
 
 echo "=== Running tests in build directory:"
 # C++
-ctest --output-on-failure
+ctest ${BUILD_TYPE:+-C "${BUILD_TYPE}"} --output-on-failure
 
 if [[ "${WITH_COVERAGE}" == "yes" ]]; then
     echo "=== Collecting coverage data"
