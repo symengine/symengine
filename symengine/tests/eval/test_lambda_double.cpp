@@ -269,6 +269,40 @@ TEST_CASE("LambdaRealDoubleVisitor with cse can be moved",
     REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
 }
 
+TEST_CASE("LambdaRealDoubleVisitor is empty after a failed init",
+          "[lambda_double]")
+{
+    RCP<const Basic> x, y, z, w, r, s;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    w = symbol("w");
+
+    r = add(x, add(mul(y, z), pow(mul(y, z), integer(2))));
+    s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
+
+    double d[3];
+    double inps[] = {1.5, 2.0, 3.0};
+    for (bool cse : {false, true}) {
+        LambdaRealDoubleVisitor v;
+        v.init({x, y, z}, {r, s}, cse);
+        // w is not an input: fails after r and s have been compiled
+        CHECK_THROWS_AS(v.init({x, y, z}, {r, s, w}, cse), SymEngineException);
+        // call writes nothing
+        d[0] = d[1] = d[2] = -1.0;
+        v.call(d, inps);
+        REQUIRE(d[0] == -1.0);
+        REQUIRE(d[1] == -1.0);
+        REQUIRE(d[2] == -1.0);
+        // the visitor can be initialized again
+        v.init({x, y, z}, {r, s}, cse);
+        v.call(d, inps);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+        REQUIRE(d[2] == -1.0);
+    }
+}
+
 TEST_CASE("Evaluate to std::complex<double>", "[lambda_complex_double]")
 {
     RCP<const Basic> x, y, z, r;
@@ -640,6 +674,43 @@ TEST_CASE("LLVMDoubleVisitor Exceptions", "[llvm_double]")
     CHECK_THROWS_WITH(v.init({x}, *r), "Symbol y not in the symbols vector.");
 }
 
+TEST_CASE("LLVMDoubleVisitor is uninitialized after a failed init",
+          "[llvm_double]")
+{
+    RCP<const Basic> x, y, z, w, r, s;
+    x = symbol("x");
+    y = symbol("y");
+    z = symbol("z");
+    w = symbol("w");
+
+    r = add(x, add(mul(y, z), pow(mul(y, z), integer(2))));
+    s = add(mul(integer(2), x), add(mul(y, z), pow(mul(y, z), integer(2))));
+
+    double d[2];
+    double inps[] = {1.5, 2.0, 3.0};
+    for (bool cse : {false, true}) {
+        LLVMDoubleVisitor v;
+        v.init({x, y, z}, {r, s}, cse);
+        REQUIRE(v.get_function_pointer() != nullptr);
+        // w is not an input: fails after r and s have been compiled
+        CHECK_THROWS_AS(v.init({x, y, z}, {r, s, w}, cse), SymEngineException);
+        REQUIRE(v.get_function_pointer() == nullptr);
+        REQUIRE(v.dumps().empty());
+        // the visitor can be initialized again
+        v.init({x, y, z}, {r, s}, cse);
+        REQUIRE(v.get_function_pointer() != nullptr);
+        v.call(d, inps);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+        // the compiled function can also be called directly
+        LLVMDoubleVisitor::function_pointer_type f = v.get_function_pointer();
+        d[0] = d[1] = 0.0;
+        f(inps, d);
+        REQUIRE(::fabs(d[0] - 43.5) < 1e-12);
+        REQUIRE(::fabs(d[1] - 45.0) < 1e-12);
+    }
+}
+
 TEST_CASE("Check that our default LLVM passes give correct results",
           "[llvm_double]")
 {
@@ -687,7 +758,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         // Check for 12 digits with doubles
         REQUIRE(::fabs((d - d2) / d) < 1e-12);
     }
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
     SymEngine::LLVMLongDoubleVisitor v3;
 #endif
     LLVMFloatVisitor v4;
@@ -698,7 +769,7 @@ TEST_CASE("Check that our default LLVM passes give correct results",
         d4 = v4.call({0.4f, 2.0f, 3.0f});
         // Check only for 6 digits with floats
         REQUIRE(::fabs((d - d4) / d) < 1e-6);
-#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
+#if defined(HAVE_SYMENGINE_LLVM_LONG_DOUBLE) && defined(HAVE_SYMENGINE_MPFR)
         long double d3, mpfr_d;
         v3.init({x, y, z}, *arg);
         d3 = v3.call({0.4l, 2.0l, 3.0l});

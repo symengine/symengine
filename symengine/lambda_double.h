@@ -32,6 +32,15 @@ protected:
     fn result_;
     vec_basic symbols;
 
+    void reset()
+    {
+        results.clear();
+        cse_intermediate_results.clear();
+        cse_intermediate_fns_map.clear();
+        cse_intermediate_fns.clear();
+        symbols.clear();
+    }
+
 public:
     LambdaDoubleVisitor() = default;
     LambdaDoubleVisitor(LambdaDoubleVisitor &&) = default;
@@ -50,36 +59,40 @@ public:
     void init(const vec_basic &inputs, const vec_basic &outputs,
               bool cse = false)
     {
-        results.clear();
-        cse_intermediate_fns.clear();
-        symbols = inputs;
-        if (not cse) {
-            for (auto &p : outputs) {
-                results.push_back(apply(*p));
+        reset();
+        try {
+            symbols = inputs;
+            if (not cse) {
+                for (auto &p : outputs) {
+                    results.push_back(apply(*p));
+                }
+            } else {
+                vec_basic reduced_exprs;
+                vec_pair replacements;
+                // cse the outputs
+                SymEngine::cse(replacements, reduced_exprs, outputs);
+                cse_intermediate_results.resize(replacements.size());
+                for (auto &rep : replacements) {
+                    auto res = apply(*(rep.second));
+                    // Store the replacement symbol values in a dictionary for
+                    // faster
+                    // lookup for initialization
+                    cse_intermediate_fns_map[rep.first]
+                        = cse_intermediate_fns.size();
+                    // Store it in a vector for faster use in call
+                    cse_intermediate_fns.push_back(res);
+                }
+                // Generate functions for all the reduced exprs and save it
+                for (unsigned i = 0; i < outputs.size(); i++) {
+                    results.push_back(apply(*reduced_exprs[i]));
+                }
+                // We don't need the cse_intermediate_fns_map anymore
+                cse_intermediate_fns_map.clear();
+                symbols.clear();
             }
-        } else {
-            vec_basic reduced_exprs;
-            vec_pair replacements;
-            // cse the outputs
-            SymEngine::cse(replacements, reduced_exprs, outputs);
-            cse_intermediate_results.resize(replacements.size());
-            for (auto &rep : replacements) {
-                auto res = apply(*(rep.second));
-                // Store the replacement symbol values in a dictionary for
-                // faster
-                // lookup for initialization
-                cse_intermediate_fns_map[rep.first]
-                    = cse_intermediate_fns.size();
-                // Store it in a vector for faster use in call
-                cse_intermediate_fns.push_back(res);
-            }
-            // Generate functions for all the reduced exprs and save it
-            for (unsigned i = 0; i < outputs.size(); i++) {
-                results.push_back(apply(*reduced_exprs[i]));
-            }
-            // We don't need the cse_intermediate_fns_map anymore
-            cse_intermediate_fns_map.clear();
-            symbols.clear();
+        } catch (...) {
+            reset();
+            throw;
         }
     }
 
