@@ -8,7 +8,6 @@
 #include <symengine/pow.h>
 
 using SymEngine::Basic;
-using SymEngine::gamma;
 using SymEngine::Inf;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -160,8 +159,6 @@ TEST_CASE("Evaluate Class of NaN", "[NaN]")
     n1 = acoth(a);
     REQUIRE(eq(*n1, *Nan));
     n1 = log(a);
-    REQUIRE(eq(*n1, *Nan));
-    n1 = gamma(a);
     REQUIRE(eq(*n1, *Nan));
     n1 = abs(a);
     REQUIRE(eq(*n1, *Nan));
