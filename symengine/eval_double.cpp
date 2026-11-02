@@ -10,20 +10,21 @@ class EvalDoubleVisitor : public BaseVisitor<C>
 {
 protected:
     /*
-       The 'result_' variable is assigned into at the very end of each visit()
-       methods below. The only place where these methods are called from is the
-       line 'b.accept(*this)' in apply() and the 'result_' is immediately
-       returned. Thus no corruption can happen and apply() can be safely called
+       The 'result_' variable is assigned into at the very end of each
+     * visit()
+       methods below. The only place where these methods are
+     * called from is the
+       line 'b.accept(*this)' in apply() and the
+     * 'result_' is immediately
+       returned. Thus no corruption can happen
+     * and apply() can be safely called
        recursively.
     */
     T result_;
-    const umap_basic_double *mpp_ = nullptr;
+    const umap_basic_double *mpp_;
 
 public:
-    void init_map(const umap_basic_double *mpp)
-    {
-        mpp_ = mpp;
-    }
+    EvalDoubleVisitor(const umap_basic_double *mpp = nullptr) : mpp_(mpp) {}
     T apply(const Basic &b)
     {
         b.accept(*down_cast<C *>(this));
@@ -293,6 +294,10 @@ template <typename C>
 class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, C>
 {
 public:
+    EvalRealDoubleVisitor(const umap_basic_double *mpp = nullptr)
+        : EvalDoubleVisitor<double, C>(mpp)
+    {
+    }
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
@@ -419,6 +424,11 @@ class EvalRealDoubleVisitorPattern
 class EvalRealDoubleVisitorFinal
     : public EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>
 {
+public:
+    EvalRealDoubleVisitorFinal(const umap_basic_double *mpp = nullptr)
+        : EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>(mpp)
+    {
+    }
 };
 
 class EvalComplexDoubleVisitor
@@ -742,8 +752,7 @@ double eval_double(const Basic &b)
 
 double eval_double(const Basic &b, const umap_basic_double &mpp)
 {
-    EvalRealDoubleVisitorFinal v;
-    v.init_map(&mpp);
+    EvalRealDoubleVisitorFinal v(&mpp);
     return v.apply(b);
 }
 
