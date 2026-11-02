@@ -58,3 +58,20 @@ TEST_CASE("cancel", "[Basic]")
     REQUIRE(denom->__str__() == "1");
     REQUIRE(common->__str__() == "exp(x) + 1");
 }
+
+TEST_CASE("cancel with a constant numerator or denominator", "[Basic]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const UIntPolyFlint> numer, denom, common;
+
+    // Only univariate fractions are cancelled; others are left untouched.
+    cancel(integer(1), x, outArg(numer), outArg(denom), outArg(common));
+    REQUIRE(numer.is_null());
+    REQUIRE(denom.is_null());
+    REQUIRE(common.is_null());
+
+    cancel(x, integer(2), outArg(numer), outArg(denom), outArg(common));
+    REQUIRE(numer.is_null());
+    REQUIRE(denom.is_null());
+    REQUIRE(common.is_null());
+}

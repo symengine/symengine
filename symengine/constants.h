@@ -60,6 +60,7 @@ extern SYMENGINE_EXPORT RCP<const Integer> &zero;
 extern SYMENGINE_EXPORT RCP<const Integer> &one;
 extern SYMENGINE_EXPORT RCP<const Integer> &minus_one;
 extern SYMENGINE_EXPORT RCP<const Integer> &two;
+extern SYMENGINE_EXPORT RCP<const Integer> &ten;
 extern SYMENGINE_EXPORT RCP<const Number> &I;
 
 // Symbolic Constants

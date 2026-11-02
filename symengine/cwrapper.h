@@ -371,6 +371,10 @@ SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_cbrt(basic s, const basic a);
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_exp(basic s, const basic a);
 //! Assigns s = log(a).
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log(basic s, const basic a);
+//! Assigns s = log10(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log10(basic s, const basic a);
+//! Assigns s = log2(a).
+SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_log2(basic s, const basic a);
 //! Assigns s = floor(a).
 SYMENGINE_EXPORT CWRAPPER_OUTPUT_TYPE basic_floor(basic s, const basic a);
 //! Assigns s = ceiling(a).

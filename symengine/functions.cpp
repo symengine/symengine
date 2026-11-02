@@ -1817,6 +1817,16 @@ RCP<const Basic> log(const RCP<const Basic> &arg, const RCP<const Basic> &base)
     return div(log(arg), log(base));
 }
 
+RCP<const Basic> log10(const RCP<const Basic> &arg)
+{
+    return log(arg, ten);
+}
+
+RCP<const Basic> log2(const RCP<const Basic> &arg)
+{
+    return log(arg, two);
+}
+
 LambertW::LambertW(const RCP<const Basic> &arg) : OneArgFunction{arg}
 {
     SYMENGINE_ASSIGN_TYPEID()
@@ -3557,7 +3567,7 @@ RCP<const Basic> max(const vec_basic &arg)
     set_basic new_args;
 
     for (const auto &p : arg) {
-        if (is_a<Complex>(*p))
+        if (is_a_Complex(*p))
             throw SymEngineException("Complex can't be passed to max!");
 
         if (is_a_Number(*p)) {
@@ -3661,7 +3671,7 @@ RCP<const Basic> min(const vec_basic &arg)
     set_basic new_args;
 
     for (const auto &p : arg) {
-        if (is_a<Complex>(*p))
+        if (is_a_Complex(*p))
             throw SymEngineException("Complex can't be passed to min!");
 
         if (is_a_Number(*p)) {

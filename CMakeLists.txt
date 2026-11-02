@@ -104,7 +104,7 @@ try_compile(HAVE_SYMENGINE_STD_TO_STRING "${CMAKE_CURRENT_BINARY_DIR}/cxx" "${CM
 	CMAKE_FLAGS "-DCOMPILE_DEFINITIONS=${CMAKE_CXX_FLAGS}")
 
 set(INTEGER_CLASS "gmp"
-    CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint or piranha")
+    CACHE STRING "Integer class for symengine. Either gmp, gmpxx, flint, piranha or boostmp")
 
 # Virtual TypeID
 set(WITH_VIRTUAL_TYPEID no CACHE BOOL "Use virtual TypeID getter")
@@ -119,6 +119,10 @@ set(HAVE_SYMENGINE_FLINT False)
 
 # Boost
 set(WITH_BOOST no CACHE BOOL "Build with Boost")
+set(USE_SYSTEM_BOOSTMP yes CACHE BOOL
+    "Use an installed Boost for Boost.Multiprecision. If OFF, download standalone Boost.Multiprecision headers")
+set(BOOST_MULTIPRECISION_VERSION "1.92.0" CACHE STRING
+    "Boost version of the Boost.Multiprecision headers to download")
 
 set(HAVE_SYMENGINE_GMP yes)
 if ("${INTEGER_CLASS}" MATCHES "boostmp")
@@ -412,10 +416,45 @@ set(BUILD_BENCHMARKS yes
 set(BUILD_BENCHMARKS_GOOGLE no
     CACHE BOOL "Build SymEngine Google Benchmark benchmarks")
 
-if (WITH_BOOST)
+if (WITH_BOOST AND NOT USE_SYSTEM_BOOSTMP AND BOOST_COMPONENTS)
+    message(FATAL_ERROR "USE_SYSTEM_BOOSTMP=no cannot be used with options that need Boost libraries (${BOOST_COMPONENTS})")
+endif()
+
+if (WITH_BOOST AND USE_SYSTEM_BOOSTMP)
     find_package(Boost REQUIRED COMPONENTS ${BOOST_COMPONENTS})
     include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
     set(LIBS ${LIBS} ${Boost_LIBRARIES})
+    set(HAVE_SYMENGINE_BOOST yes)
+endif()
+
+if (WITH_BOOST AND NOT USE_SYSTEM_BOOSTMP)
+    # Boost.Multiprecision can be used standalone; it only needs Boost.Config
+    include(ExternalProject)
+    set(BOOST_MULTIPRECISION_INCLUDE_DIR
+        "${PROJECT_BINARY_DIR}/boost_multiprecision/include")
+    set(BOOST_MULTIPRECISION_SHA256_multiprecision
+        9da997843edd802f9d5e25d53872a7676330f31a52a5e47a418d1c94ba3b01d0)
+    set(BOOST_MULTIPRECISION_SHA256_config
+        b4171037f13373203ba79cbc141d612982052283e696a315185ab5bea46102a0)
+    foreach(BOOST_LIB multiprecision config)
+        if (BOOST_MULTIPRECISION_VERSION STREQUAL "1.92.0")
+            set(BOOST_LIB_HASH URL_HASH SHA256=${BOOST_MULTIPRECISION_SHA256_${BOOST_LIB}})
+        else()
+            set(BOOST_LIB_HASH)
+        endif()
+        if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
+            list(APPEND BOOST_LIB_HASH DOWNLOAD_EXTRACT_TIMESTAMP ON)
+        endif()
+        ExternalProject_Add(boost_${BOOST_LIB}
+            URL https://github.com/boostorg/${BOOST_LIB}/archive/refs/tags/boost-${BOOST_MULTIPRECISION_VERSION}.tar.gz
+            ${BOOST_LIB_HASH}
+            CONFIGURE_COMMAND ""
+            BUILD_COMMAND ""
+            INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory
+                <SOURCE_DIR>/include ${BOOST_MULTIPRECISION_INCLUDE_DIR}
+        )
+    endforeach()
+    include_directories(SYSTEM ${BOOST_MULTIPRECISION_INCLUDE_DIR})
     set(HAVE_SYMENGINE_BOOST yes)
 endif()
 
@@ -586,6 +625,9 @@ endif()
 if (NOT WITH_SYSTEM_CEREAL)
     set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/symengine/utilities/cereal/include)
 endif()
+if (WITH_BOOST AND NOT USE_SYSTEM_BOOSTMP)
+    set(CONF_INCLUDE_DIRS ${CONF_INCLUDE_DIRS} ${BOOST_MULTIPRECISION_INCLUDE_DIR})
+endif()
 set(SYMENGINE_BUILD_TREE yes)
 configure_file(cmake/SymEngineConfig.cmake.in
     "${PROJECT_BINARY_DIR}/SymEngineConfig.cmake" @ONLY)
@@ -728,6 +770,9 @@ endif()
 
 message("WITH_BOOST: ${WITH_BOOST}")
 if (WITH_BOOST)
+    message("USE_SYSTEM_BOOSTMP: ${USE_SYSTEM_BOOSTMP}")
+endif()
+if (WITH_BOOST AND USE_SYSTEM_BOOSTMP)
     message("BOOST_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
     message("BOOST_LIBRARIES: ${Boost_LIBRARIES}")
 endif()

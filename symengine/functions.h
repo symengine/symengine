@@ -551,6 +551,11 @@ SYMENGINE_EXPORT RCP<const Basic> log(const RCP<const Basic> &arg);
 SYMENGINE_EXPORT RCP<const Basic> log(const RCP<const Basic> &arg,
                                       const RCP<const Basic> &b);
 
+//! \return Log base 10 of argument `arg`
+SYMENGINE_EXPORT RCP<const Basic> log10(const RCP<const Basic> &arg);
+//! \return Log base 2 of argument `arg`
+SYMENGINE_EXPORT RCP<const Basic> log2(const RCP<const Basic> &arg);
+
 class SYMENGINE_EXPORT LambertW : public OneArgFunction
 {
     // Lambert W function, defined as the inverse function of

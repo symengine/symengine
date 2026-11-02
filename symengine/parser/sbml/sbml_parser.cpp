@@ -63,11 +63,6 @@ static RCP<const Basic> sbml_log(const RCP<const Basic> &b,
     return log(x, b);
 }
 
-static RCP<const Basic> log10(const RCP<const Basic> &x)
-{
-    return log(x, integer(10));
-}
-
 static RCP<const Basic> root(const RCP<const Basic> &b,
                              const RCP<const Basic> &x)
 {

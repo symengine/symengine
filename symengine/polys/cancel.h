@@ -17,7 +17,7 @@ inline void cancel(const RCP<const Basic> &numer, const RCP<const Basic> &denom,
     umap_basic_num numer_gens = _find_gens_poly(numer);
     umap_basic_num denom_gens = _find_gens_poly(denom);
 
-    if (numer_gens.size() != 1 && denom_gens.size() != 1) {
+    if (numer_gens.size() != 1 || denom_gens.size() != 1) {
         // only considering univariate here
         return;
     }

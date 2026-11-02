@@ -67,6 +67,10 @@ else()
         set(SYMENGINE_INCLUDE_DIRS ${SYMENGINE_INCLUDE_DIRS}
             "${SYMENGINE_CMAKE_DIR}/@DEF_INSTALL_CMAKE_DIR_REL@/include/symengine/utilities/cereal/include")
     endif()
+    if (@WITH_BOOST@ AND NOT @USE_SYSTEM_BOOSTMP@)
+        set(SYMENGINE_INCLUDE_DIRS ${SYMENGINE_INCLUDE_DIRS}
+            "${SYMENGINE_CMAKE_DIR}/@DEF_INSTALL_CMAKE_DIR_REL@/include/symengine/utilities/boost_multiprecision/include")
+    endif()
 endif()
 
 

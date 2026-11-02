@@ -285,6 +285,9 @@ include_directories(BEFORE ${symengine_SOURCE_DIR})
 
 add_library(symengine ${SRC})
 set_target_properties (symengine PROPERTIES POSITION_INDEPENDENT_CODE ON)
+if (WITH_BOOST AND NOT USE_SYSTEM_BOOSTMP)
+    add_dependencies(symengine boost_multiprecision boost_config)
+endif()
 
 include(CMakeDependentOption)
 cmake_dependent_option(WITH_VISIBILITY_HIDDEN "Build shared libraries with hidden visibility for private functions" ON "BUILD_SHARED_LIBS AND NOT WITH_PIRANHA" OFF)
@@ -370,6 +373,11 @@ macro(INSTALL_HEADERS_WITH_DIRECTORY HEADER_LIST)
 endmacro(INSTALL_HEADERS_WITH_DIRECTORY)
 
 INSTALL_HEADERS_WITH_DIRECTORY(HEADERS)
+
+if (WITH_BOOST AND NOT USE_SYSTEM_BOOSTMP)
+    install(DIRECTORY ${BOOST_MULTIPRECISION_INCLUDE_DIR}/
+        DESTINATION include/symengine/utilities/boost_multiprecision/include)
+endif()
 
 if (BUILD_TESTS)
     add_subdirectory(utilities/catch)
