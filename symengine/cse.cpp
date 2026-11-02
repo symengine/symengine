@@ -16,8 +16,7 @@ class FuncArgTracker
 {
 
 public:
-    std::unordered_map<RCP<const Basic>, unsigned, RCPBasicHash, RCPBasicKeyEq>
-        value_numbers;
+    umap_basic<unsigned> value_numbers;
     vec_basic value_number_to_value;
     std::vector<std::set<unsigned>> arg_to_funcset;
     std::vector<std::set<unsigned>> func_to_argset;
