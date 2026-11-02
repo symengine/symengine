@@ -10,17 +10,14 @@ class EvalDoubleVisitor : public BaseVisitor<C>
 {
 protected:
     /*
-       The 'result_' variable is assigned into at the very end of each
-     * visit()
-       methods below. The only place where these methods are
-     * called from is the
-       line 'b.accept(*this)' in apply() and the
-     * 'result_' is immediately
-       returned. Thus no corruption can happen
-     * and apply() can be safely called
+       The 'result_' variable is assigned into at the very end of each visit()
+       methods below. The only place where these methods are called from is the
+       line 'b.accept(*this)' in apply() and the 'result_' is immediately
+       returned. Thus no corruption can happen and apply() can be safely called
        recursively.
     */
     T result_;
+    // Values of symbols, or nullptr. Only Symbol keys are looked up.
     const umap_basic_double *mpp_;
 
 public:
@@ -109,7 +106,8 @@ public:
                 return;
             }
         }
-        throw SymEngineException("Symbol cannot be evaluated.");
+        throw SymEngineException("Symbol " + x.get_name()
+                                 + " cannot be evaluated.");
     }
 
     void bvisit(const Log &x)
@@ -294,10 +292,7 @@ template <typename C>
 class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, C>
 {
 public:
-    EvalRealDoubleVisitor(const umap_basic_double *mpp = nullptr)
-        : EvalDoubleVisitor<double, C>(mpp)
-    {
-    }
+    using EvalDoubleVisitor<double, C>::EvalDoubleVisitor;
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
@@ -425,10 +420,8 @@ class EvalRealDoubleVisitorFinal
     : public EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>
 {
 public:
-    EvalRealDoubleVisitorFinal(const umap_basic_double *mpp = nullptr)
-        : EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>(mpp)
-    {
-    }
+    using EvalRealDoubleVisitor<
+        EvalRealDoubleVisitorFinal>::EvalRealDoubleVisitor;
 };
 
 class EvalComplexDoubleVisitor
@@ -441,6 +434,7 @@ public:
     // Derivative, ATan2, Gamma
 
     using EvalDoubleVisitor::bvisit;
+    using EvalDoubleVisitor::EvalDoubleVisitor;
 
     void bvisit(const Complex &x)
     {
@@ -744,21 +738,16 @@ static inline std::vector<fn> init_eval_double()
     return table;
 }
 
-double eval_double(const Basic &b)
-{
-    EvalRealDoubleVisitorFinal v;
-    return v.apply(b);
-}
-
 double eval_double(const Basic &b, const umap_basic_double &mpp)
 {
     EvalRealDoubleVisitorFinal v(&mpp);
     return v.apply(b);
 }
 
-std::complex<double> eval_complex_double(const Basic &b)
+std::complex<double> eval_complex_double(const Basic &b,
+                                         const umap_basic_double &mpp)
 {
-    EvalComplexDoubleVisitor v;
+    EvalComplexDoubleVisitor v(&mpp);
     return v.apply(b);
 }
 
