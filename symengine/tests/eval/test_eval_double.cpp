@@ -62,6 +62,7 @@ using SymEngine::symbol;
 using SymEngine::SymEngineException;
 using SymEngine::tan;
 using SymEngine::tanh;
+using SymEngine::umap_basic_double;
 using SymEngine::vec_basic;
 using SymEngine::zero;
 using SymEngine::zeta;
@@ -235,4 +236,40 @@ TEST_CASE("eval_complex_double: eval_double", "[eval_double]")
         REQUIRE(std::abs(val.imag() - vec[i].second.imag()) < 1e-12);
         REQUIRE(std::abs(val.real() - vec[i].second.real()) < 1e-12);
     }
+}
+
+TEST_CASE("eval_double with symbols", "[eval_double]")
+{
+    RCP<const Basic> x = symbol("x");
+    RCP<const Basic> y = symbol("y");
+    umap_basic_double mpp = {{x, 1.0}, {y, 2.0}};
+
+    double val = eval_double(*SymEngine::add(sin(x), cos(y)), mpp);
+    CHECK(std::abs(val - (std::sin(1.0) + std::cos(2.0))) < 1e-12);
+
+    // The map is used inside Max/Min and Piecewise conditions
+    CHECK(eval_double(*max({x, y}), mpp) == 2.0);
+    CHECK(eval_double(*min({x, y}), mpp) == 1.0);
+    PiecewiseVec pwv;
+    pwv.push_back({x, Gt(x, y)});
+    pwv.push_back({y, boolTrue});
+    CHECK(eval_double(*piecewise(std::move(pwv)), mpp) == 2.0);
+
+    // Dummy is a Symbol, so it can be given a value too
+    RCP<const Basic> d = SymEngine::dummy("d");
+    CHECK(eval_double(*SymEngine::mul(d, x), {{d, 3.0}, {x, 1.0}}) == 3.0);
+
+    // Keys that are not symbols are ignored
+    CHECK_THROWS_AS(eval_double(*sin(x), {{sin(x), 0.5}}), SymEngineException);
+
+    // The error names the missing symbol
+    CHECK_THROWS_WITH(eval_double(*symbol("z"), mpp),
+                      "Symbol z cannot be evaluated.");
+
+    // Complex evaluation, e.g. sqrt(x - y) = i
+    std::complex<double> c = SymEngine::eval_complex_double(
+        *SymEngine::sqrt(SymEngine::sub(x, y)), mpp);
+    CHECK(std::abs(c - std::complex<double>(0.0, 1.0)) < 1e-12);
+    CHECK_THROWS_AS(SymEngine::eval_complex_double(*symbol("z"), mpp),
+                    SymEngineException);
 }
