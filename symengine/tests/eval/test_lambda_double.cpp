@@ -712,6 +712,27 @@ TEST_CASE("LLVMDoubleVisitor is uninitialized after a failed init",
     }
 }
 
+TEST_CASE("LLVMDoubleVisitor is uninitialized after a failed loads",
+          "[llvm_double]")
+{
+    RCP<const Basic> x = symbol("x");
+    double d;
+    double inps[] = {1.5};
+
+    LLVMDoubleVisitor v;
+    v.init({x}, {mul(integer(2), x)});
+    REQUIRE(v.get_function_pointer() != nullptr);
+    const std::string valid = v.dumps();
+    CHECK_THROWS(v.loads("not an object file"));
+    REQUIRE(v.get_function_pointer() == nullptr);
+    REQUIRE(v.dumps().empty());
+    // a valid object file can be loaded again
+    v.loads(valid);
+    REQUIRE(v.get_function_pointer() != nullptr);
+    v.call(&d, inps);
+    REQUIRE(::fabs(d - 3.0) < 1e-12);
+}
+
 TEST_CASE("Check that our default LLVM passes give correct results",
           "[llvm_double]")
 {

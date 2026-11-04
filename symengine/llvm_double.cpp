@@ -918,35 +918,42 @@ void LLVMVisitor::loads(const std::string &s)
 
 void LLVMVisitor::link_membuffer()
 {
-    jit = get_or_throw(llvm::orc::LLJITBuilder().create());
+    func = 0;
+    try {
+        jit = get_or_throw(llvm::orc::LLJITBuilder().create());
 
 #if (LLVM_VERSION_MAJOR < 17)
-    // Resolve external functions (e.g. from libm) using the symbols of the
-    // current process. Since LLVM 17 LLJIT does this by default.
-    auto generator = get_or_throw(
-        llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
-            jit->getDataLayout().getGlobalPrefix()));
+        // Resolve external functions (e.g. from libm) using the symbols of the
+        // current process. Since LLVM 17 LLJIT does this by default.
+        auto generator = get_or_throw(
+            llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
+                jit->getDataLayout().getGlobalPrefix()));
 #if (LLVM_VERSION_MAJOR < 10)
-    jit->getMainJITDylib().setGenerator(std::move(generator));
+        jit->getMainJITDylib().setGenerator(std::move(generator));
 #else
-    jit->getMainJITDylib().addGenerator(std::move(generator));
+        jit->getMainJITDylib().addGenerator(std::move(generator));
 #endif
 #endif
 
-    // Customization point for subclasses: (may e.g. register custom symbol
-    // resolver)
-    modify_jit(jit.get());
+        // Customization point for subclasses: (may e.g. register custom symbol
+        // resolver)
+        modify_jit(jit.get());
 
-    throw_if_error(
-        jit->addObjectFile(llvm::MemoryBuffer::getMemBufferCopy(membuffer)));
+        throw_if_error(jit->addObjectFile(
+            llvm::MemoryBuffer::getMemBufferCopy(membuffer)));
 
-    // Get the symbol's address
-    auto symbol = get_or_throw(jit->lookup("symengine_func"));
+        // Get the symbol's address
+        auto symbol = get_or_throw(jit->lookup("symengine_func"));
 #if (LLVM_VERSION_MAJOR < 15)
-    func = (intptr_t)symbol.getAddress();
+        func = (intptr_t)symbol.getAddress();
 #else
-    func = (intptr_t)symbol.getValue();
+        func = (intptr_t)symbol.getValue();
 #endif
+    } catch (...) {
+        membuffer.clear();
+        jit.reset();
+        throw;
+    }
 }
 
 void LLVMVisitor::bvisit(const Floor &x)
