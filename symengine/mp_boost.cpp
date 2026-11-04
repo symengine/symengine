@@ -183,8 +183,11 @@ integer_class step(const unsigned long &n, const integer_class &i,
 bool positive_root(integer_class &res, const integer_class &i,
                    const unsigned long n)
 {
-    integer_class x
-        = 1; // TODO: make a better starting guess based on (number of bits)/n
+    // Start from 2**ceil(bits/n), which is not less than the root, so that
+    // Newton's iteration decreases to it in a few steps.
+    unsigned long bits
+        = static_cast<unsigned long>(boost::multiprecision::msb(i)) + 1;
+    integer_class x = integer_class(1) << ((bits + n - 1) / n);
     integer_class y = step(n, i, x);
     do {
         x = y;
