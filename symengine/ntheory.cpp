@@ -19,11 +19,6 @@
 #include <arb.h>
 #include <bernoulli.h>
 #endif // HAVE_SYMENGINE_ARB
-#ifndef HAVE_SYMENGINE_GMP
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random.hpp>
-#endif // !HAVE_SYMENGINE_GMP
 
 namespace SymEngine
 {

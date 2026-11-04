@@ -17,8 +17,11 @@ protected:
        recursively.
     */
     T result_;
+    // Values of symbols, or nullptr. Only Symbol keys are looked up.
+    const umap_basic_double *mpp_;
 
 public:
+    EvalDoubleVisitor(const umap_basic_double *mpp = nullptr) : mpp_(mpp) {}
     T apply(const Basic &b)
     {
         b.accept(*down_cast<C *>(this));
@@ -94,10 +97,18 @@ public:
         result_ = std::tan(tmp);
     }
 
-    void bvisit(const Symbol &)
+    void bvisit(const Symbol &x)
     {
-        throw SymEngineException("Symbol cannot be evaluated.");
-    };
+        if (mpp_ != nullptr) {
+            auto it = mpp_->find(x.rcp_from_this());
+            if (it != mpp_->end()) {
+                result_ = it->second;
+                return;
+            }
+        }
+        throw SymEngineException("Symbol " + x.get_name()
+                                 + " cannot be evaluated.");
+    }
 
     void bvisit(const Log &x)
     {
@@ -281,6 +292,7 @@ template <typename C>
 class EvalRealDoubleVisitor : public EvalDoubleVisitor<double, C>
 {
 public:
+    using EvalDoubleVisitor<double, C>::EvalDoubleVisitor;
     // Classes not implemented are
     // Subs, UpperGamma, LowerGamma, Dirichlet_eta, Zeta
     // LeviCivita, KroneckerDelta, LambertW
@@ -407,6 +419,9 @@ class EvalRealDoubleVisitorPattern
 class EvalRealDoubleVisitorFinal
     : public EvalRealDoubleVisitor<EvalRealDoubleVisitorFinal>
 {
+public:
+    using EvalRealDoubleVisitor<
+        EvalRealDoubleVisitorFinal>::EvalRealDoubleVisitor;
 };
 
 class EvalComplexDoubleVisitor
@@ -419,6 +434,7 @@ public:
     // Derivative, ATan2, Gamma
 
     using EvalDoubleVisitor::bvisit;
+    using EvalDoubleVisitor::EvalDoubleVisitor;
 
     void bvisit(const Complex &x)
     {
@@ -722,15 +738,16 @@ static inline std::vector<fn> init_eval_double()
     return table;
 }
 
-double eval_double(const Basic &b)
+double eval_double(const Basic &b, const umap_basic_double &mpp)
 {
-    EvalRealDoubleVisitorFinal v;
+    EvalRealDoubleVisitorFinal v(&mpp);
     return v.apply(b);
 }
 
-std::complex<double> eval_complex_double(const Basic &b)
+std::complex<double> eval_complex_double(const Basic &b,
+                                         const umap_basic_double &mpp)
 {
-    EvalComplexDoubleVisitor v;
+    EvalComplexDoubleVisitor v(&mpp);
     return v.apply(b);
 }
 

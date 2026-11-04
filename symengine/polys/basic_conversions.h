@@ -331,8 +331,7 @@ public:
     using Vec = typename Dict::vec_type;
     Dict dict;
     set_basic gens;
-    std::unordered_map<RCP<const Basic>, vec_basic, RCPBasicHash, RCPBasicKeyEq>
-        gens_pow;
+    umap_basic<vec_basic> gens_pow;
     umap_basic_uint gens_map;
 
     BasicToMPolyBase(const set_basic &gens_)
