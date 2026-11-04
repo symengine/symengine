@@ -6,13 +6,17 @@
 #include <symengine/symengine_exception.h>
 
 using SymEngine::Add;
+using SymEngine::add;
 using SymEngine::as_numer_denom;
 using SymEngine::Basic;
 using SymEngine::Complex;
+using SymEngine::div;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::make_rcp;
+using SymEngine::map_basic_basic;
+using SymEngine::mul;
 using SymEngine::Mul;
 using SymEngine::neg;
 using SymEngine::Number;
@@ -20,6 +24,7 @@ using SymEngine::one;
 using SymEngine::pow;
 using SymEngine::Rational;
 using SymEngine::RCP;
+using SymEngine::sqrt;
 using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;
@@ -178,4 +183,25 @@ TEST_CASE("Complex: Basic", "[basic]")
     as_numer_denom(c, outArg(num), outArg(den));
     REQUIRE(eq(*num, *cnum));
     REQUIRE(eq(*den, *integer(24)));
+}
+
+TEST_CASE("NumerDenom: sqrt of a square in two denominators",
+          "[as_numer_denom]")
+{
+    // a/sqrt(z**2) + b*sqrt(z**2)/z**2: multiplying the two fractions brings
+    // (z**2)**(1/2) * (z**2)**(1/2), whose exponent becomes the Integer 1 on
+    // a Pow key. That must be rewritten as z**2, not left as a Mul key.
+    RCP<const Basic> a = symbol("a"), b = symbol("b"), z = symbol("z");
+    RCP<const Basic> s = sqrt(pow(z, integer(2)));
+    RCP<const Basic> e = add(div(a, s), div(mul(b, s), pow(z, integer(2))));
+    RCP<const Basic> num, den;
+    as_numer_denom(e, outArg(num), outArg(den));
+
+    map_basic_basic values;
+    values[a] = integer(2);
+    values[b] = integer(3);
+    values[z] = integer(5);
+    double lhs = eval_double(*div(num, den)->subs(values));
+    double rhs = eval_double(*e->subs(values));
+    REQUIRE(std::abs(lhs - rhs) < 1e-12);
 }
