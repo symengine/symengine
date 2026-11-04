@@ -19,7 +19,7 @@ inline void _imulnum(const Ptr<RCP<const Number>> &self,
     *self = _mulnum(*self, other);
 }
 
-class ExpandVisitor : public BaseVisitor<ExpandVisitor>
+class ExpandVisitor : public BaseVisitor<ExpandVisitor, TransformVisitor>
 {
 private:
     umap_basic_num d_;
@@ -33,6 +33,17 @@ public:
     {
         b.accept(*this);
         return Add::from_dict(coeff, std::move(d_));
+    }
+
+    // Used by TransformVisitor to transform the arguments of functions.
+    // Each argument is expanded with a fresh visitor, so that the terms
+    // being accumulated by this visitor are not affected.
+    RCP<const Basic> apply(const RCP<const Basic> &x) override
+    {
+        if (is_a<Symbol>(*x) or is_a_Number(*x)) {
+            return x;
+        }
+        return expand(x);
     }
 
     void bvisit(const Basic &x)
@@ -59,6 +70,57 @@ public:
             }
         }
         multiply = _multiply;
+    }
+
+    void bvisit(const OneArgFunction &self)
+    {
+        if (is_a<UnevaluatedExpr>(self)) {
+            return bvisit(static_cast<const Basic &>(self));
+        }
+        transform_and_add(self);
+    }
+
+    void bvisit(const Log &self)
+    {
+        if (!deep) {
+            return bvisit(static_cast<const Basic &>(self));
+        }
+        RCP<const Basic> arg = self.get_arg();
+        if (!is_a<Mul>(*arg)) {
+            return _coef_dict_add_term(multiply, log(expand(arg)));
+        }
+        // log(a*z) = log(a) + log(z) holds for a > 0 and any complex z,
+        // so only factors known to be positive are split off. This is done
+        // before expanding the argument, so that log(2*(x+y)) gives
+        // log(2) + log(x + y) instead of log(2*x + 2*y).
+        vec_basic rest;
+        for (const auto &factor : arg->get_args()) {
+            if (is_true(is_positive(*factor))) {
+                _coef_dict_add_term(multiply, log(expand(factor)));
+            } else if (is_a_Number(*factor) and is_true(is_negative(*factor))) {
+                _coef_dict_add_term(multiply, log(neg(factor)));
+                rest.push_back(minus_one);
+            } else {
+                rest.push_back(factor);
+            }
+        }
+        _coef_dict_add_term(multiply, log(expand(mul(rest))));
+    }
+
+    template <class T>
+    void bvisit(const TwoArgBasic<T> &self)
+    {
+        transform_and_add(self);
+    }
+
+    void bvisit(const MultiArgFunction &self)
+    {
+        transform_and_add(self);
+    }
+
+    void bvisit(const Piecewise &self)
+    {
+        transform_and_add(self);
     }
 
     void bvisit(const Mul &self)
@@ -289,35 +351,40 @@ public:
     void bvisit(const Pow &self)
     {
         RCP<const Basic> _base = expand_if_deep(self.get_base());
+        RCP<const Basic> _exp = expand_if_deep(self.get_exp());
         // TODO add all types of polys
-        if (is_a<Integer>(*self.get_exp()) && is_a<UExprPoly>(*_base)) {
+        if (is_a<Integer>(*_exp) && is_a<UExprPoly>(*_base)) {
             unsigned q = numeric_cast<unsigned>(
-                down_cast<const Integer &>(*self.get_exp()).as_uint());
+                down_cast<const Integer &>(*_exp).as_uint());
             RCP<const UExprPoly> p = rcp_static_cast<const UExprPoly>(_base);
             RCP<const UExprPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);
             return;
         }
-        if (is_a<Integer>(*self.get_exp()) && is_a<UIntPoly>(*_base)) {
+        if (is_a<Integer>(*_exp) && is_a<UIntPoly>(*_base)) {
             unsigned q = numeric_cast<unsigned>(
-                down_cast<const Integer &>(*self.get_exp()).as_uint());
+                down_cast<const Integer &>(*_exp).as_uint());
             RCP<const UIntPoly> p = rcp_static_cast<const UIntPoly>(_base);
             RCP<const UIntPoly> r = pow_upoly(*p, q);
             _coef_dict_add_term(multiply, r);
             return;
         }
 
-        if (!is_a<Integer>(*self.get_exp()) || !is_a<Add>(*_base)) {
-            if (neq(*_base, *self.get_base())) {
-                Add::dict_add_term(d_, multiply, pow(_base, self.get_exp()));
+        if (!is_a<Integer>(*_exp) || !is_a<Add>(*_base)) {
+            if (neq(*_base, *self.get_base()) or neq(*_exp, *self.get_exp())) {
+                _coef_dict_add_term(multiply, pow(_base, _exp));
             } else {
                 Add::dict_add_term(d_, multiply, self.rcp_from_this());
             }
             return;
         }
 
-        integer_class n
-            = down_cast<const Integer &>(*self.get_exp()).as_integer_class();
+        integer_class n = down_cast<const Integer &>(*_exp).as_integer_class();
+        // The expanded exponent may have simplified to 0 or 1
+        if (n == 0)
+            return iaddnum(outArg(coeff), multiply);
+        if (n == 1)
+            return _coef_dict_add_term(multiply, _base);
         if (n < 0)
             return _coef_dict_add_term(
                 multiply, div(one, expand_if_deep(pow(_base, integer(-n)))));
@@ -355,10 +422,22 @@ public:
     }
 
 private:
+    template <class T>
+    void transform_and_add(const T &self)
+    {
+        if (deep) {
+            TransformVisitor::bvisit(self);
+            if (result_.get() != &self) {
+                return _coef_dict_add_term(multiply, result_);
+            }
+        }
+        bvisit(static_cast<const Basic &>(self));
+    }
+
     RCP<const Basic> expand_if_deep(const RCP<const Basic> &expr)
     {
         if (deep) {
-            return expand(expr);
+            return apply(expr);
         } else {
             return expr;
         }

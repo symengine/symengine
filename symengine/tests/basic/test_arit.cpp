@@ -3,6 +3,7 @@
 
 #include <symengine/add.h>
 #include <symengine/pow.h>
+#include <symengine/logic.h>
 #include <symengine/complex_double.h>
 #include <symengine/real_mpfr.h>
 #include <symengine/symengine_exception.h>
@@ -10,32 +11,42 @@
 
 using SymEngine::Add;
 using SymEngine::add;
+using SymEngine::atan2;
 using SymEngine::Basic;
+using SymEngine::boolTrue;
 using SymEngine::Complex;
 using SymEngine::complex_double;
 using SymEngine::ComplexDouble;
 using SymEngine::ComplexInf;
+using SymEngine::cos;
 using SymEngine::div;
 using SymEngine::down_cast;
 using SymEngine::E;
 using SymEngine::exp;
+using SymEngine::function_symbol;
 using SymEngine::I;
 using SymEngine::Inf;
 using SymEngine::Integer;
 using SymEngine::integer;
 using SymEngine::is_a;
 using SymEngine::Log;
+using SymEngine::log;
+using SymEngine::Lt;
 using SymEngine::make_rcp;
 using SymEngine::map_vec_uint;
+using SymEngine::max;
+using SymEngine::min;
 using SymEngine::minus_one;
 using SymEngine::Mul;
 using SymEngine::mul;
 using SymEngine::multinomial_coefficients;
 using SymEngine::Nan;
+using SymEngine::neg;
 using SymEngine::NegInf;
 using SymEngine::Number;
 using SymEngine::one;
 using SymEngine::pi;
+using SymEngine::piecewise;
 using SymEngine::Pow;
 using SymEngine::pow;
 using SymEngine::print_stack_on_segfault;
@@ -53,6 +64,7 @@ using SymEngine::Symbol;
 using SymEngine::symbol;
 using SymEngine::SymEngineException;
 using SymEngine::umap_basic_num;
+using SymEngine::unevaluated_expr;
 using SymEngine::zero;
 #ifdef HAVE_SYMENGINE_MPFR
 using SymEngine::mpfr_class;
@@ -1484,4 +1496,138 @@ TEST_CASE("Expand3: arit", "[arit]")
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1)
                      .count()
               << "ms" << std::endl;
+}
+
+TEST_CASE("Expand function arguments: arit", "[arit]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> e, r;
+
+    // sin(2*(x + y)) -> sin(2*x + 2*y)
+    e = sin(mul(i2, add(x, y)));
+    r = expand(e);
+    REQUIRE(eq(*r, *sin(add(mul(i2, x), mul(i2, y)))));
+
+    // shallow expansion leaves function arguments alone
+    r = expand(e, false);
+    REQUIRE(eq(*r, *e));
+
+    // coefficients and nested functions
+    e = mul(i2, cos(sin(mul(x, add(x, y)))));
+    r = expand(e);
+    REQUIRE(eq(*r, *mul(i2, cos(sin(add(pow(x, i2), mul(x, y)))))));
+
+    // two-argument and multi-argument functions
+    e = atan2(mul(i2, add(x, y)), x);
+    r = expand(e);
+    REQUIRE(eq(*r, *atan2(add(mul(i2, x), mul(i2, y)), x)));
+
+    e = function_symbol("f", {mul(x, add(x, y)), y});
+    r = expand(e);
+    REQUIRE(eq(*r, *function_symbol("f", {add(pow(x, i2), mul(x, y)), y})));
+
+    // Max and Min expand all of their arguments
+    e = mul(i2, max({mul(x, add(x, y)), y}));
+    r = expand(e);
+    REQUIRE(eq(*r, *mul(i2, max({add(pow(x, i2), mul(x, y)), y}))));
+
+    e = min({mul(i2, add(x, y)), x});
+    r = expand(e);
+    REQUIRE(eq(*r, *min({add(mul(i2, x), mul(i2, y)), x})));
+
+    // Piecewise expands both the branches and the conditions
+    e = piecewise({{mul(i2, add(x, y)), Lt(x, mul(i2, add(y, one)))},
+                   {mul(x, add(x, y)), boolTrue}});
+    r = expand(e);
+    REQUIRE(eq(*r, *piecewise({{add(mul(i2, x), mul(i2, y)),
+                                Lt(x, add(mul(i2, y), i2))},
+                               {add(pow(x, i2), mul(x, y)), boolTrue}})));
+
+    r = expand(e, false);
+    REQUIRE(eq(*r, *e));
+
+    // product of functions with expandable arguments
+    e = mul(add(x, sin(mul(i2, add(x, y)))), y);
+    r = expand(e);
+    REQUIRE(eq(*r, *add(mul(x, y), mul(y, sin(add(mul(i2, x), mul(i2, y)))))));
+
+    // UnevaluatedExpr is left untouched
+    e = unevaluated_expr(mul(i2, add(x, y)));
+    r = expand(e);
+    REQUIRE(eq(*r, *e));
+}
+
+TEST_CASE("Expand log: arit", "[arit]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> e, r;
+
+    // log(2*x) -> log(2) + log(x)
+    e = log(mul(i2, x));
+    r = expand(e);
+    REQUIRE(eq(*r, *add(log(i2), log(x))));
+
+    // log(-2*x) -> log(2) + log(-x)
+    e = log(mul(integer(-2), x));
+    r = expand(e);
+    REQUIRE(eq(*r, *add(log(i2), log(neg(x)))));
+
+    // positive constants are split off, the argument is expanded first
+    e = log(mul(pi, mul(i2, add(x, y))));
+    r = expand(e);
+    REQUIRE(eq(*r, *add({log(pi), log(i2), log(add(x, y))})));
+
+    // log(x*y) is not split, since it is not valid for all complex x, y
+    e = log(mul(x, y));
+    r = expand(e);
+    REQUIRE(eq(*r, *e));
+
+    // shallow expansion leaves log alone
+    e = log(mul(i2, x));
+    r = expand(e, false);
+    REQUIRE(eq(*r, *e));
+}
+
+TEST_CASE("Expand exponent: arit", "[arit]")
+{
+    RCP<const Symbol> x = symbol("x");
+    RCP<const Symbol> y = symbol("y");
+    RCP<const Basic> i2 = integer(2);
+    RCP<const Basic> e, r;
+
+    // exp(2*(x + y)) -> exp(2*x + 2*y)
+    e = exp(mul(i2, add(x, y)));
+    r = expand(e);
+    REQUIRE(eq(*r, *exp(add(mul(i2, x), mul(i2, y)))));
+
+    // shallow expansion leaves the exponent alone
+    r = expand(e, false);
+    REQUIRE(eq(*r, *e));
+
+    // x**(y*(y + 1) - y**2) -> x**y
+    e = pow(x, sub(mul(y, add(y, one)), pow(y, i2)));
+    r = expand(e);
+    REQUIRE(eq(*r, *pow(x, y)));
+
+    // an exponent that expands to an integer allows expanding the base
+    // (x + 1)**((y + 1)**2 - y**2 - 2*y + 1) -> x**2 + 2*x + 1
+    e = pow(add(x, one), add({pow(add(y, one), i2), neg(pow(y, i2)),
+                              mul(integer(-2), y), one}));
+    r = expand(e);
+    REQUIRE(eq(*r, *add({pow(x, i2), mul(i2, x), one})));
+
+    // exponents expanding to 1 and 0
+    e = pow(add(x, one),
+            sub(pow(add(y, one), i2), add(pow(y, i2), mul(i2, y))));
+    r = expand(e);
+    REQUIRE(eq(*r, *add(x, one)));
+
+    e = pow(add(x, one),
+            sub(pow(add(y, one), i2), add({pow(y, i2), mul(i2, y), one})));
+    r = expand(e);
+    REQUIRE(eq(*r, *one));
 }
