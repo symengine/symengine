@@ -243,6 +243,25 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
     CHECK_THROWS_AS(solve_poly_cubic({one}, reals), SymEngineException);
     CHECK_THROWS_AS(solve_poly_quartic({one}, reals), SymEngineException);
 
+    // cubic with d = 0 where remaining quadratic has no roots in domain
+    poly = add(cbx, x);
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
+
+    // quartic with biquadratic form and domain subset
+    poly = add({qx, mul(integer(-5), sqx), integer(4)});
+    soln = solve(poly, x, interval(integer(1), integer(3)));
+    REQUIRE(eq(*soln, *finiteset({one, i2})));
+
+    // quartic with domain where biquadratic roots are outside domain
+    soln = solve(poly, x, interval(integer(5), integer(10)));
+    REQUIRE(eq(*soln, *emptyset()));
+
+    // quartic with d = 0 where cubic has no roots in domain
+    poly = add(qx, sqx);
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
+
     // Quartic
     poly = qx;
     soln = solve(poly, x);
