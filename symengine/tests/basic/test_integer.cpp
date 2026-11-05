@@ -1,9 +1,12 @@
 #include "catch.hpp"
 
+#include <symengine/add.h>
 #include <symengine/integer.h>
 #include <symengine/mul.h>
+#include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
 
+using SymEngine::add;
 using SymEngine::Basic;
 using SymEngine::Integer;
 using SymEngine::integer;
@@ -11,9 +14,13 @@ using SymEngine::integer_class;
 using SymEngine::isqrt;
 using SymEngine::mp_get_hex_str;
 using SymEngine::mp_set_str;
+using SymEngine::mul;
 using SymEngine::neg;
+using SymEngine::pow;
 using SymEngine::print_stack_on_segfault;
 using SymEngine::RCP;
+using SymEngine::rcp_static_cast;
+using SymEngine::sub;
 using SymEngine::SymEngineException;
 
 RCP<const Basic> i100 = integer(100);
@@ -48,6 +55,32 @@ TEST_CASE("i_nth_root: integer", "[integer]")
 
     REQUIRE(i_nth_root(outArg(r), *i10, 2) == 0);
     REQUIRE(eq(*r, *integer(3)));
+
+    // Large n, which used to take millions of iterations with boostmp
+    RCP<const Integer> i1 = integer(1);
+    RCP<const Integer> i25 = integer(25);
+    RCP<const Integer> b
+        = rcp_static_cast<const Integer>(pow(i25, integer(1000)));
+    REQUIRE(i_nth_root(outArg(r), *b, 1000) != 0);
+    REQUIRE(eq(*r, *i25));
+    REQUIRE(
+        i_nth_root(outArg(r), *rcp_static_cast<const Integer>(add(b, i1)), 1000)
+        == 0);
+    REQUIRE(eq(*r, *i25));
+    REQUIRE(
+        i_nth_root(outArg(r), *rcp_static_cast<const Integer>(sub(b, i1)), 1000)
+        == 0);
+    REQUIRE(eq(*r, *integer(24)));
+
+    RCP<const Integer> c
+        = rcp_static_cast<const Integer>(pow(i10, integer(400)));
+    RCP<const Integer> c2 = rcp_static_cast<const Integer>(mul(c, c));
+    REQUIRE(i_nth_root(outArg(r), *c2, 2) != 0);
+    REQUIRE(eq(*r, *c));
+    REQUIRE(
+        i_nth_root(outArg(r), *rcp_static_cast<const Integer>(sub(c2, i1)), 2)
+        == 0);
+    REQUIRE(eq(*r, *sub(c, i1)));
 }
 
 TEST_CASE("perfect_power_square: integer", "[integer]")
