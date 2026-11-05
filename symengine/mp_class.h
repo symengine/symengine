@@ -86,6 +86,10 @@ inline rational_class operator""_q(const char *str)
 }
 } // namespace literals
 
+//! \return `num/den` (den > 0) rounded to the nearest double, ties to even
+SYMENGINE_EXPORT double mp_get_d_rational(const integer_class &num,
+                                          const integer_class &den);
+
 #if SYMENGINE_INTEGER_CLASS == SYMENGINE_GMPXX                                 \
     || SYMENGINE_INTEGER_CLASS == SYMENGINE_GMP
 // Helper functions for mpz
@@ -296,7 +300,7 @@ inline void canonicalize(rational_class &i)
 
 inline double mp_get_d(const rational_class &i)
 {
-    return i.get_d();
+    return mp_get_d_rational(get_num(i), get_den(i));
 }
 
 inline int mp_sign(const rational_class &i)
@@ -546,7 +550,7 @@ inline void canonicalize(piranha::rational &i)
 
 inline double mp_get_d(const piranha::rational &i)
 {
-    return mpq_get_d(i.get_mpq_view().get());
+    return mp_get_d_rational(get_num(i), get_den(i));
 }
 
 inline auto get_mpq_t(const piranha::rational &i) -> decltype(i.get_mpq_view())
@@ -787,7 +791,7 @@ inline void canonicalize(fmpq_wrapper &i)
 
 inline double mp_get_d(const fmpq_wrapper &i)
 {
-    return mp_get_d(i.get_num()) / mp_get_d(i.get_den());
+    return mp_get_d_rational(get_num(i), get_den(i));
 }
 
 inline int mp_sign(const fmpq_wrapper &i)
@@ -978,7 +982,17 @@ inline void canonicalize(rational_class &i)
 
 inline double mp_get_d(const rational_class &i)
 {
-    return i.convert_to<double>();
+    return mp_get_d_rational(get_num(i), get_den(i));
+}
+
+//! \return number of bits of |i|, 0 for i == 0
+inline unsigned long mp_bit_length(const integer_class &i)
+{
+    if (i == 0) {
+        return 0;
+    }
+    return static_cast<unsigned long>(boost::multiprecision::msb(mp_abs(i)))
+           + 1;
 }
 
 inline int mp_sign(const rational_class &i)
@@ -1151,6 +1165,15 @@ inline void mp_rootrem(integer_class &a, integer_class &b,
 inline unsigned long mp_scan1(const integer_class &i)
 {
     return mpz_scan1(get_mpz_t(i), 0);
+}
+
+//! \return number of bits of |i|, 0 for i == 0
+inline unsigned long mp_bit_length(const integer_class &i)
+{
+    if (mp_sign(i) == 0) {
+        return 0;
+    }
+    return static_cast<unsigned long>(mpz_sizeinbase(get_mpz_t(i), 2));
 }
 
 inline void mp_fib_ui(integer_class &res, unsigned long n)
