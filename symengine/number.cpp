@@ -46,7 +46,7 @@ RCP<const Number> round(const Number &x)
     if (is_a<Infty>(x) or is_a<NaN>(x)) {
         return rcp_static_cast<const Number>(x.rcp_from_this());
     }
-    if (is_a_sub<ComplexBase>(x)) {
+    if (is_a_Complex(x)) {
         const ComplexBase &c = down_cast<const ComplexBase &>(x);
         return addnum(round(*c.real_part()),
                       mulnum(round(*c.imaginary_part()), I));
@@ -74,7 +74,7 @@ RCP<const Number> round(const Number &x, long n)
     if (is_a<Infty>(x) or is_a<NaN>(x)) {
         return rcp_static_cast<const Number>(x.rcp_from_this());
     }
-    if (is_a_sub<ComplexBase>(x)) {
+    if (is_a_Complex(x)) {
         const ComplexBase &c = down_cast<const ComplexBase &>(x);
         return addnum(round(*c.real_part(), n),
                       mulnum(round(*c.imaginary_part(), n), I));
