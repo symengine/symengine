@@ -472,3 +472,104 @@ TEST_CASE("Test NumberWrapper", "[number]")
 #endif // HAVE_SYMENGINE_MPC
 #endif // HAVE_SYMENGINE_MPFR
 }
+
+TEST_CASE("round", "[number]")
+{
+    using SymEngine::complex_double;
+    using SymEngine::Inf;
+    using SymEngine::Nan;
+    using SymEngine::NegInf;
+    using SymEngine::rational;
+    using SymEngine::round;
+
+    auto rd = [](const RCP<const Number> &x) {
+        REQUIRE(is_a<SymEngine::RealDouble>(*x));
+        return down_cast<const SymEngine::RealDouble &>(*x).i;
+    };
+
+    // Integers
+    REQUIRE(eq(*round(*integer(5)), *integer(5)));
+    REQUIRE(eq(*round(*integer(-5), 2), *integer(-5)));
+    REQUIRE(eq(*round(*integer(25), -1), *integer(20)));
+    REQUIRE(eq(*round(*integer(35), -1), *integer(40)));
+    REQUIRE(eq(*round(*integer(-35), -1), *integer(-40)));
+    REQUIRE(eq(*round(*integer(149), -2), *integer(100)));
+    REQUIRE(eq(*round(*integer(151), -2), *integer(200)));
+
+    // Rationals stay exact
+    REQUIRE(eq(*round(*rational(1, 2)), *integer(0)));
+    REQUIRE(eq(*round(*rational(3, 2)), *integer(2)));
+    REQUIRE(eq(*round(*rational(5, 2)), *integer(2)));
+    REQUIRE(eq(*round(*rational(7, 2)), *integer(4)));
+    REQUIRE(eq(*round(*rational(-5, 2)), *integer(-2)));
+    REQUIRE(eq(*round(*rational(-7, 2)), *integer(-4)));
+    REQUIRE(eq(*round(*rational(1, 3)), *integer(0)));
+    REQUIRE(eq(*round(*rational(-2, 3)), *integer(-1)));
+    REQUIRE(eq(*round(*rational(1, 3), 2), *rational(33, 100)));
+    REQUIRE(eq(*round(*rational(2, 3), 2), *rational(67, 100)));
+    REQUIRE(eq(*round(*rational(1, 8), 2), *rational(3, 25)));
+    REQUIRE(eq(*round(*rational(3, 8), 2), *rational(19, 50)));
+    REQUIRE(eq(*round(*rational(7, 2), 0), *integer(4)));
+    REQUIRE(eq(*round(*rational(1001, 2), -1), *integer(500)));
+    REQUIRE(eq(*round(*rational(1, 3), -5), *integer(0)));
+
+    // RealDouble
+    REQUIRE(eq(*round(*real_double(0.5)), *integer(0)));
+    REQUIRE(eq(*round(*real_double(1.5)), *integer(2)));
+    REQUIRE(eq(*round(*real_double(2.5)), *integer(2)));
+    REQUIRE(eq(*round(*real_double(-2.5)), *integer(-2)));
+    REQUIRE(eq(*round(*real_double(-2.6)), *integer(-3)));
+    REQUIRE(eq(*round(*real_double(0.0)), *integer(0)));
+    REQUIRE(eq(*round(*real_double(0.49999999999999994)), *integer(0)));
+    REQUIRE(eq(*round(*real_double(1e20)),
+               *integer(integer_class("100000000000000000000"))));
+    REQUIRE(rd(round(*real_double(3.14159), 3)) == 3.142);
+    REQUIRE(rd(round(*real_double(-3.14159), 3)) == -3.142);
+    REQUIRE(rd(round(*real_double(0.125), 2)) == 0.12);
+    REQUIRE(rd(round(*real_double(0.375), 2)) == 0.38);
+    REQUIRE(rd(round(*real_double(0.625), 2)) == 0.62);
+    REQUIRE(rd(round(*real_double(123.456), -1)) == 120.0);
+    REQUIRE(rd(round(*real_double(12345.678), -2)) == 12300.0);
+    REQUIRE(rd(round(*real_double(1e-20), 2)) == 0.0);
+    REQUIRE(rd(round(*real_double(2.5), 0)) == 2.0);
+
+    // Complex
+    REQUIRE(
+        eq(*round(*Complex::from_two_nums(*rational(3, 2), *rational(5, 2))),
+           *Complex::from_two_nums(*integer(2), *integer(2))));
+    REQUIRE(eq(*round(*Complex::from_two_nums(*rational(1, 3), *integer(1))),
+               *Complex::from_two_nums(*integer(0), *integer(1))));
+    REQUIRE(eq(
+        *round(*Complex::from_two_nums(*rational(1, 3), *rational(-2, 3)), 1),
+        *Complex::from_two_nums(*rational(3, 10), *rational(-7, 10))));
+    REQUIRE(eq(*round(*complex_double(std::complex<double>(1.5, -2.5))),
+               *Complex::from_two_nums(*integer(2), *integer(-2))));
+    REQUIRE(eq(*round(*complex_double(std::complex<double>(1.25, -2.75)), 1),
+               *complex_double(std::complex<double>(1.2, -2.8))));
+
+    // Infinities and NaN
+    REQUIRE(eq(*round(*Inf), *Inf));
+    REQUIRE(eq(*round(*NegInf, 2), *NegInf));
+    REQUIRE(eq(*round(*Nan), *Nan));
+    REQUIRE(eq(*round(*Nan, 2), *Nan));
+
+#ifdef HAVE_SYMENGINE_MPFR
+    mpfr_class a(200);
+    mpfr_set_str(a.get_mpfr_t(), "2.5", 10, MPFR_RNDN);
+    REQUIRE(eq(*round(*real_mpfr(a)), *integer(2)));
+    mpfr_set_str(a.get_mpfr_t(), "-3.5", 10, MPFR_RNDN);
+    REQUIRE(eq(*round(*real_mpfr(a)), *integer(-4)));
+
+    // 1/3 to 40 digits keeps the precision of the input
+    mpfr_set_ui(a.get_mpfr_t(), 1, MPFR_RNDN);
+    mpfr_div_ui(a.get_mpfr_t(), a.get_mpfr_t(), 3, MPFR_RNDN);
+    RCP<const Number> r = round(*real_mpfr(a), 40);
+    REQUIRE(is_a<RealMPFR>(*r));
+    REQUIRE(down_cast<const RealMPFR &>(*r).i.get_prec() == 200);
+    mpfr_class b(200);
+    mpfr_set_str(b.get_mpfr_t(), "0.3333333333333333333333333333333333333333",
+                 10, MPFR_RNDN);
+    REQUIRE(mpfr_equal_p(down_cast<const RealMPFR &>(*r).i.get_mpfr_t(),
+                         b.get_mpfr_t()));
+#endif
+}

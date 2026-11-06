@@ -2,8 +2,62 @@
 #include <symengine/pow.h>
 #include <symengine/symengine_exception.h>
 
+#include <cmath>
+#include <limits>
+
 namespace SymEngine
 {
+
+double mp_get_d_rational(const integer_class &num, const integer_class &den)
+{
+    SYMENGINE_ASSERT(mp_sign(den) > 0)
+    if (mp_sign(num) == 0) {
+        return 0.0;
+    }
+    bool negative = mp_sign(num) < 0;
+    integer_class a = mp_abs(num);
+    long abits = static_cast<long>(mp_bit_length(a));
+    long dbits = static_cast<long>(mp_bit_length(den));
+    if (abits <= 53 and dbits <= 53) {
+        // Both are exact doubles and IEEE division is correctly rounded
+        double res = mp_get_d(a) / mp_get_d(den);
+        return negative ? -res : res;
+    }
+    // Scale so that the quotient t = floor(a * 2**s / den) satisfies
+    // 2**54 <= t < 2**56. Then |num/den| is t * 2**-s plus a remainder r.
+    long s = 55 - (abits - dbits);
+    integer_class b = den, t, r;
+    if (s >= 0) {
+        a <<= static_cast<unsigned long>(s);
+    } else {
+        b <<= static_cast<unsigned long>(-s);
+    }
+    mp_fdiv_qr(t, r, a, b);
+    long tbits = static_cast<long>(mp_bit_length(t));
+    // |num/den| is in [2**(tbits - 1 - s), 2**(tbits - s))
+    if (tbits - 1 - s > 1024) {
+        // result overflows
+        return negative ? -std::numeric_limits<double>::infinity()
+                        : std::numeric_limits<double>::infinity();
+    }
+    // Keep the leading 53 bits of t and drop the rest, rounding to nearest
+    // with ties to even, using r as a sticky bit.
+    long shift = tbits - 53;
+    integer_class m = t;
+    m >>= static_cast<unsigned long>(shift);
+    integer_class rem = m;
+    rem <<= static_cast<unsigned long>(shift);
+    rem = t - rem;
+    integer_class half(1);
+    half <<= static_cast<unsigned long>(shift - 1);
+    bool m_odd = mp_scan1(m) == 0;
+    if (rem > half or (rem == half and (mp_sign(r) != 0 or m_odd))) {
+        m += integer_class(1);
+    }
+    // m <= 2**53, so it converts exactly; ldexp overflows to inf
+    double res = std::ldexp(mp_get_d(m), static_cast<int>(shift - s));
+    return negative ? -res : res;
+}
 
 bool Rational::is_canonical(const rational_class &i) const
 {
