@@ -115,6 +115,18 @@ to_code_printer_precision(const BasicCodePrinterSettings *settings)
     return settings->precision;
 }
 
+template <typename Visitor, typename T>
+void visitor_call_batch(Visitor &v, size_t nin, size_t nout, T *const outs,
+                        const T *const inps, size_t npts)
+{
+    if (nout == 0) {
+        return;
+    }
+    for (size_t i = 0; i < npts; ++i) {
+        v.call(outs + i * nout, inps + i * nin);
+    }
+}
+
 } // namespace
 
 extern "C" {
@@ -1971,6 +1983,8 @@ CWRAPPER_OUTPUT_TYPE basic_mul_as_two_terms(basic term1, basic term2,
 
 struct CLambdaRealDoubleVisitor {
     SymEngine::LambdaRealDoubleVisitor m;
+    size_t nin = 0;
+    size_t nout = 0;
 };
 
 CLambdaRealDoubleVisitor *lambda_real_double_visitor_new()
@@ -1978,11 +1992,30 @@ CLambdaRealDoubleVisitor *lambda_real_double_visitor_new()
     return new CLambdaRealDoubleVisitor();
 }
 
-void lambda_real_double_visitor_init(CLambdaRealDoubleVisitor *self,
-                                     const CVecBasic *args,
-                                     const CVecBasic *exprs, int perform_cse)
+CWRAPPER_OUTPUT_TYPE
+lambda_real_double_visitor_init(CLambdaRealDoubleVisitor *self,
+                                const CVecBasic *args, const CVecBasic *exprs,
+                                int perform_cse)
 {
+    CWRAPPER_BEGIN
+    self->nin = 0;
+    self->nout = 0;
     self->m.init(args->m, exprs->m, perform_cse);
+    self->nin = args->m.size();
+    self->nout = exprs->m.size();
+    CWRAPPER_END
+}
+
+size_t
+lambda_real_double_visitor_get_num_inputs(const CLambdaRealDoubleVisitor *self)
+{
+    return self->nin;
+}
+
+size_t
+lambda_real_double_visitor_get_num_outputs(const CLambdaRealDoubleVisitor *self)
+{
+    return self->nout;
 }
 
 void lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
@@ -1990,6 +2023,14 @@ void lambda_real_double_visitor_call(CLambdaRealDoubleVisitor *self,
                                      const double *const inps)
 {
     self->m.call(outs, inps);
+}
+
+void lambda_real_double_visitor_call_batch(CLambdaRealDoubleVisitor *self,
+                                           double *const outs,
+                                           const double *const inps,
+                                           size_t npts)
+{
+    visitor_call_batch(self->m, self->nin, self->nout, outs, inps, npts);
 }
 
 void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
@@ -2001,6 +2042,8 @@ void lambda_real_double_visitor_free(CLambdaRealDoubleVisitor *self)
 // double
 struct CLLVMDoubleVisitor {
     SymEngine::LLVMDoubleVisitor m;
+    size_t nin = 0;
+    size_t nout = 0;
 };
 
 CLLVMDoubleVisitor *llvm_double_visitor_new()
@@ -2008,11 +2051,28 @@ CLLVMDoubleVisitor *llvm_double_visitor_new()
     return new CLLVMDoubleVisitor();
 }
 
-void llvm_double_visitor_init(CLLVMDoubleVisitor *self, const CVecBasic *args,
-                              const CVecBasic *exprs, int perform_cse,
-                              int opt_level)
+CWRAPPER_OUTPUT_TYPE llvm_double_visitor_init(CLLVMDoubleVisitor *self,
+                                              const CVecBasic *args,
+                                              const CVecBasic *exprs,
+                                              int perform_cse, int opt_level)
 {
+    CWRAPPER_BEGIN
+    self->nin = 0;
+    self->nout = 0;
     self->m.init(args->m, exprs->m, perform_cse, opt_level);
+    self->nin = args->m.size();
+    self->nout = exprs->m.size();
+    CWRAPPER_END
+}
+
+size_t llvm_double_visitor_get_num_inputs(const CLLVMDoubleVisitor *self)
+{
+    return self->nin;
+}
+
+size_t llvm_double_visitor_get_num_outputs(const CLLVMDoubleVisitor *self)
+{
+    return self->nout;
 }
 
 void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
@@ -2021,13 +2081,29 @@ void llvm_double_visitor_call(CLLVMDoubleVisitor *self, double *const outs,
     self->m.call(outs, inps);
 }
 
+void llvm_double_visitor_call_batch(CLLVMDoubleVisitor *self,
+                                    double *const outs,
+                                    const double *const inps, size_t npts)
+{
+    visitor_call_batch(self->m, self->nin, self->nout, outs, inps, npts);
+}
+
+symengine_llvm_double_function
+llvm_double_visitor_get_function(const CLLVMDoubleVisitor *self)
+{
+    return self->m.get_function_pointer();
+}
+
 void llvm_double_visitor_free(CLLVMDoubleVisitor *self)
 {
     delete self;
 }
+
 // float
 struct CLLVMFloatVisitor {
     SymEngine::LLVMFloatVisitor m;
+    size_t nin = 0;
+    size_t nout = 0;
 };
 
 CLLVMFloatVisitor *llvm_float_visitor_new()
@@ -2035,11 +2111,28 @@ CLLVMFloatVisitor *llvm_float_visitor_new()
     return new CLLVMFloatVisitor();
 }
 
-void llvm_float_visitor_init(CLLVMFloatVisitor *self, const CVecBasic *args,
-                             const CVecBasic *exprs, int perform_cse,
-                             int opt_level)
+CWRAPPER_OUTPUT_TYPE llvm_float_visitor_init(CLLVMFloatVisitor *self,
+                                             const CVecBasic *args,
+                                             const CVecBasic *exprs,
+                                             int perform_cse, int opt_level)
 {
+    CWRAPPER_BEGIN
+    self->nin = 0;
+    self->nout = 0;
     self->m.init(args->m, exprs->m, perform_cse, opt_level);
+    self->nin = args->m.size();
+    self->nout = exprs->m.size();
+    CWRAPPER_END
+}
+
+size_t llvm_float_visitor_get_num_inputs(const CLLVMFloatVisitor *self)
+{
+    return self->nin;
+}
+
+size_t llvm_float_visitor_get_num_outputs(const CLLVMFloatVisitor *self)
+{
+    return self->nout;
 }
 
 void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
@@ -2048,14 +2141,29 @@ void llvm_float_visitor_call(CLLVMFloatVisitor *self, float *const outs,
     self->m.call(outs, inps);
 }
 
+void llvm_float_visitor_call_batch(CLLVMFloatVisitor *self, float *const outs,
+                                   const float *const inps, size_t npts)
+{
+    visitor_call_batch(self->m, self->nin, self->nout, outs, inps, npts);
+}
+
+symengine_llvm_float_function
+llvm_float_visitor_get_function(const CLLVMFloatVisitor *self)
+{
+    return self->m.get_function_pointer();
+}
+
 void llvm_float_visitor_free(CLLVMFloatVisitor *self)
 {
     delete self;
 }
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 // long double
 struct CLLVMLongDoubleVisitor {
     SymEngine::LLVMLongDoubleVisitor m;
+    size_t nin = 0;
+    size_t nout = 0;
 };
 
 CLLVMLongDoubleVisitor *llvm_long_double_visitor_new()
@@ -2063,12 +2171,31 @@ CLLVMLongDoubleVisitor *llvm_long_double_visitor_new()
     return new CLLVMLongDoubleVisitor();
 }
 
-void llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
-                                   const CVecBasic *args,
-                                   const CVecBasic *exprs, int perform_cse,
-                                   int opt_level)
+CWRAPPER_OUTPUT_TYPE llvm_long_double_visitor_init(CLLVMLongDoubleVisitor *self,
+                                                   const CVecBasic *args,
+                                                   const CVecBasic *exprs,
+                                                   int perform_cse,
+                                                   int opt_level)
 {
+    CWRAPPER_BEGIN
+    self->nin = 0;
+    self->nout = 0;
     self->m.init(args->m, exprs->m, perform_cse, opt_level);
+    self->nin = args->m.size();
+    self->nout = exprs->m.size();
+    CWRAPPER_END
+}
+
+size_t
+llvm_long_double_visitor_get_num_inputs(const CLLVMLongDoubleVisitor *self)
+{
+    return self->nin;
+}
+
+size_t
+llvm_long_double_visitor_get_num_outputs(const CLLVMLongDoubleVisitor *self)
+{
+    return self->nout;
 }
 
 void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
@@ -2076,6 +2203,20 @@ void llvm_long_double_visitor_call(CLLVMLongDoubleVisitor *self,
                                    const long double *const inps)
 {
     self->m.call(outs, inps);
+}
+
+void llvm_long_double_visitor_call_batch(CLLVMLongDoubleVisitor *self,
+                                         long double *const outs,
+                                         const long double *const inps,
+                                         size_t npts)
+{
+    visitor_call_batch(self->m, self->nin, self->nout, outs, inps, npts);
+}
+
+symengine_llvm_long_double_function
+llvm_long_double_visitor_get_function(const CLLVMLongDoubleVisitor *self)
+{
+    return self->m.get_function_pointer();
 }
 
 void llvm_long_double_visitor_free(CLLVMLongDoubleVisitor *self)

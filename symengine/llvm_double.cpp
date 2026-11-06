@@ -146,7 +146,20 @@ llvm::Function *LLVMVisitor::get_function_type(llvm::LLVMContext *context)
 void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
                        const bool symbolic_cse, unsigned opt_level)
 {
+    func = 0;
+    membuffer.clear();
     jit.reset();
+    // clear temp state on exit from this function, including when an exception
+    // is thrown
+    struct ClearTemporaries {
+        LLVMVisitor &v;
+        ~ClearTemporaries()
+        {
+            v.symbol_ptrs.clear();
+            v.replacement_symbol_ptrs.clear();
+            v.symbols.clear();
+        }
+    } clear_temporaries{*this};
     llvm::InitializeNativeTarget();
     llvm::InitializeNativeTargetAsmPrinter();
     llvm::InitializeNativeTargetAsmParser();
@@ -308,9 +321,6 @@ void LLVMVisitor::init(const vec_basic &inputs, const vec_basic &outputs,
     membuffer.assign(obj->getBufferStart(), obj->getBufferSize());
 
     link_membuffer();
-    symbol_ptrs.clear();
-    replacement_symbol_ptrs.clear();
-    symbols.clear();
 }
 
 LLVMDoubleVisitor::LLVMDoubleVisitor() = default;
@@ -330,7 +340,7 @@ void LLVMVisitor::bvisit(const Integer &x)
                                     mp_get_d(x.as_integer_class()));
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 
 LLVMLongDoubleVisitor::LLVMLongDoubleVisitor() = default;
 LLVMLongDoubleVisitor::~LLVMLongDoubleVisitor() = default;
@@ -358,7 +368,7 @@ void LLVMVisitor::bvisit(const Rational &x)
     set_double(mp_get_d(x.as_rational_class()));
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const Rational &x)
 {
     convert_from_mpfr(x);
@@ -375,7 +385,7 @@ void LLVMVisitor::bvisit(const RealMPFR &x)
 {
     set_double(mpfr_get_d(x.i.get_mpfr_t(), MPFR_RNDN));
 }
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const RealMPFR &x)
 {
     convert_from_mpfr(x);
@@ -746,7 +756,7 @@ SYMENGINE_RELATIONAL_FUNCTION(StrictLessThan, CreateFCmpOLT);
         result_ = r;                                                           \
     }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 #define SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                          \
     _SYMENGINE_MACRO_EXTERNAL_FUNCTION(Class, ext)                             \
     void LLVMLongDoubleVisitor::visit(const Class &x)                          \
@@ -880,7 +890,7 @@ void LLVMVisitor::bvisit(const Constant &x)
     set_double(eval_double(x));
 }
 
-#ifdef SYMENGINE_HAVE_LLVM_LONG_DOUBLE
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
 void LLVMLongDoubleVisitor::visit(const Constant &x)
 {
     convert_from_mpfr(x);
@@ -908,35 +918,42 @@ void LLVMVisitor::loads(const std::string &s)
 
 void LLVMVisitor::link_membuffer()
 {
-    jit = get_or_throw(llvm::orc::LLJITBuilder().create());
+    func = 0;
+    try {
+        jit = get_or_throw(llvm::orc::LLJITBuilder().create());
 
 #if (LLVM_VERSION_MAJOR < 17)
-    // Resolve external functions (e.g. from libm) using the symbols of the
-    // current process. Since LLVM 17 LLJIT does this by default.
-    auto generator = get_or_throw(
-        llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
-            jit->getDataLayout().getGlobalPrefix()));
+        // Resolve external functions (e.g. from libm) using the symbols of the
+        // current process. Since LLVM 17 LLJIT does this by default.
+        auto generator = get_or_throw(
+            llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(
+                jit->getDataLayout().getGlobalPrefix()));
 #if (LLVM_VERSION_MAJOR < 10)
-    jit->getMainJITDylib().setGenerator(std::move(generator));
+        jit->getMainJITDylib().setGenerator(std::move(generator));
 #else
-    jit->getMainJITDylib().addGenerator(std::move(generator));
+        jit->getMainJITDylib().addGenerator(std::move(generator));
 #endif
 #endif
 
-    // Customization point for subclasses: (may e.g. register custom symbol
-    // resolver)
-    modify_jit(jit.get());
+        // Customization point for subclasses: (may e.g. register custom symbol
+        // resolver)
+        modify_jit(jit.get());
 
-    throw_if_error(
-        jit->addObjectFile(llvm::MemoryBuffer::getMemBufferCopy(membuffer)));
+        throw_if_error(jit->addObjectFile(
+            llvm::MemoryBuffer::getMemBufferCopy(membuffer)));
 
-    // Get the symbol's address
-    auto symbol = get_or_throw(jit->lookup("symengine_func"));
+        // Get the symbol's address
+        auto symbol = get_or_throw(jit->lookup("symengine_func"));
 #if (LLVM_VERSION_MAJOR < 15)
-    func = (intptr_t)symbol.getAddress();
+        func = (intptr_t)symbol.getAddress();
 #else
-    func = (intptr_t)symbol.getValue();
+        func = (intptr_t)symbol.getValue();
 #endif
+    } catch (...) {
+        membuffer.clear();
+        jit.reset();
+        throw;
+    }
 }
 
 void LLVMVisitor::bvisit(const Floor &x)
@@ -990,7 +1007,7 @@ llvm::Type *LLVMFloatVisitor::get_float_type(llvm::LLVMContext *context)
     return llvm::Type::getFloatTy(*context);
 }
 
-#if defined(SYMENGINE_HAVE_LLVM_LONG_DOUBLE)
+#if defined(HAVE_SYMENGINE_LLVM_LONG_DOUBLE)
 llvm::Type *LLVMLongDoubleVisitor::get_float_type(llvm::LLVMContext *context)
 {
     return llvm::Type::getX86_FP80Ty(*context);
