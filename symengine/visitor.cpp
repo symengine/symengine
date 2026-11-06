@@ -244,6 +244,69 @@ void TransformVisitor::bvisit(const Piecewise &x)
     result_ = piecewise(new_pairs);
 }
 
+RCP<const Boolean> TransformVisitor::apply_boolean(const RCP<const Boolean> &x)
+{
+    auto r = apply(x);
+    if (not is_a_Boolean(*r)) {
+        throw SymEngineException("expected an object of type Boolean");
+    }
+    return rcp_static_cast<const Boolean>(r);
+}
+
+void TransformVisitor::bvisit(const And &x)
+{
+    set_boolean v;
+    for (const auto &a : x.get_container()) {
+        v.insert(apply_boolean(a));
+    }
+    result_ = logical_and(v);
+}
+
+void TransformVisitor::bvisit(const Or &x)
+{
+    set_boolean v;
+    for (const auto &a : x.get_container()) {
+        v.insert(apply_boolean(a));
+    }
+    result_ = logical_or(v);
+}
+
+void TransformVisitor::bvisit(const Not &x)
+{
+    auto arg = x.get_arg();
+    auto newarg = apply_boolean(arg);
+    if (newarg == arg) {
+        result_ = x.rcp_from_this();
+    } else {
+        result_ = logical_not(newarg);
+    }
+}
+
+void TransformVisitor::bvisit(const Xor &x)
+{
+    vec_boolean v;
+    for (const auto &a : x.get_container()) {
+        v.push_back(apply_boolean(a));
+    }
+    result_ = logical_xor(v);
+}
+
+void TransformVisitor::bvisit(const Contains &x)
+{
+    auto expr = x.get_expr();
+    auto set = x.get_set();
+    auto newexpr = apply(expr);
+    auto newset = apply(set);
+    if (not is_a_Set(*newset)) {
+        throw SymEngineException("expected an object of type Set");
+    }
+    if (newexpr == expr and newset == set) {
+        result_ = x.rcp_from_this();
+    } else {
+        result_ = contains(newexpr, rcp_static_cast<const Set>(newset));
+    }
+}
+
 void preorder_traversal_local_stop(const Basic &b, LocalStopVisitor &v)
 {
     b.accept(v);
