@@ -248,7 +248,7 @@ umap_int_basic UPSeriesPiranha::as_dict() const
 
 RCP<const Basic> UPSeriesPiranha::get_coeff(int i) const
 {
-    return p_.find_cf({i}).get_basic();
+    return calculate(p_.find_cf({i}).get_basic());
 }
 
 p_expr UPSeriesPiranha::mul(const p_expr &s, const p_expr &r, unsigned prec)
