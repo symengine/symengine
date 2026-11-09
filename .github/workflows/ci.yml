@@ -174,24 +174,24 @@ jobs:
           - BUILD_TYPE: Debug
             WITH_LLVM: 9
             BUILD_METAL_TESTS: yes
-            OS: macos-14
+            OS: macos-15
             CC: clang
 
           - BUILD_TYPE: Release
             WITH_LLVM: 9
             BUILD_METAL_TESTS: yes
-            OS: macos-14
+            OS: macos-15
             CC: clang
 
           - BUILD_TYPE: Debug
             BUILD_METAL_TESTS: yes
-            OS: macos-14
+            OS: macos-15
             CC: gcc
             WITH_SYMENGINE_RCP: yes
 
           - BUILD_TYPE: Release
             BUILD_METAL_TESTS: yes
-            OS: macos-14
+            OS: macos-15
             CC: gcc
 
           - BUILD_TYPE: Debug
