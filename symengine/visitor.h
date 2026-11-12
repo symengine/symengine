@@ -289,6 +289,14 @@ public:
 
     void bvisit(const MultiArgFunction &x);
     void bvisit(const Piecewise &x);
+    void bvisit(const And &x);
+    void bvisit(const Or &x);
+    void bvisit(const Not &x);
+    void bvisit(const Xor &x);
+    void bvisit(const Contains &x);
+
+protected:
+    RCP<const Boolean> apply_boolean(const RCP<const Boolean> &x);
 };
 
 template <typename Derived, typename First, typename... Rest>
