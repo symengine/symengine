@@ -35,8 +35,9 @@ double mp_get_d_rational(const integer_class &num, const integer_class &den)
     mp_fdiv_qr(t, r, a, b);
     long tbits = static_cast<long>(mp_bit_length(t));
     // |num/den| is in [2**(tbits - 1 - s), 2**(tbits - s))
-    if (tbits - 1 - s > 1024) {
-        // result overflows
+    if (tbits - 1 - s >= 1024) {
+        // result overflows since IEEE-754 double exponent is
+        // (-1022, 1023)
         return negative ? -std::numeric_limits<double>::infinity()
                         : std::numeric_limits<double>::infinity();
     }
