@@ -300,7 +300,7 @@ void TransformVisitor::bvisit(const Contains &x)
     if (not is_a_Set(*newset)) {
         throw SymEngineException("expected an object of type Set");
     }
-    if (newexpr == expr and newset == set) {
+    if (newexpr.get() == expr.get() and newset.get() == set.get()) {
         result_ = x.rcp_from_this();
     } else {
         result_ = contains(newexpr, rcp_static_cast<const Set>(newset));

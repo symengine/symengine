@@ -115,13 +115,16 @@ TEST_CASE("Test piecewise_fold", "[simplify]")
     REQUIRE(
         eq(*r, *piecewise({{add(x, y), Lt(x, i0)}, {integer(3), boolTrue}})));
 
-    // Piecewise with different conditions take the cartesian product
+    // Piecewise with different conditions take the cartesian product.
+    // A FunctionSymbol is used since the order of args of an Add is
+    // platform dependent.
     q = piecewise({{y, Lt(y, i0)}, {i2, boolTrue}});
-    r = piecewise_fold(add(p, q));
-    REQUIRE(eq(*r, *piecewise({{add(x, y), logical_and({Lt(x, i0), Lt(y, i0)})},
-                               {add(i1, y), Lt(y, i0)},
-                               {add(x, i2), Lt(x, i0)},
-                               {integer(3), boolTrue}})));
+    r = piecewise_fold(function_symbol("f", {p, q}));
+    REQUIRE(eq(*r, *piecewise({{function_symbol("f", {x, y}),
+                                logical_and({Lt(x, i0), Lt(y, i0)})},
+                               {function_symbol("f", {x, i2}), Lt(x, i0)},
+                               {function_symbol("f", {i1, y}), Lt(y, i0)},
+                               {function_symbol("f", {i1, i2}), boolTrue}})));
 
     // Nested Piecewise are flattened
     e = piecewise({{p, Lt(y, i0)}, {y, boolTrue}});
