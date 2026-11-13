@@ -901,6 +901,18 @@ void StrPrinter::bvisit(const Derivative &x)
     str_ = o.str();
 }
 
+void StrPrinter::bvisit(const Integral &x)
+{
+    std::ostringstream o;
+    o << "Integral(" << this->apply(x.get_arg());
+    auto m1 = x.get_symbols();
+    // for (const auto &elem : m1) {
+    //     o << ", " << this->apply(elem);
+    // }
+    o << ", " << this->apply(m1) << ")";
+    str_ = o.str();
+}
+
 void StrPrinter::bvisit(const Subs &x)
 {
     std::ostringstream o, vars, point;
