@@ -1,5 +1,7 @@
 #include "catch.hpp"
 
+#include <limits>
+
 #include <symengine/visitor.h>
 #include <symengine/eval_double.h>
 #include <symengine/eval_mpfr.h>
@@ -272,4 +274,43 @@ TEST_CASE("eval_double with symbols", "[eval_double]")
     CHECK(std::abs(c - std::complex<double>(0.0, 1.0)) < 1e-12);
     CHECK_THROWS_AS(SymEngine::eval_complex_double(*symbol("z"), mpp),
                     SymEngineException);
+}
+
+TEST_CASE("eval_double: Rational is correctly rounded", "[eval_double]")
+{
+    using SymEngine::integer_class;
+    using SymEngine::mp_pow_ui;
+
+    auto pow = [](long b, unsigned long e) {
+        integer_class r;
+        mp_pow_ui(r, integer_class(b), e);
+        return r;
+    };
+    auto q = [](const integer_class &n, const integer_class &d) {
+        return eval_double(*Rational::from_mpq(rational_class(n, d)));
+    };
+    const double inf = std::numeric_limits<double>::infinity();
+
+    // Small numerator and denominator
+    REQUIRE(q(integer_class(38), integer_class(100)) == 0.38);
+    REQUIRE(q(integer_class(1), integer_class(3)) == 0.3333333333333333);
+    REQUIRE(q(integer_class(-2), integer_class(3)) == -0.6666666666666666);
+
+    // Larger than 2**53
+    REQUIRE(q(pow(10, 30) + 1, 3 * pow(10, 29)) == 3.3333333333333335);
+    REQUIRE(q(pow(10, 25), pow(10, 25) + 1) == 1.0);
+    REQUIRE(q(pow(2, 60) + pow(2, 7), 3 * pow(2, 7)) == 3002399751580331.0);
+
+    // Ties go to even
+    REQUIRE(q(pow(2, 53) + 1, integer_class(2)) == 4503599627370496.0);
+    REQUIRE(q(pow(2, 53) + 3, integer_class(2)) == 4503599627370498.0);
+    REQUIRE(q(-(pow(2, 53) + 1), integer_class(8)) == -1125899906842624.0);
+
+    // Largest double and overflow. Halfway between the largest double and
+    // 2**1024 is N = 2**1024 - 2**970
+    integer_class N = pow(2, 1024) - pow(2, 970);
+    REQUIRE(q(2 * N - 1, integer_class(2)) == 1.7976931348623157e+308);
+    REQUIRE(q(2 * N + 1, integer_class(2)) == inf);
+    REQUIRE(q(pow(10, 400), integer_class(3)) == inf);
+    REQUIRE(q(-pow(10, 400), integer_class(7)) == -inf);
 }

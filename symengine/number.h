@@ -126,6 +126,32 @@ inline void idivnum(const Ptr<RCP<const Number>> &self,
     *self = divnum(*self, other);
 }
 
+/**
+ * @brief Round a number to the nearest integer, like SymPy's `Number.round()`
+ * @param x Number
+ * @returns Integer (or a complex number with integer real and imaginary parts)
+ *
+ * Ties are rounded to even. The result is computed exactly from `floor(x)`,
+ * so `round(RealDouble(2.5)) == 2` and `round(Rational(7, 2)) == 4`.
+ * A complex number is rounded in its real and imaginary parts. Infinities
+ * and NaN are returned unchanged.
+ */
+SYMENGINE_EXPORT RCP<const Number> round(const Number &x);
+
+/**
+ * @brief Round a number to `n` decimal places, like SymPy's
+ * `Number.round(n)`
+ * @param x Number
+ * @param n Number of decimal places. Can be negative, in which case `x` is
+ * rounded to a multiple of `10**(-n)`.
+ * @returns Rounded number
+ *
+ * Computed as `round(x * 10**n) / 10**n`, keeping the kind of number: an
+ * exact Integer or Rational stays exact, and a RealDouble or RealMPFR keeps
+ * its precision.
+ */
+SYMENGINE_EXPORT RCP<const Number> round(const Number &x, long n);
+
 //! \return true if 'b' is a Number or any of its subclasses
 inline bool is_a_Number(const Basic &b)
 {
