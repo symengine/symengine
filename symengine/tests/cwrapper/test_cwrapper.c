@@ -2313,32 +2313,72 @@ void test_lambda_double()
     vecbasic_push_back(exprs, r);
     vecbasic_push_back(exprs, s);
 
+    // Two points for the batch calls: (1.5, 2, 3) and (1, 1, 1)
+    double inps_batch[6] = {1.5, 2.0, 3.0, 1.0, 1.0, 1.0};
+    double outs_batch[4];
+
     for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
         CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
-        lambda_real_double_visitor_init(vis, args, exprs, perform_cse);
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, exprs, perform_cse)
+            == SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_inputs(vis) == 3);
+        SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_outputs(vis)
+                           == 2);
         lambda_real_double_visitor_call(vis, outs, inps);
-        lambda_real_double_visitor_free(vis);
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
         SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+        lambda_real_double_visitor_call_batch(vis, outs_batch, inps_batch, 2);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[1] - 45.0) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[2] - 3.0) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[3] - 4.0) < 1e-12);
+        lambda_real_double_visitor_free(vis);
 #ifdef HAVE_SYMENGINE_LLVM
         // double
         int symbolic_cse = 1, opt_level = 2;
         CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
-        llvm_double_visitor_init(vis2, args, exprs, symbolic_cse, opt_level);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_function(vis2) == NULL);
+        SYMENGINE_C_ASSERT(
+            llvm_double_visitor_init(vis2, args, exprs, symbolic_cse, opt_level)
+            == SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_num_inputs(vis2) == 3);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_num_outputs(vis2) == 2);
         llvm_double_visitor_call(vis2, outs, inps);
-        llvm_double_visitor_free(vis2);
         SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
         SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+        llvm_double_visitor_call_batch(vis2, outs_batch, inps_batch, 2);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[1] - 45.0) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[2] - 3.0) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs_batch[3] - 4.0) < 1e-12);
+        symengine_llvm_double_function f
+            = llvm_double_visitor_get_function(vis2);
+        SYMENGINE_C_ASSERT(f != NULL);
+        outs[0] = outs[1] = 0.0;
+        f(inps, outs);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+        llvm_double_visitor_free(vis2);
 
         // float
         float outs_f[2];
         float inps_f[3] = {1.5F, 2.0F, 3.0F};
         CLLVMFloatVisitor *vis2f = llvm_float_visitor_new();
-        llvm_float_visitor_init(vis2f, args, exprs, symbolic_cse, opt_level);
+        SYMENGINE_C_ASSERT(
+            llvm_float_visitor_init(vis2f, args, exprs, symbolic_cse, opt_level)
+            == SYMENGINE_NO_EXCEPTION);
         llvm_float_visitor_call(vis2f, outs_f, inps_f);
-        llvm_float_visitor_free(vis2f);
         SYMENGINE_C_ASSERT(fabs(outs_f[0] - 43.5F) < 1e-6F);
         SYMENGINE_C_ASSERT(fabs(outs_f[1] - 45.0F) < 1e-6F);
+        symengine_llvm_float_function ff
+            = llvm_float_visitor_get_function(vis2f);
+        SYMENGINE_C_ASSERT(ff != NULL);
+        outs_f[0] = outs_f[1] = 0.0F;
+        ff(inps_f, outs_f);
+        SYMENGINE_C_ASSERT(fabs(outs_f[0] - 43.5F) < 1e-6F);
+        SYMENGINE_C_ASSERT(fabs(outs_f[1] - 45.0F) < 1e-6F);
+        llvm_float_visitor_free(vis2f);
 #ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
         // long double
         long double outs_l[2];
@@ -2348,11 +2388,69 @@ void test_lambda_double()
                                       opt_level);
         llvm_long_double_visitor_call(vis2l, outs_l, inps_l);
         llvm_long_double_visitor_free(vis2l);
-        SYMENGINE_C_ASSERT(fabs(outs_l[0] - 43.5L) < 1e-6L);
-        SYMENGINE_C_ASSERT(fabs(outs_l[1] - 45.0L) < 1e-6L);
+        SYMENGINE_C_ASSERT(fabsl(outs_l[0] - 43.5L) < 1e-6L);
+        SYMENGINE_C_ASSERT(fabsl(outs_l[1] - 45.0L) < 1e-6L);
 #endif
 #endif
     }
+
+    // An expression containing a symbol that is not in args is an error
+    basic w;
+    basic_new_stack(w);
+    symbol_set(w, "w");
+    CVecBasic *bad_exprs = vecbasic_new();
+    vecbasic_push_back(bad_exprs, r);
+    vecbasic_push_back(bad_exprs, s);
+    vecbasic_push_back(bad_exprs, w);
+    // A failed init leaves the visitor empty
+    for (perform_cse = 0; perform_cse <= 1; ++perform_cse) {
+        CLambdaRealDoubleVisitor *vis = lambda_real_double_visitor_new();
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, exprs, perform_cse)
+            == SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, bad_exprs, perform_cse)
+            != SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_inputs(vis) == 0);
+        SYMENGINE_C_ASSERT(lambda_real_double_visitor_get_num_outputs(vis)
+                           == 0);
+        outs_batch[0] = -1.0;
+        lambda_real_double_visitor_call_batch(vis, outs_batch, inps_batch, 2);
+        SYMENGINE_C_ASSERT(outs_batch[0] == -1.0);
+        SYMENGINE_C_ASSERT(
+            lambda_real_double_visitor_init(vis, args, exprs, perform_cse)
+            == SYMENGINE_NO_EXCEPTION);
+        lambda_real_double_visitor_call(vis, outs, inps);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+        lambda_real_double_visitor_free(vis);
+#ifdef HAVE_SYMENGINE_LLVM
+        CLLVMDoubleVisitor *vis2 = llvm_double_visitor_new();
+        SYMENGINE_C_ASSERT(
+            llvm_double_visitor_init(vis2, args, exprs, perform_cse, 2)
+            == SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(
+            llvm_double_visitor_init(vis2, args, bad_exprs, perform_cse, 2)
+            != SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_function(vis2) == NULL);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_num_inputs(vis2) == 0);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_num_outputs(vis2) == 0);
+        outs_batch[0] = -1.0;
+        llvm_double_visitor_call_batch(vis2, outs_batch, inps_batch, 2);
+        SYMENGINE_C_ASSERT(outs_batch[0] == -1.0);
+        SYMENGINE_C_ASSERT(
+            llvm_double_visitor_init(vis2, args, exprs, perform_cse, 2)
+            == SYMENGINE_NO_EXCEPTION);
+        SYMENGINE_C_ASSERT(llvm_double_visitor_get_function(vis2) != NULL);
+        llvm_double_visitor_call(vis2, outs, inps);
+        SYMENGINE_C_ASSERT(fabs(outs[0] - 43.5) < 1e-12);
+        SYMENGINE_C_ASSERT(fabs(outs[1] - 45.0) < 1e-12);
+        llvm_double_visitor_free(vis2);
+#endif
+    }
+    vecbasic_free(bad_exprs);
+    basic_free_stack(w);
+
     basic_free_stack(two);
     basic_free_stack(x);
     basic_free_stack(y);

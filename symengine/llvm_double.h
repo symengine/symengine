@@ -38,7 +38,7 @@ protected:
     std::unique_ptr<llvm::LLVMContext> context;
     std::unique_ptr<llvm::orc::LLJIT> jit;
 
-    intptr_t func;
+    intptr_t func = 0;
 
     // Following are invalid after the init call.
     IRBuilder *builder;
@@ -127,6 +127,14 @@ public:
     {
         ((double (*)(const double *, double *))func)(inps, outs);
     }
+    using function_pointer_type = void (*)(const double *inps, double *outs);
+    function_pointer_type get_function_pointer() const
+    {
+        if (func == 0) {
+            return nullptr;
+        }
+        return reinterpret_cast<function_pointer_type>(func);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -162,6 +170,14 @@ public:
     {
         ((float (*)(const float *, float *))func)(inps, outs);
     }
+    using function_pointer_type = void (*)(const float *inps, float *outs);
+    function_pointer_type get_function_pointer() const
+    {
+        if (func == 0) {
+            return nullptr;
+        }
+        return reinterpret_cast<function_pointer_type>(func);
+    }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
     void visit(const ASin &x) override;
@@ -180,7 +196,8 @@ public:
     void visit(const Erfc &x) override;
 };
 
-#if SYMENGINE_SIZEOF_LONG_DOUBLE > 8 && defined(__x86_64__) || defined(__i386__)
+#ifdef HAVE_SYMENGINE_LLVM_LONG_DOUBLE
+// Kept for backward compatibility, use HAVE_SYMENGINE_LLVM_LONG_DOUBLE instead
 #define SYMENGINE_HAVE_LLVM_LONG_DOUBLE 1
 class SYMENGINE_EXPORT LLVMLongDoubleVisitor : public LLVMVisitor
 {
@@ -199,6 +216,15 @@ public:
     void call(long double *outs, const long double *inps) const
     {
         ((long double (*)(const long double *, long double *))func)(inps, outs);
+    }
+    using function_pointer_type
+        = void (*)(const long double *inps, long double *outs);
+    function_pointer_type get_function_pointer() const
+    {
+        if (func == 0) {
+            return nullptr;
+        }
+        return reinterpret_cast<function_pointer_type>(func);
     }
     llvm::Type *get_float_type(llvm::LLVMContext *) override;
     void visit(const Tan &x) override;
