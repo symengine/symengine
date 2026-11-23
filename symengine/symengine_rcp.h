@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstddef>
+#include <cstdint>
 #include <stdexcept>
 #include <string>
 #if __cplusplus <= 201703L
@@ -313,7 +314,7 @@ public:
 #endif
     }
 
-    unsigned int use_count() const
+    uint64_t use_count() const
     {
 #if defined(WITH_SYMENGINE_RCP)
         return refcount_;
@@ -327,8 +328,8 @@ private:
 #if defined(WITH_SYMENGINE_RCP)
 
 //! Public variables if defined with SYMENGINE_RCP
-// The reference counter is defined either as "unsigned int" (faster, but
-// not thread safe) or as std::atomic<unsigned int> (slower, but thread
+// The reference counter is defined either as "uint64_t" (faster, but
+// not thread safe) or as std::atomic<uint64_t> (slower, but thread
 // safe). Semantically they are almost equivalent, except that the
 // pre-decrement operator `operator--()` returns a copy for std::atomic
 // instead of a reference to itself.
@@ -336,9 +337,9 @@ private:
 // state of the instance, but changes when more copies
 // of the same instance are made.
 #if defined(WITH_SYMENGINE_THREAD_SAFE)
-    mutable std::atomic<unsigned int> refcount_; // reference counter
+    mutable std::atomic<uint64_t> refcount_; // reference counter
 #else
-    mutable unsigned int refcount_; // reference counter
+    mutable uint64_t refcount_; // reference counter
 #endif // WITH_SYMENGINE_THREAD_SAFE
 public:
     EnableRCPFromThis() : refcount_(0) {}
