@@ -2282,6 +2282,26 @@ TEST_CASE("Atan2: functions", "[functions]")
     r1 = atan2(x, zero);
     REQUIRE(unified_eq(r1->get_args(), {x, zero}));
 
+    r1 = atan2(real_double(1.0), real_double(1.0));
+    REQUIRE(eq(*r1, *div(pi, integer(4))));
+
+    r1 = atan2(real_double(-1.0), real_double(-1.0));
+    REQUIRE(eq(*r1, *div(mul(i3, pi), integer(-4))));
+
+    r1 = atan2(real_double(-1.0), real_double(1.0));
+    REQUIRE(eq(*r1, *div(pi, integer(-4))));
+
+    r1 = atan2(real_double(1.0), real_double(-1.0));
+    REQUIRE(eq(*r1, *div(mul(i3, pi), integer(4))));
+
+    RCP<const Basic> c = cos(x);
+    RCP<const Basic> s = sin(x);
+    RCP<const Basic> z = atan2(add(c, s), sub(c, s));
+    SymEngine::map_basic_basic sub_map;
+    sub_map[x] = real_double(0.);
+    r1 = z->subs(sub_map);
+    REQUIRE(eq(*r1, *div(pi, integer(4))));
+
     RCP<const ATan2> r4 = make_rcp<ATan2>(i2, i3);
     REQUIRE(not(r4->is_canonical(zero, i2)));
     REQUIRE(not(r4->is_canonical(zero, zero)));

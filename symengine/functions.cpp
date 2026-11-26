@@ -1651,6 +1651,13 @@ RCP<const Basic> atan2(const RCP<const Basic> &num, const RCP<const Basic> &den)
         }
         return make_rcp<const ATan2>(num, den);
     }
+    if (eq(*num, *den)) {
+        RCP<const Basic> index = pow(i2, i2);
+        return add(div(pi, index), mul(div(pi, i2), sub(sign(den), one)));
+    } else if (eq(*num, *mul(minus_one, den))) {
+        RCP<const Basic> index = mul(minus_one, pow(i2, i2));
+        return sub(div(pi, index), mul(div(pi, i2), sub(sign(den), one)));
+    }
     RCP<const Basic> index;
     bool b = inverse_lookup(inverse_tct(), div(num, den), outArg(index));
     if (b) {
