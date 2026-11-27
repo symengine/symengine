@@ -104,6 +104,9 @@ RCP<const Boolean> Interval::contains(const RCP<const Basic> &a) const
             return make_rcp<Contains>(a, rcp_from_this_cast<const Set>());
         }
     }
+    if (down_cast<const Number &>(*a).is_complex() or is_a<NaN>(*a)) {
+        return boolean(false);
+    }
     if (eq(*start_, *a))
         return boolean(not left_open_);
     if (eq(*end_, *a))

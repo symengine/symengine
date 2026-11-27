@@ -64,7 +64,7 @@ RCP<const Set> solve_poly_cubic(const vec_basic &coeffs,
     RCP<const Basic> root1, root2, root3;
     if (eq(*d, *zero)) {
         root1 = zero;
-        auto fset = solve_poly_quadratic({c, b, one}, domain);
+        auto fset = solve_poly_quadratic({c, b, one});
         SYMENGINE_ASSERT(is_a<FiniteSet>(*fset));
         auto cont = down_cast<const FiniteSet &>(*fset).get_container();
         if (cont.size() == 2) {
@@ -129,7 +129,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
         vec_basic newcoeffs(4);
         newcoeffs[0] = c, newcoeffs[1] = b, newcoeffs[2] = a,
         newcoeffs[3] = one;
-        auto rcubic = solve_poly_cubic(newcoeffs, domain);
+        auto rcubic = solve_poly_cubic(newcoeffs);
         SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
         roots = down_cast<const FiniteSet &>(*rcubic).get_container();
         roots.insert(zero);
@@ -149,7 +149,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
             vec_basic newcoeffs(4);
             newcoeffs[0] = ff, newcoeffs[1] = e, newcoeffs[2] = zero,
             newcoeffs[3] = one;
-            auto rcubic = solve_poly_cubic(newcoeffs, domain);
+            auto rcubic = solve_poly_cubic(newcoeffs);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rcubic));
             auto rtemp = down_cast<const FiniteSet &>(*rcubic).get_container();
             SYMENGINE_ASSERT(rtemp.size() > 0 and rtemp.size() <= 3);
@@ -160,7 +160,7 @@ RCP<const Set> solve_poly_quartic(const vec_basic &coeffs,
         } else if (eq(*ff, *zero)) {
             vec_basic newcoeffs(3);
             newcoeffs[0] = g, newcoeffs[1] = e, newcoeffs[2] = one;
-            auto rquad = solve_poly_quadratic(newcoeffs, domain);
+            auto rquad = solve_poly_quadratic(newcoeffs);
             SYMENGINE_ASSERT(is_a<FiniteSet>(*rquad));
             auto rtemp = down_cast<const FiniteSet &>(*rquad).get_container();
             SYMENGINE_ASSERT(rtemp.size() > 0 and rtemp.size() <= 2);
