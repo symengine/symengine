@@ -1560,3 +1560,13 @@ TEST_CASE("Union : contains", "[basic]")
     REQUIRE(eq(*u2->contains(one), *boolTrue));
     REQUIRE(eq(*u2->contains(x), *boolTrue));
 }
+
+TEST_CASE("Interval : complex and NaN contains", "[basic]")
+{
+    auto r = interval(integer(-5), integer(5));
+    REQUIRE(eq(*r->contains(I), *boolFalse));
+    REQUIRE(eq(*r->contains(add(one, I)), *boolFalse));
+    REQUIRE(eq(*r->contains(Nan), *boolFalse));
+    REQUIRE(eq(*reals()->contains(I), *boolFalse));
+    REQUIRE(eq(*reals()->contains(Nan), *boolFalse));
+}

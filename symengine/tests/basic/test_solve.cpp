@@ -268,6 +268,21 @@ TEST_CASE("cubic and quartic polynomials", "[Solve]")
 
     soln = solve_poly_quartic({rational(51, 256), one, one, one, one});
     REQUIRE(eq(*soln->contains(rational(-1, 4)), *boolTrue));
+
+    // Cubic and quartic solving with restricted domains
+    poly = add(cbx, x);
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
+    soln = solve(poly, x, interval(one, i3));
+    REQUIRE(eq(*soln, *emptyset()));
+
+    poly = add({qx, mul(integer(-5), sqx), integer(4)});
+    soln = solve(poly, x, interval(one, i3));
+    REQUIRE(eq(*soln, *finiteset({one, i2})));
+
+    poly = add(qx, sqx);
+    soln = solve(poly, x, reals);
+    REQUIRE(eq(*soln, *finiteset({zero})));
 }
 
 TEST_CASE("Higher order(degree >=5) polynomials", "[Solve]")
